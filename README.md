@@ -14,3 +14,6 @@ Instalación
     source ./ve/bin/activate
     pip install -r requirements.txt
     python manage.py runserver
+
+
+python manage.py runserver --settings=libreborme.local_settings
