@@ -10,10 +10,27 @@ Instalación
 
     git clone https://github.com/PabloCastellano/libreborme.git
     cd libreborme
-    virtualenv ve
-    source ./ve/bin/activate
+    mkvirtualenv libreborme
+    sudo apt-get install libxml2-dev libxslt1-dev python-dev
     pip install -r requirements.txt
-    python manage.py runserver
+    ./manage.py syncdb
+    ./manage.py migrate?
+    ./manage.py loaddata borme/fixtures/actos.json
+    ./manage.py loaddata libreborme/fixtures/users.json
 
+Por defecto crea la cuenta `admin` con la contraseña `0000`.
 
-python manage.py runserver --settings=libreborme.local_settings
+Ejecución
+---------
+
+    cd libreborme
+    workon libreborme
+    ./manage.py runserver --settings=libreborme.local_settings
+
+Comandos
+--------
+
+    ./manage.py companyinfo "SOCIEDAD ESTATAL CORREOS Y TELEGRAFOS SA"
+    ./manage.py companyinfo sociedad-estatal-correos-y-telegrafos
+    ./manage.py findcompany correos asd
+
