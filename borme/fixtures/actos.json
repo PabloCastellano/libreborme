@@ -1,0 +1,100 @@
+[
+{
+    "fields": {
+        "nombre": "Constituci\u00f3n"
+    },
+    "model": "borme.acto",
+    "pk": 1
+},
+{
+    "fields": {
+        "nombre": "Disoluci\u00f3n"
+    },
+    "model": "borme.acto",
+    "pk": 2
+},
+{
+    "fields": {
+        "nombre": "Ampliaci\u00f3n de capital"
+    },
+    "model": "borme.acto",
+    "pk": 3
+},
+{
+    "fields": {
+        "nombre": "Reducci\u00f3n de capital"
+    },
+    "model": "borme.acto",
+    "pk": 4
+},
+{
+    "fields": {
+        "nombre": "Modificaciones estatutarias"
+    },
+    "model": "borme.acto",
+    "pk": 5
+},
+{
+    "fields": {
+        "nombre": "Cambio de objeto social"
+    },
+    "model": "borme.acto",
+    "pk": 6
+},
+{
+    "fields": {
+        "nombre": "Nombramientos"
+    },
+    "model": "borme.acto",
+    "pk": 7
+},
+{
+    "fields": {
+        "nombre": "Revocaciones"
+    },
+    "model": "borme.acto",
+    "pk": 8
+},
+{
+    "fields": {
+        "nombre": "Reelecciones"
+    },
+    "model": "borme.acto",
+    "pk": 9
+},
+{
+    "fields": {
+        "nombre": "Ceses/Dimisiones"
+    },
+    "model": "borme.acto",
+    "pk": 10
+},
+{
+    "fields": {
+        "nombre": "Sociedad unipersonal. Cambio de identidad del socio \u00fanico"
+    },
+    "model": "borme.acto",
+    "pk": 11
+},
+{
+    "fields": {
+        "nombre": "Declaraci\u00f3n de unipersonalidad"
+    },
+    "model": "borme.acto",
+    "pk": 12
+},
+{
+    "fields": {
+        "nombre": "P\u00e9rdida del car\u00e1cter de unipersonalidad"
+    },
+    "model": "borme.acto",
+    "pk": 13
+},
+{
+    "fields": {
+        "nombre": "Otros conceptos"
+    },
+    "model": "borme.acto",
+    "pk": 14
+}
+]
