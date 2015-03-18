@@ -72,8 +72,9 @@ def saveField(content):
 def printCSVHeader(outfp):
     line = ""
     for k in ("ID","Nombre","Modificaciones estatutarias","Sociedad unipersonal","Extinción","Disolución","Cambio de identidad del socio único","Nombramientos","Ceses/Dimisiones","Revocaciones","Reducción de capital","Datos registrales"):
-        line += k + ','
+        line += '"' + k + '",'
     outfp.write(line[:-1])
+    outfp.write('\n')
 
 
 def printCSVLine(outfp):
@@ -92,7 +93,7 @@ def printCSVLine(outfp):
         print ',',
         line += ','
     print
-    line += '\n'
+    line = line[:-1] + '\n'
     outfp.write(line)
 
 
