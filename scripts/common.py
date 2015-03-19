@@ -40,7 +40,7 @@ class LBCommonParser():
 
     def __init__(self, _level=logging.INFO):
         # Logs warnings, errors and criticals to stdout and file
-        logging.basicConfig(filename=self.LOGFILE, level=_level, format='\n%(name)s: %(asctime)s %(message)s', datefmt='%Y-%m-%d %I:%M')
+        logging.basicConfig(filename=self.LOGFILE, level=_level, format='%(name)s: %(asctime)s %(message)s', datefmt='%Y-%m-%d %I:%M')
         self.logger = logging.getLogger("csvBORME")  # name
 
         h1 = logging.StreamHandler(sys.stdout)
@@ -60,6 +60,8 @@ class LBCommonParser():
             filename:
             filenameOut:
         """
+
+        had_warning = False
 
         if os.path.isdir(filenameOut):
             filenameOut = os.path.join(filenameOut, os.path.basename(filenameIn))
@@ -91,6 +93,7 @@ class LBCommonParser():
                 self.print_line(outfp)
                 self.logger.debug('###########')
             except:
+                had_warning = True
                 self.logger.warning('###########')
                 self.logger.warning('SKIPPING. Invalid data found:')
                 self.logger.warning(trozo)
@@ -98,6 +101,10 @@ class LBCommonParser():
                 self.results['warning'] += 1
 
         outfp.close()
+
+        if had_warning:
+            self.results['error'] += 1
+
         return True
 
     def parse_dir(self, dirIn, dirOut):
