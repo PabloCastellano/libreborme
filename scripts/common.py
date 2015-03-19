@@ -8,6 +8,20 @@ import sys
 import time
 
 
+# Keywords with arguments
+ALL_KEYWORDS = ['Nombramientos', 'Revocaciones', 'Ceses/Dimisiones', 'Modificaciones estatutarias', 'Cambio de objeto social',
+                'Cambio de denominación social', 'Cambio de domicilio social', 'Ampliacion del objeto social', 'Fe de erratas',
+                'Cambio de identidad del socio único', 'Sociedad unipersonal', 'Disolución', 'Reelecciones', 'Constitución',
+                'Articulo 378.5 del Reglamento del Registro Mercantil',
+                'Ampliación de capital', 'Reducción de capital', 'Situación concursal', 'Socio único', 'Datos registrales']
+
+# Single keywords
+ALL_KEYWORDS2 = ['Sociedad unipersonal', 'Extinción', 'Declaración de unipersonalidad']
+
+CSV_HEADERS = ['ID', 'Nombre']
+CSV_HEADERS.extend(ALL_KEYWORDS2)
+CSV_HEADERS.extend(ALL_KEYWORDS)
+
 # Simplemente implementa parse_line
 class LBCommonParser():
     LOGFILE = 'foo.log'
@@ -16,13 +30,13 @@ class LBCommonParser():
     CSV = True
     NAME = '2'
 
-    def __init__(self):
+    def __init__(self, _level=logging.INFO):
         # Logs warnings, errors and criticals to stdout and file
-        logging.basicConfig(filename=self.LOGFILE, level=logging.INFO, format='\n%(name)s: %(asctime)s %(message)s', datefmt='%Y-%m-%d %I:%M')
+        logging.basicConfig(filename=self.LOGFILE, level=_level, format='\n%(name)s: %(asctime)s %(message)s', datefmt='%Y-%m-%d %I:%M')
         self.logger = logging.getLogger("csvBORME")  # name
 
         h1 = logging.StreamHandler(sys.stdout)
-        h1.setLevel(logging.INFO)
+        h1.setLevel(_level)
         self.logger.addHandler(h1)
 
         self.results = {'error': 0, 'skip': 0, 'ok': 0}
@@ -122,11 +136,11 @@ class LBCommonParser():
     def print_header(self, outfp):
         line = ""
         if self.CSV:
-            for k in ("ID","Nombre","Modificaciones estatutarias","Sociedad unipersonal","Extinción","Disolución","Cambio de identidad del socio único","Nombramientos","Ceses/Dimisiones","Revocaciones","Reducción de capital","Datos registrales"):
+            for k in CSV_HEADERS:
                 line += '"' + k + '",'
             line = line[:-1] + '\n'
         else:
-            for k in ("ID","Nombre","Modificaciones estatutarias","Sociedad unipersonal","Extinción","Disolución","Cambio de identidad del socio único","Nombramientos","Ceses/Dimisiones","Revocaciones","Reducción de capital","Datos registrales"):
+            for k in CSV_HEADERS:
                 line += k + '\n'
             line += '----------------------------------------------------------\n'
         self.logger.debug(line)
@@ -135,18 +149,19 @@ class LBCommonParser():
 
     def print_line(self, outfp):
         self.logger.debug('Keys: %s total: %d', self.csvline.keys(), self.csvline['total'])
+        self.logger.debug('%s', self.csvline)
         line = ""
 
         if self.CSV:
             # print CSV-friendly
-            for k in ("ID","Nombre","Modificaciones estatutarias","Sociedad unipersonal","Extinción","Disolución","Cambio de identidad del socio único","Nombramientos","Ceses/Dimisiones","Revocaciones","Reducción de capital","Datos registrales"):
+            for k in CSV_HEADERS:
                 if self.csvline.has_key(k):
                     content = '"' + self.csvline[k].replace('"', '\\"') + '"'
                     line += content
                 line += ','
             line = line[:-1] + '\n'
         else:
-            for k in ("ID","Nombre","Modificaciones estatutarias","Sociedad unipersonal","Extinción","Disolución","Cambio de identidad del socio único","Nombramientos","Ceses/Dimisiones","Revocaciones","Reducción de capital","Datos registrales"):
+            for k in CSV_HEADERS:
                 if self.csvline.has_key(k):
                     line += self.csvline[k]
                 line += '\n'
