@@ -31,7 +31,7 @@ class CSV4LBCommonParser(LBCommonParser):
         tr2_ = trozo.replace('\n', ' ').replace('  ', ' ')
         self.logger.debug(tr2_)
 
-        m = re.match('^(\d+) - (.*)\.\s*' + RE_ALL_KEYWORDS_NG, tr2_)
+        m = re.match('^(\d+) - (.*?)\.\s*' + RE_ALL_KEYWORDS_NG, tr2_)
 
         self.save_field(('ID', m.group(1)))
         self.save_field(('Nombre', m.group(2)))
@@ -47,6 +47,10 @@ class CSV4LBCommonParser(LBCommonParser):
 
         for match in re.finditer(RE_NOARG_KEYWORDS + '\.', tr2_):
             self.save_field((match.group(1), 'X'))
+
+
+def usage():
+    print "Usage: %s [-c|-v] <IN:directory|file> [OUT:directory|file]" % sys.argv[0]
 
 
 if __name__ == '__main__':

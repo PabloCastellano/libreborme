@@ -35,10 +35,9 @@ class LBCommonParser():
     LOGFILE = 'foo.log'
     DEFAULT_OUT_DIR = 'tmp'
     REWRITE = False  # Allows resuming
-    CSV = True
     NAME = '2'
 
-    def __init__(self, _level=logging.INFO):
+    def __init__(self, _level=logging.INFO, output_csv=False):
         # Logs warnings, errors and criticals to stdout and file
         logging.basicConfig(filename=self.LOGFILE, level=_level, format='%(name)s: %(asctime)s %(message)s', datefmt='%Y-%m-%d %I:%M')
         self.logger = logging.getLogger("csvBORME")  # name
@@ -49,6 +48,7 @@ class LBCommonParser():
 
         self.results = {'error': 0, 'skip': 0, 'ok': 0, 'warning': 0}
         self.csvline = {}
+        self.CSV = output_csv
 
     def parse_line(self, filenameIn, filenameOut):
         raise NotImplementedError
@@ -198,9 +198,6 @@ class LBCommonParser():
             self.logger.info('  Errors: %d (see %s for more information).' % (self.results['error'], self.LOGFILE))
         else:
             self.logger.info('  Errors: %d' % self.results['error'])
-
-    def usage(self):
-        print "Usage: %s <directory|file> [directory|file]" % sys.argv[0]
 
     def main(self, argv):
         self.start_time = time.time()
