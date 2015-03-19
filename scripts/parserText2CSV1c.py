@@ -10,8 +10,8 @@ class CSV1LBCommonParser(LBCommonParser):
 
     LOGFILE = 'bormecsv.log'
     DEFAULT_OUT_DIR = 'csv'
-    REWRITE = False  # Allows resuming
-    CSV = True
+    REWRITE = True  # Allows resuming
+    CSV = False
     NAME = '1c'
 
     def parse_line(self, trozo):

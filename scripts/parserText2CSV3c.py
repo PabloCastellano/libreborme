@@ -3,6 +3,7 @@
 
 import re
 import sys
+import logging
 
 from common import LBCommonParser
 
@@ -62,6 +63,7 @@ if __name__ == '__main__':
         usage()
         sys.exit(-1)
 
-    parser = CSV3LBCommonParser()
+    parser = CSV3LBCommonParser(logging.DEBUG)
+    #parser = CSV3LBCommonParser()
     parser.main(sys.argv)
     parser.show_stats()
