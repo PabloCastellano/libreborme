@@ -7,10 +7,16 @@ import logging
 
 from common import *
 
-RE_OR_KEYWORDS = '(' + '|'.join(ALL_KEYWORDS) + ')'
-RE_NOR_KEYWORDS = '(?:' + '|'.join(ALL_KEYWORDS) + '|' + '|'.join(ALL_KEYWORDS2) + ')'
+# OR de las palabras clave con argumentos
+RE_ARG_KEYWORDS = '(%s)' % '|'.join(ARG_KEYWORDS)
+# OR de todas las palabras clave, "non grouping"
+RE_ALL_KEYWORDS_NG = '(?:%s|%s|%s|%s)' % ('|'.join(ARG_KEYWORDS), '|'.join(COLON_KEYWORDS), '|'.join(NOARG_KEYWORDS), ENDING_KEYWORD[0])
+# OR de las palabras clave sin argumentos
+RE_NOARG_KEYWORDS = '(%s)' % '|'.join(NOARG_KEYWORDS)
+# OR de las palabras clave con argumentos seguidas por :
+RE_COLON_KEYWORDS = '(%s)' % '|'.join(COLON_KEYWORDS)
+RE_ENDING_KEYWORD = '(%s)' % ENDING_KEYWORD[0]
 
-RE_OR_KEYWORDS2 = '(' + '|'.join(ALL_KEYWORDS2) + ')'
 
 class CSV4LBCommonParser(LBCommonParser):
 
@@ -18,49 +24,29 @@ class CSV4LBCommonParser(LBCommonParser):
     DEFAULT_OUT_DIR = 'csv'
     REWRITE = True  # Allows resuming
     CSV = False
-    NAME = '3c'
+    NAME = '4c'
 
     def parse_line(self, trozo):
 
-        m = re.match('(\d+) - (.*)\.\n', trozo)
+        tr2_ = trozo.replace('\n', ' ').replace('  ', ' ')
+        self.logger.debug(tr2_)
+
+        m = re.match('^(\d+) - (.*)\.\s*' + RE_ALL_KEYWORDS_NG, tr2_)
 
         self.save_field(('ID', m.group(1)))
         self.save_field(('Nombre', m.group(2)))
 
-        tr2 = trozo.split('\n')[1:]
-        tr2_ = ' '.join(tr2)
-        tr2_ = tr2_.replace('\n', ' ')
-        tr2_ = tr2_.replace('  ', ' ')
-        self.logger.debug(tr2_)
+        for match in re.finditer('(?=' + RE_ARG_KEYWORDS + '\.\s+(.*?)\.\s*' + RE_ALL_KEYWORDS_NG + ')', tr2_):
+            self.save_field((match.group(1), match.group(2)))
 
-        # TODO
-        """
-line = 'bla bla bla<form>Form 1</form> some text...<form>Form 2</form> more text?'
-for match in re.finditer('<form>(.*?)</form>', line, re.S):
-    print match.group(1)
-        """
+        for match in re.finditer(RE_COLON_KEYWORDS + ':\s+(.*?)\.\s*' + RE_ALL_KEYWORDS_NG, tr2_):
+            self.save_field((match.group(1), match.group(2)))
 
-        m = re.findall('(?=' + RE_OR_KEYWORDS + '\.\s+(.*?)\.\s*' + RE_NOR_KEYWORDS + ')', tr2_)
+        for match in re.finditer(RE_ENDING_KEYWORD + '\.\s+(.*)\.\s*', tr2_):
+            self.save_field((match.group(1), match.group(2)))
 
-        if m != []:
-            for algo in m:
-                self.save_field(algo)
-
-        m = re.findall('(Cambio de identidad del socio único|Fe de erratas|Socio único):\s+(.*?)\.\s*' + RE_NOR_KEYWORDS, tr2_)
-
-        if m != []:
-            for algo in m:
-                self.save_field(algo)
-
-        m = re.findall('(Datos registrales)\.\s+(.*)\.\s*', tr2_)
-        if m != []:
-            for algo in m:
-                self.save_field(algo)
-
-        m = re.findall(RE_OR_KEYWORDS2 + '\.', tr2_)
-        if m != []:
-            for algo in m:
-                self.save_field((algo, 'X'))
+        for match in re.finditer(RE_NOARG_KEYWORDS + '\.', tr2_):
+            self.save_field((match.group(1), 'X'))
 
 
 if __name__ == '__main__':
@@ -69,6 +55,7 @@ if __name__ == '__main__':
         usage()
         sys.exit(-1)
 
+    #parser = CSV4LBCommonParser(logging.DEBUG)
     parser = CSV4LBCommonParser()
     parser.main(sys.argv)
     parser.show_stats()

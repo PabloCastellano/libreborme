@@ -3,24 +3,32 @@
 
 import logging
 import os
-import re
 import sys
 import time
 
 
-# Keywords with arguments
-ALL_KEYWORDS = ['Nombramientos', 'Revocaciones', 'Ceses/Dimisiones', 'Modificaciones estatutarias', 'Cambio de objeto social',
-                'Cambio de denominación social', 'Cambio de domicilio social', 'Ampliacion del objeto social', 'Fe de erratas',
-                'Cambio de identidad del socio único', 'Sociedad unipersonal', 'Disolución', 'Reelecciones', 'Constitución',
-                'Articulo 378.5 del Reglamento del Registro Mercantil',
-                'Ampliación de capital', 'Reducción de capital', 'Situación concursal', 'Socio único', 'Datos registrales']
+# Palabras clave con argumentos
+ARG_KEYWORDS = ['Nombramientos', 'Revocaciones', 'Ceses/Dimisiones', 'Modificaciones estatutarias', 'Cambio de objeto social',
+                'Cambio de denominación social', 'Cambio de domicilio social', 'Ampliacion del objeto social'
+                'Sociedad unipersonal', 'Disolución', 'Reelecciones', 'Constitución',
+                'Articulo 378.5 del Reglamento del Registro Mercantil', 'Otros conceptos',
+                'Ampliación de capital', 'Reducción de capital', 'Situación concursal']
 
-# Single keywords
-ALL_KEYWORDS2 = ['Sociedad unipersonal', 'Extinción', 'Declaración de unipersonalidad']
+# Palabras clave sin argumentos
+NOARG_KEYWORDS = ['Sociedad unipersonal', 'Extinción', 'Declaración de unipersonalidad']
+
+# Palabras clave seguidas por :
+COLON_KEYWORDS = ['Cambio de identidad del socio único', 'Fe de erratas', 'Socio único']
+
+# Palabra clave
+ENDING_KEYWORD = ['Datos registrales']
 
 CSV_HEADERS = ['ID', 'Nombre']
-CSV_HEADERS.extend(ALL_KEYWORDS2)
-CSV_HEADERS.extend(ALL_KEYWORDS)
+CSV_HEADERS.extend(NOARG_KEYWORDS)
+CSV_HEADERS.extend(COLON_KEYWORDS)
+CSV_HEADERS.extend(ARG_KEYWORDS)
+CSV_HEADERS.extend(ENDING_KEYWORD)
+
 
 # Simplemente implementa parse_line
 class LBCommonParser():
@@ -39,13 +47,11 @@ class LBCommonParser():
         h1.setLevel(_level)
         self.logger.addHandler(h1)
 
-        self.results = {'error': 0, 'skip': 0, 'ok': 0}
+        self.results = {'error': 0, 'skip': 0, 'ok': 0, 'warning': 0}
         self.csvline = {}
-
 
     def parse_line(self, filenameIn, filenameOut):
         raise NotImplementedError
-
 
     def parse_file(self, filenameIn, filenameOut):
         """
@@ -78,11 +84,18 @@ class LBCommonParser():
             self.csvline = {}
             trozo += '.'
 
-            self.parse_line(trozo)
+            try:
+                self.parse_line(trozo)
 
-            self.logger.debug('###########')
-            self.print_line(outfp)
-            self.logger.debug('###########')
+                self.logger.debug('###########')
+                self.print_line(outfp)
+                self.logger.debug('###########')
+            except:
+                self.logger.warning('###########')
+                self.logger.warning('SKIPPING. Invalid data found:')
+                self.logger.warning(trozo)
+                self.logger.warning('###########')
+                self.results['warning'] += 1
 
         outfp.close()
         return True
@@ -106,7 +119,7 @@ class LBCommonParser():
                 filenameOut = "%s.%s.plain" % (f, self.NAME)
             filenameOut = os.path.join(dirOut, filenameOut)
 
-            self.logger.info("[%d/%d] Writing %s", (i + 1, total, filenameOut))
+            self.logger.info("[%d/%d] Writing %s", i + 1, total, filenameOut)
             filename = os.path.join(dirIn, f)
             try:
                 res = self.parse_file(filename, filenameOut)
@@ -121,17 +134,15 @@ class LBCommonParser():
                 self.logger.exception("Error processing file %s", filename)
                 self.results['error'] += 1
 
-
     def save_field(self, content):
         self.logger.debug('Guardando %s', content)
 
         self.csvline[content[0]] = content[1]
 
-        if not self.csvline.has_key('total'):
+        if not 'total' in self.csvline:
             self.csvline['total'] = 1
         else:
             self.csvline['total'] += 1
-
 
     def print_header(self, outfp):
         line = ""
@@ -146,7 +157,6 @@ class LBCommonParser():
         self.logger.debug(line)
         outfp.write(line)
 
-
     def print_line(self, outfp):
         self.logger.debug('Keys: %s total: %d', self.csvline.keys(), self.csvline['total'])
         self.logger.debug('%s', self.csvline)
@@ -155,26 +165,26 @@ class LBCommonParser():
         if self.CSV:
             # print CSV-friendly
             for k in CSV_HEADERS:
-                if self.csvline.has_key(k):
+                if k in self.csvline:
                     content = '"' + self.csvline[k].replace('"', '\\"') + '"'
                     line += content
                 line += ','
             line = line[:-1] + '\n'
         else:
             for k in CSV_HEADERS:
-                if self.csvline.has_key(k):
+                if k in self.csvline:
                     line += self.csvline[k]
                 line += '\n'
             line += '----------------------------------------------------------\n'
         self.logger.debug(line)
         outfp.write(line)
 
-
     def show_stats(self):
         elapsed_time = time.time() - self.start_time
         self.logger.info('\nElapsed time: %.2f seconds' % elapsed_time)
         self.logger.info('Results:')
         self.logger.info('  Parsed: %d' % self.results['ok'])
+        self.logger.info('  Warning: %d' % self.results['warning'])
         self.logger.info('  Skipped: %d' % self.results['skip'])
 
         if self.results['error'] > 0:
@@ -182,10 +192,8 @@ class LBCommonParser():
         else:
             self.logger.info('  Errors: %d' % self.results['error'])
 
-
     def usage(self):
         print "Usage: %s <directory|file> [directory|file]" % sys.argv[0]
-
 
     def main(self, argv):
         self.start_time = time.time()
