@@ -3,23 +3,21 @@ from borme.models import Company
 
 class Command(BaseCommand):
     args = '<company name or slug ...>'
-    help = 'Shows info about a company'
+    help = 'Find a company and show its information'
 
     def handle(self, *args, **options):
         for company_name in args:
-            try:
-                companies = Company.objects.filter(name__contains=company_name)
-            except Company.DoesNotExist:
-                try:
-                    companies = Company.objects.filter(slug__constains=company_name)
-                except Company.DoesNotExist:
-                   raise CommandError('Company "%s" does not exist' % company_name)
 
-            print 'Found %d ocurrences with keyword "%s"' % (len(companies), company_name)
+            companies = Company.objects.filter(name__icontains=company_name)
+            if not companies:
+                companies = Company.objects.filter(slug__contains=company_name)
+
             for company in companies:
                 print 'Name:', company.name
+                print 'Slug:', company.slug
                 print 'Date:', company.date_creation
                 print 'Active:', company.is_active
                 print
 
-            self.stdout.write('Successful operation!')
+            print 'Found %d ocurrences with keyword "%s"' % (len(companies), company_name)
+            print

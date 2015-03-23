@@ -16,8 +16,7 @@ class Command(BaseCommand):
                    raise CommandError('Company "%s" does not exist' % company_name)
 
             print 'Name:', company.name
+            print 'Slug:', company.slug
             print 'Date:', company.date_creation
             print 'Active:', company.is_active
             print
-
-            self.stdout.write('Successful operation!')
