@@ -1,0 +1,28 @@
+body {
+  padding-top: 0px;
+}
+
+.footer {
+  padding-top: 20px;
+  padding-bottom: 10px;
+  margin-top: 40px;
+  border-top: 1px solid #eee;
+}
+
+.container {
+
+}
+
+.header1 {
+  background-color: #EEE;	
+}
+
+.jumbotron {
+  padding-top: 20px;
+  background-color: #EEE;
+}
+
+.jumbotron .btn {
+  padding: 14px 24px;
+  font-size: 21px;
+}
