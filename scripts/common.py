@@ -5,23 +5,47 @@ import logging
 import os
 import sys
 import time
+import unicodedata
+
+
+def remove_accents(str):
+    return ''.join((c for c in unicodedata.normalize('NFKD', unicode(str, 'utf-8')) if unicodedata.category(c) != 'Mn'))
 
 
 # Palabras clave con argumentos
 ARG_KEYWORDS = ['Nombramientos', 'Revocaciones', 'Ceses/Dimisiones', 'Modificaciones estatutarias', 'Cambio de objeto social',
-                'Cambio de denominación social', 'Cambio de domicilio social', 'Ampliacion del objeto social'
+                'Cambio de denominación social', 'Cambio de domicilio social', 'Ampliacion del objeto social',
                 'Sociedad unipersonal', 'Disolución', 'Reelecciones', 'Constitución',
                 'Articulo 378.5 del Reglamento del Registro Mercantil', 'Otros conceptos',
-                'Ampliación de capital', 'Reducción de capital', 'Situación concursal']
+                'Ampliación de capital', 'Reducción de capital', 'Situación concursal', 'Fusión por absorción',
+                'Suspensión de pagos', 'Transformación de sociedad', 'Cancelaciones de oficio de nombramientos']
 
 # Palabras clave sin argumentos
-NOARG_KEYWORDS = ['Sociedad unipersonal', 'Extinción', 'Declaración de unipersonalidad']
+NOARG_KEYWORDS = ['Sociedad unipersonal', 'Extinción', 'Declaración de unipersonalidad',
+                  'Pérdida del caracter de unipersonalidad', 'Reapertura hoja registral',
+                  'Adaptación Ley 2/95',
+                  'Cierre provisional hoja registral por baja en el índice de Entidades Jurídicas']
 
 # Palabras clave seguidas por :
 COLON_KEYWORDS = ['Cambio de identidad del socio único', 'Fe de erratas', 'Socio único']
 
 # Palabra clave
 ENDING_KEYWORD = ['Datos registrales']
+
+ALL_KEYWORDS = ARG_KEYWORDS + NOARG_KEYWORDS + COLON_KEYWORDS + ENDING_KEYWORD
+
+DICT_KEYWORDS = {kw: remove_accents(kw).replace(' del ', ' ').replace(' por ', ' ').replace(' de ', ' ')\
+                .replace(' ', '_').replace('/', '_').replace('.', '_').lower() for kw in ALL_KEYWORDS}
+"""
+>>> DICT_KEYWORDS.values()
+[u'revocaciones', u'cambio_objeto_social', u'reelecciones', u'otros_conceptos', u'fe_erratas', u'sociedad_unipersonal', u'declaracion_unipersonalidad', u'constitucion', u'suspension_pagos', u'
+perdida_caracter_unipersonalidad', u'cancelaciones_oficio_nombramientos', u'datos_registrales', u'cambio_domicilio_social', u'disolucion', u'ampliacion_objeto_social', u'cierre_provisional_hoj
+a_registral_baja_en_el_indice_entidades_juridicas', u'ceses_dimisiones', u'nombramientos', u'situacion_concursal', u'modificaciones_estatutarias', u'ampliacion_capital', u'adaptacion_ley_2_95'
+, u'cambio_denominacion_social', u'extincion', u'reduccion_capital', u'cambio_identidad_socio_unico', u'transformacion_sociedad', u'reapertura_hoja_registral', u'socio_unico', u'articulo_378_5
+_reglamento_registro_mercantil', u'fusion_absorcion']
+"""
+
+CARGOS_KEYWORD = ['Consejero', 'Presidente', 'Vicepresid', 'Secretario', 'Cons.Del.Man', 'Adm. Unico']
 
 CSV_HEADERS = ['ID', 'Nombre']
 CSV_HEADERS.extend(NOARG_KEYWORDS)
