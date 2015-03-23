@@ -2,4 +2,11 @@
 *~
 
 /db.sqlite3
-/ve
+
+/scripts/xml
+/scripts/pdf
+/scripts/pdfcrop
+/scripts/txt
+/scripts/txt2
+/scripts/csv
+/scripts/*.log
