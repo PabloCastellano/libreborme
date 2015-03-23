@@ -16,7 +16,6 @@ Instalación
     pip install -r requirements.txt
     ./manage.py syncdb
     ./manage.py migrate?
-    ./manage.py loaddata borme/fixtures/actos.json
     ./manage.py loaddata libreborme/fixtures/users.json
 
 Por defecto crea la cuenta `admin` con la contraseña `0000`.
