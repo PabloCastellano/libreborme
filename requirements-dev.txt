@@ -1,0 +1,5 @@
+Pygments==2.0.2
+blessings==1.6
+bpython==0.14.1
+curtsies==0.1.19
+greenlet==0.4.5

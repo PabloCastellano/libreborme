@@ -20,6 +20,12 @@ Instalación
 
 Por defecto crea la cuenta `admin` con la contraseña `0000`.
 
+
+Opcional
+--------
+
+    echo "alias libreborme='workon libreborme && cd /home/pablo/src/libreborme && ./manage.py runserver --settings=libreborme.cal_settings'" >> ~/.bash_aliases
+
 Ejecución
 ---------
 
