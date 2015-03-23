@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
+from mongoengine import connect
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -36,8 +36,17 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #mongoengine.django.mongo_auth,
     'borme',
+    'mongogeneric',
+    'mongodbforms',
 )
+
+if DEBUG:
+    INSTALLED_APPS += (
+        'debug_toolbar',
+        'mongonaut',
+    )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -47,6 +56,12 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+if DEBUG:
+    MIDDLEWARE_CLASSES += (
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    )
+
 
 ROOT_URLCONF = 'libreborme.urls'
 
@@ -62,6 +77,18 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+MONGO_DBNAME = 'libreborme'
+MONGODB = connect(MONGO_DBNAME)
+
+""""
+AUTHENTICATION_BACKENDS = (
+    'mongoengine.django.auth.MongoEngineBackend',
+)
+
+SESSION_ENGINE = 'mongoengine.django.sessions'
+MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
+"""
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

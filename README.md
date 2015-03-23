@@ -11,6 +11,7 @@ Instalación
     git clone https://github.com/PabloCastellano/libreborme.git
     cd libreborme
     mkvirtualenv libreborme
+    sudo apt-get install mongodb
     sudo apt-get install libxml2-dev libxslt1-dev python-dev
     pip install -r requirements.txt
     ./manage.py syncdb
