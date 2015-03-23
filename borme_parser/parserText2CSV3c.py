@@ -5,7 +5,7 @@ import re
 import sys
 import logging
 
-from common import LBCommonParser
+from borme_parser import LBCommonParser
 
 ALL_KEYWORDS = ['Reelecciones', 'Declaración de unipersonalidad', 'Nombramientos', 'Revocaciones', 'Ceses/Dimisiones',
                 'Constitución', 'Datos registrales', 'Modificaciones estatutarias', 'Cambio de objeto social',

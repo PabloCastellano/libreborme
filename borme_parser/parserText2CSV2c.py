@@ -4,7 +4,7 @@
 import re
 import sys
 
-from common import LBCommonParser
+from borme_parser import LBCommonParser
 
 ALL_KEYWORDS = ['Reelecciones', 'Declaración de unipersonalidad', 'Nombramientos', 'Revocaciones', 'Ceses/Dimisiones',
                 'Constitución', 'Datos registrales', 'Modificaciones estatutarias', 'Cambio de objeto social',
@@ -21,7 +21,7 @@ class CSV2LBCommonParser(LBCommonParser):
     REWRITE = True  # Allows resuming
     CSV = False
     NAME = '2c'
-    
+
     def parse_line(self, trozo):
         # ['Modificaciones estatutarias.  Modificaci\xc3\xb3n del art. 27\xc2\xba de los estatutos en orden a la retribuci\xc3\xb3n del \xc3\xb3rgano de administraci\xc3\xb3n.- .', 'Datos registrales. T 2579 , F 215, S 8, H PM 74389, I/A 2 (22.01.15)']
         tr2 = trozo.split('\n')[1:]

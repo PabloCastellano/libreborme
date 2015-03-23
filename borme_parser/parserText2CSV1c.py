@@ -4,7 +4,7 @@
 import re
 import sys
 
-from common import LBCommonParser
+from borme_parser import LBCommonParser
 
 class CSV1LBCommonParser(LBCommonParser):
 

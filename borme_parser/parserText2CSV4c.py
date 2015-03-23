@@ -6,7 +6,7 @@ import sys
 import logging
 import getopt
 
-from common import *
+from borme_parser import *
 
 # OR de las palabras clave con argumentos
 RE_ARG_KEYWORDS = '(%s)' % '|'.join(ARG_KEYWORDS)
