@@ -33,4 +33,6 @@ Comandos
     ./manage.py companyinfo "SOCIEDAD ESTATAL CORREOS Y TELEGRAFOS SA"
     ./manage.py companyinfo sociedad-estatal-correos-y-telegrafos
     ./manage.py findcompany correos asd
+    ./manage.py importbormecsv borme_parser/csv/BORME-A-2014-196-14.pdf-cropped.pdf.1.txt.clean.txt.4c.csv
+    ./manage.py importbormecsv borme_parser/csv/*.csv
 
