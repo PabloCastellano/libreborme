@@ -1,0 +1,13 @@
+{% extends "borme/base.html" %}
+
+{% block content %}
+    <h2>Personas</h2>
+    <ul>
+        {% for person in people %}
+            <li><a href="{% url "borme-persona" person.slug %}">{{ person.name }}</a></li>
+            <!-- <li><a href="{{ company.get_absolute_url }}">{{ company.name }}</a></li> -->
+        {% empty %}
+            <i>No hay personas todavía.</i>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'borme/base.html' %}
+
+{% block content %}
+  Datos totales:
+<ul>
+  <li><strong>{{ total_companies }}</strong> empresas</li>
+  <li><strong>{{ total_people }}</strong> personas</li>
+  <li><strong>{{ total_regs }}</strong> registros</li>
+  <li>Última actualización: <strong>13/13/13</strong></li>
+</ul>
+
+Ejemplos de empresas:
+<ul>
+    <li>MERCADONA SA</li>
+    <li>PC COMPONENTES Y MULTIMEDIA SL</li>
+    <li>CAJA DE RESISTENCIA MOTIVA 2 PRODUCCIONES SL</li>
+    {% for company in random_companies %}
+    <li><a href="/b/empresa/{{ company.slug }}">{{company}}</a></li>
+    {% endfor %}
+</ul>
+
+Ejemplos de personas:
+<ul>
+    <li>Roig Alfonso Juan Jose</li>
+    <li>Monedero Fernandez Juan Carlos</li>
+</ul>
+
+<div class="row">
+
+  <div class="col-lg-4">
+    <h2>Historia</h2>
+    <p>LibreBORME nace en 2014 como Proyecto de Fin de Carrera de un estudiante cotutorizado por la Universidad de Málaga y <a href="http://www.civio.es/">Fundación Ciudadana Civio</a>.</p>
+    <p><a class="btn btn-primary" href="#" role="button">Quiero saber más »</a></p>
+  </div>
+
+  <div class="col-lg-4">
+    <h2>¡Comienza a usarlo!</h2>
+    <p>LibreBORME te permite hacer búsquedas por nombres de empresas, NIF, administradores, etc. y filtrar por tipo de sociedad, fechas...</p>
+    <p>¿Quieres saber quién usa LibreBORME?</p>
+    <p><a class="btn btn-primary" href="#" role="button">¿Quién lo usa? »</a></p>
+  </div>
+
+  <div class="col-lg-4">
+    <h2>Desarrolladores</h2>
+    <p>LibreBORME es software libre y su código fuente está accesible en <a href="https://github.com/PabloCastellano/libreborme">GitHub</a> bajo la licencia <a href="https://www.gnu.org/licenses/agpl-3.0.html">Affero GPL v3</a>.</p>
+    <p>LibreBORME cuenta con una <strong>API</strong> que hace posible integrar sus datos en aplicaciones y webs externas.</p>
+    <p><a class="btn btn-primary" href="#" role="button">Ver detalles »</a></p>
+  </div>
+
+</div>
+{% endblock %}

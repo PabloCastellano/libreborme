@@ -1,0 +1,13 @@
+{% extends "borme/base.html" %}
+
+{% block content %}
+    <h2>Companies</h2>
+    <ul>
+        {% for company in companies %}
+            <li><a href="{% url "borme-empresa" company.slug %}">{{ company.name }}</a></li>
+            <!-- <li><a href="{{ company.get_absolute_url }}">{{ company.name }}</a></li> -->
+        {% empty %}
+            <i>No hay empresas todavía.</i>
+        {% endfor %}
+    </ul>
+{% endblock %}

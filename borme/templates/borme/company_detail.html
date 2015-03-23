@@ -1,0 +1,31 @@
+{% extends "borme/base.html" %}
+
+{% load utils %}
+
+{% block content %}
+    <h2>Company {{ company.name }}</h2>
+    <h3>Data</h3>
+
+    NIF: {{ company.nif }}
+    <br/>
+    Date creation: {{ company.date_creation|date }}
+    <br/>
+    Date creation 2: {{ company.date_creation }}
+    <br/>
+    Active: {{ company.is_active }}
+
+    <h3>Actos</h3>
+    <ul>
+        {% for registro in registros %}
+            <li>Acto {{ registro.id_acto }} en BORME <i>{{ registro.borme }}</i> con fecha <i>{{ registro.date }}</i>.</li>
+
+            {% for attr in registro %}
+            {% if registro|get_item:attr %}
+            <strong>{{ attr }}:</strong> {{ registro|get_item:attr }}</br>
+            {% endif %}
+            {% endfor %}
+        {% empty %}
+            <i>No hay actos registrados.</i>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="libreborme, borme, registro mercantil, opendata">
+  <meta name="author" content="Pablo Castellano">
+  {% load staticfiles %}
+  <link rel="icon" href="{% static "favicon.ico" %}">
+
+  <title>{% block title %}LibreBORME{% endblock %}</title>
+
+  <link href="{% static "bootstrap.css" %}" rel="stylesheet">
+  <link href="{% static "libreborme.css" %}" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="header1">
+<div class="row">
+
+  <form class="navbar-form navbar-left" role="search">
+  <img src="{% static "logo.png" %}">
+  <span class="glyphicon glyphicon-search"></span>
+  	<div class="form-group">
+    	<input type="text" class="form-control" placeholder="Nombre de empresa o persona">
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</div>
+</div>
+
+
+  <div class="container">
+
+    {% block content %}{% endblock %}
+
+    <div class="footer">
+    <div class="row">
+    	<div class="col-lg-3">
+      <p>© Desarrolladores de LibreBORME 2014-2015</p>
+      	</div>
+      	<div class="col-lg-3">
+      <img src="{% static "agplv3-155x51.png" %}">
+      <img src="{% static "od_80x15_blue.png" %}">
+      </div>
+    </div>
+    </div>
+
+  </div> <!-- /container -->
+
+</body></html>
