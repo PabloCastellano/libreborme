@@ -4,6 +4,7 @@
 import re
 import sys
 import logging
+import getopt
 
 from common import *
 
@@ -17,6 +18,13 @@ RE_NOARG_KEYWORDS = '(%s)' % '|'.join(NOARG_KEYWORDS)
 RE_COLON_KEYWORDS = '(%s)' % '|'.join(COLON_KEYWORDS)
 RE_ENDING_KEYWORD = '(%s)' % ENDING_KEYWORD[0]
 
+# Cargos
+"""
+RE_CARGOS_KEYWORD = '(%s)' % '|'.join(CARGOS_KEYWORD)
+RE_CARGOS_KEYWORD_NG = '(?:\.\s*%s|$)' % '|'.join(RE_CARGOS_KEYWORD) # MAL, FIX, pero funciona RE_...
+for match in re.finditer(RE_CARGOS_KEYWORD + ':\s+(.*?)' + RE_CARGOS_KEYWORD_NG, str1):
+    print match.group(1), match.group(2)
+"""
 
 class CSV4LBCommonParser(LBCommonParser):
 
@@ -55,11 +63,33 @@ def usage():
 
 if __name__ == '__main__':
 
+    """
+    try:
+        (options, arguments) = getopt.getopt(sys.argv[1:], "cv", ['version'])
+    except getopt.GetoptError, msg:
+        usage()
+        sys.exit(-1)
+    """
+
     if len(sys.argv) == 1:
         usage()
         sys.exit(-1)
 
+    logging_level = logging.INFO
+    csv_format = True
+
+    """
+    for (switch, val) in options:
+        if switch == '-v':
+            logging_level = logging.DEBUG
+        elif switch == '-c':
+            csv_format = True
+        elif switch == '--version':
+            print "parser v0.4"
+            sys.exit(0)
+    """
+
     #parser = CSV4LBCommonParser(logging.DEBUG)
-    parser = CSV4LBCommonParser()
+    parser = CSV4LBCommonParser(logging_level, csv_format)
     parser.main(sys.argv)
     parser.show_stats()
