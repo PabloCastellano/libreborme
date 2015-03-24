@@ -14,6 +14,8 @@ STATICFILES_FINDERS = (
     #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
+STATIC_ROOT = '/home/libreborme/static'
+
 TEMPLATE_DIRS = (
     '/home/libreborme/libreborme/libreborme/templates/',
     '/home/libreborme/libreborme/borme/templates/',
