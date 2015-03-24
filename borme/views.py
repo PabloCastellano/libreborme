@@ -18,6 +18,7 @@ class HomeView(TemplateView):
         context['total_regs'] = Acto.objects.count()
         # FIXME: en mongodb esto no es random:
         context['random_companies'] = Company.objects.all().order_by('?')[:5]
+        context['random_persons'] = Person.objects.all().order_by('?')[:5]
         return context
 
 
