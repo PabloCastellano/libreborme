@@ -1,14 +1,17 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import requests
 import time
 import os
 import datetime
 import sys
+import logging
 
-# Falla https
-#URL = "https://www.boe.es/diario_borme/xml.php?id=BORME-S-"
-URL = "http://www.boe.es/diario_borme/xml.php?id=BORME-S-"
+from borme_parser import get_borme_filename_xml, get_borme_xml_url, download_url
+
+start_time = time.time()
+
 
 #>>> datetime.date(2014, 10, 2) - datetime.date(2001, 01, 02)
 #datetime.timedelta(5021)
@@ -16,32 +19,42 @@ URL = "http://www.boe.es/diario_borme/xml.php?id=BORME-S-"
 # Total real: 18 min, 199MB
 
 #start: 20010102
-
-
-
 # time elapsed
 # bytes downloaded
 
 
-def download_url(url):
-    filename = "BORME-S-" + day.strftime('%Y%m%d') + ".xml"
-    filename = os.path.join('xml', filename)
+LOGFILE = 'downloadxml.log'
+LOGLEVEL = logging.INFO
 
-    if os.path.exists(filename):
-        print filename, 'already exists. Skipped.'
-        return False
+logging.basicConfig(filename=LOGFILE, level=LOGLEVEL, format='%(name)s: %(asctime)s %(message)s', datefmt='%Y-%m-%d %I:%M')
+logger = logging.getLogger(__name__)
 
-    print url, '->', filename,
-    r = requests.get(url, stream=True)
+h1 = logging.StreamHandler(sys.stdout)
+h1.setLevel(LOGLEVEL)
+logger.addHandler(h1)
 
-    cl = r.headers.get('content-length')
-    print "%.2f KB" % (int(cl) / 1024.0)
+results = {'error': 0, 'skip': 0, 'ok': 0, 'warning': 0}
 
-    with open(filename, 'wb') as fd:
-        for chunk in r.iter_content(8192):
-            fd.write(chunk)
 
-    return True
+def download_pdf(day, end):
+    while day <= end:
+        url = get_borme_xml_url(day)
+        xml_filename = get_borme_filename_xml(day)
+        xml_filename = os.path.join('xml', xml_filename)
+        logger.info('%s -> %s' % (url, xml_filename))
+        try:
+            downloaded = download_url(url, xml_filename)
+            if downloaded:
+                results['ok'] += 1
+            else:
+                logger.debug('%s already exists. SKIP.' % xml_filename)
+                results['skip'] += 1
+        except requests.exceptions.ConnectionError:
+            logger.error('DOWNLOAD ERROR')
+            results['error'] += 1
+
+        day += datetime.timedelta(1)
+        #time.sleep(0.05)
 
 
 if __name__ == '__main__':
@@ -62,14 +75,18 @@ if __name__ == '__main__':
     else:
         end = datetime.date.today()
 
-    total_dl = 0
-    while day <= end:
-        fullurl = URL + day.strftime('%Y%m%d')
-        downloaded = download_url(fullurl)
-        if downloaded:
-            total_dl += 1
+    download_pdf(day, end)
 
-        day += datetime.timedelta(1)
-        time.sleep(0.05)
+    elapsed_time = time.time() - start_time
+    logger.info('End. Elapsed time: %s seconds. Downloaded %d files.' % (elapsed_time, results['ok']))
 
-    print '\nEnd. Total files downloaded:', total_dl
+    logger.info('\nElapsed time: %.2f seconds' % elapsed_time)
+    logger.info('Results:')
+    logger.info('  Downloaded: %d' % results['ok'])
+    logger.info('  Warning: %d' % results['warning'])
+    logger.info('  Skipped: %d' % results['skip'])
+
+    if results['error'] > 0:
+        logger.info('  Errors: %d (see %s for more information).' % (results['error'], LOGFILE))
+    else:
+        logger.info('  Errors: %d' % results['error'])

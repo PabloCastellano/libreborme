@@ -6,11 +6,14 @@ import os
 import sys
 import time
 import unicodedata
-
+import requests
 
 def remove_accents(str):
     return ''.join((c for c in unicodedata.normalize('NFKD', unicode(str, 'utf-8')) if unicodedata.category(c) != 'Mn'))
 
+# Falla https
+#BORME_XML_URL = "https://www.boe.es/diario_borme/xml.php?id=BORME-S-"
+BORME_XML_URL = "http://www.boe.es/diario_borme/xml.php?id=BORME-S-"
 
 # Palabras clave con argumentos
 ARG_KEYWORDS = ['Nombramientos', 'Revocaciones', 'Ceses/Dimisiones', 'Modificaciones estatutarias', 'Cambio de objeto social',
@@ -260,3 +263,26 @@ class LBCommonParser():
                 self.results['error'] += 1
         else:
             self.logger.error("File %s doesn't exist" % filenameIn)
+
+
+def get_borme_filename_xml(day):
+    return "BORME-S-" + day.strftime('%Y%m%d') + ".xml"
+
+
+def get_borme_xml_url(day):
+    return BORME_XML_URL + day.strftime('%Y%m%d')
+
+
+def download_url(url, filename):
+    if os.path.exists(filename):
+        return False
+
+    r = requests.get(url, stream=True)
+    cl = r.headers.get('content-length')
+    print "%.2f KB" % (int(cl) / 1024.0)
+
+    with open(filename, 'wb') as fd:
+        for chunk in r.iter_content(8192):
+            fd.write(chunk)
+
+    return True

@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import logging
 import os
 import sys
@@ -88,7 +90,6 @@ def parseFile(filenameIn, filenameOut):
 
 def usage():
     print "Usage: %s <directory|file> [directory|file]" % sys.argv[0]
-    sys.exit(-1)
 
 
 if __name__ == '__main__':
@@ -96,6 +97,7 @@ if __name__ == '__main__':
 
     if len(sys.argv) == 1:
         usage()
+        sys.exit(-1)
 
     filenameIn = sys.argv[1]
     if os.path.isdir(filenameIn):
