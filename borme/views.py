@@ -22,6 +22,18 @@ class HomeView(TemplateView):
         return context
 
 
+class BusquedaView(TemplateView):
+    template_name = "busqueda.html"
+
+    # TODO: paginar
+    def get_context_data(self, **kwargs):
+        context = super(BusquedaView, self).get_context_data(**kwargs)
+        if self.request.GET['q']:
+            context['companies'] = Company.objects.filter(name__icontains=self.request.GET['q'])
+            context['persons'] = Person.objects.filter(name__icontains=self.request.GET['q'])
+        return context
+
+
 class CompanyView(DetailView):
     model = Company
     context_object_name = 'company'
