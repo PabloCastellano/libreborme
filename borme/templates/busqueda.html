@@ -1,0 +1,24 @@
+{% extends 'borme/base.html' %}
+
+{% block content %}
+<h1>Datos encontrados</h1>
+
+<h2>Empresas:</h2>
+<ul>
+    {% for company in companies %}
+    <li><a href="/b/empresa/{{ company.slug }}">{{company}}</a></li>
+    {% empty %}
+    <i>No se encontraron empresas.</i>
+    {% endfor %}
+</ul>
+
+<h2>Personas:</h2>
+<ul>
+    {% for person in persons %}
+    <li><a href="/b/persona/{{ person.slug }}">{{ person }}</a></li>
+    {% empty %}
+    <i>No se encontraron personas.</i>
+    {% endfor %}
+</ul>
+
+{% endblock %}
