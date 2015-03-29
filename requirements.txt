@@ -1,6 +1,7 @@
 Django==1.7.7
 Fabric==1.10.1
 argparse==1.2.1
+django-bootstrap-static==3.3.4
 django-debug-toolbar==1.2.2
 django-mongonaut==0.2.21
 ecdsa==0.13
