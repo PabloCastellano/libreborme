@@ -1,6 +1,7 @@
 {% extends 'borme/base.html' %}
 
 {% block content %}
+{% if query %}
 <h1>Resultados de la búsqueda</h1>
 
 <p> {{ num_companies }} empresas y {{ num_persons }} personas.</p>
@@ -59,10 +60,47 @@
         {% if persons.has_next %}
             <i class="glyphicon glyphicon-chevron-right"></i>
             <a href="?q={{ query }}&page={{ persons.next_page_number }}">Siguiente</a>
-
         {% endif %}
     </span>
 </div>
 {% endif %}
+{% else %}
 
+<h1>Búsqueda avanzada</h1>
+
+  <div>
+  <form class="navbar-form" role="search" action="{% url "borme-search" %}" method="get">
+
+  <div class="form-group">
+    Nombre: <input type="text" class="form-control" size="32" name="q" placeholder="">
+    <input type="hidden" name="page" value="1">
+    </br>
+    Tipo:
+    <input type="radio" name="type" value="all" checked>Todos
+    <input type="radio" name="type" value="company"> Empresa
+    <input type="radio" name="type" value="person"> Persona
+    </br>
+    Años de actividad:
+    desde
+<select>
+  <option value="2007">2007</option>
+  <option value="2008">2008</option>
+  <option value="2009">2009</option>
+  <option value="2010">2010</option>
+</select>
+    hasta
+<select>
+  <option value="2007">2007</option>
+  <option value="2008">2008</option>
+  <option value="2009">2009</option>
+  <option value="2010">2010</option>
+</select>
+    </br>
+
+    <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"> Buscar</i></button>
+  </div>
+  </form>
+  </div>
+
+{% endif %}
 {% endblock %}

@@ -30,6 +30,7 @@
     <input type="text" class="form-control" size="32" name="q" placeholder="Buscar por nombre de empresa o persona">
     <input type="hidden" name="page" value="1">
     <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
+    <a href="{% url "borme-search" %}">Búsqueda avanzada</a>
   </div>
   </form>
 </div>
@@ -38,10 +39,10 @@
 
     <div class="footer">
     <div class="row">
-    	<div class="col-lg-3">
+	<div class="col-lg-4">
       <p>© Desarrolladores de LibreBORME 2014-2015</p>
       	</div>
-      	<div class="col-lg-3">
+	<div class="col-lg-4">
       <img src="{% static "agplv3-155x51.png" %}">
       <img src="{% static "od_80x15_blue.png" %}">
       </div>
