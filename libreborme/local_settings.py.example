@@ -30,3 +30,7 @@ SECRET_KEY = '41+h()yq5-!*=)sh+_%4wal8=+*e)dlrau*81odpu7n&9^7d5h'
 # stats
 PIWIK_URL = 'demo.piwik.org/'
 PIWIK_SITE_ID = '1'
+
+DEBUG = False
+TEMPLATE_DEBUG = False
+ALLOWED_HOSTS = ['.libreborme.net']
