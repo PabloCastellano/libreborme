@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 
 from models import Company, Person, Acto
 
+from random import randint
 
 class HomeView(TemplateView):
     template_name = "home.html"
@@ -14,11 +15,10 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         context['total_companies'] = Company.objects.count()
-        context['total_people'] = Person.objects.count()
+        context['total_persons'] = Person.objects.count()
         context['total_regs'] = Acto.objects.count()
-        # FIXME: en mongodb esto no es random:
-        context['random_companies'] = Company.objects.all().order_by('?')[:5]
-        context['random_persons'] = Person.objects.all().order_by('?')[:5]
+        context['random_companies'] = Company.objects.filter().limit(5).skip(randint(0, context['total_companies']))
+        context['random_persons'] = Person.objects.filter().limit(5).skip(randint(0, context['total_persons']))
         return context
 
 
