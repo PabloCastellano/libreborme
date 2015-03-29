@@ -31,6 +31,8 @@ class BusquedaView(TemplateView):
         if self.request.GET['q']:
             context['companies'] = Company.objects.filter(name__icontains=self.request.GET['q'])
             context['persons'] = Person.objects.filter(name__icontains=self.request.GET['q'])
+            context['num_persons'] = len(context['persons'])
+            context['num_companies'] = len(context['companies'])
         return context
 
 

@@ -1,8 +1,9 @@
 {% extends 'borme/base.html' %}
 
 {% block content %}
-<h1>Datos encontrados</h1>
+<h1>Resultados de la búsqueda</h1>
 
+<p> {{ num_companies }} empresas y {{ num_persons }} personas.</p>
 <h2>Empresas:</h2>
 <ul>
     {% for company in companies %}
