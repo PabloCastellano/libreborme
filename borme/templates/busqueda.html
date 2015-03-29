@@ -6,20 +6,63 @@
 <p> {{ num_companies }} empresas y {{ num_persons }} personas.</p>
 <h2>Empresas:</h2>
 <ul>
-    {% for company in companies %}
+    {% for company in companies.object_list %}
     <li><a href="/b/empresa/{{ company.slug }}">{{company}}</a></li>
     {% empty %}
     <i>No se encontraron empresas.</i>
     {% endfor %}
 </ul>
 
+{% if companies.object_list %}
+<div class="pagination">
+    <span class="step-links">
+        {% if companies.has_previous %}
+
+            <a href="?q={{ query }}&page={{ companies.previous_page_number }}">Anterior</a>
+            <i class="glyphicon glyphicon-chevron-left"></i>
+        {% endif %}
+
+        <span class="current">
+            Página {{ companies.number }} de {{ companies.paginator.num_pages }}.
+        </span>
+
+        {% if companies.has_next %}
+        <i class="glyphicon glyphicon-chevron-right"></i>
+            <a href="?q={{ query }}&page={{ companies.next_page_number }}">Siguiente</a>
+
+        {% endif %}
+    </span>
+</div>
+{% endif %}
+
 <h2>Personas:</h2>
 <ul>
-    {% for person in persons %}
+    {% for person in persons.object_list %}
     <li><a href="/b/persona/{{ person.slug }}">{{ person }}</a></li>
     {% empty %}
     <i>No se encontraron personas.</i>
     {% endfor %}
 </ul>
+
+{% if persons.object_list %}
+<div class="pagination">
+    <span class="step-links">
+        {% if persons.has_previous %}
+            <a href="?q={{ query }}&page={{ persons.previous_page_number }}">Anterior</a>
+            <i class="glyphicon glyphicon-chevron-left"></i>
+        {% endif %}
+
+        <span class="current">
+            Página {{ persons.number }} de {{ persons.paginator.num_pages }}.
+        </span>
+
+        {% if persons.has_next %}
+            <i class="glyphicon glyphicon-chevron-right"></i>
+            <a href="?q={{ query }}&page={{ persons.next_page_number }}">Siguiente</a>
+
+        {% endif %}
+    </span>
+</div>
+{% endif %}
 
 {% endblock %}

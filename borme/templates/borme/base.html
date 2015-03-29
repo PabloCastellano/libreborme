@@ -28,6 +28,7 @@
   <a href="{% url "borme-home" %}"><img src="{% static "logo.png" %}"></a>
   <div class="form-group">
     <input type="text" class="form-control" size="32" name="q" placeholder="Buscar por nombre de empresa o persona">
+    <input type="hidden" name="page" value="1">
     <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
   </div>
   </form>

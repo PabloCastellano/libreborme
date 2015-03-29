@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from mongogeneric.list import ListView
 from mongogeneric.detail import DetailView
 from django.views.generic import TemplateView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from models import Company, Person, Acto
 
@@ -25,14 +26,44 @@ class HomeView(TemplateView):
 class BusquedaView(TemplateView):
     template_name = "busqueda.html"
 
-    # TODO: paginar
     def get_context_data(self, **kwargs):
         context = super(BusquedaView, self).get_context_data(**kwargs)
-        if self.request.GET['q']:
-            context['companies'] = Company.objects.filter(name__icontains=self.request.GET['q'])
-            context['persons'] = Person.objects.filter(name__icontains=self.request.GET['q'])
-            context['num_persons'] = len(context['persons'])
-            context['num_companies'] = len(context['companies'])
+        if 'q' in self.request.GET:
+            page = self.request.GET.get('page', 1)
+            q_companies = Company.objects.filter(name__icontains=self.request.GET['q'])
+            companies = Paginator(q_companies, 25)
+            q_persons = Person.objects.filter(name__icontains=self.request.GET['q'])
+            persons = Paginator(q_persons, 25)
+
+            context['num_companies'] = persons.count
+            context['num_persons'] = companies.count
+            context['page'] = page
+            context['query'] = self.request.GET['q']
+
+            try:
+                context['companies'] = companies.page(page)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                context['companies'] = companies.page(1)
+                context['page'] = 1
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                context['companies'] = companies.page(companies.num_pages)
+
+            try:
+                context['persons'] = persons.page(page)
+            except PageNotAnInteger:
+                context['persons'] = persons.page(1)
+                context['page'] = 1
+            except EmptyPage:
+                context['persons'] = persons.page(persons.num_pages)
+
+        else:
+            context['num_companies'] = 0
+            context['num_persons'] = 0
+            context['companies'] = []
+            context['persons'] = []
+
         return context
 
 
@@ -48,18 +79,12 @@ class CompanyView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CompanyView, self).get_context_data(**kwargs)
-        from django.utils import timezone
-        context['now'] = timezone.now()
-        #print self.company
+
         try:
             context['registros'] = Acto.objects.filter(company=self.company[0].slug)
         except Acto.DoesNotExist:
             context['registros'] = ()
-        print context['registros']
-        for reg in context['registros']:
-            print reg.__dict__
-            print
-        # filter None
+
         return context
 
 
