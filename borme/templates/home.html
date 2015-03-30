@@ -17,12 +17,12 @@
       <div class="col-lg-5">
         <h2>Ejemplos de empresas</h2>
         <ul>
-            <li><a href="/b/empresa/el-corte-ingles-sa">EL CORTE INGLES SA</a></li>
-            <li><a href="/b/empresa/mercadona-sa">MERCADONA SA</a></li>
-            <li><a href="/b/empresa/pc-componentes-y-multimedia-sl">PC COMPONENTES Y MULTIMEDIA SL</a></li></li>
+            <li><a href="{% url "borme-empresa" "el-corte-ingles-sa" %}">EL CORTE INGLES SA</a></li>
+            <li><a href="{% url "borme-empresa" "mercadona-sa" %}">MERCADONA SA</a></li>
+            <li><a href="{% url "borme-empresa" "pc-componentes-y-multimedia-sl" %}">PC COMPONENTES Y MULTIMEDIA SL</a></li>
             <li>CAJA DE RESISTENCIA MOTIVA 2 PRODUCCIONES SL</li>
             {% for company in random_companies %}
-            <li><a href="/b/empresa/{{ company.slug }}">{{company}}</a></li>
+            <li><a href="{% url "borme-empresa" company.slug %}">{{ company.name }}</a></li>
             {% endfor %}
         </ul>
       </div>
@@ -33,7 +33,7 @@
             <li>Roig Alfonso Juan Jose</li>
             <li>Monedero Fernandez Juan Carlos</li>
             {% for person in random_persons %}
-            <li><a href="/b/persona/{{ person.slug }}">{{ person }}</a></li>
+            <li><a href="{% url "borme-persona" person.slug %}">{{ person.name }}</a></li>
             {% endfor %}
         </ul>
       </div>
