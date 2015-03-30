@@ -41,28 +41,47 @@ class BusquedaView(TemplateView):
             context['query'] = self.request.GET['q']
 
             try:
-                context['companies'] = companies.page(page)
+                pg_companies = companies.page(page)
             except PageNotAnInteger:
                 # If page is not an integer, deliver first page.
-                context['companies'] = companies.page(1)
+                pg_companies = companies.page(1)
                 context['page'] = 1
             except EmptyPage:
                 # If page is out of range (e.g. 9999), deliver last page of results.
-                context['companies'] = companies.page(companies.num_pages)
+                pg_companies = companies.page(companies.num_pages)
+            finally:
+                context['companies'] = pg_companies
+                pagerange = companies.page_range[:3] + companies.page_range[-3:]
+                pagerange.append(pg_companies.number)
+                pagerange = list(set(pagerange))
+                pagerange.sort()
+                if len(pagerange) == 1:
+                    pagerange = []
+                context['companies'].myrange = pagerange
 
             try:
-                context['persons'] = persons.page(page)
+                pg_persons = persons.page(page)
             except PageNotAnInteger:
-                context['persons'] = persons.page(1)
+                pg_persons = persons.page(1)
                 context['page'] = 1
             except EmptyPage:
-                context['persons'] = persons.page(persons.num_pages)
+                pg_persons = persons.page(persons.num_pages)
+            finally:
+                context['persons'] = pg_persons
+                pagerange = persons.page_range[:3] + persons.page_range[-3:]
+                pagerange.append(pg_persons.number)
+                pagerange = list(set(pagerange))
+                pagerange.sort()
+                if len(pagerange) == 1:
+                    pagerange = []
+                context['persons'].myrange = pagerange
 
         else:
             context['num_companies'] = 0
             context['num_persons'] = 0
             context['companies'] = []
             context['persons'] = []
+            context['page'] = 1
 
         return context
 

@@ -15,26 +15,34 @@
 </ul>
 
 {% if companies.object_list %}
-<div class="pagination">
-    <span class="step-links">
-        {% if companies.has_previous %}
-
-            <a href="?q={{ query }}&page={{ companies.previous_page_number }}">Anterior</a>
-            <i class="glyphicon glyphicon-chevron-left"></i>
+<nav>
+  <ul class="pagination">
+    {% if companies.has_previous %}
+    <li>
+      <a href="?q={{ query }}&page={{ companies.previous_page_number }}" aria-label="Previous">
+        <span aria-hidden="true">&laquo; Anterior</span>
+      </a>
+    </li>
+    {% endif %}
+    {% for num in companies.myrange %}
+        {% if num == companies.number %}
+        <li class="active"><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
+        {% else %}
+        <li><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
         {% endif %}
+    {% endfor %}
 
-        <span class="current">
-            Página {{ companies.number }} de {{ companies.paginator.num_pages }}.
-        </span>
-
-        {% if companies.has_next %}
-        <i class="glyphicon glyphicon-chevron-right"></i>
-            <a href="?q={{ query }}&page={{ companies.next_page_number }}">Siguiente</a>
-
-        {% endif %}
-    </span>
-</div>
+    {% if companies.has_next %}
+    <li>
+      <a href="?q={{ query }}&page={{ companies.next_page_number }}" aria-label="Next">
+        <span aria-hidden="true">Siguiente &raquo;</span>
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
 {% endif %}
+
 
 <h2>Personas:</h2>
 <ul>
@@ -45,25 +53,36 @@
     {% endfor %}
 </ul>
 
+
 {% if persons.object_list %}
-<div class="pagination">
-    <span class="step-links">
-        {% if persons.has_previous %}
-            <a href="?q={{ query }}&page={{ persons.previous_page_number }}">Anterior</a>
-            <i class="glyphicon glyphicon-chevron-left"></i>
+<nav>
+  <ul class="pagination">
+    {% if persons.has_previous %}
+    <li>
+      <a href="?q={{ query }}&page={{ persons.previous_page_number }}" aria-label="Previous">
+        <span aria-hidden="true">&laquo; Anterior</span>
+      </a>
+    </li>
+    {% endif %}
+    {% for num in persons.myrange %}
+        {% if num == persons.number %}
+        <li class="active"><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
+        {% else %}
+        <li><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
         {% endif %}
+    {% endfor %}
 
-        <span class="current">
-            Página {{ persons.number }} de {{ persons.paginator.num_pages }}.
-        </span>
-
-        {% if persons.has_next %}
-            <i class="glyphicon glyphicon-chevron-right"></i>
-            <a href="?q={{ query }}&page={{ persons.next_page_number }}">Siguiente</a>
-        {% endif %}
-    </span>
-</div>
+    {% if persons.has_next %}
+    <li>
+      <a href="?q={{ query }}&page={{ persons.next_page_number }}" aria-label="Next">
+        <span aria-hidden="true">Siguiente &raquo;</span>
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
 {% endif %}
+
 {% else %}
 
 <h1>Búsqueda avanzada</h1>
