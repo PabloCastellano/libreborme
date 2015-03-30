@@ -1,3 +1,8 @@
+En estos momentos hay una versión en producción en https://beta.libreborme.net. Como su dominio indica, es una versión de pruebas, por lo que
+fallará de vez en cuando, sus URLs cambiarán, a veces contendrá más datos y otras veces menos...
+
+Tenlo en cuenta si la usas. De momento no hace falta que se reporten los bugs.
+
 Acerca de LibreBORME
 ----------------
 
@@ -11,8 +16,6 @@ y para lo que quieras.
 Para más información puedes leer las siguientes entradas en el blog del autor:
 - [Qué es LibreBORME](https://pablog.me/blog/2015/02/que-es-libreborme/) (25 de febrero de 2015)
 
-En estos momentos hay una versión en producción en https://beta.libreborme.net. Como el dominio indica, es una versión de pruebas, por lo que
-fallará de vez en cuando, sus URLs cambiarán, a veces contendrá más datos y otras veces menos... Tenlo en cuenta si la usas.
 Concursos
 --------
 
