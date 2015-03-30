@@ -87,39 +87,64 @@
 
 <h1>Búsqueda avanzada</h1>
 
-  <div>
-  <form class="navbar-form" role="search" action="{% url "borme-search" %}" method="get">
+  <form class="form-horizontal" role="search" action="{% url "borme-search" %}" method="get">
 
   <div class="form-group">
-    Nombre: <input type="text" class="form-control" size="32" name="q" placeholder="">
-    <input type="hidden" name="page" value="1">
-    </br>
-    Tipo:
-    <input type="radio" name="type" value="all" checked>Todos
-    <input type="radio" name="type" value="company"> Empresa
-    <input type="radio" name="type" value="person"> Persona
-    </br>
-    Años de actividad:
-    desde
-<select>
-  <option value="2007">2007</option>
-  <option value="2008">2008</option>
-  <option value="2009">2009</option>
-  <option value="2010">2010</option>
-</select>
-    hasta
-<select>
-  <option value="2007">2007</option>
-  <option value="2008">2008</option>
-  <option value="2009">2009</option>
-  <option value="2010">2010</option>
-</select>
-    </br>
+    <div class="form-group">
+      <label for="searchtitle" class="col-sm-2 control-label">Nombre:</label>
+      <div class="col-sm-6">
+        <input type="text" class="form-control" id="searchtitle">
+      </div>
+    </div>
 
-    <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"> Buscar</i></button>
-  </div>
+    <input type="hidden" name="page" value="1">
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Tipo:</label>
+      <div class="col-sm-6">
+        <input type="radio" name="type" value="all" checked>Todos
+        <input type="radio" name="type" value="company"> Empresa
+        <input type="radio" name="type" value="person"> Persona
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <div class="checkbox">
+          <label for="exactmatch">
+            <input type="checkbox" name="exactmatch" id="exactmatch" value="1"> Búsqueda exacta
+          </label>
+        </div>
+      <p class="help-block">Palabras claves exactas (no contenidas en otras palabras)</p>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Años de actividad</label>
+      <div class="col-sm-6">
+        Desde:
+        <select>
+          <option value="2007">2007</option>
+          <option value="2008">2008</option>
+          <option value="2009">2009</option>
+          <option value="2010">2010</option>
+        </select>
+        hasta:
+        <select>
+          <option value="2007">2007</option>
+          <option value="2008">2008</option>
+          <option value="2009">2009</option>
+          <option value="2010">2010</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"> Buscar</i></button>
+      </div>
+    </div>
+
   </form>
-  </div>
 
 {% endif %}
 {% endblock %}
