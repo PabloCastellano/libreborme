@@ -2,17 +2,18 @@
 
 {% load utils %}
 
-{% block content %}
-    <h2>Company {{ company.name }}</h2>
-    <h3>Data</h3>
+{% block title %}{{ company.name }} | LibreBORME{% endblock %}
 
-    NIF: {{ company.nif }}
+{% block content %}
+    <h2>Sociedad «{{ company.name }}»</h2>
+    <h3>Datos</h3>
+
+    {% if company.nif %}
+    <strong>NIF:</strong> {{ company.nif|default:"Desconocido" }}
     <br/>
-    Date creation: {{ company.date_creation|date }}
+    <strong>Fecha de constitución:</strong> {{ company.date_creation|date|default:"Desconocido" }}
     <br/>
-    Date creation 2: {{ company.date_creation }}
-    <br/>
-    Active: {{ company.is_active }}
+    {% endif %}
 
     <h3>Actos</h3>
     <ul>
@@ -21,7 +22,11 @@
 
             {% for attr in registro %}
             {% if registro|get_item:attr %}
-            <strong>{{ attr }}:</strong> {{ registro|get_item:attr }}</br>
+                {% if attr == 'borme' %}
+                <strong>{{ registro|get_item:attr }}</strong> <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> <a href="#" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a></br>
+                {% else %}
+                <strong>{{ attr|nombre }}:</strong> {{ registro|get_item:attr }}</br>
+                {% endif %}
             {% endif %}
             {% endfor %}
         {% empty %}
