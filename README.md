@@ -1,96 +1,37 @@
-Plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil
+Acerca de LibreBORME
+----------------
 
-Concurso
+LibreBORME es una plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil.
+
+LibreBORME nace en 2014 como un Proyecto de Fin de Carrera con la intención de «abrir» los datos del Registro Mercantil de España. Aprovechando que [desde 2009](http://elpais.com/diario/2008/01/03/ciberpais/1199330666_850215.html)
+se publica el BORME en formato electrónico, LibreBORME se encarga de *leérselo* por ti cada mañana y añadir a su base de datos los
+últimos cambios. De esta manera tú puedes hacer búsquedas semánticas, recibir notificaciones y usar estos datos de manera sencilla
+y para lo que quieras.
+
+Para más información puedes leer las siguientes entradas en el blog del autor:
+- [Qué es LibreBORME](https://pablog.me/blog/2015/02/que-es-libreborme/) (25 de febrero de 2015)
+
+Concursos
 --------
 
-Este proyecto participa en el [Certamen de Proyectos Libres de la UGR](http://osl.ugr.es/2014/09/26/premios-a-proyectos-libres-de-la-ugr/) [(Bases)](http://osl.ugr.es/bases-de-los-premios-a-proyectos-libres-de-la-ugr/).
+Este proyecto participa en los siguientes concursos:
+
+- [Concurso Universitario de Software Libre](https://www.concursosoftwarelibre.org/1415/) [(Bases)](https://www.concursosoftwarelibre.org/1415/bases)
+- [Certamen de Proyectos Libres de la UGR](http://osl.ugr.es/2014/09/26/premios-a-proyectos-libres-de-la-ugr/) [(Bases)](http://osl.ugr.es/bases-de-los-premios-a-proyectos-libres-de-la-ugr/).
+
 
 Instalación
 -----------
 
-Estas instrucciones se han comprobado que funcionan en Ubuntu 14.04 32 bits. Para otras distribuciones el proceso debería ser similar.
+Para instrucciones de cómo montar tu propia instancia de LibreBORME, echa un vistazo a [INSTALL.md](INSTALL.md).
 
-Dependencias:
-    sudo apt-get install virtualenvwrapper
-    sudo apt-get install mongodb
-    sudo apt-get install libxml2-dev libxslt1-dev python-dev zlib1g-dev
+Contribuciones
+--------------
 
-    echo "export WORKON_HOME=$HOME/.virtualenvs" >> ~/.bashrc
-    echo "source /usr/share/virtualenvwrapper/virtualenvwrapper.sh" >> ~/.bashrc
-    source ~/.bashrc
+Si deseas contribuir al proyecto puedes enviarme tus Pull Requests en GitHub, donde también
+puedes ojear el [listado de bugs](https://github.com/PabloCastellano/libreborme/issues).
 
-Hack temporal
-    ~/.virtualenvs/libreborme/local/lib/python2.7/site-packages/mongodbforms/documentoptions.py
-    Comentar:
-    from django.db.models.options import get_verbose_name
-    Y añadir a continuación:
-    from django.utils.text import camel_case_to_spaces as get_verbose_name
-
-Instalación de libreborme:
-    git clone https://github.com/PabloCastellano/libreborme.git
-    cd libreborme
-    mkvirtualenv libreborme
-    pip install -r requirements.txt
-    cp libreborme/local_settings.py.example libreborme/local_settings.py
-    Ajusta tu configuración en libreborme/local_settings.py con tus rutas y especialmente cambia la variable SECRET_KEY
-    ./manage.py syncdb
-    Puedes crear aquí tu superusuario o decir "no" y ejecutar:
-    ./manage.py loaddata libreborme/fixtures/users.json
-    Esto por defecto crea la cuenta `admin` con la contraseña `0000`.
-
-Si quieres instalar herramientas de desarrollo:
-    pip install -r requirements-dev.txt
-
-En producción:
-
-    apt-get install nginx
-    cd ~/libreborme
-    workon libreborme
-    ./manage.py collecstatic
-    pip install -r requirements-prod.txt
-    mkdir /home/libreborme/run/
-    chmod 775 /home/libreborme/run/
-    adduser libreborme www-data
-    # Crear /etc/init.d/django-libreborme
-    /etc/init.d/django-libreborme start
-    update-rc.d django-libreborme defaults
-
-Opcional
+Licencia
 --------
 
-    echo "alias libreborme_run='workon libreborme && cd ~/libreborme && ./manage.py runserver --settings=libreborme.local_settings'" >> ~/.bash_aliases
-    source ~/.bash_aliases
-
-Ejecución
----------
-
-    cd libreborme
-    workon libreborme
-    ./manage.py runserver --settings=libreborme.local_settings
-    
-o simplemente:
-
-    libreborme_run
-
-Comandos
---------
-
-    ./manage.py companyinfo "SOCIEDAD ESTATAL CORREOS Y TELEGRAFOS SA"
-    ./manage.py companyinfo sociedad-estatal-correos-y-telegrafos
-    ./manage.py findcompany correos asd
-    ./manage.py importbormecsv borme_parser/csv/BORME-A-2014-196-14.pdf-cropped.pdf.1.txt.clean.txt.4c.csv
-    ./manage.py importbormecsv borme_parser/csv/*.csv
-
-Rellenando con datos la BD
---------------------------
-
-    cd borme_parser
-    mkdir xml
-    ./getAllBormeXML.py 20150101
-    mkdir pdf
-    ./getPDFfromXML.py 20150101
-    ./crop_borme.py pdf
-    ./parserPDF.py pdfcrop
-    ./cleanText.py txt
-    ./parserText2CSV4c.py txt2
-    ./manage.py importbormecsv borme_parser/csv/*.csv
+LibreBORME es software libre y su código fuente está accesible en [GitHub](https://github.com/PabloCastellano/libreborme) bajo la licencia [Affero GPL v3](https://www.gnu.org/licenses/agpl-3.0.html).
