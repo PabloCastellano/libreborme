@@ -9,8 +9,8 @@
     <h3>BORMEs relacionados</h3>
 
     <ul>
-    {% for company in person.in_bormes %}
-        <li>{{ company }}</li>
+    {% for borme in person.in_bormes %}
+        <li>{{ borme }} <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> <a href="#" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a></li>
     {% empty %}
         <i>No hay actos registrados.</i>
     {% endfor %}
@@ -26,4 +26,8 @@
     {% endfor %}
 
     </ul>
+
+    <h3>Personas relacionadas</h3>
+    <h3>BORMEs relacionados</h3>
+
 {% endblock %}

@@ -6,7 +6,6 @@
 
 {% block content %}
     <h2>Sociedad «{{ company.name }}»</h2>
-    <h3>Datos</h3>
 
     {% if company.nif %}
     <strong>NIF:</strong> {{ company.nif|default:"Desconocido" }}
@@ -18,13 +17,13 @@
     <h3>Actos</h3>
     <ul>
         {% for registro in registros %}
-            <li>Acto {{ registro.id_acto }} en BORME <i>{{ registro.borme }}</i> con fecha <i>{{ registro.date }}</i>.</li>
-
+            <!-- <li>Acto {{ registro.id_acto }} en BORME <i>{{ registro.borme }}</i> con fecha <i>{{ registro.date }}</i>.</li> -->
+            <li><strong>{{ registro.borme }}</strong> <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> <a href="#" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a></li>
             {% for attr in registro %}
             {% if registro|get_item:attr %}
-                {% if attr == 'borme' %}
-                <strong>{{ registro|get_item:attr }}</strong> <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> <a href="#" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a></br>
-                {% else %}
+                {% if attr == 'nombramientos' %}
+                <strong>{{ attr|nombre }}:</strong> {{ registro|get_item:attr|join:", " }}</br>
+                {% elif attr != 'borme' %}
                 <strong>{{ attr|nombre }}:</strong> {{ registro|get_item:attr }}</br>
                 {% endif %}
             {% endif %}
@@ -33,4 +32,14 @@
             <i>No hay actos registrados.</i>
         {% endfor %}
     </ul>
+
+    <h3>Personas relacionadas</h3>
+    <h3>Sociedades relacionadas</h3>
+    <h3>BORMEs relacionados</h3>
+    <ul>
+        {% for borme in company.in_bormes %}
+        <li>{{ borme }} <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> <a href="#" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a></li>
+        {% endfor %}
+    </ul>
+
 {% endblock %}

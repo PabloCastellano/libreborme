@@ -20,3 +20,11 @@ def nombre(object):
         return DICT_NAMES[object]
     except:
         return object
+
+
+@register.filter
+def nombre(object):
+    try:
+        return DICT_NAMES[object]
+    except:
+        return object
