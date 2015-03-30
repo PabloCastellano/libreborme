@@ -5,6 +5,7 @@ Instalación
 Estas instrucciones se han comprobado que funcionan en Ubuntu 14.04 32 bits. Para otras distribuciones el proceso debería ser similar.
 
 Dependencias:
+
     sudo apt-get install virtualenvwrapper
     sudo apt-get install mongodb
     sudo apt-get install libxml2-dev libxslt1-dev python-dev zlib1g-dev
@@ -13,14 +14,18 @@ Dependencias:
     echo "source /usr/share/virtualenvwrapper/virtualenvwrapper.sh" >> ~/.bashrc
     source ~/.bashrc
 
-Hack temporal
-    ~/.virtualenvs/libreborme/local/lib/python2.7/site-packages/mongodbforms/documentoptions.py
-    Comentar:
+Hack temporal:
+en `~/.virtualenvs/libreborme/local/lib/python2.7/site-packages/mongodbforms/documentoptions.py`
+comentar la línea:
+
     from django.db.models.options import get_verbose_name
-    Y añadir a continuación:
+
+Y añadir a continuación:
+
     from django.utils.text import camel_case_to_spaces as get_verbose_name
 
 Instalación de libreborme:
+
     git clone https://github.com/PabloCastellano/libreborme.git
     cd libreborme
     mkvirtualenv libreborme
