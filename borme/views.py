@@ -18,8 +18,8 @@ class HomeView(TemplateView):
         context['total_companies'] = Company.objects.count()
         context['total_persons'] = Person.objects.count()
         context['total_regs'] = Acto.objects.count()
-        context['random_companies'] = Company.objects.filter().limit(5).skip(randint(0, context['total_companies']))
-        context['random_persons'] = Person.objects.filter().limit(5).skip(randint(0, context['total_persons']))
+        context['random_companies'] = Company.objects.filter().limit(10).skip(randint(0, context['total_companies']))
+        context['random_persons'] = Person.objects.filter().limit(10).skip(randint(0, context['total_persons']))
         return context
 
 
