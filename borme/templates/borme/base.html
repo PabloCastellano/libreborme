@@ -35,19 +35,26 @@
   </form>
 </div>
 </div>
+
+    <a href="https://github.com/PabloCastellano/libreborme">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="{% static "forkme_right_red_aa0000.png" %}" alt="Fork me on GitHub"
+        data-canonical-src="{% static "forkme_right_red_aa0000.png" %}">
+    </a>
     {% block content %}{% endblock %}
 
-    <div class="footer">
-    <div class="row">
-	<div class="col-lg-4">
-      <p>© Desarrolladores de LibreBORME 2014-2015</p>
-      	</div>
-	<div class="col-lg-4">
-      <img src="{% static "agplv3-155x51.png" %}">
-      <img src="{% static "od_80x15_blue.png" %}">
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+              <div class="col-lg-6">
+                <p class="text-muted">© B Desarrolladores de LibreBORME 2014-2015</p>
+              </div>
+              <div class="col-lg-6">
+                <img src="{% static "agplv3-155x51.png" %}">
+                <img src="{% static "od_80x15_blue.png" %}">
+              </div>
+            </div>
       </div>
-    </div>
-    </div>
+    </footer>
 
   </div> <!-- /container -->
 

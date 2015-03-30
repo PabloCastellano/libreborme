@@ -1,31 +1,42 @@
 {% extends 'borme/base.html' %}
 
 {% block content %}
-<h2>Datos totales:</h2>
-<ul>
-  <li><strong>{{ total_companies }}</strong> empresas</li>
-  <li><strong>{{ total_persons }}</strong> personas</li>
-  <li><strong>{{ total_regs }}</strong> registros</li>
-  <li>Última actualización: <strong>13/13/13</strong></li>
-</ul>
 
-<h2>Ejemplos de empresas:</h2>
-<ul>
-    <li>MERCADONA SA</li>
-    <li>PC COMPONENTES Y MULTIMEDIA SL</li>
-    <li>CAJA DE RESISTENCIA MOTIVA 2 PRODUCCIONES SL</li>
-    {% for company in random_companies %}
-    <li><a href="/b/empresa/{{ company.slug }}">{{company}}</a></li>
-    {% endfor %}
-</ul>
+    <div class="row">
 
-<h2>Ejemplos de personas:</h2>
-<ul>
-    <li>Roig Alfonso Juan Jose</li>
-    <li>Monedero Fernandez Juan Carlos</li>
-    {% for person in random_persons %}
-    <li><a href="/b/persona/{{ person.slug }}">{{ person }}</a></li>
-    {% endfor %}
-</ul>
+      <div class="col-lg-3">
+        <h2>Datos totales <i class="glyphicon glyphicon-signal"></i></h2>
+        <ul>
+          <li><strong>{{ total_companies }}</strong> empresas</li>
+          <li><strong>{{ total_persons }}</strong> personas</li>
+          <li><strong>{{ total_regs }}</strong> registros</li>
+          <li>Última actualización: <strong>13/13/13</strong></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-5">
+        <h2>Ejemplos de empresas</h2>
+        <ul>
+            <li>MERCADONA SA</li>
+            <li>PC COMPONENTES Y MULTIMEDIA SL</li>
+            <li>CAJA DE RESISTENCIA MOTIVA 2 PRODUCCIONES SL</li>
+            {% for company in random_companies %}
+            <li><a href="/b/empresa/{{ company.slug }}">{{company}}</a></li>
+            {% endfor %}
+        </ul>
+      </div>
+
+      <div class="col-lg-4">
+        <h2>Ejemplos de personas <i class="glyphicon glyphicon-user"></i></h2>
+        <ul>
+            <li>Roig Alfonso Juan Jose</li>
+            <li>Monedero Fernandez Juan Carlos</li>
+            {% for person in random_persons %}
+            <li><a href="/b/persona/{{ person.slug }}">{{ person }}</a></li>
+            {% endfor %}
+        </ul>
+      </div>
+
+    </div>
 
 {% endblock %}

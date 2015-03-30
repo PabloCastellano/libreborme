@@ -12,7 +12,6 @@
 
     <title>{% block title %}LibreBORME{% endblock %}</title>
 
-    <!-- Bootstrap core CSS -->
     <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
@@ -20,11 +19,14 @@
   </head>
   <body>
 
+    <a href="https://github.com/PabloCastellano/libreborme">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="{% static "forkme_right_red_aa0000.png" %}" alt="Fork me on GitHub"
+        data-canonical-src="{% static "forkme_right_red_aa0000.png" %}">
+    </a>
     {% block content %}{% endblock %}
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="{% static "ie10-viewport-bug-workaround.js" %}"></script>
-
 
   {% include "piwik.html" %}
   </body>
