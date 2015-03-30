@@ -32,11 +32,19 @@ class Borme(Document):
         return self.filename
 
 
+# TEMP
+class EmbeddedCompany(EmbeddedDocument):
+    """ Sociedad embedded """
+    name = StringField(max_length=200)
+    slug = StringField()
+
+
 class Person(Document):
     """ Persona """
     name = StringField(max_length=200)
     slug = StringField(unique=True)
     in_companies = ListField(StringField())
+    in_companies2 = ListField(EmbeddedDocumentField(EmbeddedCompany))
     in_bormes = ListField(StringField())
 
     # last access
