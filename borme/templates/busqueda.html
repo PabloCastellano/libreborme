@@ -47,7 +47,7 @@
 <h2>Personas:</h2>
 <ul>
     {% for person in persons.object_list %}
-    <li><a href="/b/persona/{{ person.slug }}">{{ person }}</a></li>
+    <li><a href="{% url "borme-persona" person.slug %}">{{ person.name }}</a></li>
     {% empty %}
     <i>No se encontraron personas.</i>
     {% endfor %}
