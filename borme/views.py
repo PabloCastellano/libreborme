@@ -1,4 +1,7 @@
-from django.shortcuts import get_object_or_404
+#from django.shortcuts import get_object_or_404
+from mongoengine.django.shortcuts import get_document_or_404
+
+from django.http import Http404
 
 #from django.views.generic import TemplateView, ListView, DetailView
 from mongogeneric.list import ListView
@@ -89,18 +92,16 @@ class BusquedaView(TemplateView):
 class CompanyView(DetailView):
     model = Company
     context_object_name = 'company'
-    #queryset = Company.objects.all()
 
-    def get_queryset(self):
-        #self.company = get_object_or_404(Company, slug=self.kwargs['slug'])
-        self.company = Company.objects.filter(slug=self.kwargs['slug'])
+    def get_object(self):
+        self.company = get_document_or_404(Company, slug=self.kwargs['slug'])
         return self.company
 
     def get_context_data(self, **kwargs):
         context = super(CompanyView, self).get_context_data(**kwargs)
 
         try:
-            context['registros'] = Acto.objects.filter(company=self.company[0].slug)
+            context['registros'] = Acto.objects.filter(company=self.company.slug).exclude('id', 'company')
         except Acto.DoesNotExist:
             context['registros'] = ()
 
@@ -110,11 +111,9 @@ class CompanyView(DetailView):
 class PersonView(DetailView):
     model = Person
     context_object_name = 'person'
-    #queryset = Person.objects.all()
 
-    def get_queryset(self):
-        #self.company = get_object_or_404(Company, slug=self.kwargs['slug'])
-        self.person = Person.objects.filter(slug=self.kwargs['slug'])
+    def get_object(self):
+        self.person = get_document_or_404(Person, slug=self.kwargs['slug'])
         return self.person
 
 

@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 
 from .views import *
+from libreborme.views import Error404View
 
 urlpatterns = patterns('',
     url(r'^$', HomeView.as_view(), name='borme-home'),
@@ -10,3 +11,5 @@ urlpatterns = patterns('',
     url(r'^personas/$', PersonListView.as_view()),
     url(r'^busqueda/$', BusquedaView.as_view(), name='borme-search'),
 )
+
+handler404 = Error404View
