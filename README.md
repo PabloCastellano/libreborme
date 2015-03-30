@@ -11,6 +11,8 @@ y para lo que quieras.
 Para más información puedes leer las siguientes entradas en el blog del autor:
 - [Qué es LibreBORME](https://pablog.me/blog/2015/02/que-es-libreborme/) (25 de febrero de 2015)
 
+En estos momentos hay una versión en producción en https://beta.libreborme.net. Como el dominio indica, es una versión de pruebas, por lo que
+fallará de vez en cuando, sus URLs cambiarán, a veces contendrá más datos y otras veces menos... Tenlo en cuenta si la usas.
 Concursos
 --------
 
@@ -35,3 +37,5 @@ Licencia
 --------
 
 LibreBORME es software libre y su código fuente está accesible en [GitHub](https://github.com/PabloCastellano/libreborme) bajo la licencia [Affero GPL v3](https://www.gnu.org/licenses/agpl-3.0.html).
+
+© Desarrolladores de LibreBORME. Véase el archivo [AUTHORS](AUTHORS).
