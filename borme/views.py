@@ -1,8 +1,6 @@
 #from django.shortcuts import get_object_or_404
 from mongoengine.django.shortcuts import get_document_or_404
 
-from django.http import Http404
-
 #from django.views.generic import TemplateView, ListView, DetailView
 from mongogeneric.list import ListView
 from mongogeneric.detail import DetailView
