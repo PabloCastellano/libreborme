@@ -8,7 +8,7 @@
 <h2>Empresas:</h2>
 <ul>
     {% for company in companies.object_list %}
-    <li><a href="/b/empresa/{{ company.slug }}">{{company}}</a></li>
+    <li><a href="{% url "borme-empresa" company.slug %}">{{ company.name }}</a></li>
     {% empty %}
     <i>No se encontraron empresas.</i>
     {% endfor %}
