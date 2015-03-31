@@ -14,7 +14,8 @@ se publica el BORME en formato electrónico, LibreBORME se encarga de *leérselo
 y para lo que quieras.
 
 Para más información puedes leer las siguientes entradas en el blog del autor:
-- [Qué es LibreBORME](https://pablog.me/blog/2015/02/que-es-libreborme/) (25 de febrero de 2015)
+- [Qué es LibreBORME](https://pablog.me/blog/2015/02/que-es-libreborme/) - [What is LibreBORME](https://pablog.me/que-es-libreborme-en.html) (25 de febrero de 2015)
+- [Versión online de LibreBORME](https://pablog.me/blog/2015/03/version-online-de-libreborme/) (31 de marzo de 2015)
 
 Concursos
 --------
