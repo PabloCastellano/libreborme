@@ -19,6 +19,7 @@ footer img[src*="agpl"] {
   padding-bottom: 10px;
   margin-top: 40px;
   border-top: 1px solid #eee;
+  z-index: 2;
 }
 
 .container {
