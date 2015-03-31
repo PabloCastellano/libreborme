@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from django.core.management.base import BaseCommand, CommandError
-from borme.models import Company, Borme, Acto, Person, Cargo
+from borme.models import Company, Borme, Acto, Person, Cargo, Config
 from mongoengine.errors import ValidationError, NotUniqueError
 
 import csv
 import os
 import re
 import time
+from datetime import datetime
 
 from borme_parser import ALL_KEYWORDS, CARGOS_KEYWORD
 
@@ -105,6 +106,10 @@ class Command(BaseCommand):
                     print e
 
             fp.close()
+
+        config = Config.objects.first()
+        config.last_modified = datetime.today()
+        config.save()
 
         # Elapsed time
         elapsed_time = time.time() - start_time
