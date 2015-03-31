@@ -7,7 +7,7 @@ from settings import DEBUG
 
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view(), name='home'),
-    url(r'^b/', include('borme.urls')),
+    url(r'^borme/', include('borme.urls')),
 
     url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain'))
 )
