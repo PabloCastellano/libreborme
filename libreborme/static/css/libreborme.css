@@ -1,5 +1,17 @@
 body {
   padding-top: 0px;
+  padding-bottom: 100px;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, .9);
+}
+
+footer img[src*="agpl"] {
+  height: 20px;
+  margin-right: 20px;
 }
 
 .footer {
@@ -17,6 +29,50 @@ body {
   background-color: #EEE;	
 }
 
+.header1 a {
+}
+
+.header1 a img{
+  width: 180px;
+  margin: 5px 10px 3px 20px;
+}
+
+.header1 input[name="q"] {
+  padding-right: 50px;
+  margin-right: -44px;
+}
+
+.header1 button[type="submit"] {
+  border: none;
+  margin-right: 20px;
+  background-color: #EEE;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: 1px solid #DDD;
+}
+
+ul:not(.pagination) {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul:not(.pagination) li {
+    border-bottom: 1px solid #DDD;
+    padding: 10px;
+}
+
+ul li:last-of-type{
+  border: none;
+}
+
+ul li:hover {
+  background-color: #EEE; 
+}
+
+h2 i.glyphicon {
+  font-size: .6em;
+}
+
 .jumbotron {
   padding-top: 20px;
   background-color: #EEE;
@@ -26,3 +82,4 @@ body {
   padding: 14px 24px;
   font-size: 21px;
 }
+
