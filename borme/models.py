@@ -177,3 +177,7 @@ class Acto(Document):
 
     def __unicode__(self):
         return 'Acto %d en borme %s' % (self.id_acto, self.borme)
+
+
+class Config(Document):
+    last_modified = DateTimeField()

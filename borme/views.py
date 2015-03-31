@@ -7,7 +7,7 @@ from mongogeneric.detail import DetailView
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from models import Company, Person, Acto
+from models import Company, Person, Acto, Config
 
 from random import randint
 
@@ -21,6 +21,7 @@ class HomeView(TemplateView):
         context['total_regs'] = Acto.objects.count()
         context['random_companies'] = Company.objects.filter().limit(10).skip(randint(0, context['total_companies']))
         context['random_persons'] = Person.objects.filter().limit(10).skip(randint(0, context['total_persons']))
+        context['last_modified'] = Config.objects.first().last_modified
         return context
 
 
