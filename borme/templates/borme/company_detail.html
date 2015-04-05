@@ -19,7 +19,9 @@
         {% for registro in registros %}
             <!-- <li>Acto {{ registro.id_acto }} en BORME <i>{{ registro.borme }}</i> con fecha <i>{{ registro.date }}</i>.</li> -->
             <div class="container">
-            <strong>{{ registro.borme }}</strong> <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> <a href="#" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
+            <strong>{{ registro.borme }}</strong>
+	    <!-- <a href="{{ bormes|get_url:registro.borme }}" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
+	    <a href="{{ bormes|get_url:registro.borme }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
             {% for attr in registro %}
             {% if registro|get_item:attr %}
                 {% if attr == 'nombramientos' %}
@@ -41,7 +43,10 @@
     <h3>BORMEs relacionados</h3>
     <ul>
         {% for borme in company.in_bormes %}
-        <li>{{ borme }} <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> <a href="#" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a></li>
+        <li>{{ borme }}
+	  <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
+	  <a href="{{ bormes|get_url:borme }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
+	</li>
         {% endfor %}
     </ul>
 

@@ -7,7 +7,7 @@ from mongogeneric.detail import DetailView
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from models import Company, Person, Acto, Config
+from models import Company, Person, Acto, Config, Borme
 
 from random import randint
 
@@ -101,8 +101,11 @@ class CompanyView(DetailView):
 
         try:
             context['registros'] = Acto.objects.filter(company=self.company.slug).exclude('id', 'company')
+            bormes = Borme.objects.filter(name__in=self.company.in_bormes)
+            context['bormes'] = {b.name: b for b in bormes}
         except Acto.DoesNotExist:
             context['registros'] = ()
+            context['bormes'] = ()
 
         return context
 

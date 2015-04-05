@@ -15,6 +15,11 @@ def get_item(object, attribute):
 
 
 @register.filter
+def get_url(object, attribute):
+    return object.get(attribute).url
+
+
+@register.filter
 def nombre(object):
     try:
         return DICT_NAMES[object]

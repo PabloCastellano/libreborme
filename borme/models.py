@@ -18,18 +18,21 @@ PROVINCES = (
 
 class Borme(Document):
     """ Edicion de BORME """
-    filename = StringField(max_length=30)
+    name = StringField(max_length=30)
     date = DateTimeField()
+    year = IntField()
+    url = URLField()
     type = StringField(max_length=1)
     from_reg = IntField()
     until_reg = IntField()
     from_page = IntField()
     until_page = IntField()
-    province = StringField(max_length=100, choices=PROVINCES)
+    #province = StringField(max_length=100, choices=PROVINCES)
+    province = StringField(max_length=100)
     pages = IntField()
 
     def __unicode__(self):
-        return self.filename
+        return self.name
 
 
 # TEMP
