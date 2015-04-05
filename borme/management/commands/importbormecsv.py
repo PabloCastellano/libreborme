@@ -31,11 +31,11 @@ class Command(BaseCommand):
             fp = open(filename)
             csvr = csv.DictReader(fp)
             try:
-                borme = Borme.objects.get(filename=pdf_name)
+                borme = Borme.objects.get(name=pdf_name)
             except Borme.DoesNotExist:
                 print 'Creando borme', pdf_name
 
-                borme = Borme(filename=pdf_name)
+                borme = Borme(name=pdf_name)
                 borme.save()
 
             # TODO: borrar si hubieran actos para este borme?
@@ -63,10 +63,10 @@ class Command(BaseCommand):
                         continue
 
                     try:
-                        acto = Acto.objects.get(borme=borme.filename, id_acto=row['ID'])
+                        acto = Acto.objects.get(borme=borme.name, id_acto=row['ID'])
                     except Acto.DoesNotExist:
                         print 'Creando acto:', row['ID'], row['Nombre']
-                        acto = Acto(company=company.slug, borme=borme.filename, id_acto=row['ID'])
+                        acto = Acto(company=company.slug, borme=borme.name, id_acto=row['ID'])
 
                     for k in ALL_KEYWORDS:
                         if row[k] not in (None, ''):

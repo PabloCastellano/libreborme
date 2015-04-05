@@ -101,7 +101,7 @@ class CompanyView(DetailView):
 
         try:
             context['registros'] = Acto.objects.filter(company=self.company.slug).exclude('id', 'company')
-            bormes = Borme.objects.filter(name__in=self.company.in_bormes)
+            bormes = Borme.objects.filter(name__in=[r.borme for r in context['registros']])
             context['bormes'] = {b.name: b for b in bormes}
         except Acto.DoesNotExist:
             context['registros'] = ()
