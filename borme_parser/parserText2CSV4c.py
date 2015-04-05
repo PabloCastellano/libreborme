@@ -34,6 +34,10 @@ class CSV4LBCommonParser(LBCommonParser):
     CSV = False
     NAME = '4c'
 
+    # TODO: Compilar las regexp para mayor eficiencia
+    # http://stackoverflow.com/questions/16720541/python-string-replace-regular-expression
+    # regexp = re.compile(...)
+    # m = regexp.findal(...)
     def parse_line(self, trozo):
 
         tr2_ = trozo.replace('\n', ' ').replace('  ', ' ')

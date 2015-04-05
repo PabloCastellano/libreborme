@@ -77,7 +77,7 @@ class LBCommonParser():
         self.csvline = {}
         self.CSV = output_csv
 
-    def parse_line(self, filenameIn, filenameOut):
+    def parse_line(self, filename_in, filename_out):
         raise NotImplementedError
 
     def parse_file(self, filenameIn, filenameOut):
@@ -97,17 +97,12 @@ class LBCommonParser():
             self.logger.info('Skipping file %s already exists and rewriting is disabled!' % filenameOut)
             return False
 
-        # regexp
         fp = open(filenameIn, 'r')
         text = fp.read()
         fp.close()
 
         outfp = open(filenameOut, 'w')
         self.print_header(outfp)
-        # TODO: Compilar las regexp para mayor eficiencia
-        # http://stackoverflow.com/questions/16720541/python-string-replace-regular-expression
-        # regexp = re.compile(...)
-        # m = regexp.findal(...)
 
         for trozo in text.split('.\n\n'):
             self.csvline = {}
@@ -115,7 +110,6 @@ class LBCommonParser():
 
             try:
                 self.parse_line(trozo)
-
                 self.logger.debug('###########')
                 self.print_line(outfp)
                 self.logger.debug('###########')
@@ -134,6 +128,13 @@ class LBCommonParser():
 
         return True
 
+    def get_filename_out(self, basename):
+        if self.CSV:
+            filename_out = "%s.%s.csv" % (basename, self.NAME)
+        else:
+            filename_out = "%s.%s.plain" % (basename, self.NAME)
+        return filename_out
+
     def parse_dir(self, dirIn, dirOut):
         """
             Parse files in batch mode
@@ -141,22 +142,18 @@ class LBCommonParser():
             dirIn:
             dirOut:
         """
-        gen = os.walk(dirIn)
-        _, _, files = gen.next()
+        _, _, files = os.walk(dirIn).next()
         total = len(files)
 
         for i, f in enumerate(files):
             filename = os.path.join(dirIn, f)
-            if self.CSV:
-                filenameOut = "%s.%s.csv" % (f, self.NAME)
-            else:
-                filenameOut = "%s.%s.plain" % (f, self.NAME)
-            filenameOut = os.path.join(dirOut, filenameOut)
+            filename_out = self.get_filename_out(f)
+            filename_out = os.path.join(dirOut, filename_out)
 
-            self.logger.info("[%d/%d] Writing %s", i + 1, total, filenameOut)
+            self.logger.info("[%d/%d] Writing %s", i + 1, total, filename_out)
             filename = os.path.join(dirIn, f)
             try:
-                res = self.parse_file(filename, filenameOut)
+                res = self.parse_file(filename, filename_out)
                 if res:
                     self.logger.info("OK")
                     self.results['ok'] += 1
