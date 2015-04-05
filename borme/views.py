@@ -118,6 +118,19 @@ class PersonView(DetailView):
         self.person = get_document_or_404(Person, slug=self.kwargs['slug'])
         return self.person
 
+    def get_context_data(self, **kwargs):
+        context = super(PersonView, self).get_context_data(**kwargs)
+
+        try:
+            context['registros'] = Acto.objects.filter(borme__in=self.person.in_bormes)
+            bormes = Borme.objects.filter(name__in=[r.borme for r in context['registros']])
+            context['bormes'] = {b.name: b for b in bormes}
+        except Acto.DoesNotExist:
+            context['registros'] = ()
+            context['bormes'] = ()
+
+        return context
+
 
 class PersonListView(ListView):
     model = Person
