@@ -3,6 +3,8 @@ fallará de vez en cuando, sus URLs cambiarán, a veces contendrá más datos y 
 
 Tenlo en cuenta si la usas. De momento no hace falta que se reporten los bugs.
 
+Actualmente los datos importados son los existentes en 2015 hasta marzo, por lo que solo aparecerán sociedades y personas con actos mercantiles en este período.
+
 Acerca de LibreBORME
 ----------------
 
