@@ -15,6 +15,7 @@ from borme_parser import ALL_KEYWORDS, CARGOS_KEYWORD
 RE_CARGOS_KEYWORD = '(%s)' % '|'.join(CARGOS_KEYWORD)
 RE_CARGOS_KEYWORD_NG = '(?:\.\s*%s|$)' % '|'.join(RE_CARGOS_KEYWORD)  # FIXME:MAL pero funciona RE_...
 
+regex1 = re.compile(RE_CARGOS_KEYWORD + ':\s+(.*?)' + RE_CARGOS_KEYWORD_NG)
 
 class Command(BaseCommand):
     args = '<csv files, ...>'
@@ -72,7 +73,7 @@ class Command(BaseCommand):
                         if row[k] not in (None, ''):
                             if k in ('Revocaciones', 'Reelecciones', 'Cancelaciones de oficio de nombramientos', 'Nombramientos'):
                                 print k, row[k]
-                                for match in re.finditer(RE_CARGOS_KEYWORD + ':\s+(.*?)' + RE_CARGOS_KEYWORD_NG, row[k]):
+                                for match in regex1.finditer(row[k]):
                                     cargo, nombres = match.group(1), match.group(2)
                                     print cargo, nombres
                                     l = []
