@@ -34,30 +34,31 @@ class CSV4LBCommonParser(LBCommonParser):
     CSV = False
     NAME = '4c'
 
-    # TODO: Compilar las regexp para mayor eficiencia
-    # http://stackoverflow.com/questions/16720541/python-string-replace-regular-expression
-    # regexp = re.compile(...)
-    # m = regexp.findal(...)
-    def parse_line(self, trozo):
+    regex1 = re.compile('^(\d+) - (.*?)\.\s*' + RE_ALL_KEYWORDS_NG)
+    regex2 = re.compile('(?=' + RE_ARG_KEYWORDS + '\.\s+(.*?)\.\s*' + RE_ALL_KEYWORDS_NG + ')')
+    regex3 = re.compile(RE_COLON_KEYWORDS + ':\s+(.*?)\.\s*' + RE_ALL_KEYWORDS_NG)
+    regex4 = re.compile(RE_ENDING_KEYWORD + '\.\s+(.*)\.\s*')
+    regex5 = re.compile(RE_NOARG_KEYWORDS + '\.')
 
+    def parse_line(self, trozo):
         tr2_ = trozo.replace('\n', ' ').replace('  ', ' ')
         self.logger.debug(tr2_)
 
-        m = re.match('^(\d+) - (.*?)\.\s*' + RE_ALL_KEYWORDS_NG, tr2_)
+        m = self.regex1.match(tr2_)
 
         self.save_field(('ID', m.group(1)))
         self.save_field(('Nombre', m.group(2)))
 
-        for match in re.finditer('(?=' + RE_ARG_KEYWORDS + '\.\s+(.*?)\.\s*' + RE_ALL_KEYWORDS_NG + ')', tr2_):
+        for match in self.regex2.finditer(tr2_):
             self.save_field((match.group(1), match.group(2)))
 
-        for match in re.finditer(RE_COLON_KEYWORDS + ':\s+(.*?)\.\s*' + RE_ALL_KEYWORDS_NG, tr2_):
+        for match in self.regex3.finditer(tr2_):
             self.save_field((match.group(1), match.group(2)))
 
-        for match in re.finditer(RE_ENDING_KEYWORD + '\.\s+(.*)\.\s*', tr2_):
+        for match in self.regex4.finditer(tr2_):
             self.save_field((match.group(1), match.group(2)))
 
-        for match in re.finditer(RE_NOARG_KEYWORDS + '\.', tr2_):
+        for match in self.regex5.finditer(tr2_):
             self.save_field((match.group(1), 'X'))
 
 
