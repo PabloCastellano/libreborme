@@ -122,6 +122,7 @@ class LBCommonParser():
                 self.logger.warning('###########')
                 self.results['warning'] += 1
 
+        self.print_footer(outfp)
         outfp.close()
 
         if had_warning:
@@ -209,6 +210,9 @@ class LBCommonParser():
             line += '----------------------------------------------------------\n'
         self.logger.debug(line)
         outfp.write(line)
+
+    def print_footer(self, outfp):
+        pass
 
     def show_stats(self):
         elapsed_time = time.time() - self.start_time
