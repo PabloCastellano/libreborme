@@ -113,7 +113,8 @@ class LBCommonParser():
                 self.logger.debug('###########')
                 self.print_line(outfp)
                 self.logger.debug('###########')
-            except:
+            except Exception, e:
+                self.logger.error(e)
                 had_warning = True
                 self.logger.warning('###########')
                 self.logger.warning('SKIPPING. Invalid data found:')
@@ -146,7 +147,6 @@ class LBCommonParser():
         total = len(files)
 
         for i, f in enumerate(files):
-            filename = os.path.join(dirIn, f)
             filename_out = self.get_filename_out(f)
             filename_out = os.path.join(dirOut, filename_out)
 
@@ -240,10 +240,8 @@ class LBCommonParser():
                     sys.exit(1)
 
         elif os.path.isfile(filenameIn):
-            if self.CSV:
-                filenameOut = argv[2] if len(argv) > 2 else '%s.%s.csv' % (os.path.basename(filenameIn), self.NAME)
-            else:
-                filenameOut = argv[2] if len(argv) > 2 else '%s.%s.plain' % (os.path.basename(filenameIn), self.NAME)
+
+            filenameOut = argv[2] if len(argv) > 2 else self.get_filename_out(os.path.basename(filenameIn))
             filenameOut = os.path.join(self.DEFAULT_OUT_DIR, filenameOut)
             self.logger.info('[1/1] Writing %s' % filenameOut)
             try:
