@@ -283,3 +283,6 @@ def download_url(url, filename):
             fd.write(chunk)
 
     return True
+
+# https
+URL_BASE = 'http://www.boe.es'
