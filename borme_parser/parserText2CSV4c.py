@@ -26,12 +26,9 @@ for match in re.finditer(RE_CARGOS_KEYWORD + ':\s+(.*?)' + RE_CARGOS_KEYWORD_NG,
     print match.group(1), match.group(2)
 """
 
-class CSV4LBCommonParser(LBCommonParser):
+class CSV4LBCommonParser(CSVLBCommonParser):
 
-    LOGFILE = 'bormecsv.log'
-    DEFAULT_OUT_DIR = 'csv'
     REWRITE = True  # Allows resuming
-    CSV = False
     NAME = '4c'
 
     regex1 = re.compile('^(\d+) - (.*?)\.\s*' + RE_ALL_KEYWORDS_NG)
@@ -81,7 +78,6 @@ if __name__ == '__main__':
         sys.exit(-1)
 
     logging_level = logging.INFO
-    csv_format = True
 
     """
     for (switch, val) in options:
@@ -95,6 +91,6 @@ if __name__ == '__main__':
     """
 
     #parser = CSV4LBCommonParser(logging.DEBUG)
-    parser = CSV4LBCommonParser(logging_level, csv_format)
+    parser = CSV4LBCommonParser(logging_level)
     parser.main(sys.argv)
     parser.show_stats()

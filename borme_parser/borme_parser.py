@@ -7,6 +7,10 @@ import sys
 import time
 import unicodedata
 import requests
+import json
+from bson import BSON
+# import csv
+
 
 def remove_accents(str):
     return ''.join((c for c in unicodedata.normalize('NFKD', unicode(str, 'utf-8')) if unicodedata.category(c) != 'Mn'))
@@ -37,8 +41,8 @@ ENDING_KEYWORD = ['Datos registrales']
 
 ALL_KEYWORDS = ARG_KEYWORDS + NOARG_KEYWORDS + COLON_KEYWORDS + ENDING_KEYWORD
 
-DICT_KEYWORDS = {kw: remove_accents(kw).replace(' del ', ' ').replace(' por ', ' ').replace(' de ', ' ')\
-                .replace(' ', '_').replace('/', '_').replace('.', '_').lower() for kw in ALL_KEYWORDS}
+DICT_KEYWORDS = {kw: remove_accents(kw).replace(' del ', ' ').replace(' por ', ' ').replace(' de ', ' ')
+                 .replace(' ', '_').replace('/', '_').replace('.', '_').lower() for kw in ALL_KEYWORDS}
 """
 >>> DICT_KEYWORDS.values()
 [u'revocaciones', u'cambio_objeto_social', u'reelecciones', u'otros_conceptos', u'fe_erratas', u'sociedad_unipersonal', u'declaracion_unipersonalidad', u'constitucion', u'suspension_pagos', u'
@@ -59,23 +63,22 @@ CSV_HEADERS.extend(ENDING_KEYWORD)
 
 # Simplemente implementa parse_line
 class LBCommonParser():
-    LOGFILE = 'foo.log'
-    DEFAULT_OUT_DIR = 'tmp'
+    LOGFILE = 'bormeplain.log'
+    DEFAULT_OUT_DIR = 'plain'
     REWRITE = False  # Allows resuming
     NAME = '2'
 
-    def __init__(self, _level=logging.INFO, output_csv=False):
+    def __init__(self, _level=logging.INFO):
         # Logs warnings, errors and criticals to stdout and file
         logging.basicConfig(filename=self.LOGFILE, level=_level, format='%(name)s: %(asctime)s %(message)s', datefmt='%Y-%m-%d %I:%M')
-        self.logger = logging.getLogger("csvBORME")  # name
+        self.logger = logging.getLogger("plainBORME")  # name
 
         h1 = logging.StreamHandler(sys.stdout)
         h1.setLevel(_level)
         self.logger.addHandler(h1)
 
         self.results = {'error': 0, 'skip': 0, 'ok': 0, 'warning': 0}
-        self.csvline = {}
-        self.CSV = output_csv
+        self.data = {}
 
     def parse_line(self, filename_in, filename_out):
         raise NotImplementedError
@@ -105,7 +108,7 @@ class LBCommonParser():
         self.print_header(outfp)
 
         for trozo in text.split('.\n\n'):
-            self.csvline = {}
+            self.data = {}
             trozo += '.'
 
             try:
@@ -131,10 +134,7 @@ class LBCommonParser():
         return True
 
     def get_filename_out(self, basename):
-        if self.CSV:
-            filename_out = "%s.%s.csv" % (basename, self.NAME)
-        else:
-            filename_out = "%s.%s.plain" % (basename, self.NAME)
+        filename_out = "%s.%s.plain" % (basename, self.NAME)
         return filename_out
 
     def parse_dir(self, dirIn, dirOut):
@@ -169,45 +169,31 @@ class LBCommonParser():
     def save_field(self, content):
         self.logger.debug('Guardando %s', content)
 
-        self.csvline[content[0]] = content[1]
+        self.data[content[0]] = content[1]
 
-        if not 'total' in self.csvline:
-            self.csvline['total'] = 1
+        if not 'total' in self.data:
+            self.data['total'] = 1
         else:
-            self.csvline['total'] += 1
+            self.data['total'] += 1
 
     def print_header(self, outfp):
         line = ""
-        if self.CSV:
-            for k in CSV_HEADERS:
-                line += '"' + k + '",'
-            line = line[:-1] + '\n'
-        else:
-            for k in CSV_HEADERS:
-                line += k + '\n'
-            line += '----------------------------------------------------------\n'
+        for k in CSV_HEADERS:
+            line += k + '\n'
+        line += '----------------------------------------------------------\n'
         self.logger.debug(line)
         outfp.write(line)
 
     def print_line(self, outfp):
-        self.logger.debug('Keys: %s total: %d', self.csvline.keys(), self.csvline['total'])
-        self.logger.debug('%s', self.csvline)
+        self.logger.debug('Keys: %s total: %d', self.data.keys(), self.data['total'])
+        self.logger.debug('%s', self.data)
         line = ""
 
-        if self.CSV:
-            # print CSV-friendly
-            for k in CSV_HEADERS:
-                if k in self.csvline:
-                    content = '"' + self.csvline[k].replace('"', '\\"') + '"'
-                    line += content
-                line += ','
-            line = line[:-1] + '\n'
-        else:
-            for k in CSV_HEADERS:
-                if k in self.csvline:
-                    line += self.csvline[k]
-                line += '\n'
-            line += '----------------------------------------------------------\n'
+        for k in CSV_HEADERS:
+            if k in self.data:
+                line += self.data[k]
+            line += '\n'
+        line += '----------------------------------------------------------\n'
         self.logger.debug(line)
         outfp.write(line)
 
@@ -262,6 +248,81 @@ class LBCommonParser():
                 self.results['error'] += 1
         else:
             self.logger.error("File %s doesn't exist" % filenameIn)
+
+
+class CSVLBCommonParser(LBCommonParser):
+    LOGFILE = 'bormecsv.log'
+    DEFAULT_OUT_DIR = 'csv'
+
+    def get_filename_out(self, basename):
+        filename_out = "%s.%s.csv" % (basename, self.NAME)
+        return filename_out
+
+    def print_header(self, outfp):
+        line = ""
+        for k in CSV_HEADERS:
+            line += '"' + k + '",'
+        line = line[:-1] + '\n'
+        self.logger.debug(line)
+        outfp.write(line)
+
+    def print_line(self, outfp):
+        self.logger.debug('Keys: %s total: %d', self.data.keys(), self.data['total'])
+        self.logger.debug('%s', self.data)
+        line = ""
+
+        # print CSV-friendly
+        for k in CSV_HEADERS:
+            if k in self.data:
+                content = '"' + self.data[k].replace('"', '\\"') + '"'
+                line += content
+            line += ','
+        line = line[:-1] + '\n'
+
+        self.logger.debug(line)
+        outfp.write(line)
+
+
+class JSONLBCommonParser(LBCommonParser):
+
+    LOGFILE = 'bormejson.log'
+    DEFAULT_OUT_DIR = 'json'
+
+    jsondata = []
+
+    def get_filename_out(self, basename):
+        return "%s.%s.json" % (basename, self.NAME)
+
+    def print_header(self, outfp):
+        pass
+
+    def print_footer(self, outfp):
+        outfp.write(json.dumps(self.jsondata, sort_keys=True, indent=4))
+        #outfp.write(json.dumps(self.jsondata))
+
+    def print_line(self, outfp):
+        self.logger.debug('Keys: %s total: %d', self.data.keys(), self.data['total'])
+        self.logger.debug('%s', self.data)
+        del self.data['total']
+        self.jsondata.append(self.data)
+
+
+class BSONLBCommonParser(LBCommonParser):
+
+    LOGFILE = 'bormebson.log'
+    DEFAULT_OUT_DIR = 'bson'
+
+    def get_filename_out(self, basename):
+        return "%s.%s.bson" % (basename, self.NAME)
+
+    def print_header(self, outfp):
+        pass
+
+    def print_line(self, outfp):
+        self.logger.debug('Keys: %s total: %d', self.data.keys(), self.data['total'])
+        self.logger.debug('%s', self.data)
+        del self.data['total']
+        outfp.write(BSON.encode(self.data))
 
 
 def get_borme_filename_xml(day):
