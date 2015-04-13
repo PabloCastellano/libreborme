@@ -25,13 +25,17 @@ ARG_KEYWORDS = ['Nombramientos', 'Revocaciones', 'Ceses/Dimisiones', 'Modificaci
                 'Sociedad unipersonal', 'Disolución', 'Reelecciones', 'Constitución',
                 'Articulo 378.5 del Reglamento del Registro Mercantil', 'Otros conceptos',
                 'Ampliación de capital', 'Reducción de capital', 'Situación concursal', 'Fusión por absorción',
-                'Suspensión de pagos', 'Transformación de sociedad', 'Cancelaciones de oficio de nombramientos']
+                'Suspensión de pagos', 'Transformación de sociedad', 'Cancelaciones de oficio de nombramientos',
+                'Desembolso de dividendos pasivos', 'Página web de la sociedad',
+                'Primera sucursal de sociedad extranjera']
 
 # Palabras clave sin argumentos
 NOARG_KEYWORDS = ['Sociedad unipersonal', 'Extinción', 'Declaración de unipersonalidad',
                   'Pérdida del caracter de unipersonalidad', 'Reapertura hoja registral',
                   'Adaptación Ley 2/95',
-                  'Cierre provisional hoja registral por baja en el índice de Entidades Jurídicas']
+                  'Cierre provisional hoja registral por baja en el índice de Entidades Jurídicas',
+                  'Cierre provisional de la hoja registral por revocación del NIF',
+                  'Reactivación de la sociedad (Art. 242 del Reglamento del Registro Mercantil)']
 
 # Palabras clave seguidas por :
 COLON_KEYWORDS = ['Cambio de identidad del socio único', 'Fe de erratas', 'Socio único']
@@ -52,7 +56,13 @@ a_registral_baja_en_el_indice_entidades_juridicas', u'ceses_dimisiones', u'nombr
 _reglamento_registro_mercantil', u'fusion_absorcion']
 """
 
-CARGOS_KEYWORD = ['Consejero', 'Presidente', 'Vicepresid', 'Secretario', 'Cons.Del.Man', 'Adm. Unico']
+CARGOS_KEYWORD = ['Consejero', 'Presidente', 'Vicepresid', 'Secretario', 'Cons.Del.Man', 'Adm. Unico',
+                  'Mie.Cons.Rec', 'Pre.Cons.Rec', 'Sec.Cons.Rec', 'Adm. Solid.', 'Apoderado', 'Soc.Prof',
+                  'Apo.Man.Soli', 'Apo.Manc', 'Apo.Sol', 'Vicesecret', 'Adm. Mancom', 'Co.De.Ma.So',
+                  'Cons.Del.Sol', 'Representan', 'Con.Delegado', 'APOD.SOL/MAN', 'LiquiSoli', 'Liquidador',
+                  'APODERAD.SOL', 'REPR.143 RRM', 'CONS. DELEG.', 'Aud.C.Con.', 'SecreNoConsj', 'LiqSolid',
+                  'CONSEJERO', 'CONS.DEL.M/S', 'VsecrNoConsj', 'Auditor', 'ADM.CONCURS', 'REP.ADM.CONC',
+                  'Aud.Supl']
 
 CSV_HEADERS = ['ID', 'Nombre']
 CSV_HEADERS.extend(NOARG_KEYWORDS)
