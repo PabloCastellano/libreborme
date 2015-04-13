@@ -79,6 +79,8 @@ Comandos
     ./manage.py findcompany correos asd
     ./manage.py importbormecsv borme_parser/csv/BORME-A-2014-196-14.pdf-cropped.pdf.1.txt.clean.txt.4c.csv
     ./manage.py importbormecsv borme_parser/csv/*.csv
+    ./manage.py importbormejson borme_parser/json/*.json
+    ./manage.py importbormebson borme_parser/bson/*.bson
 
 Rellenando con datos la BD
 --------------------------
