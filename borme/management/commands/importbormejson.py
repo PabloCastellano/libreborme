@@ -9,6 +9,7 @@ import os
 import re
 import time
 from datetime import datetime
+from libreborme.utils import get_git_revision_short_hash
 
 from borme_parser import ALL_KEYWORDS, CARGOS_KEYWORD
 
@@ -16,6 +17,7 @@ RE_CARGOS_KEYWORD = '(%s)' % '|'.join(CARGOS_KEYWORD)
 RE_CARGOS_KEYWORD_NG = '(?:\.\s*%s|$)' % '|'.join(RE_CARGOS_KEYWORD)  # FIXME:MAL pero funciona RE_...
 
 regex1 = re.compile(RE_CARGOS_KEYWORD + ':\s+(.*?)' + RE_CARGOS_KEYWORD_NG)
+
 
 class Command(BaseCommand):
     args = '<json files, ...>'
@@ -108,7 +110,11 @@ class Command(BaseCommand):
             fp.close()
 
         config = Config.objects.first()
-        config.last_modified = datetime.today()
+        if config:
+            config.last_modified = datetime.today()
+        else:
+            config = Config(last_modified=datetime.today())
+        config.version = get_git_revision_short_hash()
         config.save()
 
         # Elapsed time

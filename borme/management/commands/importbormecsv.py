@@ -3,6 +3,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from borme.models import Company, Borme, Acto, Person, Cargo, Config
 from mongoengine.errors import ValidationError, NotUniqueError
+from libreborme.utils import get_git_revision_short_hash
 
 import csv
 import os
@@ -114,6 +115,7 @@ class Command(BaseCommand):
             config.last_modified = datetime.today()
         else:
             config = Config(last_modified=datetime.today())
+        config.version = get_git_revision_short_hash()
         config.save()
 
         # Elapsed time

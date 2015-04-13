@@ -184,3 +184,4 @@ class Acto(Document):
 
 class Config(Document):
     last_modified = DateTimeField()
+    version = StringField()

@@ -66,6 +66,7 @@ if DEBUG:
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'libreborme.context_processors.piwik',
+    'libreborme.context_processors.common',
 )
 
 ROOT_URLCONF = 'libreborme.urls'

@@ -9,6 +9,7 @@ import os
 import re
 import time
 from datetime import datetime
+from libreborme.utils import get_git_revision_short_hash
 
 from borme_parser import CARGOS_KEYWORD
 
@@ -117,6 +118,7 @@ class Command(BaseCommand):
             config.last_modified = datetime.today()
         else:
             config = Config(last_modified=datetime.today())
+        config.version = get_git_revision_short_hash()
         config.save()
 
         # Elapsed time
