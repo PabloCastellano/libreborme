@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     #mongoengine.django.mongo_auth,
     'bootstrap',
     'borme',
+    'libreborme',
     'mongogeneric',
     'mongodbforms',
 )
