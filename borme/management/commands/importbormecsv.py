@@ -17,6 +17,7 @@ RE_CARGOS_KEYWORD_NG = '(?:\.\s*%s|$)' % '|'.join(RE_CARGOS_KEYWORD)  # FIXME:MA
 
 regex1 = re.compile(RE_CARGOS_KEYWORD + ':\s+(.*?)' + RE_CARGOS_KEYWORD_NG)
 
+
 class Command(BaseCommand):
     args = '<csv files, ...>'
     help = 'Import CSV parsed BORME'
@@ -66,8 +67,8 @@ class Command(BaseCommand):
                     try:
                         acto = Acto.objects.get(borme=borme.name, id_acto=row['ID'])
                     except Acto.DoesNotExist:
-                        print 'Creando acto:', row['ID'], row['Nombre']
-                        acto = Acto(company=company.slug, borme=borme.name, id_acto=row['ID'])
+                        #print 'Creando acto:', row['ID'], row['Nombre']
+                        acto = Acto(company={"name": company.name, "slug": company.slug}, borme=borme.name, id_acto=row['ID'])
 
                     for k in ALL_KEYWORDS:
                         if row[k] not in (None, ''):
@@ -87,7 +88,7 @@ class Command(BaseCommand):
                                             print 'Creando persona:', nombre
                                             p = Person(name=nombre)
 
-                                        p.in_companies.append(company.slug)
+                                        p.in_companies.append({"name": company.name, "slug": company.slug})
                                         p.in_companies = list(set(p.in_companies))
                                         p.in_bormes.append(pdf_name)
                                         p.in_bormes = list(set(p.in_bormes))
@@ -109,7 +110,10 @@ class Command(BaseCommand):
             fp.close()
 
         config = Config.objects.first()
-        config.last_modified = datetime.today()
+        if config:
+            config.last_modified = datetime.today()
+        else:
+            config = Config(last_modified=datetime.today())
         config.save()
 
         # Elapsed time

@@ -70,7 +70,7 @@ class Command(BaseCommand):
                         acto = Acto.objects.get(borme=borme.name, id_acto=doc['ID'])
                     except Acto.DoesNotExist:
                         print 'Creando acto:', doc['ID'], company_name
-                        acto = Acto(company=company.slug, borme=borme.name, id_acto=doc['ID'])
+                        acto = Acto(company={"name": company.name, "slug": company.slug}, borme=borme.name, id_acto=row['ID'])
 
                     for k, v in doc.iteritems():
                         k = k.encode('utf-8')
@@ -91,7 +91,7 @@ class Command(BaseCommand):
                                         print 'Creando persona:', nombre
                                         p = Person(name=nombre)
 
-                                    p.in_companies.append(company.slug)
+                                    p.in_companies.append({"name": company.name, "slug": company.slug})
                                     p.in_companies = list(set(p.in_companies))
                                     p.in_bormes.append(pdf_name)
                                     p.in_bormes = list(set(p.in_bormes))

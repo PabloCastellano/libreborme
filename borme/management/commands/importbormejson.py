@@ -86,7 +86,7 @@ class Command(BaseCommand):
                                         print 'Creando persona:', nombre
                                         p = Person(name=nombre)
 
-                                    p.in_companies.append(company.slug)
+                                    p.in_companies.append({"name": company.name, "slug": company.slug})
                                     p.in_companies = list(set(p.in_companies))
                                     p.in_bormes.append(pdf_name)
                                     p.in_bormes = list(set(p.in_bormes))
