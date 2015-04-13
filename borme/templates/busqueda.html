@@ -2,9 +2,9 @@
 
 {% block content %}
 {% if query %}
-<h1>Resultados de la búsqueda</h1>
+<h1>Resultados de la búsqueda «{{ query }}»</h1>
 
-<p> {{ num_companies }} empresas y {{ num_persons }} personas.</p>
+<p><strong>{{ num_companies }}</strong> empresas y <strong>{{ num_persons }}</strong> personas.</p>
 <h2>Empresas:</h2>
 <ul>
     {% for company in companies.object_list %}
