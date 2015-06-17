@@ -6,7 +6,7 @@
     <title>Libreborme by PabloCastellano</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
     <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
@@ -27,23 +27,62 @@
         </ul>
       </header>
       <section>
-        <p>Plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil</p>
+        <p>En estos momentos hay una versión en producción en <a href="https://beta.libreborme.net">https://beta.libreborme.net</a>. Como su dominio indica, es una versión de pruebas, por lo que
+fallará de vez en cuando, sus URLs cambiarán, a veces contendrá más datos y otras veces menos...</p>
+
+<p>Tenlo en cuenta si la usas. De momento no hace falta que se reporten los bugs.</p>
+
+<p>Actualmente los datos importados son los existentes en 2015 hasta marzo, por lo que solo aparecerán sociedades y personas con actos mercantiles en este período.</p>
 
 <h2>
-<a name="concurso" class="anchor" href="#concurso"><span class="octicon octicon-link"></span></a>Concurso</h2>
+<a id="acerca-de-libreborme" class="anchor" href="#acerca-de-libreborme" aria-hidden="true"><span class="octicon octicon-link"></span></a>Acerca de LibreBORME</h2>
 
-<p>Este proyecto participa en el <a href="http://osl.ugr.es/2014/09/26/premios-a-proyectos-libres-de-la-ugr/">Certamen de Proyectos Libres de la UGR</a> <a href="http://osl.ugr.es/bases-de-los-premios-a-proyectos-libres-de-la-ugr/">(Bases)</a>.</p>
+<p>LibreBORME es una plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil.</p>
+
+<p>LibreBORME nace en 2014 como un Proyecto de Fin de Carrera con la intención de «abrir» los datos del Registro Mercantil de España. Aprovechando que <a href="http://elpais.com/diario/2008/01/03/ciberpais/1199330666_850215.html">desde 2009</a>
+se publica el BORME en formato electrónico, LibreBORME se encarga de <em>leérselo</em> por ti cada mañana y añadir a su base de datos los
+últimos cambios. De esta manera tú puedes hacer búsquedas semánticas, recibir notificaciones y usar estos datos de manera sencilla
+y para lo que quieras.</p>
+
+<p>Para más información puedes leer las siguientes entradas en el blog del autor:</p>
+
+<ul>
+<li>
+<a href="https://pablog.me/blog/2015/02/que-es-libreborme/">Qué es LibreBORME</a> - <a href="https://pablog.me/que-es-libreborme-en.html">What is LibreBORME</a> (25 de febrero de 2015)</li>
+<li>
+<a href="https://pablog.me/blog/2015/03/version-online-de-libreborme/">Versión online de LibreBORME</a> (31 de marzo de 2015)</li>
+</ul>
 
 <h2>
-<a name="instalaci%C3%B3n" class="anchor" href="#instalaci%C3%B3n"><span class="octicon octicon-link"></span></a>Instalación</h2>
+<a id="concursos" class="anchor" href="#concursos" aria-hidden="true"><span class="octicon octicon-link"></span></a>Concursos</h2>
 
-<pre><code>git clone https://github.com/PabloCastellano/libreborme.git
-cd libreborme
-virtualenv ve
-source ./ve/bin/activate
-pip install -r requirements.txt
-python manage.py runserver
-</code></pre>
+<p>Este proyecto participa en los siguientes concursos:</p>
+
+<ul>
+<li>
+<a href="https://www.concursosoftwarelibre.org/1415/">Concurso Universitario de Software Libre</a> <a href="https://www.concursosoftwarelibre.org/1415/bases">(Bases)</a>
+</li>
+<li>
+<a href="http://osl.ugr.es/2014/09/26/premios-a-proyectos-libres-de-la-ugr/">Certamen de Proyectos Libres de la UGR</a> <a href="http://osl.ugr.es/bases-de-los-premios-a-proyectos-libres-de-la-ugr/">(Bases)</a>.</li>
+</ul>
+
+<h2>
+<a id="instalación" class="anchor" href="#instalaci%C3%B3n" aria-hidden="true"><span class="octicon octicon-link"></span></a>Instalación</h2>
+
+<p>Para instrucciones de cómo montar tu propia instancia de LibreBORME, echa un vistazo a <a href="INSTALL.md">INSTALL.md</a>.</p>
+
+<h2>
+<a id="contribuciones" class="anchor" href="#contribuciones" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contribuciones</h2>
+
+<p>Si deseas contribuir al proyecto puedes enviarme tus Pull Requests en GitHub, donde también
+puedes ojear el <a href="https://github.com/PabloCastellano/libreborme/issues">listado de bugs</a>.</p>
+
+<h2>
+<a id="licencia" class="anchor" href="#licencia" aria-hidden="true"><span class="octicon octicon-link"></span></a>Licencia</h2>
+
+<p>LibreBORME es software libre y su código fuente está accesible en <a href="https://github.com/PabloCastellano/libreborme">GitHub</a> bajo la licencia <a href="https://www.gnu.org/licenses/agpl-3.0.html">Affero GPL v3</a>.</p>
+
+<p>© Desarrolladores de LibreBORME. Véase el archivo <a href="AUTHORS">AUTHORS</a>.</p>
       </section>
     </div>
     <footer>
