@@ -1,3 +1,5 @@
+![logo libreborme](libreborme/static/libreborme_logo.png)
+
 En estos momentos hay una versión en producción en https://beta.libreborme.net. Como su dominio indica, es una versión de pruebas, por lo que
 fallará de vez en cuando, sus URLs cambiarán, a veces contendrá más datos y otras veces menos...
 
