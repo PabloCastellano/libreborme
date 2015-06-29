@@ -46,6 +46,7 @@ INSTALLED_APPS = (
 
 if DEBUG:
     INSTALLED_APPS += (
+        'django_extensions',
         'debug_toolbar',
         'mongonaut',
     )
@@ -100,7 +101,7 @@ MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'es-es'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
