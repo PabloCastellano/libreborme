@@ -21,7 +21,7 @@ def update_django_project():
     with cd('/home/libreborme/libreborme'):
         run('git pull')
         with prefix('workon libreborme'):
-            run('pip install -r requirements.txt')
+            run('pip install -r requirements/production.txt')
             run('./manage.py collectstatic --noinput --settings=libreborme.local_settings')
 
 

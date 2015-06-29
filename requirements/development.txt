@@ -1,0 +1,7 @@
+-r base.txt
+blessings==1.6
+bpython==0.14.2
+curtsies==0.1.19
+django-extensions==1.5.5
+Pygments==2.0.2
+requests==2.7.0

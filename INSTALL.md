@@ -29,7 +29,7 @@ Instalación de libreborme:
     git clone https://github.com/PabloCastellano/libreborme.git
     cd libreborme
     mkvirtualenv libreborme
-    pip install -r requirements.txt
+    pip install -r requirements/base.txt
     cp libreborme/local_settings.py.example libreborme/local_settings.py
     Ajusta tu configuración en libreborme/local_settings.py con tus rutas y especialmente cambia la variable SECRET_KEY
     ./manage.py syncdb
@@ -38,7 +38,7 @@ Instalación de libreborme:
     Esto por defecto crea la cuenta `admin` con la contraseña `0000`.
 
 Si quieres instalar herramientas de desarrollo:
-    pip install -r requirements-dev.txt
+    pip install -r requirements/development.txt
 
 En producción:
 
@@ -46,7 +46,7 @@ En producción:
     cd ~/libreborme
     workon libreborme
     ./manage.py collecstatic
-    pip install -r requirements-prod.txt
+    pip install -r requirements/production.txt
     mkdir /home/libreborme/run/
     chmod 775 /home/libreborme/run/
     adduser libreborme www-data
