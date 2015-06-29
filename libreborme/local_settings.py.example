@@ -1,7 +1,7 @@
 # This is an example file.
 # Rename this to local_settings.py and edit it there
 
-from settings import *
+from .settings import *
 
 
 STATICFILES_DIRS = (

@@ -7,9 +7,10 @@ from mongogeneric.detail import DetailView
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from models import Company, Person, Acto, Config, Borme
+from .models import Company, Person, Acto, Config, Borme
 
 from random import randint
+
 
 class HomeView(TemplateView):
     template_name = "home.html"

@@ -6,7 +6,8 @@ from django.core.exceptions import FieldError
 
 from mongoengine import *
 
-from borme_parser import DICT_KEYWORDS
+#from borme_parser import DICT_KEYWORDS
+DICT_KEYWORDS = {}  # FIXME
 
 # TODO: i18n 2o valor
 PROVINCES = (

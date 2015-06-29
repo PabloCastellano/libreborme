@@ -1,9 +1,8 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic.base import TemplateView
 
-from views import IndexView
-
-from settings import DEBUG
+from .views import IndexView
+from .settings import DEBUG
 
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view(), name='home'),
