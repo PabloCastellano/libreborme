@@ -46,8 +46,7 @@ class Person(Document):
     """ Persona """
     name = StringField(max_length=200)
     slug = StringField(unique=True)
-    in_companies = ListField(StringField())
-    in_companies2 = ListField(EmbeddedDocumentField(EmbeddedCompany))
+    in_companies = ListField(EmbeddedDocumentField(EmbeddedCompany))
     in_bormes = ListField(StringField())
 
     # last access
@@ -112,7 +111,7 @@ class Cargo(EmbeddedDocument):
 class Acto(Document):
     """Cada entrada de acto es un registro"""
     borme = StringField(max_length=30)
-    company = StringField(max_length=200)
+    company = EmbeddedDocumentField(EmbeddedCompany)
     id_acto = IntField()
 
     revocaciones = ListField(EmbeddedDocumentField(Cargo))

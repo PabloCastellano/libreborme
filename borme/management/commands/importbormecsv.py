@@ -90,7 +90,7 @@ class Command(BaseCommand):
                                             p = Person(name=nombre)
 
                                         p.in_companies.append({"name": company.name, "slug": company.slug})
-                                        p.in_companies = list(set(p.in_companies))
+                                        p.in_companies = [dict(t) for t in set([tuple(d.items()) for d in p.in_companies])]
                                         p.in_bormes.append(pdf_name)
                                         p.in_bormes = list(set(p.in_bormes))
                                         try:

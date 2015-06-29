@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.core.management.base import BaseCommand, CommandError
-from borme.models import Company, Borme, Acto, Person, Cargo, Config
+from borme.models import Company, Borme, Acto, Person, Cargo, Config, EmbeddedCompany
 from mongoengine.errors import ValidationError, NotUniqueError
 
 import bson
@@ -71,7 +71,7 @@ class Command(BaseCommand):
                         acto = Acto.objects.get(borme=borme.name, id_acto=doc['ID'])
                     except Acto.DoesNotExist:
                         print 'Creando acto:', doc['ID'], company_name
-                        acto = Acto(company={"name": company.name, "slug": company.slug}, borme=borme.name, id_acto=row['ID'])
+                        acto = Acto(company={"name": company.name, "slug": company.slug}, borme=borme.name, id_acto=doc['ID'])
 
                     for k, v in doc.iteritems():
                         k = k.encode('utf-8')
@@ -92,8 +92,8 @@ class Command(BaseCommand):
                                         print 'Creando persona:', nombre
                                         p = Person(name=nombre)
 
-                                    p.in_companies.append({"name": company.name, "slug": company.slug})
-                                    p.in_companies = list(set(p.in_companies))
+                                    p.in_companies.append(EmbeddedCompany(name=company.name, slug=company.slug))
+                                    p.in_companies = [dict(t) for t in set([tuple(eval(d.to_json()).items()) for d in p.in_companies])]
                                     p.in_bormes.append(pdf_name)
                                     p.in_bormes = list(set(p.in_bormes))
                                     try:
