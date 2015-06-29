@@ -82,6 +82,12 @@ Comandos
     ./manage.py importbormejson borme_parser/json/*.json
     ./manage.py importbormebson borme_parser/bson/*.bson
 
+Para actualizar a la última versión:
+    git stash && git pull && git stash pop && ./manage.py updateversion
+
+Tests:
+    ./manage.py test --settings=libreborme.local_settings
+
 Rellenando con datos la BD
 --------------------------
 
