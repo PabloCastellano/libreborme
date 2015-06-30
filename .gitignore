@@ -2,11 +2,8 @@
 *~
 
 /db.sqlite3
+/.venv
+/.idea
+/.ropeproject
 
-/borme_parser/xml
-/borme_parser/pdf
-/borme_parser/pdfcrop
-/borme_parser/txt
-/borme_parser/txt2
-/borme_parser/csv
-/borme_parser/*.log
+/docs/_build
