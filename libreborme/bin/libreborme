@@ -3,12 +3,12 @@ from __future__ import absolute_import
 import os
 import sys
 from django.core import management
-import libreborme
+from libreborme import conf
 
 
 if __name__ == "__main__":
     if 'startproject' in sys.argv:
-        project_template = '{libreborme_conf}/project_template'.format(libreborme_conf=os.path.dirname(libreborme.__file__))
+        project_template = '{libreborme_conf}/project_template'.format(libreborme_conf=os.path.dirname(conf.__file__))
         template_argument = '--template={path}'.format(path=project_template)
         sys.argv.append(template_argument)
     management.execute_from_command_line()

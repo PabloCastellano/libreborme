@@ -119,7 +119,7 @@ MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
 
 LANGUAGE_CODE = 'es'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Madrid'
 
 USE_I18N = True
 
