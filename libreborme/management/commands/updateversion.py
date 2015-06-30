@@ -12,7 +12,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         config = Config.objects.first()
         version = get_git_revision_short_hash()
-        print version
+        print(version)
         if config:
             config.version = version
         else:

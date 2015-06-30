@@ -19,7 +19,7 @@ PROVINCES = (
 
 class Borme(Document):
     """ Edicion de BORME """
-    name = StringField(max_length=30)
+    cve = StringField(max_length=30)
     date = DateTimeField()
     year = IntField()
     url = URLField()
@@ -32,8 +32,8 @@ class Borme(Document):
     province = StringField(max_length=100)
     pages = IntField()
 
-    def __unicode__(self):
-        return self.name
+    def __str__(self):
+        return self.cve
 
 
 # TEMP
@@ -61,7 +61,7 @@ class Person(Document):
         #return reverse('borme.views.PersonView', args=[str(self.slug)])
         return '/persona/%s' % self.slug
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -97,7 +97,7 @@ class Company(Document):
         #return reverse('borme.views.CompanyView', kwargs={slug: self.slug})
         return '/empresa/%s' % self.slug
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -105,7 +105,7 @@ class Cargo(EmbeddedDocument):
     titulo = StringField()
     nombre = StringField()
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s: %s' % (self.titulo, self.nombre)
 
 
@@ -178,7 +178,7 @@ class Acto(Document):
             else:
                 self.__setattr__(DICT_KEYWORDS[name], value)
 
-    def __unicode__(self):
+    def __str__(self):
         return 'Acto %d en borme %s' % (self.id_acto, self.borme)
 
 
