@@ -1,0 +1,3 @@
+include AUTHORS LICENSE README.md
+recursive-include libreborme *
+recursive-exclude * *.pyc *.swp
