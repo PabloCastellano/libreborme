@@ -6,4 +6,5 @@ repo_url: https://github.com/PabloCastellano/libreborme/
 pages:
 - ¡Bienvenido a la documentación de LibreBorme!: index.md
 - Acerca de LibreBORME: introduction.md
+- Instalación: installation.md
 theme: readthedocs

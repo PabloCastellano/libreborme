@@ -15,20 +15,17 @@ se publica el BORME en formato electrónico, LibreBORME se encarga de *leérselo
 y para lo que quieras.
 
 Para más información puedes leer las siguientes entradas en el blog del autor:
+
 - [Qué es LibreBORME](https://pablog.me/blog/2015/02/que-es-libreborme/) - [What is LibreBORME](https://pablog.me/que-es-libreborme-en.html) (25 de febrero de 2015)
 - [Versión online de LibreBORME](https://pablog.me/blog/2015/03/version-online-de-libreborme/) (31 de marzo de 2015)
 
-# Concursos
+# Premios
 
-Este proyecto participa en los siguientes concursos:
-
-- [Concurso Universitario de Software Libre](https://www.concursosoftwarelibre.org/1415/) [(Bases)](https://www.concursosoftwarelibre.org/1415/bases)
-- [Certamen de Proyectos Libres de la UGR](http://osl.ugr.es/2014/09/26/premios-a-proyectos-libres-de-la-ugr/) [(Bases)](http://osl.ugr.es/bases-de-los-premios-a-proyectos-libres-de-la-ugr/).
-
+Este proyecto obtuvo el tercer premio en el [Certamen de Proyectos Libres de la UGR](http://osl.ugr.es/2014/09/26/premios-a-proyectos-libres-de-la-ugr/).
 
 # Instalación
 
-Para instrucciones de cómo montar tu propia instancia de LibreBORME, echa un vistazo a [INSTALL.md](INSTALL.md).
+Para instrucciones de cómo montar tu propia instancia de LibreBORME, echa un vistazo a [INSTALL.md](https://github.com/PabloCastellano/libreborme/blob/master/INSTALL.md).
 
 # Contribuciones
 
@@ -39,4 +36,4 @@ puedes ojear el [listado de bugs](https://github.com/PabloCastellano/libreborme/
 
 LibreBORME es software libre y su código fuente está accesible en [GitHub](https://github.com/PabloCastellano/libreborme) bajo la licencia [Affero GPL v3](https://www.gnu.org/licenses/agpl-3.0.html).
 
-© Desarrolladores de LibreBORME. Véase el archivo [AUTHORS](AUTHORS).
+© Desarrolladores de LibreBORME. Véase el archivo [AUTHORS](https://github.com/PabloCastellano/libreborme/blob/master/AUTHORS).
