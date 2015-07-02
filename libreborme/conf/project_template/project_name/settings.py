@@ -17,7 +17,7 @@ WSGI_APPLICATION = '{{ project_name }}.wsgi.application'
 
 DEBUG = True
 DOMAIN = '<domain>'
-SUBDIR = '/'  # edit this line if you are installing in a sub directory, like /nodeshot
+SUBDIR = '/'  # edit this line if you are installing in a sub directory, like /libreborme
 SITE_NAME = '{{ project_name }}'  # site name, you can change this
 
 DATABASES = {
@@ -30,9 +30,10 @@ DATABASES = {
 MONGO_DBNAME = 'libreborme'
 MONGODB = connect(MONGO_DBNAME)
 
-# import the default nodeshot settings
+# import the default libreborme settings
 # do not move this import
-from libreborme.conf.settings import *
+#from libreborme.conf.settings import *
+from libreborme.settings import *
 
 
 # ------ All settings customizations must go here ------ #
