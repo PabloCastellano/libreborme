@@ -8,7 +8,7 @@ SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 SECRET_KEY = '{{ secret_key }}'
 
-ROOT_URLCONF = '{{ project_name }}.urls' #
+ROOT_URLCONF = '{{ project_name }}.urls'
 
 WSGI_APPLICATION = '{{ project_name }}.wsgi.application'
 
@@ -19,13 +19,6 @@ DEBUG = True
 DOMAIN = '<domain>'
 SUBDIR = '/'  # edit this line if you are installing in a sub directory, like /libreborme
 SITE_NAME = '{{ project_name }}'  # site name, you can change this
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
 MONGO_DBNAME = 'libreborme'
 MONGODB = connect(MONGO_DBNAME)
