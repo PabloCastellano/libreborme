@@ -1,7 +1,7 @@
-from libreborme.conf.celery import init_celery
+#from libreborme.conf.celery import init_celery
 
 
-__all__ = ['app']
+#__all__ = ['app']
 
 
-app = init_celery('{{ project_name }}')
+#app = init_celery('{{ project_name }}')
