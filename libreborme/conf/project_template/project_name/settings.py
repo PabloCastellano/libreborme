@@ -52,3 +52,5 @@ EMAIL_HOST = 'localhost'
 EMAIL_HOST_USER = 'root@localhost'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER  # used for error reporting
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
