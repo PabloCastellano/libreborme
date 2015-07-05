@@ -7,4 +7,5 @@ pages:
 - ¡Bienvenido a la documentación de LibreBorme!: index.md
 - Acerca de LibreBORME: introduction.md
 - Instalación: installation.md
+- Instalación automática: install_production_automated.md
 theme: readthedocs
