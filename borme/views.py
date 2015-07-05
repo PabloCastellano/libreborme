@@ -100,13 +100,10 @@ class CompanyView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(CompanyView, self).get_context_data(**kwargs)
 
-        try:
-            context['registros'] = Acto.objects.filter(company=self.company.slug).exclude('id', 'company')
-            bormes = Borme.objects.filter(cve__in=[r.borme for r in context['registros']])
-            context['bormes'] = {b.cve: b for b in bormes}
-        except Acto.DoesNotExist:
-            context['registros'] = ()
-            context['bormes'] = ()
+        context['actos'] = Acto.objects.filter(__raw__={'company.slug': self.company.slug}).exclude('id', 'company')
+        bormes = Borme.objects.filter(cve__in=[r.borme for r in context['actos']])
+        context['bormes'] = {b.cve: b for b in bormes}
+        context['persons'] = Person.objects.filter(__raw__={'in_companies.slug': self.company.slug})
 
         return context
 
@@ -122,13 +119,9 @@ class PersonView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(PersonView, self).get_context_data(**kwargs)
 
-        try:
-            context['registros'] = Acto.objects.filter(borme__in=self.person.in_bormes)
-            bormes = Borme.objects.filter(cve__in=[r.borme for r in context['registros']])
-            context['bormes'] = {b.cve: b for b in bormes}
-        except Acto.DoesNotExist:
-            context['registros'] = ()
-            context['bormes'] = ()
+        context['registros'] = Acto.objects.filter(borme__in=self.person.in_bormes)
+        bormes = Borme.objects.filter(cve__in=[r.borme for r in context['registros']])
+        context['bormes'] = {b.cve: b for b in bormes}
 
         return context
 

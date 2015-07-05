@@ -21,7 +21,7 @@
     <h3>Sociedades relacionadas</h3>
 
     <ul>
-    {% for company in person.in_companies2 %}
+    {% for company in person.in_companies %}
         <li><a href="{% url "borme-empresa" company.slug %}">{{ company.name }}</a></li>
     {% empty %}
         <i>No hay actos registrados.</i>
@@ -29,6 +29,6 @@
 
     </ul>
 
-    <h3>Personas relacionadas</h3>
+    <!-- <h3>Personas relacionadas</h3> -->
     
 {% endblock %}

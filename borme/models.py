@@ -58,8 +58,7 @@ class Person(Document):
         super(Person, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        #return reverse('borme.views.PersonView', args=[str(self.slug)])
-        return '/persona/%s' % self.slug
+        return reverse('borme-persona', args=[str(self.slug)])
 
     def __str__(self):
         return self.name
@@ -70,6 +69,7 @@ SOCIEDADES = (
     ('SL', 'Sociedad Limitada'),
     ('COOP', 'Cooperativa'),
 )
+
 
 class Company(Document):
     """ Sociedad """
@@ -94,8 +94,7 @@ class Company(Document):
         super(Company, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        #return reverse('borme.views.CompanyView', kwargs={slug: self.slug})
-        return '/empresa/%s' % self.slug
+        return reverse('borme-empresa', args=[str(self.slug)])
 
     def __str__(self):
         return self.name

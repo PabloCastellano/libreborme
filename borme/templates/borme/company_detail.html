@@ -16,18 +16,18 @@
 
     <h3>Actos</h3>
     <ul>
-        {% for registro in registros %}
-            <!-- <li>Acto {{ registro.id_acto }} en BORME <i>{{ registro.borme }}</i> con fecha <i>{{ registro.date }}</i>.</li> -->
+        {% for acto in actos %}
+            <!-- <li>Acto {{ acto.id_acto }} en BORME <i>{{ acto.borme }}</i> con fecha <i>{{ acto.date }}</i>.</li> -->
             <div class="container">
-            <strong>{{ registro.borme }}</strong>
-	    <!-- <a href="{{ bormes|get_url:registro.borme }}" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
-	    <a href="{{ bormes|get_url:registro.borme }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
-            {% for attr in registro %}
-            {% if registro|get_item:attr %}
+            <strong>{{ acto.borme }}</strong>
+	    <!-- <a href="{{ bormes|get_url:acto.borme }}" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
+	    <a href="{{ bormes|get_url:acto.borme }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
+            {% for attr in acto %}
+            {% if acto|get_item:attr %}
                 {% if attr == 'nombramientos' %}
-                <strong>{{ attr|nombre }}:</strong> {{ registro|get_item:attr|join:", " }}</br>
+                <strong>{{ attr|nombre }}:</strong> {{ acto|get_item:attr|join:", " }}</br>
                 {% elif attr != 'borme' %}
-                <strong>{{ attr|nombre }}:</strong> {{ registro|get_item:attr }}</br>
+                <strong>{{ attr|nombre }}:</strong> {{ acto|get_item:attr }}</br>
                 {% endif %}
             {% endif %}
             {% endfor %}
@@ -39,14 +39,19 @@
     </ul>
 
     <h3>Personas relacionadas</h3>
-    <h3>Sociedades relacionadas</h3>
+    <ul>
+        {% for person in persons %}
+        <li><a href="{{ person.get_absolute_url }}">{{ person.name }}</a></li>
+        {% endfor %}
+    </ul>
+    <!-- <h3>Sociedades relacionadas</h3> -->
     <h3>BORMEs relacionados</h3>
     <ul>
         {% for borme in bormes.values %}
         <li>{{ borme.cve }}
-	  <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
-	  <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
-	</li>
+            <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
+            <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
+        </li>
         {% endfor %}
     </ul>
 
