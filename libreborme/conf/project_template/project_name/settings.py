@@ -54,3 +54,6 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER  # used for error reporting
 
 STATIC_ROOT = '%s/static/' % SITE_ROOT
+
+PIWIK_URL = ''
+PIWIK_SITE_ID = ''
