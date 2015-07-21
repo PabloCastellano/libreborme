@@ -25,7 +25,7 @@ setup(
     name='libreborme',
     version=get_version(),
     description="Plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil",
-    long_description=open('README.md').read(),
+    long_description=open('README.md', encoding='utf-8').read(),
     author='Pablo Castellano',
     author_email='pablo@anche.no',
     license='GPLv3',
