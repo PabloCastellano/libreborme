@@ -2,6 +2,7 @@
 
 from setuptools import setup, find_packages
 from libreborme import get_version
+import sys
 
 
 def get_install_requires():
@@ -20,12 +21,16 @@ def get_install_requires():
 
     return requirements
 
+if sys.version_info[0] == 3:
+    long_description = open('README.md', encoding='utf-8').read()
+else:
+    long_description = open('README.md').read()
 
 setup(
     name='libreborme',
     version=get_version(),
     description="Plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil",
-    long_description=open('README.md', encoding='utf-8').read(),
+    long_description=long_description,
     author='Pablo Castellano',
     author_email='pablo@anche.no',
     license='GPLv3',
