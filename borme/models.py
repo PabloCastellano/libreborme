@@ -23,6 +23,7 @@ class Borme(Document):
     date = DateTimeField()
     year = IntField()
     url = URLField()
+    #url = StringField(max_length=100)
     type = StringField(max_length=1)
     from_reg = IntField()
     until_reg = IntField()
@@ -30,6 +31,7 @@ class Borme(Document):
     until_page = IntField()
     #province = StringField(max_length=100, choices=PROVINCES)
     province = StringField(max_length=100)
+    section = StringField(max_length=20)
     pages = IntField()
 
     def __str__(self):
