@@ -2,9 +2,10 @@ from .models import Company, Borme, Acto, Person, Cargo, EmbeddedCompany
 from mongoengine.errors import ValidationError, NotUniqueError
 
 import bormeparser
+from bormeparser import regex
 
 
-def import_borme_to_mongodb(filename):
+def import_borme_file(filename):
     """
     Import BORME to MongoDB database
 
@@ -22,7 +23,7 @@ def import_borme_to_mongodb(filename):
     except Borme.DoesNotExist:
         print('Creando borme %s' % borme.cve)
         created_bormes += 1
-        Borme(cve=borme.cve).save()
+        Borme(cve=borme.cve, date=borme.date, url=borme.url, province=borme.provincia, section=borme.seccion).save()
 
     # TODO: borrar si hubieran actos para este borme?
     for n, acto in enumerate(borme.get_actos(), 1):
@@ -36,8 +37,7 @@ def import_borme_to_mongodb(filename):
             except Company.DoesNotExist:
                 print('Creando empresa %s' % acto.empresa)
                 created_companies += 1
-                company = Company()
-                company.name = acto.empresa
+                company = Company(name=acto.empresa)
             company.in_bormes = [borme.cve]
             #company.in_bormes.append(borme.cve)
             try:
@@ -66,22 +66,38 @@ def import_borme_to_mongodb(filename):
                             #print('  %s' % nombre)
                             l.append(Cargo(titulo=cargo, nombre=nombre))
 
-                            try:
-                                p = Person.objects.get(name=nombre)
-                            except Person.DoesNotExist:
-                                print('Creando persona: %s' % nombre)
-                                created_persons += 1
-                                p = Person(name=nombre)
+                            if regex.is_company(nombre):
+                                try:
+                                    c = Company.objects.get(name=nombre)
+                                except Company.DoesNotExist:
+                                    print('Creando empresa: %s' % nombre)
+                                    created_companies += 1
+                                    c = Company(name=nombre)
 
-                            p.in_companies.append(EmbeddedCompany(name=company.name, slug=company.slug))
-                            #p.in_companies = [dict(t) for t in set([tuple(eval(d.to_json()).items()) for d in p.in_companies])]
-                            p.in_bormes.append(borme.cve)
-                            p.in_bormes = list(set(p.in_bormes))
-                            try:
-                                p.save()
-                            except NotUniqueError as e:
-                                print('ERROR creando persona: %s' % nombre)
-                                print(e)
+                                # TODO: relations
+                                try:
+                                    c.save()
+                                except NotUniqueError as e:
+                                    print('ERROR creando empresa: %s' % nombre)
+                                    print(e)
+
+                            else:
+                                try:
+                                    p = Person.objects.get(name=nombre)
+                                except Person.DoesNotExist:
+                                    print('Creando persona: %s' % nombre)
+                                    created_persons += 1
+                                    p = Person(name=nombre)
+
+                                p.in_companies.append(EmbeddedCompany(name=company.name, slug=company.slug))
+                                #p.in_companies = [dict(t) for t in set([tuple(eval(d.to_json()).items()) for d in p.in_companies])]
+                                p.in_bormes.append(borme.cve)
+                                p.in_bormes = list(set(p.in_bormes))
+                                try:
+                                    p.save()
+                                except NotUniqueError as e:
+                                    print('ERROR creando persona: %s' % nombre)
+                                    print(e)
                         nuevo_acto.__setattr__(k, l)
 
                 else:
