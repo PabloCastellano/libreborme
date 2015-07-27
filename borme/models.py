@@ -5,9 +5,11 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import FieldError
 
 from mongoengine import *
+from bormeparser.regex import SOCIEDADES as SOCIEDADES_DICT
 
 #from borme_parser import DICT_KEYWORDS
 DICT_KEYWORDS = {}  # FIXME
+SOCIEDADES = tuple(SOCIEDADES_DICT.items())
 
 # TODO: i18n 2o valor
 PROVINCES = (
@@ -58,13 +60,6 @@ class Person(Document):
 
     def __str__(self):
         return self.name
-
-
-SOCIEDADES = (
-    ('SA', 'Sociedad Anónima'),
-    ('SL', 'Sociedad Limitada'),
-    ('COOP', 'Cooperativa'),
-)
 
 
 class Company(Document):
