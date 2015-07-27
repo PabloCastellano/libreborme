@@ -33,24 +33,18 @@ class Borme(Document):
     province = StringField(max_length=100)
     section = StringField(max_length=20)
     pages = IntField()
+    anuncios = ListField(ReferenceField('Anuncio'))
 
     def __str__(self):
         return self.cve
-
-
-# TEMP
-class EmbeddedCompany(EmbeddedDocument):
-    """ Sociedad embedded """
-    name = StringField(max_length=200)
-    slug = StringField()
 
 
 class Person(Document):
     """ Persona """
     name = StringField(max_length=200)
     slug = StringField(unique=True)
-    in_companies = ListField(EmbeddedDocumentField(EmbeddedCompany))
-    in_bormes = ListField(StringField())
+    in_companies = ListField(ReferenceField('Company'))
+    in_bormes = ListField(ReferenceField('Borme'))
 
     # last access
     # number of visits
@@ -82,7 +76,8 @@ class Company(Document):
     is_active = BooleanField(default=False)
     type = StringField(choices=SOCIEDADES)
 
-    in_bormes = ListField(StringField())
+    in_bormes = ListField(ReferenceField('Borme'))
+    anuncios = ListField(ReferenceField('Anuncio'))
 
     # last access
     # number of visits
@@ -110,77 +105,15 @@ class Cargo(EmbeddedDocument):
         return '%s: %s' % (self.titulo, self.nombre)
 
 
-class Acto(Document):
-    """Cada entrada de acto es un registro"""
-    borme = StringField(max_length=30)
-    company = EmbeddedDocumentField(EmbeddedCompany)
-    id_acto = IntField()
-
-    revocaciones = ListField(EmbeddedDocumentField(Cargo))
-    reelecciones = ListField(EmbeddedDocumentField(Cargo))
-    cancelaciones_oficio_nombramientos = ListField(EmbeddedDocumentField(Cargo))
-    nombramientos = ListField(EmbeddedDocumentField(Cargo))
-
-    cambio_objeto_social = StringField()
-    otros_conceptos = StringField()
-    fe_erratas = StringField()
-    sociedad_unipersonal = StringField()
-    declaracion_unipersonalidad = StringField()
-    constitucion = StringField()
-    suspension_pagos = StringField()
-    perdida_caracter_unipersonalidad = StringField()
+class Anuncio(Document):
+    id_anuncio = IntField()
+    borme = ReferenceField('Borme')
+    company = ReferenceField('Company')
     datos_registrales = StringField()
-    cambio_domicilio_social = StringField()
-    disolucion = StringField()
-    ampliacion_objeto_social = StringField()
-    cierre_provisional_hoja_registral_baja_en_el_indice_entidades_juridicas = StringField()
-    ceses_dimisiones = StringField()
-    situacion_concursal = StringField()
-    modificaciones_estatutarias = StringField()
-    ampliacion_capital = StringField()
-    adaptacion_ley_2_95 = StringField()
-    cambio_denominacion_social = StringField()
-    extincion = StringField()
-    reduccion_capital = StringField()
-    cambio_identidad_socio_unico = StringField()
-    transformacion_sociedad = StringField()
-    reapertura_hoja_registral = StringField()
-    socio_unico = StringField()
-    articulo_378_5_reglamento_registro_mercantil = StringField()
-    fusion_absorcion = StringField()
-
-    # Descomentar cuando haya herencias.
-    #meta = {'allow_inheritance': True}
-
-    def attributes1(self):
-        d = {}
-        for attr in self.__dict__['_data'].keys():
-            if self.__getattribute__(attr) not in [None, '', []]:
-                d[attr] = self.__getattribute__(attr)
-        return d
-
-    def attributes(self):
-        l = []
-        for attr in self.__dict__['_data'].keys():
-            if self.__getattribute__(attr) not in [None, '', []]:
-                l.append(attr)
-        return l
-
-    # Sino es imposible acceder a los valores del objeto, ya que estos contienen espacios y caracteres raros
-    # FIXME: Desacoplar de borme_parser
-    def __setattr__(self, name, value):
-        if name not in DICT_KEYWORDS:
-            super(Acto, self).__setattr__(name, value)
-        else:
-            if DICT_KEYWORDS[name] in ('Revocaciones', 'Reelecciones', 'Cancelaciones de oficio de nombramientos', 'Nombramientos'):
-                if not isinstance(value, list):
-                    raise AttributeError
-                self.__setattr__(DICT_KEYWORDS[name], list(set(value)))
-            else:
-                self.__setattr__(DICT_KEYWORDS[name], value)
+    actos = DictField()
 
     def __str__(self):
-        return 'Acto %d en borme %s' % (self.id_acto, self.borme)
+        return '%d (%d actos)' % (self.id_anuncio, len(self.actos.keys()))
 
 
 class Config(Document):

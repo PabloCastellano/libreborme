@@ -7,36 +7,22 @@
 {% block content %}
     <h2>Sociedad «{{ company.name }}»</h2>
 
-    {% if company.nif %}
     <strong>NIF:</strong> {{ company.nif|default:"Desconocido" }}
     <br/>
     <strong>Fecha de constitución:</strong> {{ company.date_creation|date|default:"Desconocido" }}
     <br/>
-    {% endif %}
 
-    <h3>Actos</h3>
-    <ul>
-        {% for acto in actos %}
-            <!-- <li>Acto {{ acto.id_acto }} en BORME <i>{{ acto.borme }}</i> con fecha <i>{{ acto.date }}</i>.</li> -->
-            <div class="container">
-            <strong>{{ acto.borme }}</strong>
-	    <!-- <a href="{{ bormes|get_url:acto.borme }}" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
-	    <a href="{{ bormes|get_url:acto.borme }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
-            {% for attr in acto %}
-            {% if acto|get_item:attr %}
-                {% if attr == 'nombramientos' %}
-                <strong>{{ attr|nombre }}:</strong> {{ acto|get_item:attr|join:", " }}</br>
-                {% elif attr != 'borme' %}
-                <strong>{{ attr|nombre }}:</strong> {{ acto|get_item:attr }}</br>
-                {% endif %}
-            {% endif %}
+    <h3>Anuncios en boletines oficiales</h3>
+        {% for anuncio in anuncios %}
+            <li>Anuncio <strong>{{ anuncio.id_anuncio }}</strong> con fecha <strong><i>{{ anuncio.borme.date|date }}</i></strong>.</li>
+        <ul>
+           {% for k, v in anuncio.actos.items %}
+              <li><strong>{{ k }}</strong>: {{ v }}</li>
             {% endfor %}
-            </div>
-            </br>
+        </ul>
         {% empty %}
-            <i>No hay actos registrados.</i>
+            <i>No hay anuncios registrados.</i>
         {% endfor %}
-    </ul>
 
     <h3>Personas relacionadas</h3>
     <ul>
@@ -44,7 +30,8 @@
         <li><a href="{{ person.get_absolute_url }}">{{ person.name }}</a></li>
         {% endfor %}
     </ul>
-    <!-- <h3>Sociedades relacionadas</h3> -->
+    <h3>Sociedades relacionadas</h3>
+        <i>No disponible</i>
     <h3>BORMEs relacionados</h3>
     <ul>
         {% for borme in bormes.values %}

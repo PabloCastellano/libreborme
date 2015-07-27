@@ -7,7 +7,7 @@ from mongogeneric.detail import DetailView
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from .models import Company, Person, Acto, Config, Borme
+from .models import Company, Person, Anuncio, Config, Borme
 
 from random import randint
 
@@ -19,7 +19,7 @@ class HomeView(TemplateView):
         context = super(HomeView, self).get_context_data(**kwargs)
         context['total_companies'] = Company.objects.count()
         context['total_persons'] = Person.objects.count()
-        context['total_regs'] = Acto.objects.count()
+        context['total_anuncios'] = Anuncio.objects.count()
         context['random_companies'] = Company.objects.filter().limit(10).skip(randint(0, context['total_companies']))
         context['random_persons'] = Person.objects.filter().limit(10).skip(randint(0, context['total_persons']))
         context['last_modified'] = Config.objects.first().last_modified
@@ -100,10 +100,10 @@ class CompanyView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(CompanyView, self).get_context_data(**kwargs)
 
-        context['actos'] = Acto.objects.filter(__raw__={'company.slug': self.company.slug}).exclude('id', 'company')
-        bormes = Borme.objects.filter(cve__in=[r.borme for r in context['actos']])
+        context['anuncios'] = Anuncio.objects.filter(company=self.company)
+        bormes = [r.borme for r in context['anuncios']]
         context['bormes'] = {b.cve: b for b in bormes}
-        context['persons'] = Person.objects.filter(__raw__={'in_companies.slug': self.company.slug})
+        context['persons'] = Person.objects.filter(in_companies__contains=self.company)
 
         return context
 
@@ -119,8 +119,8 @@ class PersonView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(PersonView, self).get_context_data(**kwargs)
 
-        context['registros'] = Acto.objects.filter(borme__in=self.person.in_bormes)
-        bormes = Borme.objects.filter(cve__in=[r.borme for r in context['registros']])
+        context['anuncios'] = Anuncio.objects.filter(borme__in=self.person.in_bormes)
+        bormes = [r.borme for r in context['anuncios']]
         context['bormes'] = {b.cve: b for b in bormes}
 
         return context

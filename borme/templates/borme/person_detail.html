@@ -5,6 +5,17 @@
 {% block content %}
     <h2>Persona «{{ person.name }}»</h2>
     <h3>Datos</h3>
+    <strong>Cargos activos:</strong> {{ person.cargos1|default:"Desconocido" }}
+    <br/>
+    <strong>Cargos históricos:</strong> {{ person.cargos2|default:"Desconocido" }}
+    <br/>
+    <strong>Total empresas:</strong> {{ person.empresas|default:"Desconocido" }}
+    <br/>
+
+    <h3>Cargos directivos en empresas</h3>
+        <i>No disponible</i>
+    <h3>Anuncios de nombramientos y ceses</h3>
+        <i>No disponible</i>
 
     <h3>BORMEs relacionados</h3>
 
@@ -29,6 +40,7 @@
 
     </ul>
 
-    <!-- <h3>Personas relacionadas</h3> -->
+    <h3>Personas relacionadas</h3>
+        <i>No disponible</i>
     
 {% endblock %}
