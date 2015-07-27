@@ -4,10 +4,15 @@ from mongoengine.errors import ValidationError, NotUniqueError
 import bormeparser
 from bormeparser import regex
 
+from django.conf import settings
 
-def import_borme_file(filename):
-    """
-    Import BORME to MongoDB database
+import six
+import os
+
+# FIXME:
+#settings.BORME_DIR
+# descarga -> parse -> import -> mueve a carpeta archive
+# Problema: download_pdfs va a bajar de nuevo los archivos en tmp si ya estan procesados
 
 
 def _import1(borme):
@@ -108,6 +113,57 @@ def _import1(borme):
         except ValidationError as e:
             print('ERROR importing borme')
             print(e)
+    return results
+
+
+def import_borme_download(date):
+    """
+    Download and import BORME to MongoDB database
+
+    :param filename:
+    :return:
+    """
+    date_t = tuple(map(int, (date[0], date[1], date[2])))
+    bormeparser.download_pdfs(date_t, settings.BORME_PDF_TEMP_ROOT, bormeparser.SECCION.A)
+
+    if six.PY3:
+        _, _, files = next(os.walk(settings.BORME_PDF_TEMP_ROOT))
+    else:
+        _, _, files = os.path.walk(settings.BORME_PDF_TEMP_ROOT).next()
+
+    month_path = os.path.join(date[0], date[1])
+    new_path = os.path.join(settings.BORME_PDF_ROOT, month_path)
+    if six.PY3:
+        os.makedirs(new_path, exist_ok=True)
+    else:
+        try:
+            os.makedirs(new_path)
+        except OSError:
+            pass
+
+    for filename in files:
+        filepath = os.path.join(settings.BORME_PDF_TEMP_ROOT, filename)
+        borme = bormeparser.parse(filepath)
+        results = _import1(borme)
+        newfilepath = os.path.join(new_path, filename)
+        os.rename(filepath, newfilepath)
+        print(newfilepath)
+
+    print_results(results, borme)
+
+
+def import_borme_file(filename):
+    """
+    Import BORME to MongoDB database
+
+    :param filename:
+    :return:
+    """
+    borme = bormeparser.parse(filename)
+    results = _import1(borme)
+
+    print_results(results, borme)
+
 
 def print_results(results, borme):
     print()
