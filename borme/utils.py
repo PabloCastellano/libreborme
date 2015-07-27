@@ -2,7 +2,7 @@ from .models import Company, Borme, Anuncio, Person, Cargo
 from mongoengine.errors import ValidationError, NotUniqueError
 
 import bormeparser
-from bormeparser import regex
+from bormeparser.regex import is_company, is_acto_cargo
 
 from django.conf import settings
 
@@ -55,7 +55,7 @@ def _import1(borme):
             for k, v in actos.items():
                 #print(k)
                 #print(v)
-                if k in ('Revocaciones', 'Reelecciones', 'Cancelaciones de oficio de nombramientos', 'Nombramientos'):
+                if is_acto_cargo(k):
                     for cargo, nombres in v:
                         #print(cargo, nombres, len(nombres))
                         l = []
@@ -63,7 +63,7 @@ def _import1(borme):
                             #print('  %s' % nombre)
                             l.append(Cargo(titulo=cargo, nombre=nombre))
 
-                            if regex.is_company(nombre):
+                            if is_company(nombre):
                                 try:
                                     c = Company.objects.get(name=nombre)
                                 except Company.DoesNotExist:
