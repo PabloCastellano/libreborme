@@ -92,9 +92,17 @@ class Company(Document):
         return self.name
 
 
-class Cargo(EmbeddedDocument):
+class CargoCompany(EmbeddedDocument):
     titulo = StringField()
-    nombre = StringField()
+    nombre = ReferenceField('Company')
+
+    def __str__(self):
+        return '%s: %s' % (self.titulo, self.nombre)
+
+
+class CargoPerson(EmbeddedDocument):
+    titulo = StringField()
+    nombre = ReferenceField('Person')
 
     def __str__(self):
         return '%s: %s' % (self.titulo, self.nombre)

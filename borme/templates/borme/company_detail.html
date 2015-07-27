@@ -16,9 +16,18 @@
         {% for anuncio in anuncios %}
             <li>Anuncio <strong>{{ anuncio.id_anuncio }}</strong> con fecha <strong><i>{{ anuncio.borme.date|date }}</i></strong>.</li>
         <ul>
-           {% for k, v in anuncio.actos.items %}
-              <li><strong>{{ k }}</strong>: {{ v }}</li>
-            {% endfor %}
+           {% for acto_nombre, value in anuncio.actos.items %}
+              <li><strong>{{ acto_nombre }}</strong>:
+             {% if value|is_string %}
+               {{ value }}
+             {% else %}
+             {% for cargo in value %}
+               {{ cargo.titulo }}:
+               <a href="{{ cargo.nombre.get_absolute_url }}">{{ cargo.nombre }}</a>,
+             {% endfor %}
+             {% endif %}
+              </li>
+           {% endfor %}
         </ul>
         {% empty %}
             <i>No hay anuncios registrados.</i>

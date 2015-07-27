@@ -1,8 +1,8 @@
-from .models import Company, Borme, Anuncio, Person, Cargo
+from .models import Company, Borme, Anuncio, Person, CargoCompany, CargoPerson
 from mongoengine.errors import ValidationError, NotUniqueError
 
 import bormeparser
-from bormeparser.regex import is_company, is_acto_cargo
+from bormeparser.regex import is_company
 
 from django.conf import settings
 
@@ -60,9 +60,6 @@ def _import1(borme):
                         l = []
                         for nombre in nombres:
                             #print('  %s' % nombre)
-                            # TODO:nombre Reference Company / Person
-                            l.append(Cargo(titulo=cargo, nombre=nombre))
-
                             if is_company(nombre):
                                 try:
                                     c = Company.objects.get(name=nombre)
@@ -74,6 +71,7 @@ def _import1(borme):
                                 # TODO: relations
                                 try:
                                     c.save()
+                                    l.append(CargoCompany(titulo=cargo, nombre=c))
                                 except NotUniqueError as e:
                                     print('ERROR creando empresa: %s' % nombre)
                                     print(e)
@@ -90,6 +88,7 @@ def _import1(borme):
                                 p.in_bormes.append(nuevo_borme)
                                 try:
                                     p.save()
+                                    l.append(CargoPerson(titulo=cargo, nombre=p))
                                 except NotUniqueError as e:
                                     print('ERROR creando persona: %s' % nombre)
                                     print(e)
