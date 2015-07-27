@@ -51,16 +51,16 @@ def _import1(borme):
                 nuevo_anuncio = Anuncio(company=company, borme=nuevo_borme, id_anuncio=anuncio.id)
                 results['created_anuncios'] += 1
 
-            actos = anuncio.get_actos()
-            for k, v in actos.items():
-                #print(k)
-                #print(v)
-                if is_acto_cargo(k):
-                    for cargo, nombres in v:
+            for acto in anuncio.get_borme_actos():
+                #print(acto.name)
+                #print(acto.value)
+                if isinstance(acto, bormeparser.borme.BormeActoCargo):
+                    for cargo, nombres in acto.cargos.items():
                         #print(cargo, nombres, len(nombres))
                         l = []
                         for nombre in nombres:
                             #print('  %s' % nombre)
+                            # TODO:nombre Reference Company / Person
                             l.append(Cargo(titulo=cargo, nombre=nombre))
 
                             if is_company(nombre):
@@ -94,15 +94,15 @@ def _import1(borme):
                                     print('ERROR creando persona: %s' % nombre)
                                     print(e)
 
-                        kk = k.replace('.', '||')
+                        kk = acto.name.replace('.', '||')
                         nuevo_anuncio.actos[kk] = l
 
                 else:
                     # FIXME:
                     # mongoengine.errors.ValidationError: ValidationError (Anuncio:55b37c97cf28dd2cfa8d069e) (Invalid diction
                     # ary key name - keys may not contain "." or "$" characters: ['actos'])
-                    kk = k.replace('.', '||')
-                    nuevo_anuncio.actos[kk] = v
+                    kk = acto.name.replace('.', '||')
+                    nuevo_anuncio.actos[kk] = acto.value
 
             nuevo_anuncio.save()
             company.anuncios.append(nuevo_anuncio)
