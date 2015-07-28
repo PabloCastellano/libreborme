@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-from mongoengine import connect
+from mongoengine.connection import connect, disconnect
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -99,6 +99,8 @@ DATABASES = {
     }
 }
 
+MONGODB_HOST = 'localhost'
+MONGODB_PORT = 27017
 MONGO_DBNAME = 'libreborme'
 MONGODB = connect(MONGO_DBNAME)
 
@@ -132,7 +134,7 @@ PIWIK_URL = ''
 PIWIK_SITE_ID = ''
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-TEST_NAME = 'test_mongo1'
+#TEST_NAME = 'test_mongo1'
 NOSE_ARGS = ['--with-coverage', '--cover-package=libreborme', '--cover-package=borme', '--cover-xml']
 #NOSE_ARGS = ['--mongoengine', '--with-coverage', '--cover-package=libreborme', '--cover-package=borme', '--cover-xml']
 
