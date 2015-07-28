@@ -1,5 +1,6 @@
 import os
 from mongoengine import connect
+from django.conf import settings
 
 
 # ------ BEGIN DON'T TOUCH AREA ------ #
@@ -57,3 +58,29 @@ STATIC_ROOT = '%s/static/' % SITE_ROOT
 
 PIWIK_URL = ''
 PIWIK_SITE_ID = ''
+
+PROTOCOL = 'http' if DEBUG else 'https'
+PORT = getattr(settings, 'PORT', '8000') if DEBUG else None
+
+if PORT and str(PORT) not in ['80', '443']:
+    PORT_STRING = ':%s' % PORT
+else:
+    PORT_STRING = ''
+
+SUBDIR = getattr(settings, 'SUBDIR', '')
+
+if SUBDIR and not SUBDIR.startswith('/'):
+    SUBDIR = '/%s' % SUBDIR
+elif SUBDIR and SUBDIR.endswith('/'):
+    SUBDIR = SUBDIR[0:-1]
+
+SITE_URL = '%s://%s%s%s' % (PROTOCOL, settings.DOMAIN, PORT_STRING, SUBDIR)
+
+MEDIA_URL = '%s/media/' % SITE_URL
+MEDIA_ROOT = '%s/media/' % SITE_ROOT
+STATIC_ROOT = '%s/static/' % SITE_ROOT
+
+# BORME
+BORME_PDF_ROOT = '%s/borme/pdf/' % SITE_ROOT
+BORME_PDF_TEMP_ROOT = '%s/borme/pdf/tmp/' % SITE_ROOT
+BORME_XML_ROOT = '%s/borme/xml/' % SITE_ROOT
