@@ -47,6 +47,7 @@ if DEBUG:
         'django_extensions',
         'debug_toolbar',
         'mongonaut',
+        'django_nose',
     )
 
 MIDDLEWARE_CLASSES = (
@@ -129,3 +130,12 @@ STATIC_URL = '/static/'
 
 PIWIK_URL = ''
 PIWIK_SITE_ID = ''
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+TEST_NAME = 'test_mongo1'
+NOSE_ARGS = ['--with-coverage', '--cover-package=libreborme', '--cover-package=borme', '--cover-xml']
+#NOSE_ARGS = ['--mongoengine', '--with-coverage', '--cover-package=libreborme', '--cover-package=borme', '--cover-xml']
+
+NOSE_PLUGINS = [
+    'nose_mongoengine.MongoEnginePlugin',
+]
