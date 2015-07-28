@@ -94,22 +94,19 @@ WSGI_APPLICATION = 'libreborme.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': '',
     }
 }
 
 MONGO_DBNAME = 'libreborme'
 MONGODB = connect(MONGO_DBNAME)
 
-""""
 AUTHENTICATION_BACKENDS = (
     'mongoengine.django.auth.MongoEngineBackend',
 )
 
 SESSION_ENGINE = 'mongoengine.django.sessions'
 MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
-"""
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
