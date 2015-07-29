@@ -14,57 +14,64 @@ import os
 # descarga -> parse -> import -> mueve a carpeta archive
 # Problema: download_pdfs va a bajar de nuevo los archivos en tmp si ya estan procesados
 
+import logging
+logger = logging.getLogger(__name__)
+ch = logging.StreamHandler()
+logger.addHandler(ch)
+#logger.setLevel(logging.INFO)
+logger.setLevel(logging.ERROR)
+
 
 def _import1(borme):
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0}
     try:
         nuevo_borme = Borme.objects.get(cve=borme.cve)
     except Borme.DoesNotExist:
-        print('Creando borme %s' % borme.cve)
+        logger.info('Creando borme %s' % borme.cve)
         results['created_bormes'] += 1
         nuevo_borme = Borme(cve=borme.cve, date=borme.date, url=borme.url, province=borme.provincia, section=borme.seccion).save()
 
     # TODO: borrar si hubieran actos para este borme?
     for n, anuncio in enumerate(borme.get_anuncios(), 1):
         try:
-            print('%d: Importando anuncio: %s' % (n, anuncio))
+            logger.info('%d: Importando anuncio: %s' % (n, anuncio))
             #company = Company.objects.get_or_create(name=acto.empresa)
             #if not Company.objects.exists(name=acto.empresa):
             try:
                 company = Company.objects.get(name=anuncio.empresa)
             except Company.DoesNotExist:
-                print('Creando empresa %s' % anuncio.empresa)
+                logger.info('Creando empresa %s' % anuncio.empresa)
                 results['created_companies'] += 1
                 company = Company(name=anuncio.empresa)
             company.in_bormes.append(nuevo_borme)
             try:
                 company.save()
             except NotUniqueError as e:
-                print('ERROR creando empresa: %s' % anuncio.empresa)
-                print(e)
+                logger.error('ERROR creando empresa: %s' % anuncio.empresa)
+                logger.error(e)
                 continue
 
             try:
                 nuevo_anuncio = Anuncio.objects.get(borme=nuevo_borme, id_anuncio=anuncio.id)
             except Anuncio.DoesNotExist:
-                print('Creando anuncio %d %s:' % (anuncio.id, anuncio.empresa))
+                logger.info('Creando anuncio %d %s:' % (anuncio.id, anuncio.empresa))
                 nuevo_anuncio = Anuncio(company=company, borme=nuevo_borme, id_anuncio=anuncio.id)
                 results['created_anuncios'] += 1
 
             for acto in anuncio.get_borme_actos():
-                #print(acto.name)
-                #print(acto.value)
+                #logger.debug(acto.name)
+                #logger.debug(acto.value)
                 if isinstance(acto, bormeparser.borme.BormeActoCargo):
                     for cargo, nombres in acto.cargos.items():
-                        #print(cargo, nombres, len(nombres))
+                        #logger.debug(cargo, nombres, len(nombres))
                         l = []
                         for nombre in nombres:
-                            #print('  %s' % nombre)
+                            #logger.debug('  %s' % nombre)
                             if is_company(nombre):
                                 try:
                                     c = Company.objects.get(name=nombre)
                                 except Company.DoesNotExist:
-                                    print('Creando empresa: %s' % nombre)
+                                    logger.info('Creando empresa: %s' % nombre)
                                     results['created_companies'] += 1
                                     c = Company(name=nombre)
 
@@ -73,14 +80,14 @@ def _import1(borme):
                                     c.save()
                                     l.append(CargoCompany(titulo=cargo, nombre=c))
                                 except NotUniqueError as e:
-                                    print('ERROR creando empresa: %s' % nombre)
-                                    print(e)
+                                    logger.error('ERROR creando empresa: %s' % nombre)
+                                    logger.error(e)
 
                             else:
                                 try:
                                     p = Person.objects.get(name=nombre)
                                 except Person.DoesNotExist:
-                                    print('Creando persona: %s' % nombre)
+                                    logger.info('Creando persona: %s' % nombre)
                                     results['created_persons'] += 1
                                     p = Person(name=nombre)
 
@@ -90,8 +97,8 @@ def _import1(borme):
                                     p.save()
                                     l.append(CargoPerson(titulo=cargo, nombre=p))
                                 except NotUniqueError as e:
-                                    print('ERROR creando persona: %s' % nombre)
-                                    print(e)
+                                    logger.error('ERROR creando persona: %s' % nombre)
+                                    logger.error(e)
 
                         kk = acto.name.replace('.', '||')
                         nuevo_anuncio.actos[kk] = l
@@ -110,8 +117,8 @@ def _import1(borme):
             nuevo_borme.save()
 
         except ValidationError as e:
-            print('ERROR importing borme')
-            print(e)
+            logger.error('ERROR importing borme')
+            logger.error(e)
     return results
 
 
