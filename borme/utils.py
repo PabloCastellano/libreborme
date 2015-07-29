@@ -18,7 +18,6 @@ import logging
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler()
 logger.addHandler(ch)
-#logger.setLevel(logging.INFO)
 logger.setLevel(logging.ERROR)
 
 
@@ -38,6 +37,7 @@ def _import1(borme):
             #company = Company.objects.get_or_create(name=acto.empresa)
             #if not Company.objects.exists(name=acto.empresa):
             try:
+                # TODO: Buscar por slug
                 company = Company.objects.get(name=anuncio.empresa)
             except Company.DoesNotExist:
                 logger.info('Creando empresa %s' % anuncio.empresa)
@@ -54,19 +54,19 @@ def _import1(borme):
             try:
                 nuevo_anuncio = Anuncio.objects.get(borme=nuevo_borme, id_anuncio=anuncio.id)
             except Anuncio.DoesNotExist:
-                logger.info('Creando anuncio %d %s:' % (anuncio.id, anuncio.empresa))
+                logger.info('Creando anuncio %d: %s' % (anuncio.id, anuncio.empresa))
                 nuevo_anuncio = Anuncio(company=company, borme=nuevo_borme, id_anuncio=anuncio.id)
                 results['created_anuncios'] += 1
 
             for acto in anuncio.get_borme_actos():
-                #logger.debug(acto.name)
-                #logger.debug(acto.value)
+                logger.debug(acto.name)
+                logger.debug(acto.value)
                 if isinstance(acto, bormeparser.borme.BormeActoCargo):
                     for cargo, nombres in acto.cargos.items():
-                        #logger.debug(cargo, nombres, len(nombres))
+                        logger.debug('%s %s %d' % (cargo, nombres, len(nombres)))
                         l = []
                         for nombre in nombres:
-                            #logger.debug('  %s' % nombre)
+                            logger.debug('  %s' % nombre)
                             if is_company(nombre):
                                 try:
                                     c = Company.objects.get(name=nombre)

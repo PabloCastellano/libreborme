@@ -4,9 +4,11 @@ from django.core.management.base import BaseCommand, CommandError
 from borme.models import Config
 
 import time
+import logging
 from datetime import datetime
 from libreborme.utils import get_git_revision_short_hash
 from borme.utils import import_borme_file
+import borme.utils
 
 
 class Command(BaseCommand):
@@ -14,6 +16,17 @@ class Command(BaseCommand):
     help = 'Import BORME file'
 
     def handle(self, *args, **options):
+        verbosity = int(options['verbosity'])
+        if verbosity == 0:
+            borme.utils.logger.setLevel(logging.ERROR)
+        elif verbosity == 1:  # default
+            borme.utils.logger.setLevel(logging.ERROR)
+        elif verbosity == 2:
+            borme.utils.logger.setLevel(logging.INFO)
+        elif verbosity > 2:
+            borme.utils.logger.setLevel(logging.DEBUG)
+        if verbosity > 2:
+            logging.getLogger().setLevel(logging.DEBUG)
         start_time = time.time()
 
         if args:
