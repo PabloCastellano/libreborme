@@ -23,26 +23,21 @@ logger.setLevel(logging.ERROR)
 
 def _import1(borme):
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0}
-    try:
-        nuevo_borme = Borme.objects.get(cve=borme.cve)
-    except Borme.DoesNotExist:
+
+    nuevo_borme, created = Borme.objects.get_or_create(cve=borme.cve)
+    if created:
         logger.info('Creando borme %s' % borme.cve)
         results['created_bormes'] += 1
-        nuevo_borme = Borme(cve=borme.cve, date=borme.date, url=borme.url, province=borme.provincia, section=borme.seccion).save()
 
     # TODO: borrar si hubieran actos para este borme?
     for n, anuncio in enumerate(borme.get_anuncios(), 1):
         try:
             logger.info('%d: Importando anuncio: %s' % (n, anuncio))
-            #company = Company.objects.get_or_create(name=acto.empresa)
-            #if not Company.objects.exists(name=acto.empresa):
-            try:
-                # TODO: Buscar por slug
-                company = Company.objects.get(name=anuncio.empresa)
-            except Company.DoesNotExist:
+            # TODO: Buscar por slug
+            company, created = Company.objects.get_or_create(name=anuncio.empresa)
+            if created:
                 logger.info('Creando empresa %s' % anuncio.empresa)
                 results['created_companies'] += 1
-                company = Company(name=anuncio.empresa)
             company.in_bormes.append(nuevo_borme)
             try:
                 company.save()
@@ -51,11 +46,9 @@ def _import1(borme):
                 logger.error(e)
                 continue
 
-            try:
-                nuevo_anuncio = Anuncio.objects.get(borme=nuevo_borme, id_anuncio=anuncio.id)
-            except Anuncio.DoesNotExist:
+            nuevo_anuncio, created = Anuncio.objects.get_or_created(borme=nuevo_borme, id_anuncio=anuncio.id)
+            if created:
                 logger.info('Creando anuncio %d: %s' % (anuncio.id, anuncio.empresa))
-                nuevo_anuncio = Anuncio(company=company, borme=nuevo_borme, id_anuncio=anuncio.id)
                 results['created_anuncios'] += 1
 
             for acto in anuncio.get_borme_actos():
@@ -68,12 +61,10 @@ def _import1(borme):
                         for nombre in nombres:
                             logger.debug('  %s' % nombre)
                             if is_company(nombre):
-                                try:
-                                    c = Company.objects.get(name=nombre)
-                                except Company.DoesNotExist:
+                                c, created = Company.objects.get_or_created(name=nombre)
+                                if created:
                                     logger.info('Creando empresa: %s' % nombre)
                                     results['created_companies'] += 1
-                                    c = Company(name=nombre)
 
                                 # TODO: relations
                                 try:
@@ -84,12 +75,10 @@ def _import1(borme):
                                     logger.error(e)
 
                             else:
-                                try:
-                                    p = Person.objects.get(name=nombre)
-                                except Person.DoesNotExist:
+                                p, created = Person.objects.get_or_create(name=nombre)
+                                if created:
                                     logger.info('Creando persona: %s' % nombre)
                                     results['created_persons'] += 1
-                                    p = Person(name=nombre)
 
                                 p.in_companies.append(company)
                                 p.in_bormes.append(nuevo_borme)
@@ -114,11 +103,12 @@ def _import1(borme):
             company.anuncios.append(nuevo_anuncio)
             company.save()
             nuevo_borme.anuncios.append(nuevo_anuncio)
-            nuevo_borme.save()
 
         except ValidationError as e:
             logger.error('ERROR importing borme')
             logger.error(e)
+
+        nuevo_borme.save()
     return results
 
 
