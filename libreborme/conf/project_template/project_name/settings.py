@@ -78,7 +78,6 @@ SITE_URL = '%s://%s%s%s' % (PROTOCOL, settings.DOMAIN, PORT_STRING, SUBDIR)
 
 MEDIA_URL = '%s/media/' % SITE_URL
 MEDIA_ROOT = '%s/media/' % SITE_ROOT
-STATIC_ROOT = '%s/static/' % SITE_ROOT
 
 # BORME
 BORME_PDF_ROOT = '%s/borme/pdf/' % SITE_ROOT

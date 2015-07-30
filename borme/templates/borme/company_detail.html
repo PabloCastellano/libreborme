@@ -11,6 +11,18 @@
     <br/>
     <strong>Fecha de constitución:</strong> {{ company.date_creation|date|default:"Desconocido" }}
     <br/>
+    <strong>Cargos directivos (actuales):</strong>
+    {% for cargo in company.cargos_actuales %}
+    {{ cargo.titulo }}:
+    <a href="{{ cargo.nombre.get_absolute_url }}">{{ cargo.nombre }}</a>{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+    <br/>
+    <strong>Cargos directivos (historial):</strong>
+    {% for cargo in company.cargos_historial %}
+    {{ cargo.titulo }}:
+    <a href="{{ cargo.nombre.get_absolute_url }}">{{ cargo.nombre }}</a>{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+    <br/>
 
     <h3>Anuncios en boletines oficiales</h3>
         {% for anuncio in anuncios %}
@@ -23,7 +35,7 @@
              {% else %}
              {% for cargo in value %}
                {{ cargo.titulo }}:
-               <a href="{{ cargo.nombre.get_absolute_url }}">{{ cargo.nombre }}</a>,
+               <a href="{{ cargo.nombre.get_absolute_url }}">{{ cargo.nombre }}</a>{% if not forloop.last %}, {% endif %}
              {% endfor %}
              {% endif %}
               </li>

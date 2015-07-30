@@ -2,7 +2,7 @@ from .models import Company, Borme, Anuncio, Person, CargoCompany, CargoPerson
 from mongoengine.errors import ValidationError, NotUniqueError
 
 import bormeparser
-from bormeparser.regex import is_company
+from bormeparser.regex import is_company, is_acto_cargo_entrante
 
 from django.conf import settings
 
@@ -34,19 +34,18 @@ def _import1(borme):
         try:
             logger.info('%d: Importando anuncio: %s' % (n, anuncio))
             # TODO: Buscar por slug
-            company, created = Company.objects.get_or_create(name=anuncio.empresa)
-            if created:
-                logger.info('Creando empresa %s' % anuncio.empresa)
-                results['created_companies'] += 1
-            company.in_bormes.append(nuevo_borme)
             try:
-                company.save()
+                company, created = Company.objects.get_or_create(name=anuncio.empresa)
+                if created:
+                    logger.info('Creando empresa %s' % anuncio.empresa)
+                    results['created_companies'] += 1
+                company.in_bormes.append(nuevo_borme)
             except NotUniqueError as e:
                 logger.error('ERROR creando empresa: %s' % anuncio.empresa)
                 logger.error(e)
                 continue
 
-            nuevo_anuncio, created = Anuncio.objects.get_or_created(borme=nuevo_borme, id_anuncio=anuncio.id)
+            nuevo_anuncio, created = Anuncio.objects.get_or_create(borme=nuevo_borme, id_anuncio=anuncio.id, company=company)
             if created:
                 logger.info('Creando anuncio %d: %s' % (anuncio.id, anuncio.empresa))
                 results['created_anuncios'] += 1
@@ -55,43 +54,45 @@ def _import1(borme):
                 logger.debug(acto.name)
                 logger.debug(acto.value)
                 if isinstance(acto, bormeparser.borme.BormeActoCargo):
-                    for cargo, nombres in acto.cargos.items():
-                        logger.debug('%s %s %d' % (cargo, nombres, len(nombres)))
-                        l = []
+                    for nombre_cargo, nombres in acto.cargos.items():
+                        logger.debug('%s %s %d' % (nombre_cargo, nombres, len(nombres)))
+                        lista_cargos = []
                         for nombre in nombres:
                             logger.debug('  %s' % nombre)
                             if is_company(nombre):
-                                c, created = Company.objects.get_or_created(name=nombre)
-                                if created:
-                                    logger.info('Creando empresa: %s' % nombre)
-                                    results['created_companies'] += 1
-
-                                # TODO: relations
                                 try:
-                                    c.save()
-                                    l.append(CargoCompany(titulo=cargo, nombre=c))
+                                    c, created = Company.objects.get_or_create(name=nombre)
+                                    if created:
+                                        logger.info('Creando empresa: %s' % nombre)
+                                        results['created_companies'] += 1
+                                    cargo = CargoCompany(titulo=nombre_cargo, nombre=c)
+                                    lista_cargos.append(cargo)
                                 except NotUniqueError as e:
                                     logger.error('ERROR creando empresa: %s' % nombre)
                                     logger.error(e)
 
                             else:
-                                p, created = Person.objects.get_or_create(name=nombre)
-                                if created:
-                                    logger.info('Creando persona: %s' % nombre)
-                                    results['created_persons'] += 1
-
-                                p.in_companies.append(company)
-                                p.in_bormes.append(nuevo_borme)
                                 try:
-                                    p.save()
-                                    l.append(CargoPerson(titulo=cargo, nombre=p))
+                                    p, created = Person.objects.get_or_create(name=nombre)
+                                    if created:
+                                        logger.info('Creando persona: %s' % nombre)
+                                        results['created_persons'] += 1
+
+                                    p.in_companies.append(company)
+                                    p.in_bormes.append(nuevo_borme)
+                                    cargo = CargoPerson(titulo=nombre_cargo, nombre=p)
+                                    lista_cargos.append(cargo)
                                 except NotUniqueError as e:
                                     logger.error('ERROR creando persona: %s' % nombre)
                                     logger.error(e)
 
                         kk = acto.name.replace('.', '||')
-                        nuevo_anuncio.actos[kk] = l
+                        nuevo_anuncio.actos[kk] = lista_cargos
 
+                    if is_acto_cargo_entrante(acto.name):
+                        company.update_cargos_entrantes(lista_cargos)
+                    else:
+                        company.update_cargos_salientes(lista_cargos)
                 else:
                     # FIXME:
                     # mongoengine.errors.ValidationError: ValidationError (Anuncio:55b37c97cf28dd2cfa8d069e) (Invalid diction

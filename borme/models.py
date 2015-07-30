@@ -19,6 +19,22 @@ PROVINCES = (
 )
 
 
+class CargoCompany(EmbeddedDocument):
+    titulo = StringField()
+    nombre = ReferenceField('Company')
+
+    def __str__(self):
+        return '%s: %s' % (self.titulo, self.nombre)
+
+
+class CargoPerson(EmbeddedDocument):
+    titulo = StringField()
+    nombre = ReferenceField('Person')
+
+    def __str__(self):
+        return '%s: %s' % (self.titulo, self.nombre)
+
+
 class Borme(Document):
     """ Edicion de BORME """
     cve = StringField(max_length=30)
@@ -74,6 +90,19 @@ class Company(Document):
     in_bormes = ListField(ReferenceField('Borme'))
     anuncios = ListField(ReferenceField('Anuncio'))
 
+    cargos_actuales_p = ListField(EmbeddedDocumentField('CargoPerson'))
+    cargos_actuales_c = ListField(EmbeddedDocumentField('CargoCompany'))
+    cargos_historial_p = ListField(EmbeddedDocumentField('CargoPerson'))
+    cargos_historial_c = ListField(EmbeddedDocumentField('CargoCompany'))
+
+    @property
+    def cargos_actuales(self):
+        return self.cargos_actuales_p + self.cargos_actuales_c
+
+    @property
+    def cargos_historial(self):
+        return self.cargos_historial_p + self.cargos_historial_c
+
     # last access
     # number of visits
 
@@ -85,27 +114,35 @@ class Company(Document):
         self.slug = slugify(self.name)
         super(Company, self).save(*args, **kwargs)
 
+    def update_cargos_entrantes(self, cargos):
+        """ cargos = [CargoCompany/CargoPerson] """
+
+        for cargo in cargos:
+            if isinstance(cargo, CargoCompany):
+                self.cargos_actuales_c.append(cargo)
+            elif isinstance(cargo, CargoPerson):
+                self.cargos_actuales_p.append(cargo)
+        #self.cargos_actuales_p.extend(cargos)
+
+    def update_cargos_salientes(self, cargos):
+        """ cargos = [CargoCompany/CargoPerson] """
+
+        for cargo in cargos:
+            if isinstance(cargo, CargoCompany):
+                if cargo in self.cargos_actuales_c:
+                    self.cargos_actuales_c.remove(cargo)
+                self.cargos_historial_c.append(cargo)
+            elif isinstance(cargo, CargoPerson):
+                if cargo in self.cargos_actuales_p:
+                    self.cargos_actuales_p.remove(cargo)
+                self.cargos_historial_p.append(cargo)
+
     def get_absolute_url(self):
         return reverse('borme-empresa', args=[str(self.slug)])
 
     def __str__(self):
         return self.name
 
-
-class CargoCompany(EmbeddedDocument):
-    titulo = StringField()
-    nombre = ReferenceField('Company')
-
-    def __str__(self):
-        return '%s: %s' % (self.titulo, self.nombre)
-
-
-class CargoPerson(EmbeddedDocument):
-    titulo = StringField()
-    nombre = ReferenceField('Person')
-
-    def __str__(self):
-        return '%s: %s' % (self.titulo, self.nombre)
 
 
 class Anuncio(Document):
