@@ -5,9 +5,17 @@
 {% block content %}
     <h2>Persona «{{ person.name }}»</h2>
     <h3>Datos</h3>
-    <strong>Cargos activos:</strong> {{ person.cargos1|default:"Desconocido" }}
+    <strong>Cargos directivos en empresas (actuales):</strong>
+    {% for cargo in person.cargos_actuales %}
+    {{ cargo.titulo }}:
+    <a href="{{ cargo.nombre.get_absolute_url }}">{{ cargo.nombre }}</a>{% if not forloop.last %}, {% endif %}
+    {% endfor %}
     <br/>
-    <strong>Cargos históricos:</strong> {{ person.cargos2|default:"Desconocido" }}
+    <strong>Cargos directivos en empresas (historial):</strong>
+    {% for cargo in person.cargos_historial %}
+    {{ cargo.titulo }}:
+    <a href="{{ cargo.nombre.get_absolute_url }}">{{ cargo.nombre }}</a>{% if not forloop.last %}, {% endif %}
+    {% endfor %}
     <br/>
     <strong>Total empresas:</strong> {{ person.empresas|default:"Desconocido" }}
     <br/>

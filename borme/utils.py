@@ -82,6 +82,13 @@ def _import1(borme):
                                     p.in_bormes.append(nuevo_borme)
                                     cargo = CargoPerson(titulo=nombre_cargo, nombre=p)
                                     lista_cargos.append(cargo)
+                                    cargo = CargoCompany(titulo=nombre_cargo, nombre=company)
+                                    if is_acto_cargo_entrante(acto.name):
+                                        p.update_cargos_entrantes([cargo])
+                                    else:
+                                        p.update_cargos_salientes([cargo])
+                                    p.save()
+
                                 except NotUniqueError as e:
                                     logger.error('ERROR creando persona: %s' % nombre)
                                     logger.error(e)

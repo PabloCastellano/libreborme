@@ -64,8 +64,26 @@ class Person(Document):
     in_companies = ListField(ReferenceField('Company'))
     in_bormes = ListField(ReferenceField('Borme'))
 
+    cargos_actuales = ListField(EmbeddedDocumentField('CargoCompany'))
+    cargos_historial = ListField(EmbeddedDocumentField('CargoCompany'))
+
     # last access
     # number of visits
+
+    def update_cargos_entrantes(self, cargos):
+        """ cargos = [CargoCompany] """
+
+        self.cargos_actuales.extend(cargos)
+        #for cargo in cargos:
+        #    self.cargos_actuales_c.append(cargo)
+
+    def update_cargos_salientes(self, cargos):
+        """ cargos = [CargoCompany] """
+
+        for cargo in cargos:
+            if cargo in self.cargos_actuales:
+                self.cargos_actuales.remove(cargo)
+            self.cargos_historial.append(cargo)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
