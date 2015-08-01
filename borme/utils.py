@@ -24,7 +24,7 @@ logger.setLevel(logging.ERROR)
 def _import1(borme):
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0}
 
-    nuevo_borme, created = Borme.objects.get_or_create(cve=borme.cve)
+    nuevo_borme, created = Borme.objects.get_or_create(cve=borme.cve, date=borme.date)
     if created:
         logger.info('Creando borme %s' % borme.cve)
         results['created_bormes'] += 1
