@@ -33,8 +33,15 @@
 	  <!-- <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
 	  <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a></li>
     {% empty %}
-        <i>No hay actos registrados.</i>
+        <p><i>No hay actos registrados.</i></p>
     {% endfor %}
+        También aparece referenciado en...
+        {% for borme in person.in_bormes %}
+        <li>{{ borme.cve }}
+            <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
+            <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
+        </li>
+        {% endfor %}
     </ul>
 
     <h3>Sociedades relacionadas</h3>
