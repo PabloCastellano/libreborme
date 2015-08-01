@@ -65,8 +65,19 @@ def _import1(borme):
                                     if created:
                                         logger.info('Creando empresa: %s' % nombre)
                                         results['created_companies'] += 1
+
+                                    c.anuncios.append(nuevo_anuncio)
+                                    c.in_bormes.append(nuevo_borme)
                                     cargo = CargoCompany(title=nombre_cargo, name=c)
-                                    lista_cargos.append(cargo)
+                                    if is_acto_cargo_entrante(acto.name):
+                                        cargo.date_from = borme.date
+                                        cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_from=borme.date)
+                                        c.update_cargos_entrantes([cargo_embed])
+                                    else:
+                                        cargo.date_to = borme.date
+                                        cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_to=borme.date)
+                                        c.update_cargos_salientes([cargo_embed])
+                                    c.save()
                                 except NotUniqueError as e:
                                     logger.error('ERROR creando empresa: %s' % nombre)
                                     logger.error(e)
@@ -89,12 +100,12 @@ def _import1(borme):
                                         cargo.date_to = borme.date
                                         cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_to=borme.date)
                                         p.update_cargos_salientes([cargo_embed])
-                                    lista_cargos.append(cargo)
                                     p.save()
 
                                 except NotUniqueError as e:
                                     logger.error('ERROR creando persona: %s' % nombre)
                                     logger.error(e)
+                            lista_cargos.append(cargo)
 
                         kk = acto.name.replace('.', '||')
                         nuevo_anuncio.actos[kk] = lista_cargos
