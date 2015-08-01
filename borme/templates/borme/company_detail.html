@@ -14,13 +14,13 @@
     <strong>Cargos directivos (actuales):</strong>
     {% for cargo in company.cargos_actuales %}
     {{ cargo.title }}:
-    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a>{% if not forloop.last %}, {% endif %}
+    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a> ({{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }} - {{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}){% if not forloop.last %}, {% endif %}
     {% endfor %}
     <br/>
     <strong>Cargos directivos (historial):</strong>
     {% for cargo in company.cargos_historial %}
     {{ cargo.title }}:
-    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a>{% if not forloop.last %}, {% endif %}
+    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a> ({{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }} - {{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}){% if not forloop.last %}, {% endif %}
     {% endfor %}
     <br/>
 

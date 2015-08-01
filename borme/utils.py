@@ -81,12 +81,15 @@ def _import1(borme):
                                     p.in_companies.append(company)
                                     p.in_bormes.append(nuevo_borme)
                                     cargo = CargoPerson(title=nombre_cargo, name=p)
-                                    lista_cargos.append(cargo)
-                                    cargo = CargoCompany(title=nombre_cargo, name=company)
                                     if is_acto_cargo_entrante(acto.name):
-                                        p.update_cargos_entrantes([cargo])
+                                        cargo.date_from = borme.date
+                                        cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_from=borme.date)
+                                        p.update_cargos_entrantes([cargo_embed])
                                     else:
-                                        p.update_cargos_salientes([cargo])
+                                        cargo.date_to = borme.date
+                                        cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_to=borme.date)
+                                        p.update_cargos_salientes([cargo_embed])
+                                    lista_cargos.append(cargo)
                                     p.save()
 
                                 except NotUniqueError as e:
