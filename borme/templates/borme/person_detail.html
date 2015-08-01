@@ -7,14 +7,14 @@
     <h3>Datos</h3>
     <strong>Cargos directivos en empresas (actuales):</strong>
     {% for cargo in person.cargos_actuales %}
-    {{ cargo.titulo }}:
-    <a href="{{ cargo.nombre.get_absolute_url }}">{{ cargo.nombre }}</a>{% if not forloop.last %}, {% endif %}
+    {{ cargo.title }}:
+    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a>{% if not forloop.last %}, {% endif %}
     {% endfor %}
     <br/>
     <strong>Cargos directivos en empresas (historial):</strong>
     {% for cargo in person.cargos_historial %}
-    {{ cargo.titulo }}:
-    <a href="{{ cargo.nombre.get_absolute_url }}">{{ cargo.nombre }}</a>{% if not forloop.last %}, {% endif %}
+    {{ cargo.title }}:
+    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a>{% if not forloop.last %}, {% endif %}
     {% endfor %}
     <br/>
     <strong>Total empresas:</strong> {{ person.empresas|default:"Desconocido" }}

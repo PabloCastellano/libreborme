@@ -13,14 +13,14 @@
     <br/>
     <strong>Cargos directivos (actuales):</strong>
     {% for cargo in company.cargos_actuales %}
-    {{ cargo.titulo }}:
-    <a href="{{ cargo.nombre.get_absolute_url }}">{{ cargo.nombre }}</a>{% if not forloop.last %}, {% endif %}
+    {{ cargo.title }}:
+    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a>{% if not forloop.last %}, {% endif %}
     {% endfor %}
     <br/>
     <strong>Cargos directivos (historial):</strong>
     {% for cargo in company.cargos_historial %}
-    {{ cargo.titulo }}:
-    <a href="{{ cargo.nombre.get_absolute_url }}">{{ cargo.nombre }}</a>{% if not forloop.last %}, {% endif %}
+    {{ cargo.title }}:
+    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a>{% if not forloop.last %}, {% endif %}
     {% endfor %}
     <br/>
 
@@ -28,14 +28,14 @@
         {% for anuncio in anuncios %}
             <li>Anuncio <strong>{{ anuncio.id_anuncio }}</strong> con fecha <strong><i>{{ anuncio.borme.date|date }}</i></strong>.</li>
         <ul>
-           {% for acto_nombre, value in anuncio.actos.items %}
-              <li><strong>{{ acto_nombre }}</strong>:
+           {% for acto_name, value in anuncio.actos.items %}
+              <li><strong>{{ acto_name }}</strong>:
              {% if value|is_string %}
                {{ value }}
              {% else %}
              {% for cargo in value %}
-               {{ cargo.titulo }}:
-               <a href="{{ cargo.nombre.get_absolute_url }}">{{ cargo.nombre }}</a>{% if not forloop.last %}, {% endif %}
+               {{ cargo.titltitle }}:
+               <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a>{% if not forloop.last %}, {% endif %}
              {% endfor %}
              {% endif %}
               </li>

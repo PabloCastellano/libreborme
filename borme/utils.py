@@ -65,7 +65,7 @@ def _import1(borme):
                                     if created:
                                         logger.info('Creando empresa: %s' % nombre)
                                         results['created_companies'] += 1
-                                    cargo = CargoCompany(titulo=nombre_cargo, nombre=c)
+                                    cargo = CargoCompany(title=nombre_cargo, name=c)
                                     lista_cargos.append(cargo)
                                 except NotUniqueError as e:
                                     logger.error('ERROR creando empresa: %s' % nombre)
@@ -80,9 +80,9 @@ def _import1(borme):
 
                                     p.in_companies.append(company)
                                     p.in_bormes.append(nuevo_borme)
-                                    cargo = CargoPerson(titulo=nombre_cargo, nombre=p)
+                                    cargo = CargoPerson(title=nombre_cargo, name=p)
                                     lista_cargos.append(cargo)
-                                    cargo = CargoCompany(titulo=nombre_cargo, nombre=company)
+                                    cargo = CargoCompany(title=nombre_cargo, name=company)
                                     if is_acto_cargo_entrante(acto.name):
                                         p.update_cargos_entrantes([cargo])
                                     else:

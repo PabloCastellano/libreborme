@@ -20,19 +20,19 @@ PROVINCES = (
 
 
 class CargoCompany(EmbeddedDocument):
-    titulo = StringField()
-    nombre = ReferenceField('Company')
+    title = StringField()
+    name = ReferenceField('Company')
 
     def __str__(self):
-        return '%s: %s' % (self.titulo, self.nombre)
+        return '%s: %s' % (self.title, self.name)
 
 
 class CargoPerson(EmbeddedDocument):
-    titulo = StringField()
-    nombre = ReferenceField('Person')
+    title = StringField()
+    name = ReferenceField('Person')
 
     def __str__(self):
-        return '%s: %s' % (self.titulo, self.nombre)
+        return '%s: %s' % (self.title, self.name)
 
 
 class Borme(Document):
