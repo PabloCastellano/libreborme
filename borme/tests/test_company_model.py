@@ -2,16 +2,26 @@ from borme.models import Company
 import nose.tools as nt
 
 
-# WORKAROUND: https://github.com/mbanton/nose-mongoengine/issues/4
-from mongoengine.connection import connect, disconnect
-disconnect()
-db = connect('asdfg')
-db.drop_database('asdfg')
-
 c1_id = None
 
+from django.conf import settings
 
-class TestModelOne(object):
+class MongoTestCase(object):
+    fixtures = ['test_data.json']
+
+    def setUp(self):
+        self.dbname = 'test_' + settings.MONGO_DBNAME
+        self.connection = settings.MONGODB
+        self.db = self.connection[self.dbname]
+        # TODO: Cargar fixtures
+        # http://stackoverflow.com/questions/11568246/loading-several-text-files-into-mongodb-using-pymongo
+
+    def tearDown(self):
+        self.db.drop_collection('company')
+
+
+
+class TestModelOne(MongoTestCase):
 
     # This method run on instance of class
     @classmethod
@@ -30,6 +40,7 @@ class TestModelOne(object):
     def setUp(self):
         global c1_id
         self.c1_id = c1_id
+        super(TestModelOne, self).setUp()
 
     def test_company_object(self):
         find = Company.objects.filter(name='PATATAS JUAN SL')

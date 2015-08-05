@@ -2,12 +2,10 @@ from django.core.management import call_command
 from django.test.client import Client
 from django.utils.six import StringIO
 
-from borme.models import Person, Company
+from borme.models import Person, Company, Borme, Config
 
-from borme.models import Borme
 import nose.tools as nt
 import datetime
-
 
 # parametros django call_command
 # what to check django tests
@@ -15,8 +13,12 @@ import datetime
 # Plantillas
 # Comandos
 class TestHttp(object):
+    # TODO: fixture
+
     def setUp(self):
         self.client = Client()
+        config = Config(version='tests')
+        config.save()
 
     def test_index(self):
         response = self.client.get('/')
@@ -38,7 +40,9 @@ class TestHttp(object):
         nt.assert_equals(response.status_code, 200)
 
     def test_empresa(self):
-        company = Company.objects.first()
+        #company = Company.objects.first()
+        company = Company(name='PATATAS SL')
+        company.save()
         response = self.client.get('/borme/empresa/%s' % company.slug)
         nt.assert_equals(response.status_code, 200)
 
@@ -47,13 +51,16 @@ class TestHttp(object):
         nt.assert_equals(response.status_code, 200)
 
     def test_persona(self):
-        person = Person.objects.first()
+        #person = Person.objects.first()
+        person = Person(name='JUAN RAMON CORTES')
+        person.save()
         response = self.client.get('/borme/persona/%s' % person.slug)
         nt.assert_equals(response.status_code, 200)
 
     def test_importbormefile(self):
         out = StringIO()
-        call_command('importbormefile', '/tmp/BORME-A-2015-27-10.pdf', stdout=out)
+        # FIXME: $HOME
+        call_command('importbormefile', '/home/pablo/.bormes/pdf/BORME-A-2015-27-10.pdf', stdout=out)
         nt.assert_in(out.getvalue(), 'Errors: 0')
 
     def test_importborme(self):

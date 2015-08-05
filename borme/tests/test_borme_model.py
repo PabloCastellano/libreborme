@@ -5,12 +5,6 @@ from borme.utils import import_borme_file, _import1
 import nose.tools as nt
 import datetime
 
-# WORKAROUND: https://github.com/mbanton/nose-mongoengine/issues/4
-from mongoengine.connection import connect, disconnect
-disconnect()
-db = connect('asdfg')
-db.drop_database('asdfg')
-
 b1_id = None
 
 
@@ -18,7 +12,27 @@ b1_id = None
 # borme = bormeparser.parse(filename)
 # Testear: _import1(borme)
 
-class TestBorme1(object):
+from django.conf import settings
+
+class MongoTestCase(object):
+    fixtures = ['test_data.json']
+
+    def setUp(self):
+        self.dbname = 'test_' + settings.MONGO_DBNAME
+        self.connection = settings.MONGODB
+        self.db = self.connection[self.dbname]
+        # TODO: Cargar fixtures
+        # http://stackoverflow.com/questions/11568246/loading-several-text-files-into-mongodb-using-pymongo
+
+    def tearDown(self):
+        self.db.drop_collection('company')
+        self.db.drop_collection('borme')
+        self.db.drop_collection('anuncio')
+        #self.connection.drop_database(self.dbname)
+
+
+
+class TestBorme1(MongoTestCase):
 
     # This method run on instance of class
     @classmethod
@@ -39,6 +53,7 @@ class TestBorme1(object):
     def setUp(self):
         global b1_id
         self.b1_id = b1_id
+        super(TestBorme1, self).setUp()
         #self.user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
         #self.user = User.create_user(username='john', email='lennon@thebeatles.com', password='johnpassword')
 
@@ -48,12 +63,13 @@ class TestBorme1(object):
         nt.assert_equals(find[0].id, self.b1_id)
 
 
-class TestBorme2(object):
+class TestBorme2(MongoTestCase):
 
     def test_import_borme_mongo(self):
         #borme = None
         #results = _import1(borme)
-        import_borme_file('/tmp/BORME-A-2015-27-10.pdf')
+        #FIXME: HOME
+        import_borme_file('/home/pablo/.bormes/pdf/BORME-A-2015-27-10.pdf')
         find = Borme.objects.filter(cve='BORME-A-2015-27-10')
         nt.assert_equals(len(find), 1)
         borme = find[0]
