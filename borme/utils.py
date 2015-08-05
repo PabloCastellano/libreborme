@@ -1,13 +1,10 @@
-from .models import Company, Borme, Anuncio, Person, CargoCompany, CargoPerson
+from .models import Company, Borme, Anuncio, Person, CargoCompany, CargoPerson, BormeLog
 from mongoengine.errors import ValidationError, NotUniqueError
 
 import bormeparser
 from bormeparser.regex import is_company, is_acto_cargo_entrante
 
-from django.conf import settings
-
-import six
-import os
+from datetime import datetime
 
 # FIXME:
 #settings.BORME_DIR
@@ -22,12 +19,22 @@ logger.setLevel(logging.ERROR)
 
 
 def _import1(borme):
-    results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0}
+    results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
 
     nuevo_borme, created = Borme.objects.get_or_create(cve=borme.cve, date=borme.date)
     if created:
         logger.info('Creando borme %s' % borme.cve)
         results['created_bormes'] += 1
+
+    # TODO: Don't parse if borme_log.parsed
+    borme_log, created = BormeLog.objects.get_or_create(borme_cve=borme.cve)
+    if created:
+        borme_log.date_created = datetime.now()
+        borme_log.date_updated = borme_log.date_created
+    else:
+        borme_log.date_updated = datetime.now()
+    borme_log.path = borme.filename
+    borme_log.save()
 
     # TODO: borrar si hubieran actos para este borme?
     for n, anuncio in enumerate(borme.get_anuncios(), 1):
@@ -43,6 +50,7 @@ def _import1(borme):
             except NotUniqueError as e:
                 logger.error('ERROR creando empresa: %s' % anuncio.empresa)
                 logger.error(e)
+                results['errors'] += 1
                 continue
 
             nuevo_anuncio, created = Anuncio.objects.get_or_create(borme=nuevo_borme, id_anuncio=anuncio.id, company=company)
@@ -81,6 +89,7 @@ def _import1(borme):
                                 except NotUniqueError as e:
                                     logger.error('ERROR creando empresa: %s' % nombre)
                                     logger.error(e)
+                                    results['errors'] += 1
 
                             else:
                                 try:
@@ -105,6 +114,7 @@ def _import1(borme):
                                 except NotUniqueError as e:
                                     logger.error('ERROR creando persona: %s' % nombre)
                                     logger.error(e)
+                                    results['errors'] += 1
                             lista_cargos.append(cargo)
 
                         kk = acto.name.replace('.', '||')
@@ -129,8 +139,15 @@ def _import1(borme):
         except ValidationError as e:
             logger.error('ERROR importing borme')
             logger.error(e)
+            results['errors'] += 1
 
         nuevo_borme.save()
+
+    borme_log.errors = results['errors']
+    if results['errors'] == 0:
+        borme_log.parsed = True
+        borme_log.date_parsed = datetime.now()
+    borme_log.save()
     return results
 
 

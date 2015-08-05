@@ -179,7 +179,6 @@ class Company(Document):
         return self.name
 
 
-
 class Anuncio(Document):
     id_anuncio = IntField()
     borme = ReferenceField('Borme')
@@ -194,3 +193,13 @@ class Anuncio(Document):
 class Config(Document):
     last_modified = DateTimeField()
     version = StringField()
+
+
+class BormeLog(Document):
+    date_created = DateTimeField()
+    date_updated = DateTimeField()
+    date_parsed = DateTimeField()
+    borme_cve = StringField(max_length=30)
+    parsed = BooleanField(default=False)
+    errors = IntField(default=0)
+    path = StringField()
