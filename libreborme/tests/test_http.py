@@ -5,15 +5,19 @@ from django.utils.six import StringIO
 from borme.models import Person, Company, Borme, Config
 
 import nose.tools as nt
-import datetime
+import os
+
+from borme.tests.mongotestcase import MongoTestCase
+
 
 # parametros django call_command
 # what to check django tests
 # Envio de emails
 # Plantillas
 # Comandos
-class TestHttp(object):
-    # TODO: fixture
+class TestHttp(MongoTestCase):
+    fixtures = ['anuncio.json', 'borme.json', 'borme_log.json', 'company.json', 'config.json', 'person.json', 'jfaosfjasf']
+    #fixtures = ['anuncio.json', 'borme.json', 'borme_log.json', 'company.json', 'config.json']
 
     def setUp(self):
         self.client = Client()
@@ -40,9 +44,7 @@ class TestHttp(object):
         nt.assert_equals(response.status_code, 200)
 
     def test_empresa(self):
-        #company = Company.objects.first()
-        company = Company(name='PATATAS SL')
-        company.save()
+        company = Company.objects.first()
         response = self.client.get('/borme/empresa/%s' % company.slug)
         nt.assert_equals(response.status_code, 200)
 
@@ -51,16 +53,14 @@ class TestHttp(object):
         nt.assert_equals(response.status_code, 200)
 
     def test_persona(self):
-        #person = Person.objects.first()
-        person = Person(name='JUAN RAMON CORTES')
-        person.save()
+        person = Person.objects.first()
         response = self.client.get('/borme/persona/%s' % person.slug)
         nt.assert_equals(response.status_code, 200)
 
     def test_importbormefile(self):
         out = StringIO()
         # FIXME: $HOME
-        call_command('importbormefile', '/home/pablo/.bormes/pdf/BORME-A-2015-27-10.pdf', stdout=out)
+        call_command('importbormefile', os.path.expanduser('~/.bormes/pdf/BORME-A-2015-27-10.pdf'), stdout=out)
         nt.assert_in(out.getvalue(), 'Errors: 0')
 
     def test_importborme(self):

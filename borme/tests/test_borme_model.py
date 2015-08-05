@@ -4,6 +4,7 @@ from borme.utils import import_borme_file, _import1
 #from mongoengine.django.auth import User
 import nose.tools as nt
 import datetime
+import os
 
 from borme.tests.mongotestcase import MongoTestCase
 
@@ -56,7 +57,7 @@ class TestBorme2(MongoTestCase):
         #borme = None
         #results = _import1(borme)
         #FIXME: HOME
-        import_borme_file('/home/pablo/.bormes/pdf/BORME-A-2015-27-10.pdf')
+        import_borme_file(os.path.expanduser('~/.bormes/pdf/BORME-A-2015-27-10.pdf'))
         find = Borme.objects.filter(cve='BORME-A-2015-27-10')
         nt.assert_equals(len(find), 1)
         borme = find[0]
