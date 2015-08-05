@@ -5,9 +5,17 @@
 {% block content %}
     <h2>Persona «{{ person.name }}»</h2>
     <h3>Datos</h3>
-    <strong>Cargos activos:</strong> {{ person.cargos1|default:"Desconocido" }}
+    <strong>Cargos directivos en empresas (actuales):</strong>
+    {% for cargo in person.cargos_actuales %}
+    {{ cargo.title }}:
+    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a> ({{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }} - {{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}){% if not forloop.last %}, {% endif %}
+    {% endfor %}
     <br/>
-    <strong>Cargos históricos:</strong> {{ person.cargos2|default:"Desconocido" }}
+    <strong>Cargos directivos en empresas (historial):</strong>
+    {% for cargo in person.cargos_historial %}
+    {{ cargo.title }}:
+    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a> ({{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }} - {{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}){% if not forloop.last %}, {% endif %}
+    {% endfor %}
     <br/>
     <strong>Total empresas:</strong> {{ person.empresas|default:"Desconocido" }}
     <br/>
@@ -25,8 +33,15 @@
 	  <!-- <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
 	  <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a></li>
     {% empty %}
-        <i>No hay actos registrados.</i>
+        <p><i>No hay actos registrados.</i></p>
     {% endfor %}
+        También aparece referenciado en...
+        {% for borme in person.in_bormes %}
+        <li>{{ borme.cve }}
+            <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
+            <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
+        </li>
+        {% endfor %}
     </ul>
 
     <h3>Sociedades relacionadas</h3>

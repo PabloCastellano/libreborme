@@ -19,6 +19,39 @@ PROVINCES = (
 )
 
 
+class CargoCompany(EmbeddedDocument):
+    title = StringField()
+    name = ReferenceField('Company')
+    date_from = DateTimeField()
+    date_to = DateTimeField()
+
+    def __str__(self):
+        d_from = ''
+        d_to = ''
+        if self.date_from:
+            d_from = 'From: %s' % self.date_from.strftime('%x')
+        if self.date_to:
+            d_to = 'To: %s' % self.date_to.strftime('%x')
+        return '%s: %s (%s %s)' % (self.title, self.name, d_from, d_to)
+
+
+# TODO: subclass CargoCompany
+class CargoPerson(EmbeddedDocument):
+    title = StringField()
+    name = ReferenceField('Person')
+    date_from = DateTimeField()
+    date_to = DateTimeField()
+
+    def __str__(self):
+        d_from = ''
+        d_to = ''
+        if self.date_from:
+            d_from = 'From: %s' % self.date_from.strftime('%x')
+        if self.date_to:
+            d_to = 'To: %s' % self.date_to.strftime('%x')
+        return '%s: %s (%s %s)' % (self.title, self.name, d_from, d_to)
+
+
 class Borme(Document):
     """ Edicion de BORME """
     cve = StringField(max_length=30)
@@ -48,8 +81,26 @@ class Person(Document):
     in_companies = ListField(ReferenceField('Company'))
     in_bormes = ListField(ReferenceField('Borme'))
 
+    cargos_actuales = ListField(EmbeddedDocumentField('CargoCompany'))
+    cargos_historial = ListField(EmbeddedDocumentField('CargoCompany'))
+
     # last access
     # number of visits
+
+    def update_cargos_entrantes(self, cargos):
+        """ cargos = [CargoCompany] """
+
+        self.cargos_actuales.extend(cargos)
+        #for cargo in cargos:
+        #    self.cargos_actuales_c.append(cargo)
+
+    def update_cargos_salientes(self, cargos):
+        """ cargos = [CargoCompany] """
+
+        for cargo in cargos:
+            if cargo in self.cargos_actuales:
+                self.cargos_actuales.remove(cargo)
+            self.cargos_historial.append(cargo)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -74,6 +125,19 @@ class Company(Document):
     in_bormes = ListField(ReferenceField('Borme'))
     anuncios = ListField(ReferenceField('Anuncio'))
 
+    cargos_actuales_p = ListField(EmbeddedDocumentField('CargoPerson'))
+    cargos_actuales_c = ListField(EmbeddedDocumentField('CargoCompany'))
+    cargos_historial_p = ListField(EmbeddedDocumentField('CargoPerson'))
+    cargos_historial_c = ListField(EmbeddedDocumentField('CargoCompany'))
+
+    @property
+    def cargos_actuales(self):
+        return self.cargos_actuales_p + self.cargos_actuales_c
+
+    @property
+    def cargos_historial(self):
+        return self.cargos_historial_p + self.cargos_historial_c
+
     # last access
     # number of visits
 
@@ -85,27 +149,34 @@ class Company(Document):
         self.slug = slugify(self.name)
         super(Company, self).save(*args, **kwargs)
 
+    def update_cargos_entrantes(self, cargos):
+        """ cargos = [CargoCompany/CargoPerson] """
+
+        for cargo in cargos:
+            if isinstance(cargo, CargoCompany):
+                self.cargos_actuales_c.append(cargo)
+            elif isinstance(cargo, CargoPerson):
+                self.cargos_actuales_p.append(cargo)
+        #self.cargos_actuales_p.extend(cargos)
+
+    def update_cargos_salientes(self, cargos):
+        """ cargos = [CargoCompany/CargoPerson] """
+
+        for cargo in cargos:
+            if isinstance(cargo, CargoCompany):
+                if cargo in self.cargos_actuales_c:
+                    self.cargos_actuales_c.remove(cargo)
+                self.cargos_historial_c.append(cargo)
+            elif isinstance(cargo, CargoPerson):
+                if cargo in self.cargos_actuales_p:
+                    self.cargos_actuales_p.remove(cargo)
+                self.cargos_historial_p.append(cargo)
+
     def get_absolute_url(self):
         return reverse('borme-empresa', args=[str(self.slug)])
 
     def __str__(self):
         return self.name
-
-
-class CargoCompany(EmbeddedDocument):
-    titulo = StringField()
-    nombre = ReferenceField('Company')
-
-    def __str__(self):
-        return '%s: %s' % (self.titulo, self.nombre)
-
-
-class CargoPerson(EmbeddedDocument):
-    titulo = StringField()
-    nombre = ReferenceField('Person')
-
-    def __str__(self):
-        return '%s: %s' % (self.titulo, self.nombre)
 
 
 class Anuncio(Document):
@@ -122,3 +193,13 @@ class Anuncio(Document):
 class Config(Document):
     last_modified = DateTimeField()
     version = StringField()
+
+
+class BormeLog(Document):
+    date_created = DateTimeField()
+    date_updated = DateTimeField()
+    date_parsed = DateTimeField()
+    borme_cve = StringField(max_length=30)
+    parsed = BooleanField(default=False)
+    errors = IntField(default=0)
+    path = StringField()

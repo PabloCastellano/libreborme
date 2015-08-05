@@ -11,19 +11,31 @@
     <br/>
     <strong>Fecha de constitución:</strong> {{ company.date_creation|date|default:"Desconocido" }}
     <br/>
+    <strong>Cargos directivos (actuales):</strong>
+    {% for cargo in company.cargos_actuales %}
+    {{ cargo.title }}:
+    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a> ({{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }} - {{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}){% if not forloop.last %}, {% endif %}
+    {% endfor %}
+    <br/>
+    <strong>Cargos directivos (historial):</strong>
+    {% for cargo in company.cargos_historial %}
+    {{ cargo.title }}:
+    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a> ({{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }} - {{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}){% if not forloop.last %}, {% endif %}
+    {% endfor %}
+    <br/>
 
     <h3>Anuncios en boletines oficiales</h3>
         {% for anuncio in anuncios %}
             <li>Anuncio <strong>{{ anuncio.id_anuncio }}</strong> con fecha <strong><i>{{ anuncio.borme.date|date }}</i></strong>.</li>
         <ul>
-           {% for acto_nombre, value in anuncio.actos.items %}
-              <li><strong>{{ acto_nombre }}</strong>:
+           {% for acto_name, value in anuncio.actos.items %}
+              <li><strong>{{ acto_name }}</strong>:
              {% if value|is_string %}
                {{ value }}
              {% else %}
              {% for cargo in value %}
-               {{ cargo.titulo }}:
-               <a href="{{ cargo.nombre.get_absolute_url }}">{{ cargo.nombre }}</a>,
+               {{ cargo.titltitle }}:
+               <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a>{% if not forloop.last %}, {% endif %}
              {% endfor %}
              {% endif %}
               </li>
@@ -44,6 +56,15 @@
     <h3>BORMEs relacionados</h3>
     <ul>
         {% for borme in bormes.values %}
+        <li>{{ borme.cve }}
+            <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
+            <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
+        </li>
+        {% empty %}
+            <p><i>No hay actos registrados.</i></p>
+        {% endfor %}
+        También aparece referenciada en...
+        {% for borme in company.in_bormes %}
         <li>{{ borme.cve }}
             <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
             <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
