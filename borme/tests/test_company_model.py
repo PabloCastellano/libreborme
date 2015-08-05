@@ -1,24 +1,8 @@
 from borme.models import Company
+from borme.tests.mongotestcase import MongoTestCase
 import nose.tools as nt
 
-
 c1_id = None
-
-from django.conf import settings
-
-class MongoTestCase(object):
-    fixtures = ['test_data.json']
-
-    def setUp(self):
-        self.dbname = 'test_' + settings.MONGO_DBNAME
-        self.connection = settings.MONGODB
-        self.db = self.connection[self.dbname]
-        # TODO: Cargar fixtures
-        # http://stackoverflow.com/questions/11568246/loading-several-text-files-into-mongodb-using-pymongo
-
-    def tearDown(self):
-        self.db.drop_collection('company')
-
 
 
 class TestModelOne(MongoTestCase):
@@ -41,6 +25,10 @@ class TestModelOne(MongoTestCase):
         global c1_id
         self.c1_id = c1_id
         super(TestModelOne, self).setUp()
+
+    def tearDown(self):
+        self.db.drop_collection('company')
+        super(TestModelOne, self).tearDown()
 
     def test_company_object(self):
         find = Company.objects.filter(name='PATATAS JUAN SL')

@@ -5,33 +5,14 @@ from borme.utils import import_borme_file, _import1
 import nose.tools as nt
 import datetime
 
+from borme.tests.mongotestcase import MongoTestCase
+
 b1_id = None
 
 
 # Hacer Mockup de:
 # borme = bormeparser.parse(filename)
 # Testear: _import1(borme)
-
-from django.conf import settings
-
-class MongoTestCase(object):
-    fixtures = ['test_data.json']
-
-    def setUp(self):
-        self.dbname = 'test_' + settings.MONGO_DBNAME
-        self.connection = settings.MONGODB
-        self.db = self.connection[self.dbname]
-        # TODO: Cargar fixtures
-        # http://stackoverflow.com/questions/11568246/loading-several-text-files-into-mongodb-using-pymongo
-
-    def tearDown(self):
-        self.db.drop_collection('company')
-        self.db.drop_collection('borme')
-        self.db.drop_collection('anuncio')
-        #self.connection.drop_database(self.dbname)
-
-
-
 class TestBorme1(MongoTestCase):
 
     # This method run on instance of class
@@ -56,6 +37,12 @@ class TestBorme1(MongoTestCase):
         super(TestBorme1, self).setUp()
         #self.user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
         #self.user = User.create_user(username='john', email='lennon@thebeatles.com', password='johnpassword')
+
+    def tearDown(self):
+        self.db.drop_collection('company')
+        self.db.drop_collection('borme')
+        self.db.drop_collection('anuncio')
+        super(TestBorme1, self).tearDown()
 
     def test_borme_object(self):
         find = Borme.objects.filter(cve='BORME-A-2015-27-10')
