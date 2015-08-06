@@ -17,8 +17,8 @@ import os
 class TestHttp(MongoFixturesTestCase):
 
     # FIXME: Pq si no cargo person.json, los test van bien pero con company.json si fallan?
-    mongo_fixtures = {'anuncio':'anuncio.json', 'borme': 'borme.json', 'borme_log': 'borme_log.json',
-                      'company': 'company.json', 'config': 'config.json', 'person': 'person.json'}
+    mongo_fixtures = {'Anuncio':'anuncio.json', 'Borme': 'borme.json', 'BormeLog': 'borme_log.json',
+                      'Company': 'company.json', 'Config': 'config.json', 'Person': 'person.json'}
 
     def setUp(self):
         self.client = Client()

@@ -1,8 +1,8 @@
 from django.conf import settings
 import json
-from subprocess import call
 import os
 import time
+import importlib
 
 from django_mongoengine.tests import MongoTestCase
 
@@ -40,61 +40,22 @@ class MongoFixturesTestCase(MongoTestCase):
         will be removed.
 
         :param fixtures:
-            dictionary, seimport pdb
-        pdb.set_trace()e :py:attr:`~MongoTestCase.mongo_fixtures`.
+            dictionary, see :py:attr:`~MongoTestCase.mongo_fixtures`.
         """
         print('22222222222222 _load_fixtures')
         for collname, filename in fixtures.items():
             print('loading fixture %s' % filename)
-            collection = self.conn[self.db_name][collname]
-            collection.remove()
-            path = '%s/%s' %(self.fixtures_path, filename)
-            #_import_json1(collection, path)
-            _import_json2(self.db_name, collname, path)
+            self._import_json(collname, filename)
 
+    def _import_json(self, collname, filename):
+        path = '%s/%s' % (self.fixtures_path, filename)
+        models = importlib.import_module('borme.models')
+        klass = getattr(models, collname)
+        klass.objects.delete()
 
-# No va pq contiene $oid como atributo empezando por $
-def _import_json1(collection, path):
-    with open(path) as fileobj:
-        docs = json.loads(fileobj.read())
-        import pdb
-        pdb.set_trace()
-        #collection.save(docs)
-        for doc in docs:
-            collection.save(doc)
-
-
-# TODO: esconder output
-def _import_json2(dbname, collection_name, path):
-    call(["mongoimport", "--db", dbname, "--collection", collection_name, "--jsonArray", "--file", path])
-
-
-class MongoTestCaseOld(object):
-    #fixtures = ['anuncio.json', 'borme.json', 'borme_log.json', 'company.json', 'config.json', 'person.json', 'jfaosfjasf']
-    fixtures = ['anuncio.json', 'borme.json', 'borme_log.json', 'company.json', 'config.json', 'person.json']
-
-    def setUp(self):
-        self.dbname = 'test_' + settings.MONGO_DBNAME
-        self.connection = settings.MONGODB
-        self.db = self.connection[self.dbname]
-
-        # http://stackoverflow.com/questions/11568246/loading-several-text-files-into-mongodb-using-pymongo
-        for fixture in self.fixtures:
-            path = 'borme/fixtures/%s' % fixture
-            if not os.path.isfile(path):
-                raise IOError
-            collection_name = fixture.split('.')[0]
-            # mongoimport --db libreborme --collection config --file fixture1.json
-            time.sleep(2)
-            import pdb
-            pdb.set_trace()
-            call(["mongoimport", "-db %s" % self.dbname, "--collection %s" % collection_name, "--file %s" % path])
-            # Popen(['/bin/sh', '-c', args[0], args[1], ...])
-            #collection = self.db.create_collection(collection_name)
-            #d = json.load(open(fixture))
-            #collection.insert(d)
-
-
-    def tearDown(self):
-        pass
-        #self.connection.drop_database(self.dbname)
+        with open(path) as fileobj:
+            docs = json.load(fileobj)
+            for doc in docs:
+                j = json.dumps(doc)
+                obj = klass.from_json(j, created=True)
+                obj.save()
