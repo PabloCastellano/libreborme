@@ -1,7 +1,3 @@
-#from django.shortcuts import get_object_or_404
-from mongoengine.django.shortcuts import get_document_or_404
-
-#from django.views.generic import TemplateView, ListView, DetailView
 from mongogeneric.list import ListView
 from mongogeneric.detail import DetailView
 from django.views.generic import TemplateView
@@ -94,7 +90,7 @@ class CompanyView(DetailView):
     context_object_name = 'company'
 
     def get_object(self):
-        self.company = get_document_or_404(Company, slug=self.kwargs['slug'])
+        self.company = Company.objects.get_or_404(slug=self.kwargs['slug'])
         return self.company
 
     def get_context_data(self, **kwargs):
@@ -113,7 +109,8 @@ class PersonView(DetailView):
     context_object_name = 'person'
 
     def get_object(self):
-        self.person = get_document_or_404(Person, slug=self.kwargs['slug'])
+        self.person = Person.objects.get_or_404(slug=self.kwargs['slug'])
+        #self.person = get_document_or_404(Person, slug=self.kwargs['slug'])
         return self.person
 
     def get_context_data(self, **kwargs):

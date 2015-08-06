@@ -47,7 +47,7 @@ if DEBUG:
         'django_extensions',
         'debug_toolbar',
         'mongonaut',
-        'django_nose',
+#        'django_nose',
     )
 
 MIDDLEWARE_CLASSES = (
@@ -93,23 +93,37 @@ WSGI_APPLICATION = 'libreborme.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
+"""
+DATABASES = {
+    'default': {'ENGINE': 'django.db.backends.dummy'}
+}
+"""
+
+# No se usan pero se necesitan para que los tests no se quejen por usar
+# TestCase y tener una implementación de MongoTestCase incompleta.
 DATABASES = {
     'default': {
-        'ENGINE': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+}
+
+# MongoDB Databases
+MONGODB_DATABASES = {
+    'default': {'name': 'libreborme'}
 }
 
 MONGODB_HOST = 'localhost'
 MONGODB_PORT = 27017
-MONGO_DBNAME = 'libreborme'
-MONGODB = connect(MONGO_DBNAME)
+MONGO_DATABASE_NAME = 'libreborme'
+connect(MONGO_DATABASE_NAME)
 
 AUTHENTICATION_BACKENDS = (
-    'mongoengine.django.auth.MongoEngineBackend',
+    'django_mongoengine.auth.MongoEngineBackend',
 )
 
-SESSION_ENGINE = 'mongoengine.django.sessions'
-MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
+SESSION_ENGINE = 'django_mongoengine.sessions'
+MONGOENGINE_USER_DOCUMENT = 'django_mongoengine.auth.models.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -133,11 +147,4 @@ STATIC_URL = '/static/'
 PIWIK_URL = ''
 PIWIK_SITE_ID = ''
 
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-#TEST_NAME = 'test_mongo1'
-NOSE_ARGS = ['--with-coverage', '--cover-package=libreborme', '--cover-package=borme', '--cover-xml']
-#NOSE_ARGS = ['--mongoengine', '--with-coverage', '--cover-package=libreborme', '--cover-package=borme', '--cover-xml']
-
-NOSE_PLUGINS = [
-    'nose_mongoengine.MongoEnginePlugin',
-]
+TEST_RUNNER = 'borme.tests.mongotestrunner.MongoTestRunner'

@@ -1,5 +1,5 @@
 from borme.models import Company
-from borme.tests.mongotestcase import MongoTestCase
+from django_mongoengine.tests import MongoTestCase
 import nose.tools as nt
 
 c1_id = None
@@ -25,10 +25,6 @@ class TestModelOne(MongoTestCase):
         global c1_id
         self.c1_id = c1_id
         super(TestModelOne, self).setUp()
-
-    def tearDown(self):
-        self.db.drop_collection('company')
-        super(TestModelOne, self).tearDown()
 
     def test_company_object(self):
         find = Company.objects.filter(name='PATATAS JUAN SL')

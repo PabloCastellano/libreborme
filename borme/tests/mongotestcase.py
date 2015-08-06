@@ -1,36 +1,58 @@
 from django.conf import settings
 import json
-from subprocess import call
 import os
 import time
+import importlib
+
+from django_mongoengine.tests import MongoTestCase
 
 
-class MongoTestCase(object):
-    #fixtures = ['anuncio.json', 'borme.json', 'borme_log.json', 'company.json', 'config.json', 'person.json', 'jfaosfjasf']
-    fixtures = ['anuncio.json', 'borme.json', 'borme_log.json', 'company.json', 'config.json', 'person.json']
+#TODO: SimpleMongoTestCase
 
-    def setUp(self):
-        self.dbname = 'test_' + settings.MONGO_DBNAME
-        self.connection = settings.MONGODB
-        self.db = self.connection[self.dbname]
+# https://github.com/hmarr/mongoengine/pull/493/files
+class MongoFixturesTestCase(MongoTestCase):
+    mongo_fixtures = {}
+    """
+    Dictionary of fixtures, where each key is a collection name,
+    and each value is a name of a json file. Such file contains list
+    of documents to load.
+    """
 
-        # http://stackoverflow.com/questions/11568246/loading-several-text-files-into-mongodb-using-pymongo
-        for fixture in self.fixtures:
-            path = 'borme/fixtures/%s' % fixture
-            if not os.path.isfile(path):
-                raise IOError
-            collection_name = fixture.split('.')[0]
-            # mongoimport --db libreborme --collection config --file fixture1.json
-            time.sleep(2)
-            import pdb
-            pdb.set_trace()
-            call(["mongoimport", "-db %s" % self.dbname, "--collection %s" % collection_name, "--file %s" % path])
-            # Popen(['/bin/sh', '-c', args[0], args[1], ...])
-            #collection = self.db.create_collection(collection_name)
-            #d = json.load(open(fixture))
-            #collection.insert(d)
+    def __init__(self, methodName='runtest'):
+        self.db_name = 'test_libreborme'  # FIXME hardcoded
+        self.fixtures_path = 'borme/fixtures'  # FIXME
+        super(MongoFixturesTestCase, self).__init__(methodName)
 
+    def _pre_setup(self):
+        """
+        Load mongo fixtures.
+        """
+        if self.mongo_fixtures:
+            self._load_fixtures(self.mongo_fixtures)
+        super(MongoFixturesTestCase, self)._pre_setup()
 
-    def tearDown(self):
-        pass
-        #self.connection.drop_database(self.dbname)
+    def _load_fixtures(self, fixtures):
+        """
+        Load fixtures from json files.
+        Before loading content of every collection
+        will be removed.
+
+        :param fixtures:
+            dictionary, see :py:attr:`~MongoTestCase.mongo_fixtures`.
+        """
+        for collname, filename in fixtures.items():
+            #print('loading fixture %s' % filename)
+            self._import_json(collname, filename)
+
+    def _import_json(self, collname, filename):
+        path = '%s/%s' % (self.fixtures_path, filename)
+        models = importlib.import_module('borme.models')
+        klass = getattr(models, collname)
+        klass.objects.delete()
+
+        with open(path) as fileobj:
+            docs = json.load(fileobj)
+            for doc in docs:
+                j = json.dumps(doc)
+                obj = klass.from_json(j, created=True)
+                obj.save()
