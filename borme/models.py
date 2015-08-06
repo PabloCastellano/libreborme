@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import FieldError
 
 from mongoengine import *
+from django_mongoengine.utils.module import Document
 from bormeparser.regex import SOCIEDADES as SOCIEDADES_DICT
 
 #from borme_parser import DICT_KEYWORDS

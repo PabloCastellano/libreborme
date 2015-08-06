@@ -6,7 +6,9 @@ import nose.tools as nt
 import datetime
 import os
 
-from borme.tests.mongotestcase import MongoTestCase
+from django_mongoengine.tests import MongoTestCase
+
+import bormeparser
 
 b1_id = None
 
@@ -25,7 +27,7 @@ class TestBorme1(MongoTestCase):
         # Create two objects for test
         b1 = Borme(cve='BORME-A-2015-27-10',  date=datetime.date(2015, 2, 10),
                    url='http://boe.es/borme/dias/2015/02/10/pdfs/BORME-A-2015-27-10.pdf',
-                   province='29', section='A')
+                   province=bormeparser.PROVINCIA.CACERES.code, section='A')
         b1.save()
 
         # Save the id of objects to match in the test
@@ -38,12 +40,6 @@ class TestBorme1(MongoTestCase):
         super(TestBorme1, self).setUp()
         #self.user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
         #self.user = User.create_user(username='john', email='lennon@thebeatles.com', password='johnpassword')
-
-    def tearDown(self):
-        self.db.drop_collection('company')
-        self.db.drop_collection('borme')
-        self.db.drop_collection('anuncio')
-        super(TestBorme1, self).tearDown()
 
     def test_borme_object(self):
         find = Borme.objects.filter(cve='BORME-A-2015-27-10')

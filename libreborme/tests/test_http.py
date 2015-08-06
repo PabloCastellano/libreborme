@@ -3,11 +3,10 @@ from django.test.client import Client
 from django.utils.six import StringIO
 
 from borme.models import Person, Company, Borme, Config
+from borme.tests.mongotestcase import MongoFixturesTestCase
 
 import nose.tools as nt
 import os
-
-from borme.tests.mongotestcase import MongoTestCase
 
 
 # parametros django call_command
@@ -15,9 +14,11 @@ from borme.tests.mongotestcase import MongoTestCase
 # Envio de emails
 # Plantillas
 # Comandos
-class TestHttp(MongoTestCase):
-    fixtures = ['anuncio.json', 'borme.json', 'borme_log.json', 'company.json', 'config.json', 'person.json', 'jfaosfjasf']
-    #fixtures = ['anuncio.json', 'borme.json', 'borme_log.json', 'company.json', 'config.json']
+class TestHttp(MongoFixturesTestCase):
+
+    # FIXME: Pq si no cargo person.json, los test van bien pero con company.json si fallan?
+    mongo_fixtures = {'anuncio':'anuncio.json', 'borme': 'borme.json', 'borme_log': 'borme_log.json',
+                      'company': 'company.json', 'config': 'config.json', 'person': 'person.json'}
 
     def setUp(self):
         self.client = Client()
@@ -44,7 +45,10 @@ class TestHttp(MongoTestCase):
         nt.assert_equals(response.status_code, 200)
 
     def test_empresa(self):
-        company = Company.objects.first()
+        company = Company.objects.get(name='ALDARA CATERING SL')
+        #company = Company.objects.first()
+        #company = Company(name='PATATAS SL')
+        #company.save()
         response = self.client.get('/borme/empresa/%s' % company.slug)
         nt.assert_equals(response.status_code, 200)
 
@@ -53,7 +57,10 @@ class TestHttp(MongoTestCase):
         nt.assert_equals(response.status_code, 200)
 
     def test_persona(self):
-        person = Person.objects.first()
+        person = Person.objects.get(name='PANIAGUA SANCHEZ JOSE ANTONIO')
+        #person = Person.objects.first()
+        #person = Person(name='JUAN RAMON CORTES')
+        #person.save()
         response = self.client.get('/borme/persona/%s' % person.slug)
         nt.assert_equals(response.status_code, 200)
 
