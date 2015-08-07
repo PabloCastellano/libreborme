@@ -3,9 +3,12 @@ from django.core.urlresolvers import reverse
 from django.test.client import Client
 from django.utils.six import StringIO
 
-from borme.models import Person, Company, Borme, Config
+from borme.models import Anuncio, Borme, Config, Company, Person
 from borme.tests.mongotestcase import MongoFixturesTestCase
 from django_mongoengine.tests import MongoTestCase
+
+#from django.contrib.auth.models import User
+#from mongoengine.django.auth import User
 
 import os
 from datetime import datetime
@@ -28,6 +31,12 @@ class TestBasicHttp(MongoTestCase):
         Person(name='PERSONA RANDOM').save()
         Config(version='test', last_modified=datetime.now()).save()
         super(TestBasicHttp, cls).setUpClass()
+
+    # This method run on every test
+    def setUp(self):
+        #self.user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+        #self.user = User.create_user(username='john', email='lennon@thebeatles.com', password='johnpassword')
+        super(TestBasicHttp, self).setUp()
 
     @classmethod
     def tearDownClass(cls):
@@ -89,6 +98,16 @@ class TestBasicHttp(MongoTestCase):
 
 
 class TestCommands(MongoTestCase):
+
+    @classmethod
+    def tearDownClass(cls):
+        Anuncio.objects.delete()
+        Borme.objects.delete()
+        Company.objects.delete()
+        Person.objects.delete()
+        Config.objects.delete()
+        super(TestCommands, cls).tearDownClass()
+
     def test_importbormefile(self):
         out = StringIO()
         # FIXME: $HOME
@@ -99,3 +118,27 @@ class TestCommands(MongoTestCase):
         out = StringIO()
         call_command('importborme', stdout=out)
         self.assertIn(out.getvalue(), 'Errors: 0')
+
+"""
+
+    def test_login_required(self):
+        response = self.client.get(reverse('process_all'))
+        self.assertRedirects(response, '/login')
+
+    def test_get_method(self):
+        self.client.login(username='john', password='johnpassword')
+        response = self.client.get(reverse('process_all'))
+        self.assertRedirects(response, '/reports/messages')
+
+        # assert no messages were sent
+
+    def test_post_method(self):
+        self.client.login(username='john', password='johnpassword')
+
+        # add pending messages, mock sms sending?
+
+        response = self.client.post(reverse('process_all'))
+        self.assertRedirects(response, '/reports/messages')
+
+        # assert that sms messages were sent
+"""
