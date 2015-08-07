@@ -1,6 +1,5 @@
 from borme.models import Company
 from django_mongoengine.tests import MongoTestCase
-import nose.tools as nt
 
 c1_id = None
 
@@ -28,8 +27,8 @@ class TestModelOne(MongoTestCase):
 
     def test_company_object(self):
         find = Company.objects.filter(name='PATATAS JUAN SL')
-        nt.assert_equals(len(find), 1)
-        nt.assert_equals(find[0].id, self.c1_id)
+        self.assertEqual(len(find), 1)
+        self.assertEqual(find[0].id, self.c1_id)
         find = Company.objects.filter(slug='patatas-juan-sl')
-        nt.assert_equals(len(find), 1)
-        nt.assert_equals(find[0].id, self.c1_id)
+        self.assertEqual(len(find), 1)
+        self.assertEqual(find[0].id, self.c1_id)

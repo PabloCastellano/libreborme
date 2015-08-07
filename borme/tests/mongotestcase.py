@@ -13,9 +13,10 @@ from django_mongoengine.tests import MongoTestCase
 class MongoFixturesTestCase(MongoTestCase):
     mongo_fixtures = {}
     """
-    Dictionary of fixtures, where each key is a collection name,
+    Dictionary of fixtures, where each key is a Document class name,
     and each value is a name of a json file. Such file contains list
-    of documents to load.
+    of documents to load, previously exported using mongoexport --jsonArray
+
     """
 
     def __init__(self, methodName='runtest'):
@@ -34,11 +35,7 @@ class MongoFixturesTestCase(MongoTestCase):
     def _load_fixtures(self, fixtures):
         """
         Load fixtures from json files.
-        Before loading content of every collection
-        will be removed.
-
-        :param fixtures:
-            dictionary, see :py:attr:`~MongoTestCase.mongo_fixtures`.
+        Before loading content of every collection will be removed.
         """
         for collname, filename in fixtures.items():
             #print('loading fixture %s' % filename)

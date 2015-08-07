@@ -2,7 +2,6 @@ from borme.models import Borme, Anuncio
 from borme.utils import import_borme_file, _import1
 #from django.contrib.auth.models import User
 #from mongoengine.django.auth import User
-import nose.tools as nt
 import datetime
 import os
 
@@ -43,8 +42,8 @@ class TestBorme1(MongoTestCase):
 
     def test_borme_object(self):
         find = Borme.objects.filter(cve='BORME-A-2015-27-10')
-        nt.assert_equals(len(find), 1)
-        nt.assert_equals(find[0].id, self.b1_id)
+        self.assertEqual(len(find), 1)
+        self.assertEqual(find[0].id, self.b1_id)
 
 
 class TestBorme2(MongoTestCase):
@@ -55,9 +54,9 @@ class TestBorme2(MongoTestCase):
         #FIXME: HOME
         import_borme_file(os.path.expanduser('~/.bormes/pdf/BORME-A-2015-27-10.pdf'))
         find = Borme.objects.filter(cve='BORME-A-2015-27-10')
-        nt.assert_equals(len(find), 1)
+        self.assertEqual(len(find), 1)
         borme = find[0]
-        nt.assert_equals(Anuncio.objects.count(), 30)
+        self.assertEqual(Anuncio.objects.count(), 30)
         # Anuncios desde el 57315 al 57344
         #BORME-A-2015-27-10
         # borme = bormeparser.parse(filename)

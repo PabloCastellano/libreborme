@@ -6,7 +6,6 @@ from borme.models import Person, Company, Borme, Config
 from borme.tests.mongotestcase import MongoFixturesTestCase
 from django_mongoengine.tests import MongoTestCase
 
-import nose.tools as nt
 import os
 
 
@@ -28,7 +27,7 @@ class TestHttp1(MongoFixturesTestCase):
         #company = Company(name='PATATAS SL')
         #company.save()
         response = self.client.get('/borme/empresa/%s' % company.slug)
-        nt.assert_equals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_persona(self):
         person = Person.objects.get(name='PANIAGUA SANCHEZ JOSE ANTONIO')
@@ -36,33 +35,32 @@ class TestHttp1(MongoFixturesTestCase):
         #person = Person(name='JUAN RAMON CORTES')
         #person.save()
         response = self.client.get('/borme/persona/%s' % person.slug)
-        nt.assert_equals(response.status_code, 200)
-
+        self.assertEqual(response.status_code, 200)
 
 
 class TestHttp2(MongoTestCase):
     def test_index(self):
         response = self.client.get('/')
-        nt.assert_equals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = self.client.get('/robots.txt')
-        nt.assert_equals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = self.client.get('/borme/')
-        nt.assert_equals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = self.client.get('/fakeurl/')
-        nt.assert_equals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def test_busqueda(self):
         response = self.client.get('/borme/busqueda/')
-        nt.assert_equals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         # self.client.post
 
     def test_empresas(self):
         response = self.client.get('/borme/empresas/')
-        nt.assert_equals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_personas(self):
         response = self.client.get('/borme/personas/')
-        nt.assert_equals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class TestCommands(MongoTestCase):
@@ -71,9 +69,9 @@ class TestCommands(MongoTestCase):
         out = StringIO()
         # FIXME: $HOME
         call_command('importbormefile', os.path.expanduser('~/.bormes/pdf/BORME-A-2015-27-10.pdf'), stdout=out)
-        nt.assert_in(out.getvalue(), 'Errors: 0')
+        self.assertIn(out.getvalue(), 'Errors: 0')
 
     def test_importborme(self):
         out = StringIO()
         call_command('importborme', stdout=out)
-        nt.assert_in(out.getvalue(), 'Errors: 0')
+        self.assertIn(out.getvalue(), 'Errors: 0')
