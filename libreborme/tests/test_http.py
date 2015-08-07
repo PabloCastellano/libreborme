@@ -1,4 +1,5 @@
 from django.core.management import call_command
+from django.core.urlresolvers import reverse
 from django.test.client import Client
 from django.utils.six import StringIO
 
@@ -7,64 +8,87 @@ from borme.tests.mongotestcase import MongoFixturesTestCase
 from django_mongoengine.tests import MongoTestCase
 
 import os
-
+from datetime import datetime
 
 # parametros django call_command
 # what to check django tests
 # Envio de emails
 # Plantillas
-# Comandos
-class TestHttp1(MongoFixturesTestCase):
+class TestBasicHttp(MongoTestCase):
 
     # FIXME: Pq si no cargo person.json, los test van bien pero con company.json si fallan?
+    """
     mongo_fixtures = {'Anuncio':'anuncio.json', 'Borme': 'borme.json', 'BormeLog': 'borme_log.json',
                       'Company': 'company.json', 'Config': 'config.json', 'Person': 'person.json'}
+    """
 
+    @classmethod
+    def setUpClass(cls):
+        Company(name='EMPRESA RANDOM SL').save()
+        Person(name='PERSONA RANDOM').save()
+        Config(version='test', last_modified=datetime.now()).save()
+        super(TestBasicHttp, cls).setUpClass()
+
+    @classmethod
+    def tearDownClass(cls):
+        Company.objects.delete()
+        Person.objects.delete()
+        Config.objects.delete()
+        super(TestBasicHttp, cls).tearDownClass()
 
     def test_empresa(self):
-        company = Company.objects.get(name='ALDARA CATERING SL')
-        #company = Company.objects.first()
-        #company = Company(name='PATATAS SL')
-        #company.save()
-        response = self.client.get('/borme/empresa/%s' % company.slug)
+        company = Company.objects.get(name='EMPRESA RANDOM SL')
+        url = reverse('borme-empresa', args=[company.slug])
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+        url = reverse('borme-empresa', args=['doesnt-exist-sl'])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
 
     def test_persona(self):
-        person = Person.objects.get(name='PANIAGUA SANCHEZ JOSE ANTONIO')
-        #person = Person.objects.first()
-        #person = Person(name='JUAN RAMON CORTES')
-        #person.save()
-        response = self.client.get('/borme/persona/%s' % person.slug)
+        person = Person.objects.get(name='PERSONA RANDOM')
+        url = reverse('borme-persona', args=[person.slug])
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
+        url = reverse('borme-persona', args=['doesnt-exist'])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
 
-class TestHttp2(MongoTestCase):
     def test_index(self):
-        response = self.client.get('/')
+        url = reverse('home')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+        url = reverse('borme-home')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
         response = self.client.get('/robots.txt')
         self.assertEqual(response.status_code, 200)
-        response = self.client.get('/borme/')
-        self.assertEqual(response.status_code, 200)
-        response = self.client.get('/fakeurl/')
+
+        response = self.client.get('/wrongurl/')
         self.assertEqual(response.status_code, 404)
 
     def test_busqueda(self):
-        response = self.client.get('/borme/busqueda/')
+        url = reverse('borme-search')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         # self.client.post
 
     def test_empresas(self):
-        response = self.client.get('/borme/empresas/')
+        url = reverse('borme-empresas-list')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_personas(self):
-        response = self.client.get('/borme/personas/')
+        url = reverse('borme-personas-list')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
 
 class TestCommands(MongoTestCase):
-
     def test_importbormefile(self):
         out = StringIO()
         # FIXME: $HOME
