@@ -1,0 +1,29 @@
+branches:
+  only:
+    - master
+
+language: python
+
+services:
+    - mongodb
+
+python:
+  - "2.7"
+  - "3.4"
+
+install:
+#  - pip install coveralls
+  - pip install -r requirements/test.txt
+  - python setup.py -q develop
+
+before_script:
+#  - sleep 15
+  - mongo mydb_test --eval 'db.addUser("travis", "test");'
+
+# command to run tests, e.g. python setup.py test
+#script:
+#  - coverage run --source=libreborme setup.py test
+script: "./runtests.sh"
+
+#after_success:
+#  - coveralls
