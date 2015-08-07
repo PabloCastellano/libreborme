@@ -42,17 +42,8 @@ Si quieres instalar herramientas de desarrollo:
 
 En producción:
 
-    apt-get install nginx
-    cd ~/libreborme
-    workon libreborme
-    ./manage.py collecstatic
-    pip install -r requirements/production.txt
-    mkdir /home/libreborme/run/
-    chmod 775 /home/libreborme/run/
-    adduser libreborme www-data
-    # Crear /etc/init.d/django-libreborme
-    /etc/init.d/django-libreborme start
-    update-rc.d django-libreborme defaults
+- Instalación manual: http://libreborme.readthedocs.org/es/latest/installation/
+- Instalación automatizada: http://libreborme.readthedocs.org/es/latest/install_production_automated/
 
 Opcional
 --------
