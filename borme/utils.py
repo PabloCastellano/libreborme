@@ -1,10 +1,12 @@
 from .models import Company, Borme, Anuncio, Person, CargoCompany, CargoPerson, BormeLog
 from mongoengine.errors import ValidationError, NotUniqueError
 
-import bormeparser
+from django.conf import settings
 from bormeparser.regex import is_company, is_acto_cargo_entrante
-
 from datetime import datetime
+
+import bormeparser
+import os
 
 # FIXME:
 #settings.BORME_DIR
@@ -161,20 +163,11 @@ def import_borme_download(date):
     date_t = tuple(map(int, (date[0], date[1], date[2])))
     bormeparser.download_pdfs(date_t, settings.BORME_PDF_TEMP_ROOT, bormeparser.SECCION.A)
 
-    if six.PY3:
-        _, _, files = next(os.walk(settings.BORME_PDF_TEMP_ROOT))
-    else:
-        _, _, files = os.path.walk(settings.BORME_PDF_TEMP_ROOT).next()
+    _, _, files = next(os.walk(settings.BORME_PDF_TEMP_ROOT))
 
     month_path = os.path.join(date[0], date[1])
     new_path = os.path.join(settings.BORME_PDF_ROOT, month_path)
-    if six.PY3:
-        os.makedirs(new_path, exist_ok=True)
-    else:
-        try:
-            os.makedirs(new_path)
-        except OSError:
-            pass
+    os.makedirs(new_path, exist_ok=True)
 
     for filename in files:
         filepath = os.path.join(settings.BORME_PDF_TEMP_ROOT, filename)
