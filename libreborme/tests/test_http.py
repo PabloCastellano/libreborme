@@ -4,6 +4,7 @@ from django.utils.six import StringIO
 
 from borme.models import Person, Company, Borme, Config
 from borme.tests.mongotestcase import MongoFixturesTestCase
+from django_mongoengine.tests import MongoTestCase
 
 import nose.tools as nt
 import os
@@ -14,17 +15,32 @@ import os
 # Envio de emails
 # Plantillas
 # Comandos
-class TestHttp(MongoFixturesTestCase):
+class TestHttp1(MongoFixturesTestCase):
 
     # FIXME: Pq si no cargo person.json, los test van bien pero con company.json si fallan?
     mongo_fixtures = {'Anuncio':'anuncio.json', 'Borme': 'borme.json', 'BormeLog': 'borme_log.json',
                       'Company': 'company.json', 'Config': 'config.json', 'Person': 'person.json'}
 
-    def setUp(self):
-        self.client = Client()
-        config = Config(version='tests')
-        config.save()
 
+    def test_empresa(self):
+        company = Company.objects.get(name='ALDARA CATERING SL')
+        #company = Company.objects.first()
+        #company = Company(name='PATATAS SL')
+        #company.save()
+        response = self.client.get('/borme/empresa/%s' % company.slug)
+        nt.assert_equals(response.status_code, 200)
+
+    def test_persona(self):
+        person = Person.objects.get(name='PANIAGUA SANCHEZ JOSE ANTONIO')
+        #person = Person.objects.first()
+        #person = Person(name='JUAN RAMON CORTES')
+        #person.save()
+        response = self.client.get('/borme/persona/%s' % person.slug)
+        nt.assert_equals(response.status_code, 200)
+
+
+
+class TestHttp2(MongoTestCase):
     def test_index(self):
         response = self.client.get('/')
         nt.assert_equals(response.status_code, 200)
@@ -44,25 +60,12 @@ class TestHttp(MongoFixturesTestCase):
         response = self.client.get('/borme/empresas/')
         nt.assert_equals(response.status_code, 200)
 
-    def test_empresa(self):
-        company = Company.objects.get(name='ALDARA CATERING SL')
-        #company = Company.objects.first()
-        #company = Company(name='PATATAS SL')
-        #company.save()
-        response = self.client.get('/borme/empresa/%s' % company.slug)
-        nt.assert_equals(response.status_code, 200)
-
     def test_personas(self):
         response = self.client.get('/borme/personas/')
         nt.assert_equals(response.status_code, 200)
 
-    def test_persona(self):
-        person = Person.objects.get(name='PANIAGUA SANCHEZ JOSE ANTONIO')
-        #person = Person.objects.first()
-        #person = Person(name='JUAN RAMON CORTES')
-        #person.save()
-        response = self.client.get('/borme/persona/%s' % person.slug)
-        nt.assert_equals(response.status_code, 200)
+
+class TestCommands(MongoTestCase):
 
     def test_importbormefile(self):
         out = StringIO()

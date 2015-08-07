@@ -19,7 +19,6 @@ class MongoFixturesTestCase(MongoTestCase):
     """
 
     def __init__(self, methodName='runtest'):
-        print('222222222222222 init')
         self.db_name = 'test_libreborme'  # FIXME hardcoded
         self.fixtures_path = 'borme/fixtures'  # FIXME
         super(MongoFixturesTestCase, self).__init__(methodName)
@@ -28,7 +27,6 @@ class MongoFixturesTestCase(MongoTestCase):
         """
         Load mongo fixtures.
         """
-        print('22222222222222 _pre_setup')
         if self.mongo_fixtures:
             self._load_fixtures(self.mongo_fixtures)
         super(MongoFixturesTestCase, self)._pre_setup()
@@ -42,9 +40,8 @@ class MongoFixturesTestCase(MongoTestCase):
         :param fixtures:
             dictionary, see :py:attr:`~MongoTestCase.mongo_fixtures`.
         """
-        print('22222222222222 _load_fixtures')
         for collname, filename in fixtures.items():
-            print('loading fixture %s' % filename)
+            #print('loading fixture %s' % filename)
             self._import_json(collname, filename)
 
     def _import_json(self, collname, filename):
