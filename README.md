@@ -3,6 +3,7 @@
 [![Travis libreborme](https://travis-ci.org/PabloCastellano/libreborme.svg?branch=master)](https://travis-ci.org/PabloCastellano/libreborme)
 [![Coverage Status](https://coveralls.io/repos/PabloCastellano/libreborme/badge.svg)](https://coveralls.io/r/PabloCastellano/libreborme)
 [![Documentation Status](https://readthedocs.org/projects/libreborme/badge/?version=latest)](https://readthedocs.org/projects/libreborme/?badge=latest)
+[![Requirements Status](https://requires.io/github/PabloCastellano/libreborme/requirements.svg?branch=master)](https://requires.io/github/PabloCastellano/libreborme/requirements/?branch=master)
 
 En estos momentos hay una versión en producción en https://beta.libreborme.net. Como su dominio indica, es una versión de pruebas, por lo que
 fallará de vez en cuando, sus URLs cambiarán, a veces contendrá más datos y otras veces menos...
