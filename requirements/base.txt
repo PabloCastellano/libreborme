@@ -1,7 +1,7 @@
 #mongoengine==0.10.0
 https://github.com/PabloCastellano/mongoengine/archive/master.zip#egg=mongoengine
 #django-mongoengine==0.1
-https://github.com/PabloCastellano/django-mongoengine/archive/master.zip#egg=django-mongoengine
+https://github.com/PabloCastellano/django-mongoengine/archive/develop.zip#egg=django-mongoengine
 #mongodbforms==0.3
 https://github.com/jschrewe/django-mongodbforms/archive/master.zip#egg=mongodbforms
 #mongogeneric==0.1a0

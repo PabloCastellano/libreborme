@@ -13,7 +13,10 @@ python:
 install:
 #  - pip install coveralls
   - pip install -r requirements/test.txt
+  - pip install django-extensions
   - python setup.py -q develop
+  - mkdir -p /home/travis/.bormes/pdf
+  - wget http://www.boe.es/borme/dias/2015/02/10/pdfs/BORME-A-2015-27-10.pdf -O /home/travis/.bormes/pdf/BORME-A-2015-27-10.pdf
 
 before_script:
 #  - sleep 15
