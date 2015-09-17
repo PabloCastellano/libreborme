@@ -153,31 +153,56 @@ def _import1(borme):
     return results
 
 
-def import_borme_download(date):
+def get_borme_pdf_path(date):
+    year = '%02d' % date.year
+    month = '%02d' % date.month
+    day = '%02d' % date.day
+    return os.path.join(settings.BORME_PDF_ROOT, year, month, day)
+
+
+def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
     """
     Download and import BORME to MongoDB database
 
     :param filename:
     :return:
     """
-    date_t = tuple(map(int, (date[0], date[1], date[2])))
-    bormeparser.download_pdfs(date_t, settings.BORME_PDF_TEMP_ROOT, bormeparser.SECCION.A)
 
-    _, _, files = next(os.walk(settings.BORME_PDF_TEMP_ROOT))
+    if isinstance(date, tuple):
+        date = datetime.date(year=date[0], month=date[1], day=date[2])
 
-    month_path = os.path.join(date[0], date[1])
-    new_path = os.path.join(settings.BORME_PDF_ROOT, month_path)
+    new_path = get_borme_pdf_path(date)
     os.makedirs(new_path, exist_ok=True)
+    print(new_path)
 
-    for filename in files:
-        filepath = os.path.join(settings.BORME_PDF_TEMP_ROOT, filename)
-        borme = bormeparser.parse(filepath)
+    bormes = []
+    if download:
+        _, files = bormeparser.download_pdfs(date, new_path, seccion=seccion)
+    else:
+        _, _, files = next(os.walk(new_path))
+        files = list(map(lambda x: os.path.join(new_path, x), files))
+
+    for filepath in files:
+        if filepath.endswith('-99.pdf'):
+            continue
+        print(filepath)
+        bormes.append(bormeparser.parse(filepath))
+
+    total_results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
+    for borme in sorted(bormes):
         results = _import1(borme)
-        newfilepath = os.path.join(new_path, filename)
-        os.rename(filepath, newfilepath)
-        print(newfilepath)
+        total_results['created_anuncios'] += results['created_anuncios']
+        total_results['created_bormes'] += results['created_bormes']
+        total_results['created_companies'] += results['created_companies']
+        total_results['created_persons'] += results['created_persons']
+        total_results['errors'] += results['errors']
+        print_results(results, borme)
 
-    print_results(results, borme)
+    print()
+    print('BORMEs creados: %d' % total_results['created_bormes'])
+    print('Anuncios creados: %d' % total_results['created_anuncios'])
+    print('Empresas creadas: %d' % total_results['created_companies'])
+    print('Personas creadas: %d' % total_results['created_persons'])
 
 
 def import_borme_file(filename):
@@ -195,6 +220,7 @@ def import_borme_file(filename):
 
 def print_results(results, borme):
     print()
+    print('BORME CVE: %s' % borme.cve)
     print('BORMEs creados: %d' % results['created_bormes'])
     print('Anuncios creados: %d/%d' % (results['created_anuncios'], len(borme.get_anuncios())))
     print('Empresas creadas: %d' % results['created_companies'])
