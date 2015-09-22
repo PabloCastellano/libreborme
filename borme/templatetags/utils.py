@@ -38,3 +38,8 @@ def is_acto_cargo(val):
 @register.filter
 def is_string(val):
     return isinstance(val, str)
+
+
+@register.filter
+def is_bool(val):
+    return isinstance(val, bool)

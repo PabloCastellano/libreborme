@@ -32,9 +32,11 @@
               <li><strong>{{ acto_name }}</strong>:
              {% if value|is_string %}
                {{ value }}
+             {% elif value|is_bool %}
+               <i class="glyphicon glyphicon-ok"></i>
              {% else %}
              {% for cargo in value %}
-               {{ cargo.titltitle }}:
+               {{ cargo.title }}:
                <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a>{% if not forloop.last %}, {% endif %}
              {% endfor %}
              {% endif %}
