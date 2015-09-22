@@ -25,10 +25,18 @@ logger.setLevel(logging.INFO)
 def _import1(borme):
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
 
-    nuevo_borme, created = Borme.objects.get_or_create(cve=borme.cve, date=borme.date)
+    nuevo_borme, created = Borme.objects.get_or_create(cve=borme.cve)
     if created:
         logger.info('Creando borme %s' % borme.cve)
         results['created_bormes'] += 1
+        nuevo_borme.date = borme.date
+        nuevo_borme.url = borme.url
+        nuevo_borme.from_reg = borme.anuncios_rango[0]
+        nuevo_borme.until_reg = borme.anuncios_rango[1]
+        nuevo_borme.province = borme.provincia.name
+        nuevo_borme.section = borme.seccion
+        #year, type, from_page, until_page, pages
+        # num?, filename?
 
     # TODO: Don't parse if borme_log.parsed
     borme_log, created = BormeLog.objects.get_or_create(borme_cve=borme.cve)
