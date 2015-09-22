@@ -15,9 +15,11 @@ import os
 
 import logging
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
 ch = logging.StreamHandler()
 logger.addHandler(ch)
-logger.setLevel(logging.ERROR)
+logger.setLevel(logging.INFO)
 
 
 def _import1(borme):
@@ -41,7 +43,7 @@ def _import1(borme):
     # TODO: borrar si hubieran actos para este borme?
     for n, anuncio in enumerate(borme.get_anuncios(), 1):
         try:
-            logger.info('%d: Importando anuncio: %s' % (n, anuncio))
+            logger.debug('%d: Importando anuncio: %s' % (n, anuncio))
             # TODO: Buscar por slug
             try:
                 company, created = Company.objects.get_or_create(name=anuncio.empresa)
@@ -171,9 +173,23 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
     if isinstance(date, tuple):
         date = datetime.date(year=date[0], month=date[1], day=date[2])
 
+    # Add FileHandlers
+    logpath = os.path.join(settings.BORME_LOG_ROOT, 'imports', '%02d-%02d' % (date.year, date.month))
+    os.makedirs(logpath, exist_ok=True)
+
+    fh1_path = os.path.join(logpath, '%02d_info.txt' % date.day)
+    fh1 = logging.FileHandler(fh1_path)
+    fh1.setLevel(logging.INFO)
+    logger.addHandler(fh1)
+
+    fh2_path = os.path.join(logpath, '%02d_error.txt' % date.day)
+    fh2 = logging.FileHandler(fh2_path)
+    fh2.setLevel(logging.ERROR)
+    logger.addHandler(fh2)
+
     new_path = get_borme_pdf_path(date)
     os.makedirs(new_path, exist_ok=True)
-    print(new_path)
+    logger.info(new_path)
 
     bormes = []
     if download:
@@ -185,7 +201,7 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
     for filepath in files:
         if filepath.endswith('-99.pdf'):
             continue
-        print(filepath)
+        logger.info('%s' % filepath)
         bormes.append(bormeparser.parse(filepath))
 
     total_results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
@@ -198,11 +214,14 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
         total_results['errors'] += results['errors']
         print_results(results, borme)
 
-    print()
-    print('BORMEs creados: %d' % total_results['created_bormes'])
-    print('Anuncios creados: %d' % total_results['created_anuncios'])
-    print('Empresas creadas: %d' % total_results['created_companies'])
-    print('Personas creadas: %d' % total_results['created_persons'])
+    logger.info('\nBORMEs creados: %d' % total_results['created_bormes'])
+    logger.info('Anuncios creados: %d' % total_results['created_anuncios'])
+    logger.info('Empresas creadas: %d' % total_results['created_companies'])
+    logger.info('Personas creadas: %d' % total_results['created_persons'])
+
+    # Remove handlers
+    logger.removeHandler(fh1)
+    logger.removeHandler(fh2)
 
 
 def import_borme_file(filename):
@@ -219,10 +238,9 @@ def import_borme_file(filename):
 
 
 def print_results(results, borme):
-    print()
-    print('BORME CVE: %s' % borme.cve)
-    print('BORMEs creados: %d' % results['created_bormes'])
-    print('Anuncios creados: %d/%d' % (results['created_anuncios'], len(borme.get_anuncios())))
-    print('Empresas creadas: %d' % results['created_companies'])
-    print('Personas creadas: %d' % results['created_persons'])
+    logger.info('\nBORME CVE: %s' % borme.cve)
+    logger.info('BORMEs creados: %d' % results['created_bormes'])
+    logger.info('Anuncios creados: %d/%d' % (results['created_anuncios'], len(borme.get_anuncios())))
+    logger.info('Empresas creadas: %d' % results['created_companies'])
+    logger.info('Personas creadas: %d' % results['created_persons'])
     return True
