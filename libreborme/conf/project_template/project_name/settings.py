@@ -80,6 +80,8 @@ MEDIA_URL = '%s/media/' % SITE_URL
 MEDIA_ROOT = '%s/media/' % SITE_ROOT
 
 # BORME
-BORME_PDF_ROOT = '%s/borme/pdf/' % SITE_ROOT
-BORME_PDF_TEMP_ROOT = '%s/borme/pdf/tmp/' % SITE_ROOT
-BORME_XML_ROOT = '%s/borme/xml/' % SITE_ROOT
+BORME_PDF_ROOT = os.path.join(SITE_ROOT, 'bormes', 'pdf')
+BORME_PDF_TEMP_ROOT = os.path.join(SITE_ROOT, 'bormes', 'pdf', 'tmp')
+BORME_XML_ROOT = os.path.join(SITE_ROOT, 'bormes', 'xml')
+
+BORME_LOG_ROOT = os.path.join(SITE_ROOT, 'log')
