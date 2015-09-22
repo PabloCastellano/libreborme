@@ -84,4 +84,4 @@ BORME_PDF_ROOT = os.path.join(SITE_ROOT, 'bormes', 'pdf')
 BORME_PDF_TEMP_ROOT = os.path.join(SITE_ROOT, 'bormes', 'pdf', 'tmp')
 BORME_XML_ROOT = os.path.join(SITE_ROOT, 'bormes', 'xml')
 
-BORME_LOG_ROOT = os.path.join(SITE_ROOT, 'log')
+BORME_LOG_ROOT = os.path.join(SITE_ROOT, '..', 'log')
