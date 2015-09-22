@@ -48,7 +48,7 @@ def _import1(borme):
             try:
                 company, created = Company.objects.get_or_create(name=anuncio.empresa)
                 if created:
-                    logger.info('Creando empresa %s' % anuncio.empresa)
+                    logger.debug('Creando empresa %s' % anuncio.empresa)
                     results['created_companies'] += 1
                 company.in_bormes.append(nuevo_borme)
             except NotUniqueError as e:
@@ -59,7 +59,7 @@ def _import1(borme):
 
             nuevo_anuncio, created = Anuncio.objects.get_or_create(borme=nuevo_borme, id_anuncio=anuncio.id, company=company)
             if created:
-                logger.info('Creando anuncio %d: %s' % (anuncio.id, anuncio.empresa))
+                logger.debug('Creando anuncio %d: %s' % (anuncio.id, anuncio.empresa))
                 results['created_anuncios'] += 1
 
             for acto in anuncio.get_borme_actos():
@@ -75,7 +75,7 @@ def _import1(borme):
                                 try:
                                     c, created = Company.objects.get_or_create(name=nombre)
                                     if created:
-                                        logger.info('Creando empresa: %s' % nombre)
+                                        logger.debug('Creando empresa: %s' % nombre)
                                         results['created_companies'] += 1
 
                                     c.anuncios.append(nuevo_anuncio)
@@ -99,7 +99,7 @@ def _import1(borme):
                                 try:
                                     p, created = Person.objects.get_or_create(name=nombre)
                                     if created:
-                                        logger.info('Creando persona: %s' % nombre)
+                                        logger.debug('Creando persona: %s' % nombre)
                                         results['created_persons'] += 1
 
                                     p.in_companies.append(company)
@@ -189,6 +189,9 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
 
     new_path = get_borme_pdf_path(date)
     os.makedirs(new_path, exist_ok=True)
+    logger.info('============================================================')
+    logger.info('Exec: import_borme_download at %s' % datetime.now())
+    logger.info('============================================================')
     logger.info(new_path)
 
     bormes = []
