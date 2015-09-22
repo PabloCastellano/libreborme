@@ -198,8 +198,8 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
     new_path = get_borme_pdf_path(date)
     os.makedirs(new_path, exist_ok=True)
     logger.info('============================================================')
-    logger.info('Exec: import_borme_download at %s' % datetime.now())
-    logger.info('  Import date: %s. Section: %s' % (date.isoformat()), seccion)
+    logger.info('Ran import_borme_download at %s' % datetime.now())
+    logger.info('  Import date: %s. Section: %s' % (date.isoformat(), seccion))
     logger.info('============================================================')
     logger.info(new_path)
 
