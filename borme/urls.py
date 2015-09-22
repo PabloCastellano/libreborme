@@ -1,9 +1,10 @@
 from django.conf.urls import patterns, url
 
-from .views import CompanyView, PersonView, HomeView, PersonListView, CompanyListView, BusquedaView
+from .views import CompanyView, PersonView, HomeView, PersonListView, CompanyListView, BusquedaView, BormeView
 
 urlpatterns = patterns('',
     url(r'^$', HomeView.as_view(), name='borme-home'),
+    url(r'^borme/(?P<cve>[\w-]+)$', BormeView.as_view(), name='borme-borme'),
     url(r'^empresa/(?P<slug>[\w-]+)$', CompanyView.as_view(), name='borme-empresa'),
     url(r'^empresas/$', CompanyListView.as_view(), name='borme-empresas-list'),
     url(r'^persona/(?P<slug>[\w-]+)$', PersonView.as_view(), name='borme-persona'),

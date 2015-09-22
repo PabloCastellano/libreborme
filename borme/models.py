@@ -71,6 +71,9 @@ class Borme(Document):
     pages = IntField()
     anuncios = ListField(ReferenceField('Anuncio'))
 
+    def get_absolute_url(self):
+        return reverse('borme-borme', args=[str(self.cve)])
+
     def __str__(self):
         return self.cve
 

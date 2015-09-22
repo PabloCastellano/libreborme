@@ -85,6 +85,24 @@ class BusquedaView(TemplateView):
         return context
 
 
+class BormeView(DetailView):
+    model = Borme
+    context_object_name = 'borme'
+
+    def get_object(self):
+        self.borme = Borme.objects.get_or_404(cve=self.kwargs['cve'])
+        return self.borme
+
+    def get_context_data(self, **kwargs):
+        context = super(BormeView, self).get_context_data(**kwargs)
+
+        context['total_anuncios'] = self.borme.until_reg - self.borme.from_reg + 1
+        context['bormes_dia'] = Borme.objects.filter(date=self.borme.date).order_by('cve')
+        context['bormes_dia'] = list(context['bormes_dia'])
+        context['bormes_dia'].remove(self.borme)
+        return context
+
+
 class CompanyView(DetailView):
     model = Company
     context_object_name = 'company'

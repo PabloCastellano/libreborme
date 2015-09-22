@@ -1,0 +1,27 @@
+{% extends "borme/base.html" %}
+
+{% load utils %}
+
+{% block title %}{{ borme.cve }} | LibreBORME{% endblock %}
+
+{% block content %}
+    <h2>{{ borme.cve }}</h2>
+
+    <strong>Fecha:</strong> {{ borme.date|date }}
+    <br/>
+    <strong>Provincia:</strong> {{ borme.province }}
+    <br/>
+    <strong>Sección:</strong> {{ borme.section }}
+    <br/>
+    <strong>Fuente:</strong> <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF">{{ borme.url }} <i class="glyphicon glyphicon-download-alt"></i></a>
+    <br/>
+    <strong>Anuncios:</strong> {{ total_anuncios }}
+    ({% if total_anuncios == 1 %}{{ borme.from_reg }}{% else %}del {{ borme.from_reg }} al {{ borme.until_reg }}{% endif %})
+
+    <h3>Bormes del mismo día:</h3>
+    <ul>
+    {% for b in bormes_dia %}
+        <li>{{ b.province }}: <a href="{{ b.get_absolute_url }}">{{ b.cve }}</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}
