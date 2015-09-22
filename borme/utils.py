@@ -27,7 +27,7 @@ def _import1(borme):
 
     nuevo_borme, created = Borme.objects.get_or_create(cve=borme.cve)
     if created:
-        logger.info('Creando borme %s' % borme.cve)
+        logger.debug('Creando borme %s' % borme.cve)
         results['created_bormes'] += 1
         nuevo_borme.date = borme.date
         nuevo_borme.url = borme.url

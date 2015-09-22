@@ -17,7 +17,7 @@ class Command(BaseCommand):
         start_time = time.time()
 
         if args:
-            local = args and args[1] == 'local'
+            local = len(args) > 1 and args[1] == 'local'
             date = datetime.date(*map(int, args[0].split('-')))
             import_borme_download(date, download=not local)
 
