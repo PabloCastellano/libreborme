@@ -2,6 +2,7 @@ from .models import Company, Borme, Anuncio, Person, CargoCompany, CargoPerson, 
 from mongoengine.errors import ValidationError, NotUniqueError
 
 from django.conf import settings
+from django.utils.text import slugify
 from bormeparser.regex import is_company, is_acto_cargo_entrante
 from datetime import datetime
 
@@ -110,23 +111,26 @@ def _import1(borme):
                                         logger.debug('Creando persona: %s' % nombre)
                                         results['created_persons'] += 1
 
-                                    p.in_companies.append(company)
-                                    p.in_bormes.append(nuevo_borme)
-                                    cargo = CargoPerson(title=nombre_cargo, name=p)
-                                    if is_acto_cargo_entrante(acto.name):
-                                        cargo.date_from = borme.date
-                                        cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_from=borme.date)
-                                        p.update_cargos_entrantes([cargo_embed])
-                                    else:
-                                        cargo.date_to = borme.date
-                                        cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_to=borme.date)
-                                        p.update_cargos_salientes([cargo_embed])
-                                    p.save()
-
                                 except NotUniqueError as e:
-                                    logger.error('ERROR creando persona: %s' % nombre)
-                                    logger.error(e)
+                                    slug_p = slugify(nombre)
+                                    p = Person.objects.get(slug=slug_p)
+                                    logger.warn('WARNING: Persona similar. Mismo slug: %s' % slug_p)
+                                    logger.warn('%s\n%s\n' % (p.name, nombre))
                                     results['errors'] += 1
+
+                                p.in_companies.append(company)
+                                p.in_bormes.append(nuevo_borme)
+                                cargo = CargoPerson(title=nombre_cargo, name=p)
+                                if is_acto_cargo_entrante(acto.name):
+                                    cargo.date_from = borme.date
+                                    cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_from=borme.date)
+                                    p.update_cargos_entrantes([cargo_embed])
+                                else:
+                                    cargo.date_to = borme.date
+                                    cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_to=borme.date)
+                                    p.update_cargos_salientes([cargo_embed])
+                                p.save()
+
                             lista_cargos.append(cargo)
 
                         kk = acto.name.replace('.', '||')
@@ -182,6 +186,7 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
         date = datetime.date(year=date[0], month=date[1], day=date[2])
 
     # Add FileHandlers
+    # TODO: Renombrar .1, .2, .3...
     logpath = os.path.join(settings.BORME_LOG_ROOT, 'imports', '%02d-%02d' % (date.year, date.month))
     os.makedirs(logpath, exist_ok=True)
 
@@ -192,7 +197,7 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
 
     fh2_path = os.path.join(logpath, '%02d_error.txt' % date.day)
     fh2 = logging.FileHandler(fh2_path)
-    fh2.setLevel(logging.ERROR)
+    fh2.setLevel(logging.WARNING)
     logger.addHandler(fh2)
 
     new_path = get_borme_pdf_path(date)
