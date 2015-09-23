@@ -66,10 +66,13 @@ def _import1(borme):
                 results['errors'] += 1
                 continue
 
-            nuevo_anuncio, created = Anuncio.objects.get_or_create(borme=nuevo_borme, id_anuncio=anuncio.id, company=company)
+            nuevo_anuncio, created = Anuncio.objects.get_or_create(id_anuncio=anuncio.id)
             if created:
                 logger.debug('Creando anuncio %d: %s' % (anuncio.id, anuncio.empresa))
                 results['created_anuncios'] += 1
+                nuevo_anuncio.borme = nuevo_borme
+                nuevo_anuncio.company = company
+                nuevo_anuncio.datos_registrales = anuncio.datos_registrales
 
             for acto in anuncio.get_borme_actos():
                 logger.debug(acto.name)

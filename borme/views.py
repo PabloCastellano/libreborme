@@ -85,6 +85,21 @@ class BusquedaView(TemplateView):
         return context
 
 
+class AnuncioView(DetailView):
+    model = Anuncio
+    context_object_name = 'anuncio'
+
+    def get_object(self):
+        self.anuncio = Anuncio.objects.get_or_404(id_anuncio=self.kwargs['id'])
+        return self.anuncio
+
+    """
+    def get_context_data(self, **kwargs):
+        context = super(AnuncioView, self).get_context_data(**kwargs)
+        return context
+    """
+
+
 class BormeView(DetailView):
     model = Borme
     context_object_name = 'borme'

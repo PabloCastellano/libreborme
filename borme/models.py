@@ -190,6 +190,9 @@ class Anuncio(Document):
     datos_registrales = StringField()
     actos = DictField()
 
+    def get_absolute_url(self):
+        return reverse('borme-anuncio', args=[str(self.id_anuncio)])
+
     def __str__(self):
         return '%d (%d actos)' % (self.id_anuncio, len(self.actos.keys()))
 

@@ -58,8 +58,8 @@
 
     <h2>Anuncios en boletines oficiales</h2>
         {% for anuncio in anuncios %}
-            <h3>{{ anuncio.borme.date|date }}</h3>
-            <li>Anuncio <strong>{{ anuncio.id_anuncio }}</strong> con fecha <strong><i>{{ anuncio.borme.date|date }}</i></strong>.</li>
+            <h3>{{ anuncio.borme.date|date:"d b Y" }}</h3>
+            Detalles del anuncio <a href="{{ anuncio.get_absolute_url }}">{{ anuncio.id_anuncio }}</a>.
         <ul>
            {% for acto_name, value in anuncio.actos.items %}
               <li><strong>{{ acto_name }}</strong>:
@@ -86,8 +86,10 @@
         <li><a href="{{ person.get_absolute_url }}">{{ person.name }}</a></li>
         {% endfor %}
     </ul>
+
     <h2>Sociedades relacionadas</h2>
         <i>No disponible</i>
+
     <h2>BORMEs relacionados</h2>
     <ul>
         {% for borme in bormes.values %}

@@ -2,6 +2,7 @@
 
 from django.template.defaulttags import register
 from borme.models import CargoPerson, CargoCompany
+from bormeparser.regex import is_acto_cargo as es_acto_cargo
 
 #from borme_parser import DICT_KEYWORDS
 DICT_KEYWORDS = {}  # FIXME
@@ -36,6 +37,11 @@ def is_acto_cargo(val):
 
 
 @register.filter
+def is_acto_cargo2(val):
+    return es_acto_cargo(val)
+
+
+@register.filter
 def is_string(val):
     return isinstance(val, str)
 
@@ -43,3 +49,8 @@ def is_string(val):
 @register.filter
 def is_bool(val):
     return isinstance(val, bool)
+
+
+@register.filter(name='get_class')
+def get_class(val):
+  return val.__class__.__name__
