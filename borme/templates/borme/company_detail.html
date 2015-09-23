@@ -5,27 +5,60 @@
 {% block title %}{{ company.name }} | LibreBORME{% endblock %}
 
 {% block content %}
-    <h2>Sociedad «{{ company.name }}»</h2>
+    <h1>Sociedad «{{ company.name }}»</h1>
 
     <strong>NIF:</strong> {{ company.nif|default:"Desconocido" }}
     <br/>
     <strong>Fecha de constitución:</strong> {{ company.date_creation|date|default:"Desconocido" }}
     <br/>
-    <strong>Cargos directivos (actuales):</strong>
-    {% for cargo in company.cargos_actuales %}
-    {{ cargo.title }}:
-    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a> ({{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }} - {{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}){% if not forloop.last %}, {% endif %}
-    {% endfor %}
-    <br/>
-    <strong>Cargos directivos (historial):</strong>
-    {% for cargo in company.cargos_historial %}
-    {{ cargo.title }}:
-    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a> ({{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }} - {{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}){% if not forloop.last %}, {% endif %}
-    {% endfor %}
-    <br/>
 
-    <h3>Anuncios en boletines oficiales</h3>
+    <h2>Cargos directivos (actuales):</h2>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>Cargo</th>
+                <th>Persona física/jurídica</th>
+                <th>Desde</th>
+                <th>Hasta</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for cargo in company.cargos_actuales %}
+            <tr>
+                <td>{{ cargo.title }}</td>
+                <td><a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a></td>
+                <td>{{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
+                <td>{{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Cargos directivos (historial):</h2>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>Cargo</th>
+                <th>Persona física/jurídica</th>
+                <th>Desde</th>
+                <th>Hasta</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for cargo in company.cargos_historial %}
+            <tr>
+                <td>{{ cargo.title }}</td>
+                <td><a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a></td>
+                <td>{{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
+                <td>{{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Anuncios en boletines oficiales</h2>
         {% for anuncio in anuncios %}
+            <h3>{{ anuncio.borme.date|date }}</h3>
             <li>Anuncio <strong>{{ anuncio.id_anuncio }}</strong> con fecha <strong><i>{{ anuncio.borme.date|date }}</i></strong>.</li>
         <ul>
            {% for acto_name, value in anuncio.actos.items %}
@@ -47,15 +80,15 @@
             <i>No hay anuncios registrados.</i>
         {% endfor %}
 
-    <h3>Personas relacionadas</h3>
+    <h2>Personas relacionadas</h2>
     <ul>
         {% for person in persons %}
         <li><a href="{{ person.get_absolute_url }}">{{ person.name }}</a></li>
         {% endfor %}
     </ul>
-    <h3>Sociedades relacionadas</h3>
+    <h2>Sociedades relacionadas</h2>
         <i>No disponible</i>
-    <h3>BORMEs relacionados</h3>
+    <h2>BORMEs relacionados</h2>
     <ul>
         {% for borme in bormes.values %}
         <li>{{ borme.cve }}

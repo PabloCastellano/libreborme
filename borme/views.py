@@ -114,7 +114,7 @@ class CompanyView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(CompanyView, self).get_context_data(**kwargs)
 
-        context['anuncios'] = Anuncio.objects.filter(company=self.company)
+        context['anuncios'] = Anuncio.objects.filter(company=self.company).order_by('-id_anuncio')
         bormes = [r.borme for r in context['anuncios']]
         context['bormes'] = {b.cve: b for b in bormes}
         context['persons'] = Person.objects.filter(in_companies__contains=self.company)
