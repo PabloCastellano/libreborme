@@ -27,6 +27,7 @@ def _import1(borme):
     """
     borme: bormeparser.Borme
     """
+    logger.info('\nBORME CVE: %s' % borme.cve)
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
 
     borme_log, created = BormeLog.objects.get_or_create(borme_cve=borme.cve)
@@ -66,10 +67,10 @@ def _import1(borme):
                     results['created_companies'] += 1
                 company.in_bormes.append(nuevo_borme)
             except NotUniqueError as e:
-                slug_c = slugify(nombre)
+                slug_c = slugify(anuncio.empresa)
                 company = Company.objects.get(slug=slug_c)
                 logger.warn('WARNING: Empresa similar. Mismo slug: %s' % slug_c)
-                logger.warn('%s\n%s\n' % (company.name, nombre))
+                logger.warn('%s\n%s\n' % (company.name, anuncio.empresa))
                 results['errors'] += 1
 
             nuevo_anuncio, created = Anuncio.objects.get_or_create(id_anuncio=anuncio.id)
@@ -152,6 +153,7 @@ def _import1(borme):
                         company.update_cargos_entrantes(lista_cargos)
                     else:
                         company.update_cargos_salientes(lista_cargos)
+
                 else:
                     # FIXME:
                     # mongoengine.errors.ValidationError: ValidationError (Anuncio:55b37c97cf28dd2cfa8d069e) (Invalid diction
@@ -266,7 +268,6 @@ def import_borme_file(filename):
 
 
 def print_results(results, borme):
-    logger.info('\nBORME CVE: %s' % borme.cve)
     logger.info('BORMEs creados: %d' % results['created_bormes'])
     logger.info('Anuncios creados: %d/%d' % (results['created_anuncios'], len(borme.get_anuncios())))
     logger.info('Empresas creadas: %d' % results['created_companies'])
