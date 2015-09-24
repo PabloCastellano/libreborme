@@ -20,7 +20,7 @@ class Command(BaseCommand):
         if verbosity == 0:
             borme.utils.logger.setLevel(logging.ERROR)
         elif verbosity == 1:  # default
-            borme.utils.logger.setLevel(logging.ERROR)
+            borme.utils.logger.setLevel(logging.INFO)
         elif verbosity == 2:
             borme.utils.logger.setLevel(logging.INFO)
         elif verbosity > 2:

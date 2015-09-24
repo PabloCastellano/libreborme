@@ -24,7 +24,23 @@ logger.setLevel(logging.INFO)
 
 
 def _import1(borme):
+    """
+    borme: bormeparser.Borme
+    """
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
+
+    borme_log, created = BormeLog.objects.get_or_create(borme_cve=borme.cve)
+    if created:
+        borme_log.date_created = datetime.now()
+        borme_log.date_updated = borme_log.date_created
+        borme_log.path = borme.filename
+        borme_log.save()
+    else:
+        borme_log.date_updated = datetime.now()
+        borme_log.save()
+        if borme_log.parsed:
+            logger.warn('%s ya ha sido analizado.' % borme.cve)
+            return results
 
     nuevo_borme, created = Borme.objects.get_or_create(cve=borme.cve)
     if created:
@@ -38,16 +54,6 @@ def _import1(borme):
         nuevo_borme.section = borme.seccion
         #year, type, from_page, until_page, pages
         # num?, filename?
-
-    # TODO: Don't parse if borme_log.parsed
-    borme_log, created = BormeLog.objects.get_or_create(borme_cve=borme.cve)
-    if created:
-        borme_log.date_created = datetime.now()
-        borme_log.date_updated = borme_log.date_created
-    else:
-        borme_log.date_updated = datetime.now()
-    borme_log.path = borme.filename
-    borme_log.save()
 
     # TODO: borrar si hubieran actos para este borme?
     for n, anuncio in enumerate(borme.get_anuncios(), 1):
@@ -166,9 +172,8 @@ def _import1(borme):
         nuevo_borme.save()
 
     borme_log.errors = results['errors']
-    if results['errors'] == 0:
-        borme_log.parsed = True
-        borme_log.date_parsed = datetime.now()
+    borme_log.parsed = True
+    borme_log.date_parsed = datetime.now()
     borme_log.save()
     return results
 
