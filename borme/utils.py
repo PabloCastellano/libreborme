@@ -53,7 +53,6 @@ def _import1(borme):
     for n, anuncio in enumerate(borme.get_anuncios(), 1):
         try:
             logger.debug('%d: Importando anuncio: %s' % (n, anuncio))
-            # TODO: Buscar por slug
             try:
                 company, created = Company.objects.get_or_create(name=anuncio.empresa)
                 if created:
@@ -61,10 +60,11 @@ def _import1(borme):
                     results['created_companies'] += 1
                 company.in_bormes.append(nuevo_borme)
             except NotUniqueError as e:
-                logger.error('ERROR creando empresa: %s' % anuncio.empresa)
-                logger.error(e)
+                slug_c = slugify(nombre)
+                company = Company.objects.get(slug=slug_c)
+                logger.warn('WARNING: Empresa similar. Mismo slug: %s' % slug_c)
+                logger.warn('%s\n%s\n' % (company.name, nombre))
                 results['errors'] += 1
-                continue
 
             nuevo_anuncio, created = Anuncio.objects.get_or_create(id_anuncio=anuncio.id)
             if created:
