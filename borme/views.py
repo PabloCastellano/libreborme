@@ -34,8 +34,8 @@ class BusquedaView(TemplateView):
             q_persons = Person.objects.filter(name__icontains=self.request.GET['q'])
             persons = Paginator(q_persons, 25)
 
-            context['num_companies'] = persons.count
-            context['num_persons'] = companies.count
+            context['num_persons'] = persons.count
+            context['num_companies'] = companies.count
             context['page'] = page
             context['query'] = self.request.GET['q']
 
