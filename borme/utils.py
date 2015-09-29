@@ -236,7 +236,13 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
 
     total_results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
     for borme in sorted(bormes):
-        results = _import1(borme)
+        try:
+            results = _import1(borme)
+        except Exception as e:
+            logger.error('[%s] Error grave en _import1:' % borme.cve)
+            logger.error(e)
+            logger.error('Prueba importar manualmente en modo detallado:')
+            logger.error('  python manage.py importbormefile %s -v 3' % borme.filename)
         total_results['created_anuncios'] += results['created_anuncios']
         total_results['created_bormes'] += results['created_bormes']
         total_results['created_companies'] += results['created_companies']
@@ -252,6 +258,7 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
     # Remove handlers
     logger.removeHandler(fh1)
     logger.removeHandler(fh2)
+    return True
 
 
 def import_borme_file(filename):
@@ -265,6 +272,7 @@ def import_borme_file(filename):
     results = _import1(borme)
 
     print_results(results, borme)
+    return True
 
 
 def print_results(results, borme):
@@ -272,4 +280,3 @@ def print_results(results, borme):
     logger.info('Anuncios creados: %d/%d' % (results['created_anuncios'], len(borme.get_anuncios())))
     logger.info('Empresas creadas: %d' % results['created_companies'])
     logger.info('Personas creadas: %d' % results['created_persons'])
-    return True
