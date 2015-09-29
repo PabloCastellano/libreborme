@@ -243,6 +243,8 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
             logger.error(e)
             logger.error('Prueba importar manualmente en modo detallado:')
             logger.error('  python manage.py importbormefile %s -v 3' % borme.filename)
+            break
+            
         total_results['created_anuncios'] += results['created_anuncios']
         total_results['created_bormes'] += results['created_bormes']
         total_results['created_companies'] += results['created_companies']
