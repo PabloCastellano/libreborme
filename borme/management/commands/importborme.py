@@ -10,7 +10,7 @@ from borme.utils import import_borme_download
 
 
 class Command(BaseCommand):
-    args = '<ISO formmated date (ex. 2015-01-01)> [--local]'
+    args = '<ISO formmated date (ex. 2015-01-01 or --init)> [--local]'
     help = 'Import BORMEs from date'
 
     def handle(self, *args, **options):
@@ -18,8 +18,7 @@ class Command(BaseCommand):
 
         if args:
             local = len(args) > 1 and args[1] == 'local'
-            date = datetime.date(*map(int, args[0].split('-')))
-            import_borme_download(date, download=not local)
+            import_borme_download(args[0], download=not local)
 
             config = Config.objects.first()
             if config:

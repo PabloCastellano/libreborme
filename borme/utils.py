@@ -3,10 +3,16 @@ from mongoengine.errors import ValidationError, NotUniqueError
 
 from django.conf import settings
 from django.utils.text import slugify
-from bormeparser.regex import is_company, is_acto_cargo_entrante
-from datetime import datetime
+import datetime
 
 import bormeparser
+from bormeparser.borme import BormeXML
+from bormeparser.exceptions import BormeDoesntExistException
+from bormeparser.regex import is_company, is_acto_cargo_entrante
+from bormeparser.utils import FIRST_BORME
+
+import calendar
+
 import os
 
 # FIXME:
@@ -27,17 +33,17 @@ def _import1(borme):
     """
     borme: bormeparser.Borme
     """
-    logger.info('\nBORME CVE: %s' % borme.cve)
+    logger.info('\nBORME CVE: %s (%s)' % (borme.cve, borme.provincia))
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
 
     borme_log, created = BormeLog.objects.get_or_create(borme_cve=borme.cve)
     if created:
-        borme_log.date_created = datetime.now()
+        borme_log.date_created = datetime.datetime.now()
         borme_log.date_updated = borme_log.date_created
         borme_log.path = borme.filename
         borme_log.save()
     else:
-        borme_log.date_updated = datetime.now()
+        borme_log.date_updated = datetime.datetime.now()
         borme_log.save()
         if borme_log.parsed:
             logger.warn('%s ya ha sido analizado.' % borme.cve)
@@ -175,7 +181,7 @@ def _import1(borme):
 
     borme_log.errors = results['errors']
     borme_log.parsed = True
-    borme_log.date_parsed = datetime.now()
+    borme_log.date_parsed = datetime.datetime.now()
     borme_log.save()
     return results
 
@@ -189,78 +195,118 @@ def get_borme_pdf_path(date):
 
 def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
     """
-    Download and import BORME to MongoDB database
-
-    :param filename:
-    :return:
+    date: "2015", "2015-01", "2015-01-30", "--init"
     """
-
-    if isinstance(date, tuple):
-        date = datetime.date(year=date[0], month=date[1], day=date[2])
-
-    # Add FileHandlers
-    # TODO: Renombrar .1, .2, .3...
-    logpath = os.path.join(settings.BORME_LOG_ROOT, 'imports', '%02d-%02d' % (date.year, date.month))
-    os.makedirs(logpath, exist_ok=True)
-
-    fh1_path = os.path.join(logpath, '%02d_info.txt' % date.day)
-    fh1 = logging.FileHandler(fh1_path)
-    fh1.setLevel(logging.INFO)
-    logger.addHandler(fh1)
-
-    fh2_path = os.path.join(logpath, '%02d_error.txt' % date.day)
-    fh2 = logging.FileHandler(fh2_path)
-    fh2.setLevel(logging.WARNING)
-    logger.addHandler(fh2)
-
-    new_path = get_borme_pdf_path(date)
-    os.makedirs(new_path, exist_ok=True)
-    logger.info('============================================================')
-    logger.info('Ran import_borme_download at %s' % datetime.now())
-    logger.info('  Import date: %s. Section: %s' % (date.isoformat(), seccion))
-    logger.info('============================================================')
-    logger.info(new_path)
-
-    bormes = []
-    if download:
-        _, files = bormeparser.download_pdfs(date, new_path, seccion=seccion)
+    if date == '--init':
+        begin = FIRST_BORME
+        end = datetime.date.today()
     else:
-        _, _, files = next(os.walk(new_path))
-        files = list(map(lambda x: os.path.join(new_path, x), files))
+        date = tuple(map(int, date.split('-')))  # TODO: exception
 
-    for filepath in files:
-        if filepath.endswith('-99.pdf'):
-            continue
-        logger.info('%s' % filepath)
-        bormes.append(bormeparser.parse(filepath))
+        if len(date) == 3:  # 2015-06-02
+            begin = datetime.date(*date)
+            try:
+                _import_borme_download_range2(begin, begin, seccion, download)
+            except BormeDoesntExistException:
+                print('It looks like there is no BORME for this date. Nothing was downloaded')
+            return
+        elif len(date) == 2:  # 2015-06
+            _, lastday = calendar.monthrange(*date)
+            begin = datetime.date(date[0], date[1], 1)
+            end = datetime.date(date[0], date[1], lastday)
 
-    total_results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
-    for borme in sorted(bormes):
+        elif len(date) == 1:  # 2015
+            begin = datetime.date(date[0], 1, 1)
+            end = datetime.date(date[0], 12, 31)
+
+    try:
+        _import_borme_download_range2(begin, end, seccion, download)
+    except BormeDoesntExistException:
         try:
-            results = _import1(borme)
-        except Exception as e:
-            logger.error('[%s] Error grave en _import1:' % borme.cve)
-            logger.error(e)
-            logger.error('Prueba importar manualmente en modo detallado:')
-            logger.error('  python manage.py importbormefile %s -v 3' % borme.filename)
-            break
-            
-        total_results['created_anuncios'] += results['created_anuncios']
-        total_results['created_bormes'] += results['created_bormes']
-        total_results['created_companies'] += results['created_companies']
-        total_results['created_persons'] += results['created_persons']
-        total_results['errors'] += results['errors']
-        print_results(results, borme)
+            begin = begin + datetime.timedelta(days=1)
+            _import_borme_download_range2(begin, end, seccion, download)
+        except BormeDoesntExistException:
+            begin = begin + datetime.timedelta(days=1)
+            _import_borme_download_range2(begin, end, seccion, download)
 
-    logger.info('\nBORMEs creados: %d' % total_results['created_bormes'])
-    logger.info('Anuncios creados: %d' % total_results['created_anuncios'])
-    logger.info('Empresas creadas: %d' % total_results['created_companies'])
-    logger.info('Personas creadas: %d' % total_results['created_persons'])
 
-    # Remove handlers
-    logger.removeHandler(fh1)
-    logger.removeHandler(fh2)
-    return True
+def _import_borme_download_range2(begin, end, seccion, download):
+    next_date = begin
+    seccion = bormeparser.SECCION.A
+    total_results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
+
+    while next_date and next_date <= end:
+        bxml = BormeXML.from_date(next_date)
+        # TODO: BormeDoesntExist?
+
+        # Add FileHandlers
+        # TODO: Renombrar .1, .2, .3...
+        logpath = os.path.join(settings.BORME_LOG_ROOT, 'imports', '%02d-%02d' % (bxml.date.year, bxml.date.month))
+        os.makedirs(logpath, exist_ok=True)
+
+        fh1_path = os.path.join(logpath, '%02d_info.txt' % bxml.date.day)
+        fh1 = logging.FileHandler(fh1_path)
+        fh1.setLevel(logging.INFO)
+        logger.addHandler(fh1)
+
+        fh2_path = os.path.join(logpath, '%02d_error.txt' % bxml.date.day)
+        fh2 = logging.FileHandler(fh2_path)
+        fh2.setLevel(logging.WARNING)
+        logger.addHandler(fh2)
+
+        pdf_path = get_borme_pdf_path(bxml.date)
+        os.makedirs(pdf_path, exist_ok=True)
+        logger.info('============================================================')
+        logger.info('Ran import_borme_download at %s' % datetime.datetime.now())
+        logger.info('  Import date: %s. Section: %s' % (bxml.date.isoformat(), seccion))
+        logger.info('============================================================')
+        logger.info(pdf_path)
+
+        print('\nPATH: %s\nDATE: %s\nSECCION: %s\n' % (pdf_path, bxml.date, seccion))
+
+        bormes = []
+        if download:
+            _, files = bxml.download_pdfs(pdf_path, seccion=seccion)
+        else:
+            _, _, files = next(os.walk(pdf_path))
+            files = list(map(lambda x: os.path.join(pdf_path, x), files))
+
+        for filepath in files:
+            if filepath.endswith('-99.pdf'):
+                continue
+            logger.info('%s' % filepath)
+            bormes.append(bormeparser.parse(filepath))
+
+        for borme in sorted(bormes):
+            try:
+                results = _import1(borme)
+            except Exception as e:
+                logger.error('[%s] Error grave en _import1:' % borme.cve)
+                logger.error(e)
+                logger.error('Prueba importar manualmente en modo detallado para ver el error:')
+                logger.error('  python manage.py importbormefile %s -v 3' % borme.filename)
+                logger.error('Una vez arreglado, reanuda la importación:')
+                logger.error('  python manage.py importbormetoday local')
+                break
+
+            total_results['created_anuncios'] += results['created_anuncios']
+            total_results['created_bormes'] += results['created_bormes']
+            total_results['created_companies'] += results['created_companies']
+            total_results['created_persons'] += results['created_persons']
+            total_results['errors'] += results['errors']
+            print_results(results, borme)
+
+        logger.info('\nBORMEs creados: %d' % total_results['created_bormes'])
+        logger.info('Anuncios creados: %d' % total_results['created_anuncios'])
+        logger.info('Empresas creadas: %d' % total_results['created_companies'])
+        logger.info('Personas creadas: %d' % total_results['created_persons'])
+
+        # Remove handlers
+        logger.removeHandler(fh1)
+        logger.removeHandler(fh2)
+        next_date = bxml.next_borme
+
+    return True, total_results
 
 
 def import_borme_file(filename):
