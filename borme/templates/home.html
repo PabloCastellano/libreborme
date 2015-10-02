@@ -21,9 +21,9 @@
                 <li><a href="{% url "borme-empresa" "el-corte-ingles-sa" %}">EL CORTE INGLES SA</a></li>
                 <li><a href="{% url "borme-empresa" "mercadona-sa" %}">MERCADONA SA</a></li>
                 <li><a href="{% url "borme-empresa" "pc-componentes-y-multimedia-sl" %}">PC COMPONENTES Y MULTIMEDIA SL</a></li>
+                <li>CAJA DE RESISTENCIA MOTIVA 2 PRODUCCIONES SL</li>
             {% endif %}
         
-            <li>CAJA DE RESISTENCIA MOTIVA 2 PRODUCCIONES SL</li>
             {% for company in random_companies %}
             <li><a href="{% url "borme-empresa" company.slug %}">{{ company.name }}</a></li>
             {% endfor %}
