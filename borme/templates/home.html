@@ -17,9 +17,12 @@
       <div class="col-lg-5">
         <h2>Ejemplos de empresas</h2>
         <ul>
-            <li><a href="{% url "borme-empresa" "el-corte-ingles-sa" %}">EL CORTE INGLES SA</a></li>
-            <li><a href="{% url "borme-empresa" "mercadona-sa" %}">MERCADONA SA</a></li>
-            <li><a href="{% url "borme-empresa" "pc-componentes-y-multimedia-sl" %}">PC COMPONENTES Y MULTIMEDIA SL</a></li>
+            {% if not random_companies %}
+                <li><a href="{% url "borme-empresa" "el-corte-ingles-sa" %}">EL CORTE INGLES SA</a></li>
+                <li><a href="{% url "borme-empresa" "mercadona-sa" %}">MERCADONA SA</a></li>
+                <li><a href="{% url "borme-empresa" "pc-componentes-y-multimedia-sl" %}">PC COMPONENTES Y MULTIMEDIA SL</a></li>
+            {% endif %}
+        
             <li>CAJA DE RESISTENCIA MOTIVA 2 PRODUCCIONES SL</li>
             {% for company in random_companies %}
             <li><a href="{% url "borme-empresa" company.slug %}">{{ company.name }}</a></li>
@@ -30,8 +33,11 @@
       <div class="col-lg-4">
         <h2>Ejemplos de personas <i class="glyphicon glyphicon-user"></i></h2>
         <ul>
-            <li>Roig Alfonso Juan Jose</li>
-            <li>Monedero Fernandez Juan Carlos</li>
+            {% if not random_persons %}
+                <li>Roig Alfonso Juan Jose</li>
+                <li>Monedero Fernandez Juan Carlos</li>
+            {% endif %}
+
             {% for person in random_persons %}
             <li><a href="{% url "borme-persona" person.slug %}">{{ person.name }}</a></li>
             {% endfor %}
