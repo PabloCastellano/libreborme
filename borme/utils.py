@@ -171,13 +171,15 @@ def _import1(borme):
             company.anuncios.append(nuevo_anuncio)
             company.save()
             nuevo_borme.anuncios.append(nuevo_anuncio)
+            nuevo_borme.save()
+            nuevo_borme = Borme.objects.get(cve=borme.cve)  # Trick to avoid excessive memory consuming in large PDFs
 
         except ValidationError as e:
             logger.error('ERROR importing borme')
             logger.error(e)
             results['errors'] += 1
 
-        nuevo_borme.save()
+    nuevo_borme.save()
 
     borme_log.errors = results['errors']
     borme_log.parsed = True
