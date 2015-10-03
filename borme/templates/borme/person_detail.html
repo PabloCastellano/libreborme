@@ -3,22 +3,62 @@
 {% block title %}{{ person.name }} | LibreBORME{% endblock %}
 
 {% block content %}
-    <h2>Persona «{{ person.name }}»</h2>
-    <h3>Datos</h3>
-    <strong>Cargos directivos en empresas (actuales):</strong>
-    {% for cargo in person.cargos_actuales %}
-    {{ cargo.title }}:
-    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a> ({{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }} - {{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}){% if not forloop.last %}, {% endif %}
-    {% endfor %}
-    <br/>
-    <strong>Cargos directivos en empresas (historial):</strong>
-    {% for cargo in person.cargos_historial %}
-    {{ cargo.title }}:
-    <a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name }}</a> ({{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }} - {{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}){% if not forloop.last %}, {% endif %}
-    {% endfor %}
-    <br/>
+    <h1>Persona «{{ person.name }}»</h1>
+
     <strong>Total empresas:</strong> {{ person.empresas|default:"Desconocido" }}
     <br/>
+
+    <h2>Cargos directivos en empresas (actuales):</h2>
+    {% if person.cargos_actuales %}
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Cargo</th>
+                    <th>Persona física/jurídica</th>
+                    <th>Desde</th>
+                    <th>Hasta</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for cargo in person.cargos_actuales %}
+                <tr>
+                    <td>{{ cargo.title }}</td>
+                    <td><a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name|title }}</a></td>
+                    <td>{{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
+                    <td>{{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <i>No hay datos</i>
+    {% endif %}
+
+    <h2>Cargos directivos en empresas (historial):</h2>
+    {% if person.cargos_historial %}
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Cargo</th>
+                    <th>Persona física/jurídica</th>
+                    <th>Desde</th>
+                    <th>Hasta</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for cargo in person.cargos_historial %}
+                <tr>
+                    <td>{{ cargo.title }}</td>
+                    <td><a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name|title }}</a></td>
+                    <td>{{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
+                    <td>{{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <i>No hay datos</i>
+    {% endif %}
 
     <h3>Cargos directivos en empresas</h3>
         <i>No disponible</i>
@@ -29,7 +69,7 @@
 
     <ul>
     {% for borme in bormes.values %}
-        <li>{{ borme.cve }}
+        <li><a href="{{ borme.get_absolute_url }}">{{ borme.cve }}</a>
 	  <!-- <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
 	  <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a></li>
     {% empty %}
@@ -37,7 +77,7 @@
     {% endfor %}
         También aparece referenciado en...
         {% for borme in person.in_bormes %}
-        <li>{{ borme.cve }}
+        <li><a href="{{ borme.get_absolute_url }}">{{ borme.cve }}</a>
             <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
             <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
         </li>

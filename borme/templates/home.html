@@ -39,7 +39,7 @@
             {% endif %}
 
             {% for person in random_persons %}
-            <li><a href="{% url "borme-persona" person.slug %}">{{ person.name }}</a></li>
+            <li><a href="{% url "borme-persona" person.slug %}">{{ person.name|title }}</a></li>
             {% endfor %}
         </ul>
       </div>

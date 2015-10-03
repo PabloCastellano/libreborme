@@ -16,12 +16,12 @@
     <strong>Fuente:</strong> <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF">{{ borme.url }} <i class="glyphicon glyphicon-download-alt"></i></a>
     <br/>
     <strong>Anuncios:</strong> {{ total_anuncios }}
-    ({% if total_anuncios == 1 %}{{ borme.from_reg }}{% else %}del {{ borme.from_reg }} al {{ borme.until_reg }}{% endif %})
+    ({% if total_anuncios == 1 %}{{ borme.from_reg }}{% else %}del <a href="{% url 'borme-anuncio' borme.from_reg %}">{{ borme.from_reg }}</a> al <a href="{% url 'borme-anuncio' borme.until_reg %}">{{ borme.until_reg }}</a>{% endif %})
 
     <h3>Bormes del mismo día:</h3>
     <ul>
     {% for b in bormes_dia %}
-        <li>{{ b.province }}: <a href="{{ b.get_absolute_url }}">{{ b.cve }}</a></li>
+        <li><a href="{{ b.get_absolute_url }}">{{ b.province }}</a></li>
     {% endfor %}
     </ul>
 {% endblock %}
