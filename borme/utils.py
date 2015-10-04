@@ -12,7 +12,7 @@ from bormeparser.regex import is_company, is_acto_cargo_entrante
 from bormeparser.utils import FIRST_BORME
 
 import calendar
-
+import time
 import os
 
 # FIXME:
@@ -122,7 +122,6 @@ def _import1(borme):
                                      cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_to=borme.date)
                                      c.update_cargos_salientes([cargo_embed])
                                 c.save()
-
                             else:
                                 try:
                                     p, created = Person.objects.get_or_create(name=nombre)
@@ -159,7 +158,6 @@ def _import1(borme):
                         company.update_cargos_entrantes(lista_cargos)
                     else:
                         company.update_cargos_salientes(lista_cargos)
-
                 else:
                     # FIXME:
                     # mongoengine.errors.ValidationError: ValidationError (Anuncio:55b37c97cf28dd2cfa8d069e) (Invalid diction
@@ -210,7 +208,7 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
             try:
                 _import_borme_download_range2(begin, begin, seccion, download)
             except BormeDoesntExistException:
-                print('It looks like there is no BORME for this date. Nothing was downloaded')
+                logger.info('It looks like there is no BORME for this date. Nothing was downloaded')
             return
         elif len(date) == 2:  # 2015-06
             _, lastday = calendar.monthrange(*date)
@@ -232,9 +230,11 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
             _import_borme_download_range2(begin, end, seccion, download)
 
 
-def _import_borme_download_range2(begin, end, seccion, download):
+def _import_borme_download_range2(begin, end, seccion, download, strict=False):
+    """
+    strict: Para en caso de error grave
+    """
     next_date = begin
-    seccion = bormeparser.SECCION.A
     total_results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
 
     while next_date and next_date <= end:
@@ -277,26 +277,40 @@ def _import_borme_download_range2(begin, end, seccion, download):
             if filepath.endswith('-99.pdf'):
                 continue
             logger.info('%s' % filepath)
-            bormes.append(bormeparser.parse(filepath))
+            try:
+                bormes.append(bormeparser.parse(filepath))
+            except Exception as e:
+                logger.error('[X] Error grave en bormeparser.parse(): %s' % filepath)
+                logger.error('[X] %s: %s' % (e.__class__.__name__, e))
+                if strict:
+                    logger.error('[X] Una vez arreglado, reanuda la importación:')
+                    logger.error('[X]   python manage.py importbormetoday local')
+                    return False, total_results
 
         for borme in sorted(bormes):
+            start_time = time.time()
             try:
                 results = _import1(borme)
             except Exception as e:
                 logger.error('[%s] Error grave en _import1:' % borme.cve)
-                logger.error(e)
-                logger.error('Prueba importar manualmente en modo detallado para ver el error:')
-                logger.error('  python manage.py importbormefile %s -v 3' % borme.filename)
-                logger.error('Una vez arreglado, reanuda la importación:')
-                logger.error('  python manage.py importbormetoday local')
-                break
+                logger.error('[%s] %s' % (borme.cve, e))
+                logger.error('[%s] Prueba importar manualmente en modo detallado para ver el error:' % borme.cve)
+                logger.error('[%s]   python manage.py importbormefile %s -v 3' % (borme.cve, borme.filename))
+                if strict:
+                    logger.error('[%s] Una vez arreglado, reanuda la importación:' % borme.cve)
+                    logger.error('[%s]   python manage.py importbormetoday local' % borme.cve)
+                    return False, total_results
 
             total_results['created_anuncios'] += results['created_anuncios']
             total_results['created_bormes'] += results['created_bormes']
             total_results['created_companies'] += results['created_companies']
             total_results['created_persons'] += results['created_persons']
             total_results['errors'] += results['errors']
-            print_results(results, borme)
+
+            if not all(map(lambda x: x== 0, total_results.values())):
+                print_results(results, borme)
+                elapsed_time = time.time() - start_time
+                logger.info('[%s] Elapsed time: %.2f seconds' % (borme.cve, elapsed_time))
 
         logger.info('\nBORMEs creados: %d' % total_results['created_bormes'])
         logger.info('Anuncios creados: %d' % total_results['created_anuncios'])
@@ -318,15 +332,22 @@ def import_borme_file(filename):
     :param filename:
     :return:
     """
-    borme = bormeparser.parse(filename)
-    results = _import1(borme)
+    results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
 
-    print_results(results, borme)
-    return True
+    try:
+        borme = bormeparser.parse(filename)
+        results = _import1(borme)
+    except Exception as e:
+        logger.error('[X] Error grave en bormeparser.parse(): %s' % filename)
+        logger.error('[X] %s: %s' % (e.__class__.__name__, e))
+
+    if not all(map(lambda x: x== 0, results.values())):
+        print_results(results, borme)
+    return True, results
 
 
 def print_results(results, borme):
-    logger.info('BORMEs creados: %d' % results['created_bormes'])
-    logger.info('Anuncios creados: %d/%d' % (results['created_anuncios'], len(borme.get_anuncios())))
-    logger.info('Empresas creadas: %d' % results['created_companies'])
-    logger.info('Personas creadas: %d' % results['created_persons'])
+    logger.info('[%s] BORMEs creados: %d' % (borme.cve, results['created_bormes']))
+    logger.info('[%s] Anuncios creados: %d/%d' % (borme.cve, results['created_anuncios'], len(borme.get_anuncios())))
+    logger.info('[%s] Empresas creadas: %d' % (borme.cve, results['created_companies']))
+    logger.info('[%s] Personas creadas: %d' % (borme.cve, results['created_persons']))
