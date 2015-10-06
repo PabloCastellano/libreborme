@@ -236,6 +236,7 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
     """
     next_date = begin
     total_results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
+    total_start_time = time.time()
 
     while next_date and next_date <= end:
         bxml = BormeXML.from_date(next_date)
@@ -312,15 +313,17 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
                 elapsed_time = time.time() - start_time
                 logger.info('[%s] Elapsed time: %.2f seconds' % (borme.cve, elapsed_time))
 
-        logger.info('\nBORMEs creados: %d' % total_results['created_bormes'])
-        logger.info('Anuncios creados: %d' % total_results['created_anuncios'])
-        logger.info('Empresas creadas: %d' % total_results['created_companies'])
-        logger.info('Personas creadas: %d' % total_results['created_persons'])
-
         # Remove handlers
         logger.removeHandler(fh1)
         logger.removeHandler(fh2)
         next_date = bxml.next_borme
+
+    elapsed_time = time.time() - total_start_time
+    logger.info('\nBORMEs creados: %d' % total_results['created_bormes'])
+    logger.info('Anuncios creados: %d' % total_results['created_anuncios'])
+    logger.info('Empresas creadas: %d' % total_results['created_companies'])
+    logger.info('Personas creadas: %d' % total_results['created_persons'])
+    logger.info('Total elapsed time: %.2f seconds' % elapsed_time)
 
     return True, total_results
 
