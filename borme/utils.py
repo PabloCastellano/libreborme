@@ -186,6 +186,14 @@ def _import1(borme):
     return results
 
 
+def get_borme_xml_filepath(date):
+    year = '%02d' % date.year
+    month = '%02d' % date.month
+    day = '%02d' % date.day
+    filename = 'BORME-S-{year}{month}{day}.xml' % (year, month, day)
+    return os.path.join(settings.BORME_XML_ROOT, year, month, filename)
+
+
 def get_borme_pdf_path(date):
     year = '%02d' % date.year
     month = '%02d' % date.month
@@ -239,7 +247,13 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
     total_start_time = time.time()
 
     while next_date and next_date <= end:
-        bxml = BormeXML.from_date(next_date)
+        xml_path = get_borme_xml_filepath(next_date)
+        try:
+            bxml = BormeXML.from_file(xml_path)
+        except FileNotFoundError:
+            bxml = BormeXML.from_date(next_date)
+            os.makedirs(os.path.dirname(xml_path), exist_ok=True)
+            bxml.save_to_file(xml_path)
         # TODO: BormeDoesntExist?
 
         # Add FileHandlers
