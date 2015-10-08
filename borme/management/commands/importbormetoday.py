@@ -17,8 +17,8 @@ class Command(BaseCommand):
         start_time = time.time()
 
         local = args and args[0] == 'local'
-        date = datetime.date.today().strftime('%Y-%m-%d')
-        import_borme_download(date, download=not local)
+        date = datetime.date.today()
+        import_borme_download(date.strftime('%Y-%m-%d'), download=not local)
         update_previous_xml(date)
 
         config = Config.objects.first()

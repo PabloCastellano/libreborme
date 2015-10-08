@@ -187,10 +187,10 @@ def _import1(borme):
 
 
 def get_borme_xml_filepath(date):
-    year = '%02d' % date.year
+    year = str(date.year)
     month = '%02d' % date.month
     day = '%02d' % date.day
-    filename = 'BORME-S-{year}{month}{day}.xml' % (year, month, day)
+    filename = 'BORME-S-%s%s%s.xml' % (year, month, day)
     return os.path.join(settings.BORME_XML_ROOT, year, month, filename)
 
 
@@ -206,14 +206,19 @@ def update_previous_xml(date):
     xml_path = get_borme_xml_filepath(date)
     bxml = BormeXML.from_file(xml_path)
 
-    prev_xml_path = get_borme_xml_filepath(bxml.prev_borme)
-    prev_bxml = BormeXML.from_file(prev_xml_path)
-    if prev_bxml.is_final:
-        return False
+    try:
+        prev_xml_path = get_borme_xml_filepath(bxml.prev_borme)
+        prev_bxml = BormeXML.from_file(prev_xml_path)
+        if prev_bxml.is_final:
+            return False
 
-    os.unlink(prev_xml_path)
-    prev_bxml = BormeXML.from_date(bxml.prev_borme)
-    prev_bxml.save_to_file(xml_path)
+        os.unlink(prev_xml_path)
+    except FileNotFoundError:
+        pass
+    finally:
+        prev_bxml = BormeXML.from_date(bxml.prev_borme)
+        prev_bxml.save_to_file(prev_xml_path)
+
     return True
 
 
@@ -338,7 +343,7 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
             total_results['created_persons'] += results['created_persons']
             total_results['errors'] += results['errors']
 
-            if not all(map(lambda x: x== 0, total_results.values())):
+            if not all(map(lambda x: x == 0, total_results.values())):
                 print_results(results, borme)
                 elapsed_time = time.time() - start_time
                 logger.info('[%s] Elapsed time: %.2f seconds' % (borme.cve, elapsed_time))
@@ -374,7 +379,7 @@ def import_borme_file(filename):
         logger.error('[X] Error grave en bormeparser.parse(): %s' % filename)
         logger.error('[X] %s: %s' % (e.__class__.__name__, e))
 
-    if not all(map(lambda x: x== 0, results.values())):
+    if not all(map(lambda x: x == 0, results.values())):
         print_results(results, borme)
     return True, results
 
