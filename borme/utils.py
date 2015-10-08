@@ -75,8 +75,8 @@ def _import1(borme):
             except NotUniqueError as e:
                 slug_c = slugify(anuncio.empresa)
                 company = Company.objects.get(slug=slug_c)
-                logger.warn('WARNING: Empresa similar. Mismo slug: %s' % slug_c)
-                logger.warn('%s\n%s\n' % (company.name, anuncio.empresa))
+                logger.warn('[%s] WARNING: Empresa similar. Mismo slug: %s' % (borme.cve, slug_c))
+                logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, company.name, borme.cve, anuncio.empresa))
                 results['errors'] += 1
 
             nuevo_anuncio, created = Anuncio.objects.get_or_create(id_anuncio=anuncio.id)
@@ -106,8 +106,8 @@ def _import1(borme):
                                 except NotUniqueError as e:
                                     slug_c = slugify(nombre)
                                     c = Company.objects.get(slug=slug_c)
-                                    logger.warn('WARNING: Empresa similar. Mismo slug: %s' % slug_c)
-                                    logger.warn('%s\n%s\n' % (c.name, nombre))
+                                    logger.warn('[%s] WARNING: Empresa similar. Mismo slug: %s' % (borme.cve, slug_c))
+                                    logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, c.name, borme.cve, nombre))
                                     results['errors'] += 1
 
                                 c.anuncios.append(nuevo_anuncio)
@@ -132,8 +132,8 @@ def _import1(borme):
                                 except NotUniqueError as e:
                                     slug_p = slugify(nombre)
                                     p = Person.objects.get(slug=slug_p)
-                                    logger.warn('WARNING: Persona similar. Mismo slug: %s' % slug_p)
-                                    logger.warn('%s\n%s\n' % (p.name, nombre))
+                                    logger.warn('[%s] WARNING: Persona similar. Mismo slug: %s' % (borme.cve, slug_p))
+                                    logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, p.name, borme.cve, nombre))
                                     results['errors'] += 1
 
                                 p.in_companies.append(company)
@@ -173,7 +173,7 @@ def _import1(borme):
             nuevo_borme = Borme.objects.get(cve=borme.cve)  # Trick to avoid excessive memory consuming in large PDFs
 
         except ValidationError as e:
-            logger.error('ERROR importing borme')
+            logger.error('[%s] ERROR importing anuncio %d' % (borme.cve, anuncio.id))
             logger.error(e)
             results['errors'] += 1
 
