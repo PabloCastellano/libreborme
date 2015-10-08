@@ -180,7 +180,7 @@ def _import1(borme):
     nuevo_borme.save()
 
     borme_log.errors = results['errors']
-    borme_log.parsed = True
+    borme_log.parsed = True  # FIXME: Si hay ValidationError, parsed = False
     borme_log.date_parsed = datetime.datetime.now()
     borme_log.save()
     return results

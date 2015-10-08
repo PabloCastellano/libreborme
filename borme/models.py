@@ -119,7 +119,7 @@ class Person(Document):
 
 class Company(Document):
     """ Sociedad """
-    name = StringField(max_length=200)
+    name = StringField(max_length=250)
     nif = StringField(max_length=10)
     slug = StringField(unique=True)
     date_creation = DateTimeField()
