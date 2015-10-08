@@ -201,6 +201,22 @@ def get_borme_pdf_path(date):
     return os.path.join(settings.BORME_PDF_ROOT, year, month, day)
 
 
+def update_previous_xml(date):
+    """ Dado una fecha, comprueba si el XML anterior es definitivo y si no lo es lo descarga de nuevo """
+    xml_path = get_borme_xml_filepath(date)
+    bxml = BormeXML.from_file(xml_path)
+
+    prev_xml_path = get_borme_xml_filepath(bxml.prev_borme)
+    prev_bxml = BormeXML.from_file(prev_xml_path)
+    if prev_bxml.is_final:
+        return False
+
+    os.unlink(prev_xml_path)
+    prev_bxml = BormeXML.from_date(bxml.prev_borme)
+    prev_bxml.save_to_file(xml_path)
+    return True
+
+
 def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
     """
     date: "2015", "2015-01", "2015-01-30", "--init"

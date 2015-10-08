@@ -6,7 +6,7 @@ from borme.models import Config
 import time
 import datetime
 from libreborme.utils import get_git_revision_short_hash
-from borme.utils import import_borme_download
+from borme.utils import import_borme_download, update_previous_xml
 
 
 class Command(BaseCommand):
@@ -19,6 +19,7 @@ class Command(BaseCommand):
         local = args and args[0] == 'local'
         date = datetime.date.today().strftime('%Y-%m-%d')
         import_borme_download(date, download=not local)
+        update_previous_xml(date)
 
         config = Config.objects.first()
         if config:
