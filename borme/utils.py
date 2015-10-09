@@ -62,7 +62,6 @@ def _import1(borme):
         #year, type, from_page, until_page, pages
         # num?, filename?
 
-    # TODO: borrar si hubieran actos para este borme?
     for n, anuncio in enumerate(borme.get_anuncios(), 1):
         try:
             logger.debug('%d: Importando anuncio: %s' % (n, anuncio))
@@ -275,10 +274,8 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
             bxml = BormeXML.from_date(next_date)
             os.makedirs(os.path.dirname(xml_path), exist_ok=True)
             bxml.save_to_file(xml_path)
-        # TODO: BormeDoesntExist?
 
         # Add FileHandlers
-        # TODO: Renombrar .1, .2, .3...
         logpath = os.path.join(settings.BORME_LOG_ROOT, 'imports', '%02d-%02d' % (bxml.date.year, bxml.date.month))
         os.makedirs(logpath, exist_ok=True)
 
