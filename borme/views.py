@@ -113,8 +113,12 @@ class BormeView(DetailView):
 
         context['total_anuncios'] = self.borme.until_reg - self.borme.from_reg + 1
         context['bormes_dia'] = Borme.objects.filter(date=self.borme.date).order_by('cve')
-        context['bormes_dia'] = list(context['bormes_dia'])
-        context['bormes_dia'].remove(self.borme)
+        bormes_dia = list(context['bormes_dia'])
+        bormes_dia.remove(self.borme)
+        mid1, mid2 = int(len(bormes_dia)/3), int(len(bormes_dia)/3*2)
+        context['bormes_dia1'] = bormes_dia[:mid1]
+        context['bormes_dia2'] = bormes_dia[mid1:mid2]
+        context['bormes_dia3'] = bormes_dia[mid2:]
         return context
 
 
