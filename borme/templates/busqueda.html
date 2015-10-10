@@ -60,7 +60,7 @@
         <div class="col-md-4">
             <ul>
             {% for person in ps %}
-                <li><a href="{% url "borme-persona" person.slug %}">{{ person.name }}</a></li>
+                <li><a href="{% url "borme-persona" person.slug %}">{{ person.name|title }}</a></li>
             {% endfor %}
             </ul>
         </div>
