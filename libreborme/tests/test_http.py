@@ -2,6 +2,7 @@ from django.core.management import call_command
 from django.core.urlresolvers import reverse
 from django.test.client import Client
 from django.utils.six import StringIO
+from django.conf import settings
 
 from borme.models import Anuncio, Borme, Config, Company, Person
 from borme.tests.mongotestcase import MongoFixturesTestCase
@@ -12,6 +13,7 @@ from django_mongoengine.tests import MongoTestCase
 
 import os
 from datetime import datetime
+
 
 # parametros django call_command
 # what to check django tests
@@ -108,11 +110,14 @@ class TestCommands(MongoTestCase):
         Config.objects.delete()
         super(TestCommands, cls).tearDownClass()
 
-    def test_importbormefile(self):
+    def test_importbormepdf(self):
         out = StringIO()
-        # FIXME: $HOME
-        call_command('importbormefile', os.path.expanduser('~/.bormes/pdf/BORME-A-2015-27-10.pdf'), stdout=out)
+        path = os.path.join(settings.BORME_PDF_ROOT, '2015', '02', '10', 'BORME-A-2015-27-10.pdf')
+        call_command('importbormepdf', path, stdout=out)
         self.assertIn(out.getvalue(), 'Errors: 0')
+
+    def test_importbormejson(self):
+        pass
 
     def test_importborme(self):
         out = StringIO()

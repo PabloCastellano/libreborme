@@ -326,7 +326,7 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
                 logger.error('[%s] Error grave en _import1:' % borme.cve)
                 logger.error('[%s] %s' % (borme.cve, e))
                 logger.error('[%s] Prueba importar manualmente en modo detallado para ver el error:' % borme.cve)
-                logger.error('[%s]   python manage.py importbormefile %s -v 3' % (borme.cve, borme.filename))
+                logger.error('[%s]   python manage.py importbormepdf %s -v 3' % (borme.cve, borme.filename))
                 if strict:
                     logger.error('[%s] Una vez arreglado, reanuda la importación:' % borme.cve)
                     logger.error('[%s]   python manage.py importbormetoday local' % borme.cve)
