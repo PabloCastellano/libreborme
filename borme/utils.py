@@ -226,7 +226,7 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
     date: "2015", "2015-01", "2015-01-30", "--init"
     """
     if date == '--init':
-        begin = FIRST_BORME
+        begin = FIRST_BORME[2009]
         end = datetime.date.today()
     else:
         date = tuple(map(int, date.split('-')))  # TODO: exception
@@ -244,7 +244,7 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
             end = datetime.date(date[0], date[1], lastday)
 
         elif len(date) == 1:  # 2015
-            begin = datetime.date(date[0], 1, 1)
+            begin = FIRST_BORME[date[0]]
             end = datetime.date(date[0], 12, 31)
 
     try:
