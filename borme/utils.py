@@ -109,7 +109,7 @@ def _import1(borme):
                                     logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, c.name, borme.cve, nombre))
                                     results['errors'] += 1
 
-                                c.anuncios.append(nuevo_anuncio)
+                                c.anuncios.append(anuncio.id)
                                 c.in_bormes.append(nuevo_borme)
                                 cargo = CargoCompany(title=nombre_cargo, name=c)
                                 if is_acto_cargo_entrante(acto.name):
@@ -165,11 +165,9 @@ def _import1(borme):
                     nuevo_anuncio.actos[kk] = acto.value
 
             nuevo_anuncio.save()
-            company.anuncios.append(nuevo_anuncio)
+            company.anuncios.append(anuncio.id)
             company.save()
-            nuevo_borme.anuncios.append(nuevo_anuncio)
-            nuevo_borme.save()
-            nuevo_borme = Borme.objects.get(cve=borme.cve)  # Trick to avoid excessive memory consuming in large PDFs
+            nuevo_borme.anuncios.append(anuncio.id)
 
         except ValidationError as e:
             logger.error('[%s] ERROR importing anuncio %d' % (borme.cve, anuncio.id))

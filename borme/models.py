@@ -69,7 +69,7 @@ class Borme(Document):
     province = StringField(max_length=100)
     section = StringField(max_length=20)
     pages = IntField()
-    anuncios = ListField(ReferenceField('Anuncio'))
+    anuncios = ListField(IntField())
 
     def get_absolute_url(self):
         return reverse('borme-borme', args=[str(self.cve)])
@@ -127,7 +127,7 @@ class Company(Document):
     type = StringField(choices=SOCIEDADES)
 
     in_bormes = ListField(ReferenceField('Borme'))
-    anuncios = ListField(ReferenceField('Anuncio'))
+    anuncios = ListField(IntField())
 
     cargos_actuales_p = ListField(EmbeddedDocumentField('CargoPerson'))
     cargos_actuales_c = ListField(EmbeddedDocumentField('CargoCompany'))
