@@ -27,7 +27,7 @@
             {% for cargo in company.cargos_actuales %}
                 <tr>
                     <td>{{ cargo.title }}</td>
-                    <td><a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name|title }}</a></td>
+                    <td><a href="{{ cargo.get_absolute_url }}">{{ cargo.name|title }}</a></td>
                     <td>{{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
                     <td>{{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
                 </tr>
@@ -53,7 +53,7 @@
             {% for cargo in company.cargos_historial %}
                 <tr>
                     <td>{{ cargo.title }}</td>
-                    <td><a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name|title }}</a></td>
+                    <td><a href="{{ cargo.get_absolute_url }}">{{ cargo.name|title }}</a></td>
                     <td>{{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
                     <td>{{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
                 </tr>
@@ -87,7 +87,7 @@
                     {% for cargo in value %}
                         <tr>
                             <td>{{ cargo.title }}</td>
-                            <td><a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name|title }}</a></td>
+                            <td><a href="{{ cargo.get_absolute_url }}">{{ cargo.name|title }}</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>

@@ -22,9 +22,13 @@ PROVINCES = (
 
 class CargoCompany(EmbeddedDocument):
     title = StringField()
-    name = ReferenceField('Company')
+    name = StringField(max_length=250)
     date_from = DateTimeField()
     date_to = DateTimeField()
+
+    def get_absolute_url(self):
+        slug = slugify(self.name)
+        return reverse('borme-empresa', args=[slug])
 
     def __str__(self):
         d_from = ''
@@ -39,9 +43,13 @@ class CargoCompany(EmbeddedDocument):
 # TODO: subclass CargoCompany
 class CargoPerson(EmbeddedDocument):
     title = StringField()
-    name = ReferenceField('Person')
+    name = StringField(max_length=200)
     date_from = DateTimeField()
     date_to = DateTimeField()
+
+    def get_absolute_url(self):
+        slug = slugify(self.name)
+        return reverse('borme-persona', args=[slug])
 
     def __str__(self):
         d_from = ''
@@ -78,18 +86,33 @@ class Borme(Document):
         return self.cve
 
 
+class EmbeddedBorme(EmbeddedDocument):
+    cve = StringField(max_length=30)
+    url = URLField()
+
+    def get_absolute_url(self):
+        return reverse('borme-borme', args=[str(self.cve)])
+
+    def __str__(self):
+        return self.cve
+
+
 class Person(Document):
     """ Persona """
     name = StringField(max_length=200)
     slug = StringField(unique=True)
-    in_companies = ListField(ReferenceField('Company'))
-    in_bormes = ListField(ReferenceField('Borme'))
+    in_companies = ListField(StringField(max_length=250))
+    in_bormes = ListField(EmbeddedDocumentField('EmbeddedBorme'))
 
     cargos_actuales = ListField(EmbeddedDocumentField('CargoCompany'))
     cargos_historial = ListField(EmbeddedDocumentField('CargoCompany'))
 
     # last access
     # number of visits
+
+    def add_in_company(self, company):
+        if not company in self.in_companies:
+            self.in_companies.append(company)
 
     def add_in_bormes(self, borme):
         if not borme in self.in_bormes:
@@ -130,7 +153,7 @@ class Company(Document):
     is_active = BooleanField(default=False)
     type = StringField(choices=SOCIEDADES)
 
-    in_bormes = ListField(ReferenceField('Borme'))
+    in_bormes = ListField(EmbeddedDocumentField('EmbeddedBorme'))
     anuncios = ListField(IntField())
 
     cargos_actuales_p = ListField(EmbeddedDocumentField('CargoPerson'))
@@ -193,8 +216,8 @@ class Company(Document):
 
 class Anuncio(Document):
     id_anuncio = IntField()
-    borme = ReferenceField('Borme')
-    company = ReferenceField('Company')
+    borme = StringField(max_length=30)
+    company = StringField(max_length=250)
     datos_registrales = StringField()
     actos = DictField()
 

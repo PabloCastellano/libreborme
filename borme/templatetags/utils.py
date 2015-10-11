@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.template.defaulttags import register
+from django.utils.text import slugify
+
 from borme.models import CargoPerson, CargoCompany
 from django.utils.text import slugify
 
@@ -56,6 +58,11 @@ def is_bool(val):
 @register.filter(name='get_class')
 def get_class(val):
   return val.__class__.__name__
+
+
+@register.filter
+def slug(val):
+  return slugify(val)
 
 
 # https://djangosnippets.org/snippets/401/

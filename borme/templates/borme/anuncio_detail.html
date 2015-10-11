@@ -7,15 +7,15 @@
 {% block content %}
     <h1>Anuncio {{ anuncio.id_anuncio }}</h1>
 
-    <strong>Empresa:</strong> <a href="{{ anuncio.company.get_absolute_url }}">{{ anuncio.company.name }}</a>
+    <strong>Empresa:</strong> <a href="{% url 'borme-empresa' anuncio.company|slug %}">{{ anuncio.company }}</a>
     <br/>
-    <strong>Fecha:</strong> {{ anuncio.borme.date|date }}
+    <strong>Fecha:</strong> {{ borme.date|date }}
     <br/>
     <strong>Número total de actos mercantiles:</strong> {{ anuncio.actos|length }}
     <br/>
-    <strong>Fuente:</strong> <a href="{{ anuncio.borme.get_absolute_url }}">{{ anuncio.borme.cve }}</a> <a href="{{ anuncio.borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
+    <strong>Fuente:</strong> <a href="{{ borme.get_absolute_url }}">{{ borme.cve }}</a> <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
     <br/>
-    <strong>Provincia:</strong> {{ anuncio.borme.province }}
+    <strong>Provincia:</strong> {{ borme.province }}
     <br/>
     <strong>Datos registrales:</strong> {{ anuncio.datos_registrales }}
     <br/>
@@ -38,7 +38,7 @@
                 {% for cargo in valor %}
                     <tr>
                         <td>{{ cargo.title }} ({{ cargo|get_class }})</td>
-                        <td><a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name|title }}</a></td>
+                        <td><a href="{{ cargo.get_absolute_url }}">{{ cargo.name|title }}</a></td>
                         <td>{{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
                         <td>{{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
                     </tr>

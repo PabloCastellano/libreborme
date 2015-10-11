@@ -1,4 +1,4 @@
-from .models import Company, Borme, Anuncio, Person, CargoCompany, CargoPerson, BormeLog
+from .models import Company, Borme, Anuncio, Person, CargoCompany, CargoPerson, BormeLog, EmbeddedBorme
 from mongoengine.errors import ValidationError, NotUniqueError
 
 from django.conf import settings
@@ -62,6 +62,7 @@ def _import1(borme):
         #year, type, from_page, until_page, pages
         # num?, filename?
 
+    borme_embed = EmbeddedBorme(cve=borme.cve, url=borme.url)
     for n, anuncio in enumerate(borme.get_anuncios(), 1):
         try:
             logger.debug('%d: Importando anuncio: %s' % (n, anuncio))
@@ -76,14 +77,14 @@ def _import1(borme):
                 logger.warn('[%s] WARNING: Empresa similar. Mismo slug: %s' % (borme.cve, slug_c))
                 logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, company.name, borme.cve, anuncio.empresa))
                 results['errors'] += 1
-            company.add_in_bormes(nuevo_borme)
+            company.add_in_bormes(borme_embed)
 
             nuevo_anuncio, created = Anuncio.objects.get_or_create(id_anuncio=anuncio.id)
             if created:
                 logger.debug('Creando anuncio %d: %s' % (anuncio.id, anuncio.empresa))
                 results['created_anuncios'] += 1
-                nuevo_anuncio.borme = nuevo_borme
-                nuevo_anuncio.company = company
+                nuevo_anuncio.borme = borme.cve
+                nuevo_anuncio.company = company.name
                 nuevo_anuncio.datos_registrales = anuncio.datos_registrales
 
             for acto in anuncio.get_borme_actos():
@@ -110,16 +111,14 @@ def _import1(borme):
                                     results['errors'] += 1
 
                                 c.anuncios.append(anuncio.id)
-                                c.add_in_bormes(nuevo_borme)
-                                cargo = CargoCompany(title=nombre_cargo, name=c)
+                                c.add_in_bormes(borme_embed)
+                                cargo = CargoCompany(title=nombre_cargo, name=c.name)
                                 if is_acto_cargo_entrante(acto.name):
                                     cargo.date_from = borme.date
-                                    cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_from=borme.date)
-                                    c.update_cargos_entrantes([cargo_embed])
+                                    c.update_cargos_entrantes([cargo])
                                 else:
                                      cargo.date_to = borme.date
-                                     cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_to=borme.date)
-                                     c.update_cargos_salientes([cargo_embed])
+                                     c.update_cargos_salientes([cargo])
                                 c.save()
                             else:
                                 try:
@@ -135,16 +134,16 @@ def _import1(borme):
                                     logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, p.name, borme.cve, nombre))
                                     results['errors'] += 1
 
-                                p.in_companies.append(company)
-                                p.add_in_bormes(nuevo_borme)
-                                cargo = CargoPerson(title=nombre_cargo, name=p)
+                                p.add_in_company(company.name)
+                                p.add_in_bormes(borme_embed)
+                                cargo = CargoPerson(title=nombre_cargo, name=p.name)
                                 if is_acto_cargo_entrante(acto.name):
                                     cargo.date_from = borme.date
-                                    cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_from=borme.date)
+                                    cargo_embed = CargoCompany(title=nombre_cargo, name=company.name, date_from=borme.date)
                                     p.update_cargos_entrantes([cargo_embed])
                                 else:
                                     cargo.date_to = borme.date
-                                    cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_to=borme.date)
+                                    cargo_embed = CargoCompany(title=nombre_cargo, name=company.name, date_to=borme.date)
                                     p.update_cargos_salientes([cargo_embed])
                                 p.save()
 

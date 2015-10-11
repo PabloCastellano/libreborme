@@ -93,11 +93,11 @@ class AnuncioView(DetailView):
         self.anuncio = Anuncio.objects.get_or_404(id_anuncio=self.kwargs['id'])
         return self.anuncio
 
-    """
     def get_context_data(self, **kwargs):
         context = super(AnuncioView, self).get_context_data(**kwargs)
+
+        context['borme'] = Borme.objects.get(cve=self.anuncio.borme)
         return context
-    """
 
 
 class BormeView(DetailView):
@@ -130,10 +130,9 @@ class CompanyView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(CompanyView, self).get_context_data(**kwargs)
 
-        context['anuncios'] = Anuncio.objects.filter(company=self.company).order_by('-id_anuncio')
-        bormes = [r.borme for r in context['anuncios']]
-        context['bormes'] = {b.cve: b for b in bormes}
-        context['persons'] = Person.objects.filter(in_companies__contains=self.company)
+        context['anuncios'] = Anuncio.objects.filter(company=self.company.name).order_by('-id_anuncio')
+        context['bormes'] = [a.borme for a in context['anuncios']]
+        context['persons'] = Person.objects.filter(in_companies__contains=self.company.name)
 
         return context
 
