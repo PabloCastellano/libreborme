@@ -28,7 +28,7 @@ ch = logging.StreamHandler()
 logger.addHandler(ch)
 logger.setLevel(logging.INFO)
 
-
+# PROBAR A VER SI QUITANDO DEL NOMBRE EL FINAL "SOCIEDAD LIMITADA" MEJORA EN EFICIENCIA CON LAS CADENAS SEMIIGUALES
 def _import1(borme):
     """
     borme: bormeparser.Borme
