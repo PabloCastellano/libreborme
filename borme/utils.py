@@ -360,17 +360,32 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
     return True, total_results
 
 
-def import_borme_file(filename):
+def import_borme_pdf(filename):
     """
-    Import BORME to MongoDB database
-
-    :param filename:
-    :return:
+    Import BORME PDF to MongoDB database
     """
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
 
     try:
         borme = bormeparser.parse(filename)
+        results = _import1(borme)
+    except Exception as e:
+        logger.error('[X] Error grave en bormeparser.parse(): %s' % filename)
+        logger.error('[X] %s: %s' % (e.__class__.__name__, e))
+
+    if not all(map(lambda x: x == 0, results.values())):
+        print_results(results, borme)
+    return True, results
+
+
+def import_borme_json(filename):
+    """
+    Import BORME JSON to MongoDB database
+    """
+    results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
+
+    try:
+        borme = bormeparser.from_json(filename)
         results = _import1(borme)
     except Exception as e:
         logger.error('[X] Error grave en bormeparser.parse(): %s' % filename)

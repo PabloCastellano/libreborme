@@ -7,13 +7,13 @@ import time
 import logging
 from datetime import datetime
 from libreborme.utils import get_git_revision_short_hash
-from borme.utils import import_borme_file
+from borme.utils import import_borme_json
 import borme.utils
 
 
 class Command(BaseCommand):
     args = '<BORME files, ...>'
-    help = 'Import BORME file'
+    help = 'Import BORME JSON file'
 
     def handle(self, *args, **options):
         verbosity = int(options['verbosity'])
@@ -32,7 +32,7 @@ class Command(BaseCommand):
         if args:
             for filename in args:
                 print(filename)
-                import_borme_file(filename)
+                import_borme_json(filename)
 
             config = Config.objects.first()
             if config:
