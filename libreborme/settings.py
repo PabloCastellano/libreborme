@@ -119,7 +119,7 @@ MONGO_DATABASE_NAME = 'libreborme'
 connect(MONGO_DATABASE_NAME)
 
 AUTHENTICATION_BACKENDS = (
-    'django_mongoengine.auth.MongoEngineBackend',
+    'django_mongoengine.auth.backends.MongoEngineBackend',
 )
 
 SESSION_ENGINE = 'django_mongoengine.sessions'
