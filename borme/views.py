@@ -132,8 +132,7 @@ class CompanyView(DetailView):
 
         context['anuncios'] = Anuncio.objects.filter(company=self.company.name).order_by('-id_anuncio')
         context['bormes'] = [a.borme for a in context['anuncios']]
-        context['persons'] = Person.objects.filter(in_companies__contains=self.company.name)
-
+        context['persons'] = Person.objects.filter(in_companies__in=[self.company.name])
         return context
 
 
