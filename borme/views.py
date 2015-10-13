@@ -6,6 +6,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Company, Person, Anuncio, Config, Borme
 
 from random import randint
+import datetime
 
 
 class HomeView(TemplateView):
@@ -16,8 +17,17 @@ class HomeView(TemplateView):
         context['total_companies'] = Company.objects.count()
         context['total_persons'] = Person.objects.count()
         context['total_anuncios'] = Anuncio.objects.count()
-        context['random_companies'] = Company.objects.filter().limit(10).skip(randint(0, context['total_companies']))
-        context['random_persons'] = Person.objects.filter().limit(10).skip(randint(0, context['total_persons']))
+        context['random_companies'] = Company.objects.limit(10)
+        context['random_persons'] = Person.objects.limit(10)
+
+        #bormes_today = Borme.objects.filter(date=context['last_modified']).limit(2)
+        #bormes = [b.cve for b in bormes_today]
+        # bormes de hoy: Borme.date
+        # compañias en bormes de hoy: Company.in_bormes
+        # > db.company.find({ in_bormes: { $in: [ { "cve": "BORME-A-2009-1-01" } ] } })
+
+        #context['random_companies'] = Company.objects.filter().limit(10).skip(randint(0, context['total_companies']))
+        #context['random_persons'] = Person.objects.filter().limit(10).skip(randint(0, context['total_persons']))
         context['last_modified'] = Config.objects.first().last_modified
         return context
 
