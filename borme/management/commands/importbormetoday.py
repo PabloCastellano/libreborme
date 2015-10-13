@@ -18,16 +18,16 @@ class Command(BaseCommand):
 
         local = args and args[0] == 'local'
         date = datetime.date.today()
-        import_borme_download(date.strftime('%Y-%m-%d'), download=not local)
-        update_previous_xml(date)
+        success = import_borme_download(date.strftime('%Y-%m-%d'), download=not local)
+        if success:
+            update_previous_xml(date)
 
-        config = Config.objects.first()
-        if config:
-            config.last_modified = datetime.datetime.today()
-        else:
-            config = Config(last_modified=datetime.datetime.today())
-        config.version = get_git_revision_short_hash()
-        config.save()
+            config = Config.objects.first()
+            if config:
+                config.last_modified = datetime.datetime.today()
+            else:
+                config = Config(last_modified=datetime.datetime.today())
+            config.save()
 
         # Elapsed time
         elapsed_time = time.time() - start_time

@@ -232,10 +232,11 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
         if len(date) == 3:  # 2015-06-02
             begin = datetime.date(*date)
             try:
-                _import_borme_download_range2(begin, begin, seccion, download)
+                ret, _ = _import_borme_download_range2(begin, begin, seccion, download)
+                return ret
             except BormeDoesntExistException:
                 logger.info('It looks like there is no BORME for this date. Nothing was downloaded')
-            return
+                return False
         elif len(date) == 2:  # 2015-06
             _, lastday = calendar.monthrange(*date)
             begin = datetime.date(date[0], date[1], 1)
@@ -245,15 +246,8 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
             begin = FIRST_BORME[date[0]]
             end = datetime.date(date[0], 12, 31)
 
-    try:
-        _import_borme_download_range2(begin, end, seccion, download)
-    except BormeDoesntExistException:
-        try:
-            begin = begin + datetime.timedelta(days=1)
-            _import_borme_download_range2(begin, end, seccion, download)
-        except BormeDoesntExistException:
-            begin = begin + datetime.timedelta(days=1)
-            _import_borme_download_range2(begin, end, seccion, download)
+    ret, _ = _import_borme_download_range2(begin, end, seccion, download)
+    return ret
 
 
 def _import_borme_download_range2(begin, end, seccion, download, strict=False):
