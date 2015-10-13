@@ -147,15 +147,13 @@ class PersonView(DetailView):
         #self.person = get_document_or_404(Person, slug=self.kwargs['slug'])
         return self.person
 
+    """
     def get_context_data(self, **kwargs):
         context = super(PersonView, self).get_context_data(**kwargs)
 
-        context['anuncios'] = Anuncio.objects.filter(borme__in=self.person.in_bormes)
-        bormes = [r.borme for r in context['anuncios']]
-        context['bormes'] = {b.cve: b for b in bormes}
-
+        context['bormes'] = [b.cve for b in self.person.in_bormes]
         return context
-
+    """
 
 class PersonListView(ListView):
     model = Person

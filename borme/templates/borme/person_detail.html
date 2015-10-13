@@ -1,5 +1,7 @@
 {% extends "borme/base.html" %}
 
+{% load utils %}
+
 {% block title %}{{ person.name }} | LibreBORME{% endblock %}
 
 {% block content %}
@@ -60,27 +62,19 @@
         <i>No hay datos</i>
     {% endif %}
 
-    <h3>Cargos directivos en empresas</h3>
-        <i>No disponible</i>
     <h3>Anuncios de nombramientos y ceses</h3>
         <i>No disponible</i>
 
     <h3>BORMEs relacionados</h3>
 
     <ul>
-    {% for borme in bormes.values %}
-        <li><a href="{{ borme.get_absolute_url }}">{{ borme.cve }}</a>
-	  <!-- <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
-	  <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a></li>
-    {% empty %}
-        <p><i>No hay actos registrados.</i></p>
-    {% endfor %}
-        También aparece referenciado en...
         {% for borme in person.in_bormes %}
-        <li><a href="{{ borme.get_absolute_url }}">{{ borme.cve }}</a>
+            <li><a href="{{ borme.get_absolute_url }}">{{ borme.cve }}</a>
             <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
             <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
         </li>
+        {% empty %}
+            <p><i>No hay actos registrados.</i></p>
         {% endfor %}
     </ul>
 
