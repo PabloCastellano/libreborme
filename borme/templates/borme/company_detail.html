@@ -101,11 +101,18 @@
         {% endfor %}
 
     <h2>Personas relacionadas</h2>
-    <ul>
-        {% for person in persons %}
-        <li><a href="{{ person.get_absolute_url }}">{{ person.name|title }}</a></li>
-        {% endfor %}
-    </ul>
+
+    <div class="related-persons">
+     {% for ps in persons|rows_distributed:3 %}
+        <div class="col-md-4">
+            <ul>
+            {% for person in ps %}
+                <li><a href="{{ person.get_absolute_url }}">{{ person.name|title }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+     {% endfor %}
+    </div>
 
     <h2>Sociedades relacionadas</h2>
         <i>No disponible</i>
