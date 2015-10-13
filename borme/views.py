@@ -119,20 +119,25 @@ class BormeView(DetailView):
         return context
 
 
+# CompanyView: TODO: Ver más...
 class CompanyView(DetailView):
     model = Company
     context_object_name = 'company'
 
     def get_object(self):
         self.company = Company.objects.get_or_404(slug=self.kwargs['slug'])
+        self.company.cargos_actuales_p = self.company.cargos_actuales_p[:20]
+        self.company.cargos_actuales_c = self.company.cargos_actuales_c[:20]
+        self.company.cargos_historial_p = self.company.cargos_historial_p[:20]
+        self.company.cargos_historial_c = self.company.cargos_historial_c[:20]
         return self.company
 
     def get_context_data(self, **kwargs):
         context = super(CompanyView, self).get_context_data(**kwargs)
 
-        context['anuncios'] = Anuncio.objects.filter(company=self.company.name).order_by('-id_anuncio')
+        context['anuncios'] = Anuncio.objects.filter(company=self.company.name).limit(20).order_by('-id_anuncio')
         context['bormes'] = [a.borme for a in context['anuncios']]
-        context['persons'] = Person.objects.filter(in_companies__in=[self.company.name])
+        context['persons'] = Person.objects.filter(in_companies__in=[self.company.name]).limit(20)
         return context
 
 
