@@ -91,6 +91,10 @@ class Person(Document):
     # last access
     # number of visits
 
+    def add_in_bormes(self, borme):
+        if not borme in self.in_bormes:
+            self.in_bormes.append(borme)
+
     def update_cargos_entrantes(self, cargos):
         """ cargos = [CargoCompany] """
 
@@ -133,6 +137,10 @@ class Company(Document):
     cargos_actuales_c = ListField(EmbeddedDocumentField('CargoCompany'))
     cargos_historial_p = ListField(EmbeddedDocumentField('CargoPerson'))
     cargos_historial_c = ListField(EmbeddedDocumentField('CargoCompany'))
+
+    def add_in_bormes(self, borme):
+        if not borme in self.in_bormes:
+            self.in_bormes.append(borme)
 
     @property
     def cargos_actuales(self):

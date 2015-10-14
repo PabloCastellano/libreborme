@@ -70,13 +70,13 @@ def _import1(borme):
                 if created:
                     logger.debug('Creando empresa %s' % anuncio.empresa)
                     results['created_companies'] += 1
-                company.in_bormes.append(nuevo_borme)
             except NotUniqueError as e:
                 slug_c = slugify(anuncio.empresa)
                 company = Company.objects.get(slug=slug_c)
                 logger.warn('[%s] WARNING: Empresa similar. Mismo slug: %s' % (borme.cve, slug_c))
                 logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, company.name, borme.cve, anuncio.empresa))
                 results['errors'] += 1
+            company.add_in_bormes(nuevo_borme)
 
             nuevo_anuncio, created = Anuncio.objects.get_or_create(id_anuncio=anuncio.id)
             if created:
@@ -110,7 +110,7 @@ def _import1(borme):
                                     results['errors'] += 1
 
                                 c.anuncios.append(anuncio.id)
-                                c.in_bormes.append(nuevo_borme)
+                                c.add_in_bormes(nuevo_borme)
                                 cargo = CargoCompany(title=nombre_cargo, name=c)
                                 if is_acto_cargo_entrante(acto.name):
                                     cargo.date_from = borme.date
@@ -136,7 +136,7 @@ def _import1(borme):
                                     results['errors'] += 1
 
                                 p.in_companies.append(company)
-                                p.in_bormes.append(nuevo_borme)
+                                p.add_in_bormes(nuevo_borme)
                                 cargo = CargoPerson(title=nombre_cargo, name=p)
                                 if is_acto_cargo_entrante(acto.name):
                                     cargo.date_from = borme.date
