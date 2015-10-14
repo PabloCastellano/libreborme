@@ -1,0 +1,25 @@
+{% extends "borme/base.html" %}
+
+{% block content %}
+    <h2>Anuncios mercantiles del día {{ date }}</h2>
+
+        <div class="calendar">
+            {{ calendar }}
+        </div>
+
+        <div class="bormes">
+            {% for borme in bormes %}
+                {{ borme.cve }}<br/>
+            {% empty %}
+                <i>No hay bormes.</i>
+            {% endfor %}
+        </div>
+
+        <div class="anuncios">
+            {% for anuncio in anuncios %}
+                {{ anuncio.id_anuncio }}<br/>
+            {% empty %}
+                <i>No hay anuncios.</i>
+            {% endfor %}
+        </div>
+{% endblock %}

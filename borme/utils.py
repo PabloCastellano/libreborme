@@ -20,6 +20,10 @@ import os
 # descarga -> parse -> import -> mueve a carpeta archive
 # Problema: download_pdfs va a bajar de nuevo los archivos en tmp si ya estan procesados
 
+from calendar import HTMLCalendar
+from .models import Config
+
+
 import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -27,6 +31,32 @@ logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 logger.addHandler(ch)
 logger.setLevel(logging.INFO)
+
+
+class LibreBormeCalendar(HTMLCalendar):
+
+    def formatday(self, day, weekday):
+        """
+        Return a day as a table cell.
+        """
+
+        if day == 0:
+            return '<td class="noday">&nbsp;</td>' # day outside month
+        elif self.today == datetime.date(self.year, self.month, day):
+            last_modified = Config.objects.first().last_modified.date()
+            if self.today == last_modified:
+                return '<td class="day today"><a href="/borme/fecha/%d-%d-%d">%d</a></td>' % (self.year, self.month, day, day)
+            else:
+                return '<td class="day today">%d</td>' % day
+        elif self.today > datetime.date(self.year, self.month, day) and weekday not in (5, 6):
+            return '<td class="day %s"><a href="/borme/fecha/%d-%d-%d">%d</a></td>' % (self.cssclasses[weekday], self.year, self.month, day, day)
+        else:
+            return '<td class="day %s">%d</td>' % (self.cssclasses[weekday], day)
+
+    def formatmonth(self, year, month):
+        self.year, self.month = year, month
+        self.today = datetime.date.today()
+        return super(LibreBormeCalendar, self).formatmonth(year, month)
 
 
 def _import1(borme):

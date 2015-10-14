@@ -84,3 +84,24 @@ h2 i.glyphicon {
   font-size: 21px;
 }
 
+
+
+td.sat {
+  background-color: lightgray;
+}
+
+td.sun {
+  background-color: lightgray;
+}
+
+td.today {
+  background-color: lightgreen;
+}
+
+td.day:hover {
+  background-color: lightblue;
+}
+
+table.month > tbody > tr > th {
+	padding: 4px;
+}

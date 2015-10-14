@@ -1,11 +1,16 @@
 from mongogeneric.list import ListView
 from mongogeneric.detail import DetailView
+
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.utils.safestring import mark_safe
 
 from .models import Company, Person, Anuncio, Config, Borme
+from .utils import LibreBormeCalendar
 
 from random import randint
+
+import datetime
 
 
 class HomeView(TemplateView):
@@ -19,6 +24,10 @@ class HomeView(TemplateView):
         context['random_companies'] = Company.objects.filter().limit(10).skip(randint(0, context['total_companies']))
         context['random_persons'] = Person.objects.filter().limit(10).skip(randint(0, context['total_persons']))
         context['last_modified'] = Config.objects.first().last_modified
+
+        today = datetime.date.today()
+        calendar = LibreBormeCalendar().formatmonth(today.year, today.month)
+        context['calendar'] = mark_safe(calendar)
         return context
 
 
@@ -115,7 +124,57 @@ class BormeView(DetailView):
         context['bormes_dia'] = Borme.objects.filter(date=self.borme.date).order_by('cve')
         bormes_dia = list(context['bormes_dia'])
         bormes_dia.remove(self.borme)
+        bormes_dia.sort(key=lambda b: b.province)
         context['bormes_dia'] = bormes_dia
+        return context
+
+
+class BormeDateView(TemplateView):
+    template_name = 'borme/borme_fecha.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BormeDateView, self).get_context_data(**kwargs)
+
+        year, month, _ = self.kwargs['date'].split('-')
+        calendar = LibreBormeCalendar().formatmonth(int(year), int(month))  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
+        #calendar = HTMLCalendar().formatyear(int(year))  # formatyearpage()
+
+        resumen_dia = {}
+        bormes = Borme.objects.filter(date=self.kwargs['date'])
+        if len(bormes) > 0:
+            from_reg = min([b.from_reg for b in bormes])
+            until_reg = max([b.until_reg for b in bormes])
+            anuncios = Anuncio.objects.filter(id_anuncio__gte=from_reg, id_anuncio__lte=until_reg)
+
+            # FIXME: performance-killer. Guardar resultados en el modelo Borme
+            from collections import Counter
+            resumen_dia = Counter()
+            for anuncio in anuncios:
+                resumen_dia += Counter(anuncio.actos.keys())
+
+        # TODO: Guardar la fecha en el anuncio
+        context['calendar'] = mark_safe(calendar)
+        context['date'] = self.kwargs['date']
+        context['bormes'] = bormes
+        context['resumen_dia'] = dict(resumen_dia)
+        return context
+
+
+class BormeProvinciaView(TemplateView):
+    template_name = 'borme/borme_provincia.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BormeDateView, self).get_context_data(**kwargs)
+        bormes = Borme.objects.filter(province=self.kwargs['provincia'])
+
+        year, month, _ = self.kwargs['date'].split('-')
+        calendar = HTMLCalendar().formatmonth(int(year), int(month))  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
+        #calendar = HTMLCalendar().formatyear(int(year))  # formatyearpage()
+
+        context['calendar'] = mark_safe(calendar)
+        #context['date'] = self.kwargs['date']
+        context['bormes'] = bormes
+        context['anuncios'] = []
         return context
 
 

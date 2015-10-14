@@ -5,11 +5,13 @@
 {% block title %}{{ borme.cve }} | LibreBORME{% endblock %}
 
 {% block content %}
-    <h2>{{ borme.cve }}</h2>
+    <h2>BORME de {{ borme.province }} del día {{ borme.date|date }}</h2>
 
-    <strong>Fecha:</strong> {{ borme.date|date }}
+    <strong>CVE:</strong> {{ borme.cve }}
     <br/>
-    <strong>Provincia:</strong> {{ borme.province }}
+    <strong>Fecha:</strong> <a href="{% url 'borme-fecha' borme.date|date_isoformat %}">{{ borme.date|date }}</a>
+    <br/>
+    <strong>Provincia:</strong> <a href="{% url 'borme-provincia' borme.province %}">{{ borme.province }}</a>
     <br/>
     <strong>Sección:</strong> {{ borme.section }}
     <br/>
