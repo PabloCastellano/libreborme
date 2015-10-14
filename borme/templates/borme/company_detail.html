@@ -127,13 +127,6 @@
         {% empty %}
             <p><i>No hay actos registrados.</i></p>
         {% endfor %}
-        También aparece referenciada en...
-        {% for borme in company.in_bormes %}
-        <li><a href="{{ borme.get_absolute_url }}">{{ borme.cve }}</a>
-            <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
-            <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
-        </li>
-        {% endfor %}
     </ul>
 
 {% endblock %}
