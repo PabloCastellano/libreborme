@@ -7,22 +7,14 @@ Estas instrucciones se han comprobado que funcionan en Ubuntu 14.04 32 bits. Par
 Dependencias:
 
     sudo apt-get install virtualenvwrapper
-    sudo apt-get install mongodb
+    sudo apt-get install libpq-dev postgresql postgresql-contrib
     sudo apt-get install libxml2-dev libxslt1-dev python-dev zlib1g-dev
 
     echo "export WORKON_HOME=$HOME/.virtualenvs" >> ~/.bashrc
     echo "source /usr/share/virtualenvwrapper/virtualenvwrapper.sh" >> ~/.bashrc
     source ~/.bashrc
 
-Hack temporal:
-en `~/.virtualenvs/libreborme/local/lib/python2.7/site-packages/mongodbforms/documentoptions.py`
-comentar la línea:
-
-    from django.db.models.options import get_verbose_name
-
-Y añadir a continuación:
-
-    from django.utils.text import camel_case_to_spaces as get_verbose_name
+TODO: postgresql
 
 Instalación de libreborme:
 
@@ -68,10 +60,7 @@ Comandos
     ./manage.py companyinfo "SOCIEDAD ESTATAL CORREOS Y TELEGRAFOS SA"
     ./manage.py companyinfo sociedad-estatal-correos-y-telegrafos
     ./manage.py findcompany correos asd
-    ./manage.py importbormecsv borme_parser/csv/BORME-A-2014-196-14.pdf-cropped.pdf.1.txt.clean.txt.4c.csv
-    ./manage.py importbormecsv borme_parser/csv/*.csv
-    ./manage.py importbormejson borme_parser/json/*.json
-    ./manage.py importbormebson borme_parser/bson/*.bson
+    ./manage.py importbormepdf /home/libreborme/.bormes/pdf/2009/01/02/BORME-A-2009-1-31.pdf -v 3
 
 Para actualizar a la última versión:
     git stash && git pull && git stash pop && ./manage.py updateversion
@@ -79,16 +68,7 @@ Para actualizar a la última versión:
 Tests:
     ./manage.py test --settings=libreborme.local_settings
 
-Rellenando con datos la BD
---------------------------
+Rellenar la BD con datos
+------------------------
 
-    cd borme_parser
-    mkdir xml
-    ./getAllBormeXML.py 20150101
-    mkdir pdf
-    ./getPDFfromXML.py 20150101
-    ./crop_borme.py pdf
-    ./parserPDF.py pdfcrop
-    ./cleanText.py txt
-    ./parserText2CSV4c.py txt2
-    ./manage.py importbormecsv borme_parser/csv/*.csv
+    ./manage.py importborme -- --init local
