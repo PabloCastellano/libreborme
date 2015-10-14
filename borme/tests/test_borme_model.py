@@ -1,4 +1,4 @@
-from django_mongoengine.tests import MongoTestCase
+from django.test import TestCase
 from borme.models import Borme
 
 import bormeparser
@@ -10,7 +10,7 @@ b1_id = None
 # Hacer Mockup de:
 # borme = bormeparser.parse(filename)
 # Testear: _import1(borme)
-class TestBormeModel(MongoTestCase):
+class TestBormeModel(TestCase):
 
     # This method run on instance of class
     @classmethod

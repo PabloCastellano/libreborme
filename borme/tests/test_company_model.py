@@ -1,10 +1,10 @@
+from django.test import TestCase
 from borme.models import Company
-from django_mongoengine.tests import MongoTestCase
 
 c1_id = None
 
 
-class TestCompanyModel(MongoTestCase):
+class TestCompanyModel(TestCase):
 
     # This method run on instance of class
     @classmethod

@@ -21,8 +21,8 @@ class HomeView(TemplateView):
         context['total_companies'] = Company.objects.count()
         context['total_persons'] = Person.objects.count()
         context['total_anuncios'] = Anuncio.objects.count()
-        context['random_companies'] = Company.objects.filter().limit(10).skip(randint(0, context['total_companies']))
-        context['random_persons'] = Person.objects.filter().limit(10).skip(randint(0, context['total_persons']))
+        context['random_companies'] = Company.objects.all().order_by('?')[:10]
+        context['random_persons'] = Person.objects.all().order_by('?')[:10]
         context['last_modified'] = Config.objects.first().last_modified
 
         today = datetime.date.today()
@@ -99,14 +99,14 @@ class AnuncioView(DetailView):
     context_object_name = 'anuncio'
 
     def get_object(self):
-        self.anuncio = Anuncio.objects.get_or_404(id_anuncio=self.kwargs['id'])
+        self.anuncio = Anuncio.objects.get(id_anuncio=self.kwargs['id'])
         return self.anuncio
 
-    """
     def get_context_data(self, **kwargs):
         context = super(AnuncioView, self).get_context_data(**kwargs)
+
+        context['borme'] = Borme.objects.get(cve=self.anuncio.borme)
         return context
-    """
 
 
 class BormeView(DetailView):
@@ -114,7 +114,7 @@ class BormeView(DetailView):
     context_object_name = 'borme'
 
     def get_object(self):
-        self.borme = Borme.objects.get_or_404(cve=self.kwargs['cve'])
+        self.borme = Borme.objects.get(cve=self.kwargs['cve'])
         return self.borme
 
     def get_context_data(self, **kwargs):
@@ -183,16 +183,14 @@ class CompanyView(DetailView):
     context_object_name = 'company'
 
     def get_object(self):
-        self.company = Company.objects.get_or_404(slug=self.kwargs['slug'])
+        self.company = Company.objects.get(slug=self.kwargs['slug'])
         return self.company
 
     def get_context_data(self, **kwargs):
         context = super(CompanyView, self).get_context_data(**kwargs)
 
         context['anuncios'] = Anuncio.objects.filter(company=self.company).order_by('-id_anuncio')
-        bormes = [r.borme for r in context['anuncios']]
-        context['bormes'] = {b.cve: b for b in bormes}
-        context['persons'] = Person.objects.filter(in_companies__contains=self.company)
+        context['persons'] = Person.objects.filter(in_companies__contains=[self.company.name])
 
         return context
 
@@ -202,8 +200,7 @@ class PersonView(DetailView):
     context_object_name = 'person'
 
     def get_object(self):
-        self.person = Person.objects.get_or_404(slug=self.kwargs['slug'])
-        #self.person = get_document_or_404(Person, slug=self.kwargs['slug'])
+        self.person = Person.objects.get(slug=self.kwargs['slug'])
         return self.person
 
     """

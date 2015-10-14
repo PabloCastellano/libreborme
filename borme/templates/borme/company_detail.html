@@ -27,9 +27,13 @@
             {% for cargo in company.cargos_actuales %}
                 <tr>
                     <td>{{ cargo.title }}</td>
-                    <td><a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name|title }}</a></td>
-                    <td>{{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
-                    <td>{{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
+                    {% if cargo.type == 'person' %}
+                        <td><a href="{% url 'borme-persona' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
+                    {% else %}
+                        <td><a href="{% url 'borme-empresa' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
+                    {% endif %}
+                    <td>{{ cargo.date_from|default:"Desconocido" }}</td>
+                    <td>{{ cargo.date_to|default:"Desconocido" }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -53,9 +57,13 @@
             {% for cargo in company.cargos_historial %}
                 <tr>
                     <td>{{ cargo.title }}</td>
-                    <td><a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name|title }}</a></td>
-                    <td>{{ cargo.date_from|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
-                    <td>{{ cargo.date_to|date:"SHORT_DATE_FORMAT"|default:"Desconocido" }}</td>
+                    {% if cargo.type == 'person' %}
+                        <td><a href="{% url 'borme-persona' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
+                    {% else %}
+                        <td><a href="{% url 'borme-empresa' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
+                    {% endif %}
+                    <td>{{ cargo.date_from|default:"Desconocido" }}</td>
+                    <td>{{ cargo.date_to|default:"Desconocido" }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -87,7 +95,7 @@
                     {% for cargo in value %}
                         <tr>
                             <td>{{ cargo.title }}</td>
-                            <td><a href="{{ cargo.name.get_absolute_url }}">{{ cargo.name|title }}</a></td>
+                            <td><a href="{% url 'borme-persona' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -119,8 +127,8 @@
 
     <h2>BORMEs relacionados</h2>
     <ul>
-        {% for borme in bormes.values %}
-        <li><a href="{{ borme.get_absolute_url }}">{{ borme.cve }}</a>
+        {% for borme in company.in_bormes %}
+        <li><a href="{% url 'borme-borme' borme.cve %}">{{ borme.cve }}</a>
             <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
             <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
         </li>

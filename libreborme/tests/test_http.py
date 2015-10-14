@@ -5,8 +5,7 @@ from django.utils.six import StringIO
 from django.conf import settings
 
 from borme.models import Anuncio, Borme, Config, Company, Person
-from borme.tests.mongotestcase import MongoFixturesTestCase
-from django_mongoengine.tests import MongoTestCase
+from django.test import TestCase
 
 #from django.contrib.auth.models import User
 from django.utils import timezone
@@ -19,13 +18,7 @@ import os
 # what to check django tests
 # Envio de emails
 # Plantillas
-class TestBasicHttp(MongoTestCase):
-
-    # FIXME: Pq si no cargo person.json, los test van bien pero con company.json si fallan?
-    """
-    mongo_fixtures = {'Anuncio':'anuncio.json', 'Borme': 'borme.json', 'BormeLog': 'borme_log.json',
-                      'Company': 'company.json', 'Config': 'config.json', 'Person': 'person.json'}
-    """
+class TestBasicHttp(TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -99,7 +92,7 @@ class TestBasicHttp(MongoTestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class TestCommands(MongoTestCase):
+class TestCommands(TestCase):
 
     @classmethod
     def tearDownClass(cls):
