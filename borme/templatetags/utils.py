@@ -2,6 +2,8 @@
 
 from django.template.defaulttags import register
 from borme.models import CargoPerson, CargoCompany
+from django.utils.text import slugify
+
 from bormeparser.regex import is_acto_cargo as es_acto_cargo
 
 #from borme_parser import DICT_KEYWORDS
@@ -105,3 +107,15 @@ def rows_distributed(thelist, n):
             remainder -= 1
             offset += 1
     return rows
+
+
+@register.filter
+def date_isoformat(date):
+    if isinstance(date, datetime.datetime):
+        date = date.date()
+    return date.isoformat()
+
+
+@register.filter
+def slug(val):
+  return slugify(val)
