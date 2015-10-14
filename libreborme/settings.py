@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-from mongoengine.connection import connect, disconnect
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -34,19 +33,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #mongoengine.django.mongo_auth,
+    'django_hstore',
     'bootstrap',
     'borme',
     'libreborme',
-    'mongogeneric',
-    'mongodbforms',
 )
 
 if DEBUG:
     INSTALLED_APPS += (
         'django_extensions',
         'debug_toolbar',
-        'mongonaut',
 #        'django_nose',
     )
 
@@ -92,38 +88,16 @@ WSGI_APPLICATION = 'libreborme.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
-"""
-DATABASES = {
-    'default': {'ENGINE': 'django.db.backends.dummy'}
-}
-"""
-
-# No se usan pero se necesitan para que los tests no se quejen por usar
-# TestCase y tener una implementación de MongoTestCase incompleta.
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'libreborme',
+        'USER': 'libreborme',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
-
-# MongoDB Databases
-MONGODB_DATABASES = {
-    'default': {'name': 'libreborme'}
-}
-
-MONGODB_HOST = 'localhost'
-MONGODB_PORT = 27017
-MONGO_DATABASE_NAME = 'libreborme'
-connect(MONGO_DATABASE_NAME)
-
-AUTHENTICATION_BACKENDS = (
-    'django_mongoengine.auth.backends.MongoEngineBackend',
-)
-
-SESSION_ENGINE = 'django_mongoengine.sessions'
-MONGOENGINE_USER_DOCUMENT = 'django_mongoengine.auth.models.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -146,5 +120,3 @@ STATIC_URL = '/static/'
 
 PIWIK_URL = ''
 PIWIK_SITE_ID = ''
-
-TEST_RUNNER = 'borme.tests.mongotestrunner.MongoTestRunner'

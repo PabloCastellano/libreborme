@@ -92,19 +92,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #mongoengine.django.mongo_auth,
+    'django_hstore',
     'bootstrap',
     'borme',
     'libreborme',
-    'mongogeneric',
-    'mongodbforms',
 )
 
 if DEBUG:
     INSTALLED_APPS += (
         'django_extensions',
         'debug_toolbar',
-        'mongonaut',
     )
 
 #AUTH_USER_MODEL = 'profiles.Profile'

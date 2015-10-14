@@ -1,9 +1,9 @@
-from .models import Company, Borme, Anuncio, Person, CargoCompany, CargoPerson, BormeLog
-from mongoengine.errors import ValidationError, NotUniqueError
+from .models import Company, Borme, Anuncio, Person, BormeLog
 
 from django.conf import settings
+from django.db import IntegrityError
 from django.utils.text import slugify
-import datetime
+from django.utils import timezone
 
 import bormeparser
 from bormeparser.borme import BormeXML
@@ -12,6 +12,7 @@ from bormeparser.regex import is_company, is_acto_cargo_entrante
 from bormeparser.utils import FIRST_BORME
 
 import calendar
+import datetime
 import time
 import os
 
@@ -66,55 +67,54 @@ def _import1(borme):
     logger.info('\nBORME CVE: %s (%s)' % (borme.cve, borme.provincia))
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
 
-    borme_log, created = BormeLog.objects.get_or_create(borme_cve=borme.cve)
-    if created:
-        borme_log.date_created = datetime.datetime.now()
-        borme_log.date_updated = borme_log.date_created
-        borme_log.path = borme.filename
-        borme_log.save()
-    else:
-        borme_log.date_updated = datetime.datetime.now()
-        borme_log.save()
-        if borme_log.parsed:
-            logger.warn('%s ya ha sido analizado.' % borme.cve)
-            return results
+    try:
+        borme_log = BormeLog.objects.get(borme_cve=borme.cve)
+    except BormeLog.DoesNotExist:
+        borme_log = BormeLog(borme_cve=borme.cve, path=borme.filename)
 
-    nuevo_borme, created = Borme.objects.get_or_create(cve=borme.cve)
-    if created:
-        logger.debug('Creando borme %s' % borme.cve)
-        results['created_bormes'] += 1
-        nuevo_borme.date = borme.date
-        nuevo_borme.url = borme.url
-        nuevo_borme.from_reg = borme.anuncios_rango[0]
-        nuevo_borme.until_reg = borme.anuncios_rango[1]
-        nuevo_borme.province = borme.provincia.name
-        nuevo_borme.section = borme.seccion
+    borme_log.save()  # date_updated
+    if borme_log.parsed:
+        logger.warn('%s ya ha sido analizado.' % borme.cve)
+        return results
+
+    try:
+        nuevo_borme = Borme.objects.get(cve=borme.cve)
+    except Borme.DoesNotExist:
+        nuevo_borme = Borme(cve=borme.cve, date=borme.date, url=borme.url, from_reg=borme.anuncios_rango[0],
+                            until_reg=borme.anuncios_rango[1], province=borme.provincia.name, section=borme.seccion)
         #year, type, from_page, until_page, pages
         # num?, filename?
+        logger.debug('Creando borme %s' % borme.cve)
+        nuevo_borme.save()
+        results['created_bormes'] += 1
 
+    #import pdb; pdb.set_trace()
+
+    borme_embed = {'cve': nuevo_borme.cve, 'url': nuevo_borme.url}
     for n, anuncio in enumerate(borme.get_anuncios(), 1):
         try:
             logger.debug('%d: Importando anuncio: %s' % (n, anuncio))
             try:
-                company, created = Company.objects.get_or_create(name=anuncio.empresa)
-                if created:
-                    logger.debug('Creando empresa %s' % anuncio.empresa)
-                    results['created_companies'] += 1
-            except NotUniqueError as e:
+                company = Company.objects.get(name=anuncio.empresa)
+            except Company.DoesNotExist:
+                company = Company(name=anuncio.empresa)
+                logger.debug('Creando empresa %s' % anuncio.empresa)
+                results['created_companies'] += 1
+            except IntegrityError:
                 slug_c = slugify(anuncio.empresa)
                 company = Company.objects.get(slug=slug_c)
                 logger.warn('[%s] WARNING: Empresa similar. Mismo slug: %s' % (borme.cve, slug_c))
                 logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, company.name, borme.cve, anuncio.empresa))
                 results['errors'] += 1
-            company.add_in_bormes(nuevo_borme)
+            company.add_in_bormes(borme_embed)
 
-            nuevo_anuncio, created = Anuncio.objects.get_or_create(id_anuncio=anuncio.id)
-            if created:
+            try:
+                nuevo_anuncio = Anuncio.objects.get(id_anuncio=anuncio.id)
+            except Anuncio.DoesNotExist:
+                nuevo_anuncio = Anuncio(id_anuncio=anuncio.id, borme=nuevo_borme,
+                                        datos_registrales=anuncio.datos_registrales)
                 logger.debug('Creando anuncio %d: %s' % (anuncio.id, anuncio.empresa))
                 results['created_anuncios'] += 1
-                nuevo_anuncio.borme = nuevo_borme
-                nuevo_anuncio.company = company
-                nuevo_anuncio.datos_registrales = anuncio.datos_registrales
 
             for acto in anuncio.get_borme_actos():
                 logger.debug(acto.name)
@@ -132,7 +132,7 @@ def _import1(borme):
                                         logger.debug('Creando empresa: %s' % nombre)
                                         results['created_companies'] += 1
 
-                                except NotUniqueError as e:
+                                except IntegrityError:
                                     slug_c = slugify(nombre)
                                     c = Company.objects.get(slug=slug_c)
                                     logger.warn('[%s] WARNING: Empresa similar. Mismo slug: %s' % (borme.cve, slug_c))
@@ -140,15 +140,16 @@ def _import1(borme):
                                     results['errors'] += 1
 
                                 c.anuncios.append(anuncio.id)
-                                c.add_in_bormes(nuevo_borme)
-                                cargo = CargoCompany(title=nombre_cargo, name=c)
+                                c.add_in_bormes(borme_embed)
+
+                                cargo = {'title': nombre_cargo, 'name': c.name, 'type': 'company'}
                                 if is_acto_cargo_entrante(acto.name):
-                                    cargo.date_from = borme.date
-                                    cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_from=borme.date)
+                                    cargo['date_from'] = borme.date.isoformat()
+                                    cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_from': borme.date.isoformat(), 'type': 'company'}
                                     c.update_cargos_entrantes([cargo_embed])
                                 else:
-                                     cargo.date_to = borme.date
-                                     cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_to=borme.date)
+                                     cargo['date_to'] = borme.date.isoformat()
+                                     cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_to': borme.date.isoformat(), 'type': 'company'}
                                      c.update_cargos_salientes([cargo_embed])
                                 c.save()
                             else:
@@ -158,26 +159,28 @@ def _import1(borme):
                                         logger.debug('Creando persona: %s' % nombre)
                                         results['created_persons'] += 1
 
-                                except NotUniqueError as e:
+                                except IntegrityError:
                                     slug_p = slugify(nombre)
                                     p = Person.objects.get(slug=slug_p)
                                     logger.warn('[%s] WARNING: Persona similar. Mismo slug: %s' % (borme.cve, slug_p))
                                     logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, p.name, borme.cve, nombre))
                                     results['errors'] += 1
 
-                                p.in_companies.append(company)
-                                p.add_in_bormes(nuevo_borme)
-                                cargo = CargoPerson(title=nombre_cargo, name=p)
+                                p.in_company.append(company.name)
+                                p.add_in_bormes(borme_embed)
+
+                                cargo = {'title': nombre_cargo, 'name': p.name, 'type': 'person'}
                                 if is_acto_cargo_entrante(acto.name):
-                                    cargo.date_from = borme.date
-                                    cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_from=borme.date)
+                                    cargo['date_from'] = borme.date.isoformat()  # TODO: datetime.date
+                                    # TODO: Ahora guarda serializado python: '[{"date_from": "2009-01-02", "name": "MOORE STEPHENS FIDELITAS AUDITORES SOCIEDAD LIMITA", "title": "Auditor"}]'
+                                    cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_from': borme.date.isoformat(), 'type': 'person'}
                                     p.update_cargos_entrantes([cargo_embed])
                                 else:
-                                    cargo.date_to = borme.date
-                                    cargo_embed = CargoCompany(title=nombre_cargo, name=company, date_to=borme.date)
+                                    cargo['date_to'] = borme.date.isoformat()
+                                    cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_from': borme.date.isoformat(), 'type': 'person'}
                                     p.update_cargos_salientes([cargo_embed])
-                                p.save()
 
+                                p.save()
                             lista_cargos.append(cargo)
 
                         kk = acto.name.replace('.', '||')
@@ -194,14 +197,15 @@ def _import1(borme):
                     kk = acto.name.replace('.', '||')
                     nuevo_anuncio.actos[kk] = acto.value
 
-            nuevo_anuncio.save()
             company.anuncios.append(anuncio.id)
             company.save()
+            nuevo_anuncio.company=company
+            nuevo_anuncio.save()
             nuevo_borme.anuncios.append(anuncio.id)
 
-        except ValidationError as e:
+        except Exception as e:
             logger.error('[%s] ERROR importing anuncio %d' % (borme.cve, anuncio.id))
-            logger.error(e)
+            logger.error('[X] %s: %s' % (e.__class__.__name__, e))
             results['errors'] += 1
 
     nuevo_borme.save()
@@ -384,7 +388,7 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
 
 def import_borme_pdf(filename):
     """
-    Import BORME PDF to MongoDB database
+    Import BORME PDF to database
     """
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
 
@@ -402,7 +406,7 @@ def import_borme_pdf(filename):
 
 def import_borme_json(filename):
     """
-    Import BORME JSON to MongoDB database
+    Import BORME JSON to database
     """
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
 

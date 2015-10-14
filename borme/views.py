@@ -1,5 +1,5 @@
-from mongogeneric.list import ListView
-from mongogeneric.detail import DetailView
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger

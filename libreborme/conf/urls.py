@@ -20,7 +20,6 @@ if settings.DEBUG:
     admin.autodiscover()
 
     urlpatterns += url(r'^admin/', include(admin.site.urls)),
-    urlpatterns += url(r'^mongonaut/', include('mongonaut.urls')),
 
 
 if settings.DEBUG and settings.SERVE_STATIC:

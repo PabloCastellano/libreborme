@@ -16,4 +16,3 @@ if DEBUG:
     admin.autodiscover()
 
     urlpatterns += url(r'^admin/', include(admin.site.urls)),
-    urlpatterns += url(r'^mongonaut/', include('mongonaut.urls')),

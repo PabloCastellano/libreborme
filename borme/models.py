@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
+from django.contrib import admin
 from django.utils.text import slugify
 from django.core.urlresolvers import reverse
 from django.core.exceptions import FieldError
+from django.contrib.postgres.fields import ArrayField
 
-from mongoengine import *
-from django_mongoengine.utils.module import Document
+from django.db.models import *
 from bormeparser.regex import SOCIEDADES as SOCIEDADES_DICT
+from django_hstore import hstore
 
 #from borme_parser import DICT_KEYWORDS
 DICT_KEYWORDS = {}  # FIXME
@@ -20,11 +22,16 @@ PROVINCES = (
 )
 
 
-class CargoCompany(EmbeddedDocument):
-    title = StringField()
-    name = ReferenceField('Company')
+"""
+class CargoCompany(Model):
+    title = CharField(max_length=50)
+    name = ForeignKey('Company')
     date_from = DateTimeField()
-    date_to = DateTimeField()
+    date_to = DateField()
+
+    def get_absolute_url(self):
+        slug = slugify(self.name)
+        return reverse('borme-empresa', args=[slug])
 
     def __str__(self):
         d_from = ''
@@ -37,11 +44,15 @@ class CargoCompany(EmbeddedDocument):
 
 
 # TODO: subclass CargoCompany
-class CargoPerson(EmbeddedDocument):
-    title = StringField()
-    name = ReferenceField('Person')
+class CargoPerson(Model):
+    title = CharField(max_length=50)
+    name = ForeignKey('Person')
     date_from = DateTimeField()
-    date_to = DateTimeField()
+    date_to = DateField()
+
+    def get_absolute_url(self):
+        slug = slugify(self.name)
+        return reverse('borme-persona', args=[slug])
 
     def __str__(self):
         d_from = ''
@@ -51,25 +62,25 @@ class CargoPerson(EmbeddedDocument):
         if self.date_to:
             d_to = 'To: %s' % self.date_to.strftime('%x')
         return '%s: %s (%s %s)' % (self.title, self.name, d_from, d_to)
+"""
 
-
-class Borme(Document):
+class Borme(Model):
     """ Edicion de BORME """
-    cve = StringField(max_length=30)
-    date = DateTimeField()
-    year = IntField()
+    cve = CharField(max_length=30, primary_key=True)
+    date = DateField()
+    #year = IntegerField()
     url = URLField()
-    #url = StringField(max_length=100)
-    type = StringField(max_length=1)
-    from_reg = IntField()
-    until_reg = IntField()
-    from_page = IntField()
-    until_page = IntField()
-    #province = StringField(max_length=100, choices=PROVINCES)
-    province = StringField(max_length=100)
-    section = StringField(max_length=20)
-    pages = IntField()
-    anuncios = ListField(IntField())
+    #url = CharField(max_length=100)
+    #type = CharField(max_length=1)
+    from_reg = IntegerField()
+    until_reg = IntegerField()
+    #from_page = IntegerField()
+    #until_page = IntegerField()
+    #province = CharField(max_length=100, choices=PROVINCES)
+    province = CharField(max_length=100)
+    section = CharField(max_length=20)
+    #pages = IntegerField()
+    anuncios = ArrayField(IntegerField(), default=list)
 
     def get_absolute_url(self):
         return reverse('borme-borme', args=[str(self.cve)])
@@ -78,15 +89,15 @@ class Borme(Document):
         return self.cve
 
 
-class Person(Document):
+class Person(Model):
     """ Persona """
-    name = StringField(max_length=200)
-    slug = StringField(unique=True)
-    in_companies = ListField(ReferenceField('Company'))
-    in_bormes = ListField(ReferenceField('Borme'))
+    name = CharField(max_length=200)
+    slug = CharField(max_length=200, unique=True)
+    in_companies = ArrayField(CharField(max_length=250), default=list)
+    in_bormes = ArrayField(hstore.DictionaryField(), default=list)
 
-    cargos_actuales = ListField(EmbeddedDocumentField('CargoCompany'))
-    cargos_historial = ListField(EmbeddedDocumentField('CargoCompany'))
+    cargos_actuales = ArrayField(hstore.DictionaryField(), default=list)
+    cargos_historial = ArrayField(hstore.DictionaryField(), default=list)
 
     # last access
     # number of visits
@@ -125,22 +136,22 @@ class Person(Document):
         return self.name
 
 
-class Company(Document):
+class Company(Model):
     """ Sociedad """
-    name = StringField(max_length=250)
-    nif = StringField(max_length=10)
-    slug = StringField(unique=True)
-    date_creation = DateTimeField()
+    name = CharField(max_length=250)
+    nif = CharField(max_length=10)
+    slug = CharField(max_length=250, unique=True)
+    date_creation = DateField(blank=True, null=True)
     is_active = BooleanField(default=False)
-    type = StringField(choices=SOCIEDADES)
+    type = CharField(max_length=50, choices=SOCIEDADES)
 
-    in_bormes = ListField(ReferenceField('Borme'))
-    anuncios = ListField(IntField())
+    in_bormes = ArrayField(hstore.DictionaryField(), default=list)
+    anuncios = ArrayField(IntegerField(), default=list)
 
-    cargos_actuales_p = ListField(EmbeddedDocumentField('CargoPerson'))
-    cargos_actuales_c = ListField(EmbeddedDocumentField('CargoCompany'))
-    cargos_historial_p = ListField(EmbeddedDocumentField('CargoPerson'))
-    cargos_historial_c = ListField(EmbeddedDocumentField('CargoCompany'))
+    cargos_actuales_p = ArrayField(hstore.DictionaryField(), default=list)
+    cargos_actuales_c = ArrayField(hstore.DictionaryField(), default=list)
+    cargos_historial_p = ArrayField(hstore.DictionaryField(), default=list)
+    cargos_historial_c = ArrayField(hstore.DictionaryField(), default=list)
 
     def add_in_bormes(self, borme):
         if not borme in self.in_bormes:
@@ -169,9 +180,9 @@ class Company(Document):
         """ cargos = [CargoCompany/CargoPerson] """
 
         for cargo in cargos:
-            if isinstance(cargo, CargoCompany):
+            if cargo['type'] == 'company':
                 self.cargos_actuales_c.append(cargo)
-            elif isinstance(cargo, CargoPerson):
+            elif cargo['type'] == 'person':
                 self.cargos_actuales_p.append(cargo)
         #self.cargos_actuales_p.extend(cargos)
 
@@ -179,11 +190,11 @@ class Company(Document):
         """ cargos = [CargoCompany/CargoPerson] """
 
         for cargo in cargos:
-            if isinstance(cargo, CargoCompany):
+            if cargo['type'] == 'company':
                 if cargo in self.cargos_actuales_c:
                     self.cargos_actuales_c.remove(cargo)
                 self.cargos_historial_c.append(cargo)
-            elif isinstance(cargo, CargoPerson):
+            elif cargo['type'] == 'person':
                 if cargo in self.cargos_actuales_p:
                     self.cargos_actuales_p.remove(cargo)
                 self.cargos_historial_p.append(cargo)
@@ -195,12 +206,14 @@ class Company(Document):
         return self.name
 
 
-class Anuncio(Document):
-    id_anuncio = IntField()
-    borme = ReferenceField('Borme')
-    company = ReferenceField('Company')
-    datos_registrales = StringField()
-    actos = DictField()
+class Anuncio(Model):
+    id_anuncio = IntegerField(primary_key=True)
+    borme = ForeignKey('Borme')
+    company = ForeignKey('Company')
+    datos_registrales = CharField(max_length=70)
+    actos = hstore.SerializedDictionaryField()  # TODO: schema={...}  # TODO: Actos repetidos
+
+    #objects = hstore.HStoreManager()
 
     def get_absolute_url(self):
         return reverse('borme-anuncio', args=[str(self.id_anuncio)])
@@ -209,16 +222,28 @@ class Anuncio(Document):
         return '%d (%d actos)' % (self.id_anuncio, len(self.actos.keys()))
 
 
-class Config(Document):
+class Config(Model):
     last_modified = DateTimeField()
-    version = StringField()
+    version = CharField(max_length=50)
 
 
-class BormeLog(Document):
-    date_created = DateTimeField()
-    date_updated = DateTimeField()
-    date_parsed = DateTimeField()
-    borme_cve = StringField(max_length=30)
+class BormeLog(Model):
+    date_created = DateTimeField(auto_now_add=True)
+    date_updated = DateTimeField(auto_now=True)
+    date_parsed = DateTimeField(blank=True, null=True)
+    borme_cve = CharField(max_length=30)
     parsed = BooleanField(default=False)
-    errors = IntField(default=0)
-    path = StringField()
+    errors = IntegerField(default=0)
+    path = CharField(max_length=200)
+
+
+admin.site.register(Borme)
+admin.site.register(Person)
+admin.site.register(Company)
+admin.site.register(Anuncio)
+admin.site.register(Config)
+admin.site.register(BormeLog)
+"""
+admin.site.register(CargoPerson)
+admin.site.register(CargoCompany)
+"""

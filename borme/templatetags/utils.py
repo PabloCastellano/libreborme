@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.template.defaulttags import register
-from borme.models import CargoPerson, CargoCompany
 from django.utils.text import slugify
 
 from bormeparser.regex import is_acto_cargo as es_acto_cargo
