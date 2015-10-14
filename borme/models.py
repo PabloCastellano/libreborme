@@ -91,6 +91,10 @@ class Person(Document):
     # last access
     # number of visits
 
+    def add_in_company(self, company):
+        if not company in self.in_companies:
+            self.in_companies.append(company)
+
     def add_in_bormes(self, borme):
         if not borme in self.in_bormes:
             self.in_bormes.append(borme)
