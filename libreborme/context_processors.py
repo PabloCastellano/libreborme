@@ -7,4 +7,5 @@ def piwik(request):
 
 def common(request):
     config = Config.objects.first()
-    return {'version': config.version}
+    version = getattr(config, 'version', 'Unknown')
+    return {'version': version}
