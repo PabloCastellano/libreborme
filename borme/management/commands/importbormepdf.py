@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from django.core.management.base import BaseCommand, CommandError
+from django.utils import timezone
 from borme.models import Config
 
 import time
 import logging
-from datetime import datetime
+
 from libreborme.utils import get_git_revision_short_hash
 from borme.utils import import_borme_pdf
 import borme.utils
@@ -36,9 +37,9 @@ class Command(BaseCommand):
 
             config = Config.objects.first()
             if config:
-                config.last_modified = datetime.today()
+                config.last_modified = timezone.now()
             else:
-                config = Config(last_modified=datetime.today())
+                config = Config(last_modified=timezone.now())
             config.version = get_git_revision_short_hash()
             config.save()
 

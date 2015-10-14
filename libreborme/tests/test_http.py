@@ -9,10 +9,10 @@ from borme.tests.mongotestcase import MongoFixturesTestCase
 from django_mongoengine.tests import MongoTestCase
 
 #from django.contrib.auth.models import User
-#from mongoengine.django.auth import User
+from django.utils import timezone
 
 import os
-from datetime import datetime
+
 
 
 # parametros django call_command
@@ -31,7 +31,7 @@ class TestBasicHttp(MongoTestCase):
     def setUpClass(cls):
         Company(name='EMPRESA RANDOM SL').save()
         Person(name='PERSONA RANDOM').save()
-        Config(version='test', last_modified=datetime.now()).save()
+        Config(version='test', last_modified=timezone.now()).save()
         super(TestBasicHttp, cls).setUpClass()
 
     # This method run on every test

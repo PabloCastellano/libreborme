@@ -1,5 +1,4 @@
 import os
-from mongoengine import connect
 from django.conf import settings
 
 
@@ -20,9 +19,6 @@ DEBUG = True
 DOMAIN = '<domain>'
 SUBDIR = '/'  # edit this line if you are installing in a sub directory, like /libreborme
 SITE_NAME = '{{ project_name }}'  # site name, you can change this
-
-MONGO_DATABASE_NAME = 'libreborme'
-MONGODB = connect(MONGO_DATABASE_NAME)
 
 # import the default libreborme settings
 # do not move this import

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from django.core.management.base import BaseCommand, CommandError
+from django.utils import timezone
 from borme.models import Config
 
-import time
 import datetime
-from libreborme.utils import get_git_revision_short_hash
+import time
+
 from borme.utils import import_borme_download, update_previous_xml
 
 
@@ -24,9 +25,9 @@ class Command(BaseCommand):
 
             config = Config.objects.first()
             if config:
-                config.last_modified = datetime.datetime.today()
+                config.last_modified = timezone.now()
             else:
-                config = Config(last_modified=datetime.datetime.today())
+                config = Config(last_modified=timezone.now())
             config.save()
 
         # Elapsed time

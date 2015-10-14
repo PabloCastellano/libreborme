@@ -212,7 +212,7 @@ def _import1(borme):
 
     borme_log.errors = results['errors']
     borme_log.parsed = True  # FIXME: Si hay ValidationError, parsed = False
-    borme_log.date_parsed = datetime.datetime.now()
+    borme_log.date_parsed = timezone.now()
     borme_log.save()
     return results
 
@@ -318,7 +318,7 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
         pdf_path = get_borme_pdf_path(bxml.date)
         os.makedirs(pdf_path, exist_ok=True)
         logger.info('============================================================')
-        logger.info('Ran import_borme_download at %s' % datetime.datetime.now())
+        logger.info('Ran import_borme_download at %s' % timezone.now())
         logger.info('  Import date: %s. Section: %s' % (bxml.date.isoformat(), seccion))
         logger.info('============================================================')
         logger.info(pdf_path)

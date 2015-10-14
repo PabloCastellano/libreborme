@@ -5,6 +5,8 @@ from django.utils.text import slugify
 
 from bormeparser.regex import is_acto_cargo as es_acto_cargo
 
+import datetime
+
 #from borme_parser import DICT_KEYWORDS
 DICT_KEYWORDS = {}  # FIXME
 
