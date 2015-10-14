@@ -4,11 +4,10 @@ from django.contrib import admin
 from django.utils.text import slugify
 from django.core.urlresolvers import reverse
 from django.core.exceptions import FieldError
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField, HStoreField
 
 from django.db.models import *
 from bormeparser.regex import SOCIEDADES as SOCIEDADES_DICT
-from django_hstore import hstore
 
 #from borme_parser import DICT_KEYWORDS
 DICT_KEYWORDS = {}  # FIXME
@@ -64,6 +63,7 @@ class CargoPerson(Model):
         return '%s: %s (%s %s)' % (self.title, self.name, d_from, d_to)
 """
 
+
 class Borme(Model):
     """ Edicion de BORME """
     cve = CharField(max_length=30, primary_key=True)
@@ -96,8 +96,8 @@ class Person(Model):
     in_companies = ArrayField(CharField(max_length=250), default=list)
     in_bormes = ArrayField(hstore.DictionaryField(), default=list)
 
-    cargos_actuales = ArrayField(hstore.DictionaryField(), default=list)
-    cargos_historial = ArrayField(hstore.DictionaryField(), default=list)
+    cargos_actuales = ArrayField(HStoreField(), default=list)
+    cargos_historial = ArrayField(HStoreField(), default=list)
 
     # last access
     # number of visits
@@ -148,10 +148,10 @@ class Company(Model):
     in_bormes = ArrayField(hstore.DictionaryField(), default=list)
     anuncios = ArrayField(IntegerField(), default=list)
 
-    cargos_actuales_p = ArrayField(hstore.DictionaryField(), default=list)
-    cargos_actuales_c = ArrayField(hstore.DictionaryField(), default=list)
-    cargos_historial_p = ArrayField(hstore.DictionaryField(), default=list)
-    cargos_historial_c = ArrayField(hstore.DictionaryField(), default=list)
+    cargos_actuales_p = ArrayField(HStoreField(), default=list)
+    cargos_actuales_c = ArrayField(HStoreField(), default=list)
+    cargos_historial_p = ArrayField(HStoreField(), default=list)
+    cargos_historial_c = ArrayField(HStoreField(), default=list)
 
     def add_in_bormes(self, borme):
         if not borme in self.in_bormes:
@@ -210,10 +210,8 @@ class Anuncio(Model):
     id_anuncio = IntegerField(primary_key=True)
     borme = ForeignKey('Borme')
     company = ForeignKey('Company')
-    datos_registrales = CharField(max_length=70)
-    actos = hstore.SerializedDictionaryField()  # TODO: schema={...}  # TODO: Actos repetidos
-
-    #objects = hstore.HStoreManager()
+    datos_registrales = CharField(max_length=60)
+    actos = HStoreField()  # TODO: Actos repetidos
 
     def get_absolute_url(self):
         return reverse('borme-anuncio', args=[str(self.id_anuncio)])

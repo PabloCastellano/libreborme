@@ -112,7 +112,7 @@ def _import1(borme):
                 nuevo_anuncio = Anuncio.objects.get(id_anuncio=anuncio.id)
             except Anuncio.DoesNotExist:
                 nuevo_anuncio = Anuncio(id_anuncio=anuncio.id, borme=nuevo_borme,
-                                        datos_registrales=anuncio.datos_registrales)
+                                        datos_registrales=anuncio.datos_registrales, actos={})
                 logger.debug('Creando anuncio %d: %s' % (anuncio.id, anuncio.empresa))
                 results['created_anuncios'] += 1
 
@@ -166,7 +166,7 @@ def _import1(borme):
                                     logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, p.name, borme.cve, nombre))
                                     results['errors'] += 1
 
-                                p.in_company.append(company.name)
+                                p.in_companies.append(company)
                                 p.add_in_bormes(borme_embed)
 
                                 cargo = {'title': nombre_cargo, 'name': p.name, 'type': 'person'}

@@ -3,7 +3,6 @@ git+https://github.com/PabloCastellano/bormeparser.git#egg=bormeparser
 Django==1.8.5
 django-bootstrap-static==3.3.5
 django-debug-toolbar==1.3.2
-django-hstore==1.4
 ecdsa==0.13
 Fabric==1.10.2
 greenlet==0.4.9
