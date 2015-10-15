@@ -17,7 +17,7 @@ class TestImport(MongoTestCase):
 
     def test_import_borme_mongo(self):
         #FIXME: HOME
-        import_borme_pdf(os.path.expanduser('~/.bormes/pdf/BORME-A-2015-27-10.pdf'))
+        import_borme_pdf(os.path.expanduser('~/.bormes/pdf/2015/02/10/BORME-A-2015-27-10.pdf'))
         find = Borme.objects.filter(cve='BORME-A-2015-27-10')
         self.assertEqual(len(find), 1)
         self.assertEqual(Anuncio.objects.count(), 30)
