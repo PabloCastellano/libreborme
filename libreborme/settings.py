@@ -155,4 +155,4 @@ BORME_PDF_ROOT = os.path.join(BORME_ROOT, 'pdf')
 BORME_XML_ROOT = os.path.join(BORME_ROOT, 'xml')
 BORME_JSON_ROOT = os.path.join(BORME_ROOT, 'json')
 
-BORME_LOG_ROOT = os.path.join(SITE_ROOT, '..', 'log')
+BORME_LOG_ROOT = os.path.join(BASE_DIR, '..', 'log')
