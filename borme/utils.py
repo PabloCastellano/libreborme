@@ -276,18 +276,18 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
             end = datetime.date(date[0], date[1], lastday)
             try:
                 begin = datetime.date(date[0], date[1], 1)
-                ret, _ = _import_borme_download_range2(begin, end, seccion, download)
+                ret, _ = _import_borme_download_range2(begin, end, seccion, download, strict=True)
             except BormeDoesntExistException:
                 try:
                     begin = datetime.date(date[0], date[1], 2)
-                    ret, _ = _import_borme_download_range2(begin, end, seccion, download)
+                    ret, _ = _import_borme_download_range2(begin, end, seccion, download, strict=True)
                 except BormeDoesntExistException:
                     try:
                         begin = datetime.date(date[0], date[1], 3)
-                        ret, _ = _import_borme_download_range2(begin, end, seccion, download)
+                        ret, _ = _import_borme_download_range2(begin, end, seccion, download, strict=True)
                     except BormeDoesntExistException:
                         begin = datetime.date(date[0], date[1], 4)
-                        ret, _ = _import_borme_download_range2(begin, end, seccion, download)
+                        ret, _ = _import_borme_download_range2(begin, end, seccion, download, strict=True)
             return ret
 
         elif len(date) == 1:  # 2015
