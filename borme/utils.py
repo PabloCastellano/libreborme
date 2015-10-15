@@ -242,14 +242,19 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
             end = datetime.date(date[0], date[1], lastday)
             try:
                 begin = datetime.date(date[0], date[1], 1)
+                ret, _ = _import_borme_download_range2(begin, end, seccion, download)
             except BormeDoesntExistException:
                 try:
                     begin = datetime.date(date[0], date[1], 2)
+                    ret, _ = _import_borme_download_range2(begin, end, seccion, download)
                 except BormeDoesntExistException:
                     try:
                         begin = datetime.date(date[0], date[1], 3)
+                        ret, _ = _import_borme_download_range2(begin, end, seccion, download)
                     except BormeDoesntExistException:
                         begin = datetime.date(date[0], date[1], 4)
+                        ret, _ = _import_borme_download_range2(begin, end, seccion, download)
+            return ret
 
         elif len(date) == 1:  # 2015
             begin = FIRST_BORME[date[0]]
