@@ -22,7 +22,6 @@ install:
 before_script:
   - psql template1 -c 'CREATE EXTENSION hstore;'
   - psql -U postgres -c 'CREATE DATABASE libreborme;'
-  - cd tests
   - ./manage.py migrate --noinput --no-initial-data
 
 # command to run tests, e.g. python setup.py test
