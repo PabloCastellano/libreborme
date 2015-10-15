@@ -25,6 +25,7 @@ y para lo que quieras.
 Para más información puedes leer las siguientes entradas en el blog del autor:
 - [Qué es LibreBORME](https://pablog.me/blog/2015/02/que-es-libreborme/) - [What is LibreBORME](https://pablog.me/que-es-libreborme-en.html) (25 de febrero de 2015)
 - [Versión online de LibreBORME](https://pablog.me/blog/2015/03/version-online-de-libreborme/) (31 de marzo de 2015)
+- [LibreBORME tercer premio en el I Certamen de Proyectos Libres de la UGR](https://pablog.me/blog/2015/07/libreborme-tercer-premio-en-el-i-certamen-de-proyectos-libres-de-la-ugr/) (15 de julio de 2015)
 
 
 Instalación
