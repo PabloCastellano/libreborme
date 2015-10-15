@@ -102,7 +102,7 @@ class Person(Model):
     # last access
     # number of visits
 
-    def add_in_company(self, company):
+    def add_in_companies(self, company):
         if not company in self.in_companies:
             self.in_companies.append(company)
 

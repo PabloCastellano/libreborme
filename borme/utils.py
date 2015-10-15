@@ -166,7 +166,7 @@ def _import1(borme):
                                     logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, p.name, borme.cve, nombre))
                                     results['errors'] += 1
 
-                                p.in_company.append(company.name)
+                                p.add_in_companies(company.name)
                                 p.add_in_bormes(borme_embed)
 
                                 cargo = {'title': nombre_cargo, 'name': p.name, 'type': 'person'}
