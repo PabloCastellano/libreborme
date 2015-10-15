@@ -273,8 +273,17 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
                 return False
         elif len(date) == 2:  # 2015-06
             _, lastday = calendar.monthrange(*date)
-            begin = datetime.date(date[0], date[1], 1)
             end = datetime.date(date[0], date[1], lastday)
+            try:
+                begin = datetime.date(date[0], date[1], 1)
+            except BormeDoesntExistException:
+                try:
+                    begin = datetime.date(date[0], date[1], 2)
+                except BormeDoesntExistException:
+                    try:
+                        begin = datetime.date(date[0], date[1], 3)
+                    except BormeDoesntExistException:
+                        begin = datetime.date(date[0], date[1], 4)
 
         elif len(date) == 1:  # 2015
             begin = FIRST_BORME[date[0]]
