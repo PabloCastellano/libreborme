@@ -148,3 +148,11 @@ PIWIK_URL = ''
 PIWIK_SITE_ID = ''
 
 TEST_RUNNER = 'borme.tests.mongotestrunner.MongoTestRunner'
+
+# BORME
+BORME_ROOT = os.path.expanduser('~/.bormes')
+BORME_PDF_ROOT = os.path.join(BORME_ROOT, 'pdf')
+BORME_XML_ROOT = os.path.join(BORME_ROOT, 'xml')
+BORME_JSON_ROOT = os.path.join(BORME_ROOT, 'json')
+
+BORME_LOG_ROOT = os.path.join(SITE_ROOT, '..', 'log')
