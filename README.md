@@ -32,6 +32,11 @@ Instalación
 
 Para instrucciones de cómo montar tu propia instancia de LibreBORME, echa un vistazo a [INSTALL.md](INSTALL.md).
 
+Documentación
+-------------
+
+La documentación está incluída en la carpeta docs/. También se puede consultar la última versión online en [https://libreborme.readthedocs.org/en/latest/](https://libreborme.readthedocs.org/en/latest/).
+
 Contribuciones
 --------------
 
