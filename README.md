@@ -5,7 +5,7 @@
 [![Documentation Status](https://readthedocs.org/projects/libreborme/badge/?version=latest)](https://readthedocs.org/projects/libreborme/?badge=latest)
 [![Requirements Status](https://requires.io/github/PabloCastellano/libreborme/requirements.svg?branch=master)](https://requires.io/github/PabloCastellano/libreborme/requirements/?branch=master)
 
-En estos momentos hay una versión en producción en https://beta.libreborme.net. Como su dominio indica, es una versión de pruebas, por lo que
+En estos momentos hay una versión en producción en https://libreborme.net. Es una versión de pruebas, por lo que
 fallará de vez en cuando, sus URLs cambiarán, a veces contendrá más datos y otras veces menos...
 
 Tenlo en cuenta si la usas. De momento no hace falta que se reporten los bugs.
@@ -25,14 +25,6 @@ y para lo que quieras.
 Para más información puedes leer las siguientes entradas en el blog del autor:
 - [Qué es LibreBORME](https://pablog.me/blog/2015/02/que-es-libreborme/) - [What is LibreBORME](https://pablog.me/que-es-libreborme-en.html) (25 de febrero de 2015)
 - [Versión online de LibreBORME](https://pablog.me/blog/2015/03/version-online-de-libreborme/) (31 de marzo de 2015)
-
-Concursos
---------
-
-Este proyecto participa en los siguientes concursos:
-
-- [Concurso Universitario de Software Libre](https://www.concursosoftwarelibre.org/1415/) [(Bases)](https://www.concursosoftwarelibre.org/1415/bases)
-- [Certamen de Proyectos Libres de la UGR](http://osl.ugr.es/2014/09/26/premios-a-proyectos-libres-de-la-ugr/) [(Bases)](http://osl.ugr.es/bases-de-los-premios-a-proyectos-libres-de-la-ugr/).
 
 
 Instalación
