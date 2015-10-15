@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.core.management.base import BaseCommand
+from django.utils import timezone
+
 from borme.models import Config
 
 from libreborme.utils import get_git_revision_short_hash
@@ -16,5 +18,6 @@ class Command(BaseCommand):
         if config:
             config.version = version
         else:
-            config = Config(version=version)
+            date = timezone.make_aware(timezone.datetime(2000, 1, 1))
+            config = Config(version=version, last_modified=date)
         config.save()
