@@ -42,7 +42,7 @@ class LibreBormeCalendar(HTMLCalendar):
         """
 
         if day == 0:
-            return '<td class="noday">&nbsp;</td>' # day outside month
+            return '<td class="noday">&nbsp;</td>'  # day outside month
         elif self.today == datetime.date(self.year, self.month, day):
             last_modified = Config.objects.first().last_modified.date()
             if self.today == last_modified:
@@ -199,7 +199,7 @@ def _import1(borme):
 
             company.anuncios.append(anuncio.id)
             company.save()
-            nuevo_anuncio.company=company
+            nuevo_anuncio.company = company
             nuevo_anuncio.save()
             nuevo_borme.anuncios.append(anuncio.id)
 
@@ -276,14 +276,19 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
             end = datetime.date(date[0], date[1], lastday)
             try:
                 begin = datetime.date(date[0], date[1], 1)
+                ret, _ = _import_borme_download_range2(begin, end, seccion, download)
             except BormeDoesntExistException:
                 try:
                     begin = datetime.date(date[0], date[1], 2)
+                    ret, _ = _import_borme_download_range2(begin, end, seccion, download)
                 except BormeDoesntExistException:
                     try:
                         begin = datetime.date(date[0], date[1], 3)
+                        ret, _ = _import_borme_download_range2(begin, end, seccion, download)
                     except BormeDoesntExistException:
                         begin = datetime.date(date[0], date[1], 4)
+                        ret, _ = _import_borme_download_range2(begin, end, seccion, download)
+            return ret
 
         elif len(date) == 1:  # 2015
             begin = FIRST_BORME[date[0]]
