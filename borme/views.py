@@ -3,6 +3,7 @@ from django.views.generic.detail import DetailView
 
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import Http404
 from django.utils.safestring import mark_safe
 
 from .models import Company, Person, Anuncio, Config, Borme
@@ -99,8 +100,11 @@ class AnuncioView(DetailView):
     context_object_name = 'anuncio'
 
     def get_object(self):
-        self.anuncio = Anuncio.objects.get(id_anuncio=self.kwargs['id'])
-        return self.anuncio
+        try:
+            self.anuncio = Anuncio.objects.get(id_anuncio=self.kwargs['id'])
+            return self.anuncio
+        except Anuncio.DoesNotExist:
+            raise Http404('Anuncio does not exist')
 
     def get_context_data(self, **kwargs):
         context = super(AnuncioView, self).get_context_data(**kwargs)
@@ -114,8 +118,11 @@ class BormeView(DetailView):
     context_object_name = 'borme'
 
     def get_object(self):
-        self.borme = Borme.objects.get(cve=self.kwargs['cve'])
-        return self.borme
+        try:
+            self.borme = Borme.objects.get(cve=self.kwargs['cve'])
+            return self.borme
+        except Borme.DoesNotExist:
+            raise Http404('Borme does not exist')
 
     def get_context_data(self, **kwargs):
         context = super(BormeView, self).get_context_data(**kwargs)
@@ -183,8 +190,11 @@ class CompanyView(DetailView):
     context_object_name = 'company'
 
     def get_object(self):
-        self.company = Company.objects.get(slug=self.kwargs['slug'])
-        return self.company
+        try:
+            self.company = Company.objects.get(slug=self.kwargs['slug'])
+            return self.company
+        except Company.DoesNotExist:
+            raise Http404('Company does not exist')
 
     def get_context_data(self, **kwargs):
         context = super(CompanyView, self).get_context_data(**kwargs)
@@ -200,8 +210,11 @@ class PersonView(DetailView):
     context_object_name = 'person'
 
     def get_object(self):
-        self.person = Person.objects.get(slug=self.kwargs['slug'])
-        return self.person
+        try:
+            self.person = Person.objects.get(slug=self.kwargs['slug'])
+            return self.person
+        except Person.DoesNotExist:
+            raise Http404('Person does not exist')
 
     """
     def get_context_data(self, **kwargs):
