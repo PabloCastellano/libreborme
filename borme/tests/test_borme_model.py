@@ -4,7 +4,6 @@ from borme.models import Borme
 import bormeparser
 import datetime
 import os
-import tempfile
 
 b1_id = None
 
