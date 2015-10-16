@@ -7,16 +7,7 @@ from django.test import TestCase
 
 class TestImport(TestCase):
 
-    @classmethod
-    def tearDownClass(cls):
-        Anuncio.objects.all().delete()
-        Borme.objects.all().delete()
-        Company.objects.all().delete()
-        Person.objects.all().delete()
-        super(TestImport, cls).tearDownClass()
-
     def test_import_borme(self):
-        #FIXME: HOME
         import_borme_pdf(os.path.expanduser('~/.bormes/pdf/2015/02/10/BORME-A-2015-27-10.pdf'))
         find = Borme.objects.filter(cve='BORME-A-2015-27-10')
         self.assertEqual(len(find), 1)

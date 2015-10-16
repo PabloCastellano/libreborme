@@ -1,11 +1,12 @@
 from django.test import TestCase
 from borme.models import Borme
+from borme.utils import _import1
 
 import bormeparser
 import datetime
 import os
 
-b1_id = None
+results = None
 
 
 # Hacer Mockup de:
@@ -18,24 +19,18 @@ class TestBormeModel(TestCase):
     def setUpClass(cls):
         super(TestBormeModel, cls).setUpClass()
 
-        global b1_id
+        global results
 
         path = os.path.expanduser('~/.bormes/pdf/2015/02/10/BORME-A-2015-27-10.pdf')
-        b1 = bormeparser.parse(path)
-        b1.save()
+        borme = bormeparser.parse(path)
+        results = _import1(borme)
 
-        # Save the id of objects to match in the test
-        b1_id = b1.id
-
-    @classmethod
-    def tearDownClass(cls):
-        Borme.objects.all().delete()
-        super(TestBormeModel, cls).tearDownClass()
-
-    # This method run on every test
-    def setUp(self):
-        global b1_id
-        self.b1_id = b1_id
+    def test_results(self):
+        global results
+        self.assertEqual(results['created_bormes'], 1)
+        self.assertEqual(results['created_anuncios'], 30)
+        self.assertEqual(results['created_companies'], 29)
+        self.assertEqual(results['created_persons'], 35)
 
     def test_borme_object(self):
         b = Borme.objects.get(cve='BORME-A-2015-27-10')

@@ -20,11 +20,6 @@ class TestCompanyModel(TestCase):
         # Save the id of objects to match in the test
         c1_id = c1.id
 
-    @classmethod
-    def tearDownClass(cls):
-        Company.objects.all().delete()
-        super(TestCompanyModel, cls).tearDownClass()
-
     # This method run on every test
     def setUp(self):
         global c1_id
