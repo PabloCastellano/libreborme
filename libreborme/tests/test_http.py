@@ -22,22 +22,22 @@ class TestBasicHttp(TestCase):
 
     @classmethod
     def setUpClass(cls):
+        super(TestBasicHttp, cls).setUpClass()
         Company(name='EMPRESA RANDOM SL').save()
         Person(name='PERSONA RANDOM').save()
         Config(version='test', last_modified=timezone.now()).save()
-        super(TestBasicHttp, cls).setUpClass()
 
     # This method run on every test
     def setUp(self):
+        pass
         #self.user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
         #self.user = User.create_user(username='john', email='lennon@thebeatles.com', password='johnpassword')
-        super(TestBasicHttp, self).setUp()
 
     @classmethod
     def tearDownClass(cls):
-        Company.objects.delete()
-        Person.objects.delete()
-        Config.objects.delete()
+        Company.objects.all().delete()
+        Person.objects.all().delete()
+        Config.objects.all().delete()
         super(TestBasicHttp, cls).tearDownClass()
 
     def test_empresa(self):
@@ -96,11 +96,11 @@ class TestCommands(TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        Anuncio.objects.delete()
-        Borme.objects.delete()
-        Company.objects.delete()
-        Person.objects.delete()
-        Config.objects.delete()
+        Anuncio.objects.all().delete()
+        Borme.objects.all().delete()
+        Company.objects.all().delete()
+        Person.objects.all().delete()
+        Config.objects.all().delete()
         super(TestCommands, cls).tearDownClass()
 
     def test_importbormepdf(self):

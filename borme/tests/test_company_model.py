@@ -9,6 +9,7 @@ class TestCompanyModel(TestCase):
     # This method run on instance of class
     @classmethod
     def setUpClass(cls):
+        super(TestCompanyModel, cls).setUpClass()
 
         global c1_id
 
@@ -21,14 +22,13 @@ class TestCompanyModel(TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        Company.objects.delete()
+        Company.objects.all().delete()
         super(TestCompanyModel, cls).tearDownClass()
 
     # This method run on every test
     def setUp(self):
         global c1_id
         self.c1_id = c1_id
-        super(TestCompanyModel, self).setUp()
 
     def test_company_object(self):
         find = Company.objects.filter(name='PATATAS JUAN SL')

@@ -9,10 +9,10 @@ class TestImport(TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        Anuncio.objects.delete()
-        Borme.objects.delete()
-        Company.objects.delete()
-        Person.objects.delete()
+        Anuncio.objects.all().delete()
+        Borme.objects.all().delete()
+        Company.objects.all().delete()
+        Person.objects.all().delete()
         super(TestImport, cls).tearDownClass()
 
     def test_import_borme(self):

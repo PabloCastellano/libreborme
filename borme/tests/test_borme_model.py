@@ -3,6 +3,8 @@ from borme.models import Borme
 
 import bormeparser
 import datetime
+import os
+import tempfile
 
 b1_id = None
 
@@ -15,13 +17,12 @@ class TestBormeModel(TestCase):
     # This method run on instance of class
     @classmethod
     def setUpClass(cls):
+        super(TestBormeModel, cls).setUpClass()
 
         global b1_id
 
-        # Create two objects for test
-        b1 = Borme(cve='BORME-A-2015-27-10',  date=datetime.date(2015, 2, 10),
-                   url='http://boe.es/borme/dias/2015/02/10/pdfs/BORME-A-2015-27-10.pdf',
-                   province=bormeparser.PROVINCIA.CACERES.code, section='A')
+        path = os.path.expanduser('~/.bormes/pdf/2015/02/10/BORME-A-2015-27-10.pdf')
+        b1 = bormeparser.parse(path)
         b1.save()
 
         # Save the id of objects to match in the test
@@ -29,16 +30,19 @@ class TestBormeModel(TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        Borme.objects.delete()
+        Borme.objects.all().delete()
         super(TestBormeModel, cls).tearDownClass()
 
     # This method run on every test
     def setUp(self):
         global b1_id
         self.b1_id = b1_id
-        super(TestBormeModel, self).setUp()
 
     def test_borme_object(self):
-        find = Borme.objects.filter(cve='BORME-A-2015-27-10')
-        self.assertEqual(len(find), 1)
-        self.assertEqual(find[0].id, self.b1_id)
+        b = Borme.objects.get(cve='BORME-A-2015-27-10')
+        self.assertEqual(b.from_reg, 57315)
+        self.assertEqual(b.until_reg, 57344)
+        self.assertEqual(b.date, datetime.date(2015, 2, 10))
+        self.assertEqual(b.url, 'http://boe.es/borme/dias/2015/02/10/pdfs/BORME-A-2015-27-10.pdf')
+        self.assertEqual(b.province, bormeparser.PROVINCIA.CACERES)
+        self.assertEqual(b.section, bormeparser.SECCION.A)
