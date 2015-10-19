@@ -109,9 +109,9 @@ def _import1(borme):
             company.add_in_bormes(borme_embed)
 
             try:
-                nuevo_anuncio = Anuncio.objects.get(id_anuncio=anuncio.id)
+                nuevo_anuncio = Anuncio.objects.get(id_anuncio=anuncio.id, year=borme.date.year)
             except Anuncio.DoesNotExist:
-                nuevo_anuncio = Anuncio(id_anuncio=anuncio.id, borme=nuevo_borme,
+                nuevo_anuncio = Anuncio(id_anuncio=anuncio.id, year=borme.date.year, borme=nuevo_borme,
                                         datos_registrales=anuncio.datos_registrales)
                 logger.debug('Creando anuncio %d: %s' % (anuncio.id, anuncio.empresa))
                 results['created_anuncios'] += 1

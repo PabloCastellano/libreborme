@@ -210,8 +210,12 @@ class Anuncio(Model):
     id_anuncio = IntegerField(primary_key=True)
     borme = ForeignKey('Borme')
     company = ForeignKey('Company')
+    year = IntegerField()
     datos_registrales = CharField(max_length=70)
     actos = hstore.SerializedDictionaryField()  # TODO: schema={...}  # TODO: Actos repetidos
+
+    class Meta:
+        index_together = ['id_anuncio', 'year']
 
     #objects = hstore.HStoreManager()
 
