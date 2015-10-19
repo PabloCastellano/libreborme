@@ -68,16 +68,6 @@ def _import1(borme):
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
 
     try:
-        borme_log = BormeLog.objects.get(borme_cve=borme.cve)
-    except BormeLog.DoesNotExist:
-        borme_log = BormeLog(borme_cve=borme.cve, path=borme.filename)
-
-    borme_log.save()  # date_updated
-    if borme_log.parsed:
-        logger.warn('%s ya ha sido analizado.' % borme.cve)
-        return results
-
-    try:
         nuevo_borme = Borme.objects.get(cve=borme.cve)
     except Borme.DoesNotExist:
         nuevo_borme = Borme(cve=borme.cve, date=borme.date, url=borme.url, from_reg=borme.anuncios_rango[0],
@@ -88,6 +78,16 @@ def _import1(borme):
         nuevo_borme.save()
         results['created_bormes'] += 1
 
+    try:
+        borme_log = BormeLog.objects.get(borme=nuevo_borme)
+    except BormeLog.DoesNotExist:
+        borme_log = BormeLog(borme=nuevo_borme, path=borme.filename)
+
+    if borme_log.parsed:
+        logger.warn('%s ya ha sido analizado.' % borme.cve)
+        return results
+
+    borme_log.save()  # date_updated
     #import pdb; pdb.set_trace()
 
     borme_embed = {'cve': nuevo_borme.cve, 'url': nuevo_borme.url}

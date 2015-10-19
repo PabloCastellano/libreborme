@@ -91,7 +91,7 @@ class Borme(Model):
 
 class Person(Model):
     """ Persona """
-    name = CharField(max_length=200)
+    name = CharField(max_length=200, db_index=True)
     slug = CharField(max_length=200, unique=True)
     in_companies = ArrayField(CharField(max_length=250), default=list)
     in_bormes = ArrayField(hstore.DictionaryField(), default=list)
@@ -138,7 +138,7 @@ class Person(Model):
 
 class Company(Model):
     """ Sociedad """
-    name = CharField(max_length=250)
+    name = CharField(max_length=250, db_index=True)
     nif = CharField(max_length=10)
     slug = CharField(max_length=250, unique=True)
     date_creation = DateField(blank=True, null=True)
@@ -228,10 +228,10 @@ class Config(Model):
 
 
 class BormeLog(Model):
+    borme = ForeignKey('Borme')
     date_created = DateTimeField(auto_now_add=True)
     date_updated = DateTimeField(auto_now=True)
     date_parsed = DateTimeField(blank=True, null=True)
-    borme_cve = CharField(max_length=30)
     parsed = BooleanField(default=False)
     errors = IntegerField(default=0)
     path = CharField(max_length=200)
