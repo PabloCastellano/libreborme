@@ -171,11 +171,11 @@ class BormeProvinciaView(TemplateView):
     template_name = 'borme/borme_provincia.html'
 
     def get_context_data(self, **kwargs):
-        context = super(BormeDateView, self).get_context_data(**kwargs)
+        context = super(BormeProvinciaView, self).get_context_data(**kwargs)
         bormes = Borme.objects.filter(province=self.kwargs['provincia'])
 
-        year, month, _ = self.kwargs['date'].split('-')
-        calendar = HTMLCalendar().formatmonth(int(year), int(month))  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
+        year, month = 2015, 1
+        calendar = LibreBormeCalendar().formatmonth(int(year), int(month))  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
         #calendar = HTMLCalendar().formatyear(int(year))  # formatyearpage()
 
         context['calendar'] = mark_safe(calendar)
@@ -223,6 +223,7 @@ class PersonView(DetailView):
         context['bormes'] = [b.cve for b in self.person.in_bormes]
         return context
     """
+
 
 class PersonListView(ListView):
     model = Person
