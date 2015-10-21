@@ -65,7 +65,8 @@ def _import1(borme):
     borme: bormeparser.Borme
     """
     logger.info('\nBORME CVE: %s (%s)' % (borme.cve, borme.provincia))
-    results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
+    results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0,
+               'total_companies': 0, 'total_persons': 0, 'errors': 0}
 
     try:
         nuevo_borme = Borme.objects.get(cve=borme.cve)
@@ -94,6 +95,7 @@ def _import1(borme):
     for n, anuncio in enumerate(borme.get_anuncios(), 1):
         try:
             logger.debug('%d: Importando anuncio: %s' % (n, anuncio))
+            results['total_companies'] += 1
             try:
                 company = Company.objects.get(name=anuncio.empresa)
             except Company.DoesNotExist:
@@ -126,6 +128,7 @@ def _import1(borme):
                         for nombre in nombres:
                             logger.debug('  %s' % nombre)
                             if is_company(nombre):
+                                results['total_companies'] += 1
                                 try:
                                     c, created = Company.objects.get_or_create(name=nombre)
                                     if created:
@@ -148,11 +151,12 @@ def _import1(borme):
                                     cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_from': borme.date.isoformat(), 'type': 'company'}
                                     c.update_cargos_entrantes([cargo_embed])
                                 else:
-                                     cargo['date_to'] = borme.date.isoformat()
-                                     cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_to': borme.date.isoformat(), 'type': 'company'}
-                                     c.update_cargos_salientes([cargo_embed])
+                                    cargo['date_to'] = borme.date.isoformat()
+                                    cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_to': borme.date.isoformat(), 'type': 'company'}
+                                    c.update_cargos_salientes([cargo_embed])
                                 c.save()
                             else:
+                                results['total_persons'] += 1
                                 try:
                                     p, created = Person.objects.get_or_create(name=nombre)
                                     if created:
@@ -171,8 +175,7 @@ def _import1(borme):
 
                                 cargo = {'title': nombre_cargo, 'name': p.name, 'type': 'person'}
                                 if is_acto_cargo_entrante(acto.name):
-                                    cargo['date_from'] = borme.date.isoformat()  # TODO: datetime.date
-                                    # TODO: Ahora guarda serializado python: '[{"date_from": "2009-01-02", "name": "MOORE STEPHENS FIDELITAS AUDITORES SOCIEDAD LIMITA", "title": "Auditor"}]'
+                                    cargo['date_from'] = borme.date.isoformat()
                                     cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_from': borme.date.isoformat(), 'type': 'person'}
                                     p.update_cargos_entrantes([cargo_embed])
                                 else:
@@ -303,7 +306,8 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
     strict: Para en caso de error grave
     """
     next_date = begin
-    total_results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
+    total_results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0,
+                     'total_anuncios': 0, 'total_bormes': 0, 'total_companies': 0, 'total_persons': 0, 'errors': 0}
     total_start_time = time.time()
 
     while next_date and next_date <= end:
@@ -350,6 +354,7 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
             if filepath.endswith('-99.pdf'):
                 continue
             logger.info('%s' % filepath)
+            total_results['total_bormes'] += 1
             try:
                 bormes.append(bormeparser.parse(filepath))
             except Exception as e:
@@ -361,6 +366,7 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
                     return False, total_results
 
         for borme in sorted(bormes):
+            total_results['total_anuncios'] += len(borme.get_anuncios())
             start_time = time.time()
             try:
                 results = _import1(borme)
@@ -378,6 +384,8 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
             total_results['created_bormes'] += results['created_bormes']
             total_results['created_companies'] += results['created_companies']
             total_results['created_persons'] += results['created_persons']
+            total_results['total_companies'] += results['total_companies']
+            total_results['total_persons'] += results['total_persons']
             total_results['errors'] += results['errors']
 
             if not all(map(lambda x: x == 0, total_results.values())):
@@ -391,10 +399,10 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
         next_date = bxml.next_borme
 
     elapsed_time = time.time() - total_start_time
-    logger.info('\nBORMEs creados: %d' % total_results['created_bormes'])
-    logger.info('Anuncios creados: %d' % total_results['created_anuncios'])
-    logger.info('Empresas creadas: %d' % total_results['created_companies'])
-    logger.info('Personas creadas: %d' % total_results['created_persons'])
+    logger.info('\nBORMEs creados: %d/%d' % (total_results['created_bormes'], total_results['total_bormes']))
+    logger.info('Anuncios creados: %d/%d' % (total_results['created_anuncios'], total_results['total_anuncios']))
+    logger.info('Empresas creadas: %d/%d' % (total_results['created_companies'], total_results['total_companies']))
+    logger.info('Personas creadas: %d/%d' % (total_results['created_persons'], total_results['total_persons']))
     logger.info('Total elapsed time: %.2f seconds' % elapsed_time)
 
     return True, total_results
@@ -437,7 +445,7 @@ def import_borme_json(filename):
 
 
 def print_results(results, borme):
-    logger.info('[%s] BORMEs creados: %d' % (borme.cve, results['created_bormes']))
+    logger.info('[%s] BORMEs creados: %d/1' % (borme.cve, results['created_bormes']))
     logger.info('[%s] Anuncios creados: %d/%d' % (borme.cve, results['created_anuncios'], len(borme.get_anuncios())))
-    logger.info('[%s] Empresas creadas: %d' % (borme.cve, results['created_companies']))
-    logger.info('[%s] Personas creadas: %d' % (borme.cve, results['created_persons']))
+    logger.info('[%s] Empresas creadas: %d/%d' % (borme.cve, results['created_companies'], results['total_companies']))
+    logger.info('[%s] Personas creadas: %d/%d' % (borme.cve, results['created_persons'], results['total_persons']))
