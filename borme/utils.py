@@ -310,93 +310,96 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
                      'total_anuncios': 0, 'total_bormes': 0, 'total_companies': 0, 'total_persons': 0, 'errors': 0}
     total_start_time = time.time()
 
-    while next_date and next_date <= end:
-        xml_path = get_borme_xml_filepath(next_date)
-        try:
-            bxml = BormeXML.from_file(xml_path)
-        except FileNotFoundError:
-            bxml = BormeXML.from_date(next_date)
-            os.makedirs(os.path.dirname(xml_path), exist_ok=True)
-            bxml.save_to_file(xml_path)
-
-        # Add FileHandlers
-        logpath = os.path.join(settings.BORME_LOG_ROOT, 'imports', '%02d-%02d' % (bxml.date.year, bxml.date.month))
-        os.makedirs(logpath, exist_ok=True)
-
-        fh1_path = os.path.join(logpath, '%02d_info.txt' % bxml.date.day)
-        fh1 = logging.FileHandler(fh1_path)
-        fh1.setLevel(logging.INFO)
-        logger.addHandler(fh1)
-
-        fh2_path = os.path.join(logpath, '%02d_error.txt' % bxml.date.day)
-        fh2 = logging.FileHandler(fh2_path)
-        fh2.setLevel(logging.WARNING)
-        logger.addHandler(fh2)
-
-        pdf_path = get_borme_pdf_path(bxml.date)
-        os.makedirs(pdf_path, exist_ok=True)
-        logger.info('============================================================')
-        logger.info('Ran import_borme_download at %s' % timezone.now())
-        logger.info('  Import date: %s. Section: %s' % (bxml.date.isoformat(), seccion))
-        logger.info('============================================================')
-        logger.info(pdf_path)
-
-        print('\nPATH: %s\nDATE: %s\nSECCION: %s\n' % (pdf_path, bxml.date, seccion))
-
-        bormes = []
-        if download:
-            _, files = bxml.download_pdfs(pdf_path, seccion=seccion)
-        else:
-            _, _, files = next(os.walk(pdf_path))
-            files = list(map(lambda x: os.path.join(pdf_path, x), files))
-
-        for filepath in files:
-            if filepath.endswith('-99.pdf'):
-                continue
-            logger.info('%s' % filepath)
-            total_results['total_bormes'] += 1
+    try:
+        while next_date and next_date <= end:
+            xml_path = get_borme_xml_filepath(next_date)
             try:
-                bormes.append(bormeparser.parse(filepath))
-            except Exception as e:
-                logger.error('[X] Error grave en bormeparser.parse(): %s' % filepath)
-                logger.error('[X] %s: %s' % (e.__class__.__name__, e))
-                if strict:
-                    logger.error('[X] Una vez arreglado, reanuda la importación:')
-                    logger.error('[X]   python manage.py importbormetoday local')
-                    return False, total_results
+                bxml = BormeXML.from_file(xml_path)
+            except FileNotFoundError:
+                bxml = BormeXML.from_date(next_date)
+                os.makedirs(os.path.dirname(xml_path), exist_ok=True)
+                bxml.save_to_file(xml_path)
 
-        for borme in sorted(bormes):
-            total_results['total_anuncios'] += len(borme.get_anuncios())
-            start_time = time.time()
-            try:
-                results = _import1(borme)
-            except Exception as e:
-                logger.error('[%s] Error grave en _import1:' % borme.cve)
-                logger.error('[%s] %s' % (borme.cve, e))
-                logger.error('[%s] Prueba importar manualmente en modo detallado para ver el error:' % borme.cve)
-                logger.error('[%s]   python manage.py importbormepdf %s -v 3' % (borme.cve, borme.filename))
-                if strict:
-                    logger.error('[%s] Una vez arreglado, reanuda la importación:' % borme.cve)
-                    logger.error('[%s]   python manage.py importbormetoday local' % borme.cve)
-                    return False, total_results
+            # Add FileHandlers
+            logpath = os.path.join(settings.BORME_LOG_ROOT, 'imports', '%02d-%02d' % (bxml.date.year, bxml.date.month))
+            os.makedirs(logpath, exist_ok=True)
 
-            total_results['created_anuncios'] += results['created_anuncios']
-            total_results['created_bormes'] += results['created_bormes']
-            total_results['created_companies'] += results['created_companies']
-            total_results['created_persons'] += results['created_persons']
-            total_results['total_companies'] += results['total_companies']
-            total_results['total_persons'] += results['total_persons']
-            total_results['errors'] += results['errors']
+            fh1_path = os.path.join(logpath, '%02d_info.txt' % bxml.date.day)
+            fh1 = logging.FileHandler(fh1_path)
+            fh1.setLevel(logging.INFO)
+            logger.addHandler(fh1)
 
-            if not all(map(lambda x: x == 0, total_results.values())):
-                print_results(results, borme)
-                elapsed_time = time.time() - start_time
-                logger.info('[%s] Elapsed time: %.2f seconds' % (borme.cve, elapsed_time))
+            fh2_path = os.path.join(logpath, '%02d_error.txt' % bxml.date.day)
+            fh2 = logging.FileHandler(fh2_path)
+            fh2.setLevel(logging.WARNING)
+            logger.addHandler(fh2)
 
-        # Remove handlers
-        logger.removeHandler(fh1)
-        logger.removeHandler(fh2)
-        next_date = bxml.next_borme
+            pdf_path = get_borme_pdf_path(bxml.date)
+            os.makedirs(pdf_path, exist_ok=True)
+            logger.info('============================================================')
+            logger.info('Ran import_borme_download at %s' % timezone.now())
+            logger.info('  Import date: %s. Section: %s' % (bxml.date.isoformat(), seccion))
+            logger.info('============================================================')
+            logger.info(pdf_path)
+
+            print('\nPATH: %s\nDATE: %s\nSECCION: %s\n' % (pdf_path, bxml.date, seccion))
+
+            bormes = []
+            if download:
+                _, files = bxml.download_pdfs(pdf_path, seccion=seccion)
+            else:
+                _, _, files = next(os.walk(pdf_path))
+                files = list(map(lambda x: os.path.join(pdf_path, x), files))
+
+            for filepath in files:
+                if filepath.endswith('-99.pdf'):
+                    continue
+                logger.info('%s' % filepath)
+                total_results['total_bormes'] += 1
+                try:
+                    bormes.append(bormeparser.parse(filepath))
+                except Exception as e:
+                    logger.error('[X] Error grave en bormeparser.parse(): %s' % filepath)
+                    logger.error('[X] %s: %s' % (e.__class__.__name__, e))
+                    if strict:
+                        logger.error('[X] Una vez arreglado, reanuda la importación:')
+                        logger.error('[X]   python manage.py importbormetoday local')
+                        return False, total_results
+
+            for borme in sorted(bormes):
+                total_results['total_anuncios'] += len(borme.get_anuncios())
+                start_time = time.time()
+                try:
+                    results = _import1(borme)
+                except Exception as e:
+                    logger.error('[%s] Error grave en _import1:' % borme.cve)
+                    logger.error('[%s] %s' % (borme.cve, e))
+                    logger.error('[%s] Prueba importar manualmente en modo detallado para ver el error:' % borme.cve)
+                    logger.error('[%s]   python manage.py importbormepdf %s -v 3' % (borme.cve, borme.filename))
+                    if strict:
+                        logger.error('[%s] Una vez arreglado, reanuda la importación:' % borme.cve)
+                        logger.error('[%s]   python manage.py importbormetoday local' % borme.cve)
+                        return False, total_results
+
+                total_results['created_anuncios'] += results['created_anuncios']
+                total_results['created_bormes'] += results['created_bormes']
+                total_results['created_companies'] += results['created_companies']
+                total_results['created_persons'] += results['created_persons']
+                total_results['total_companies'] += results['total_companies']
+                total_results['total_persons'] += results['total_persons']
+                total_results['errors'] += results['errors']
+
+                if not all(map(lambda x: x == 0, total_results.values())):
+                    print_results(results, borme)
+                    elapsed_time = time.time() - start_time
+                    logger.info('[%s] Elapsed time: %.2f seconds' % (borme.cve, elapsed_time))
+
+            # Remove handlers
+            logger.removeHandler(fh1)
+            logger.removeHandler(fh2)
+            next_date = bxml.next_borme
+    except KeyboardInterrupt:
+        logger.info('\nImport aborted.')
 
     elapsed_time = time.time() - total_start_time
     logger.info('\nBORMEs creados: %d/%d' % (total_results['created_bormes'], total_results['total_bormes']))
