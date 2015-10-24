@@ -9,8 +9,6 @@ from django.utils.safestring import mark_safe
 from .models import Company, Person, Anuncio, Config, Borme
 from .utils import LibreBormeCalendar
 
-from random import randint
-
 import datetime
 
 
@@ -40,12 +38,12 @@ class BusquedaView(TemplateView):
         if 'q' in self.request.GET:
             page = self.request.GET.get('page', 1)
             q_companies = Company.objects.filter(name__icontains=self.request.GET['q'])
+            q_companies = list(q_companies)  # Force
             companies = Paginator(q_companies, 25)
             q_persons = Person.objects.filter(name__icontains=self.request.GET['q'])
+            q_persons = list(q_persons)  # Force
             persons = Paginator(q_persons, 25)
 
-            context['num_persons'] = persons.count
-            context['num_companies'] = companies.count
             context['page'] = page
             context['query'] = self.request.GET['q']
 

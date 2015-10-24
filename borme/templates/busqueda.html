@@ -6,7 +6,7 @@
 {% if query %}
 <h1>Resultados de la búsqueda «{{ query }}»</h1>
 
-<p><strong>{{ num_companies }}</strong> empresas y <strong>{{ num_persons }}</strong> personas.</p>
+<p><strong>{{ companies.count }}</strong> empresas y <strong>{{ persons.count }}</strong> personas.</p>
 <h2>Empresas:</h2>
     <div class="search-companies">
         {% for cs in companies.object_list|rows_distributed:3 %}
