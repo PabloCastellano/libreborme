@@ -80,14 +80,17 @@
 
     <h3>Sociedades relacionadas</h3>
 
-    <ul>
-    {% for company in person.in_companies %}
-        <li><a href="{% url "borme-empresa" company|slug %}">{{ company.name }}</a></li>
-    {% empty %}
-        <i>No hay actos registrados.</i>
-    {% endfor %}
-
-    </ul>
+    <div class="related-companies">
+     {% for cs in companies|rows_distributed:3 %}
+        <div class="col-md-4">
+            <ul>
+            {% for c in cs %}
+                <li><a href="{% url 'borme-empresa' c|slug %}">{{ c }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+     {% endfor %}
+    </div>
 
     <h3>Personas relacionadas</h3>
         <i>No disponible</i>

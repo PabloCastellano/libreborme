@@ -198,8 +198,16 @@ class CompanyView(DetailView):
         context = super(CompanyView, self).get_context_data(**kwargs)
 
         context['anuncios'] = Anuncio.objects.filter(company=self.company).order_by('-id_anuncio')
-        context['persons'] = Person.objects.filter(in_companies__contains=[self.company.name])
 
+        context['persons'] = []
+        for cargo in self.company.todos_cargos_p:
+            if cargo['name'] not in context['persons']:
+                context['persons'].append(cargo['name'])
+
+        context['companies'] = []
+        for cargo in self.company.todos_cargos_c:
+            if cargo['name'] not in context['companies']:
+                context['companies'].append(cargo['name'])
         return context
 
 
@@ -214,13 +222,15 @@ class PersonView(DetailView):
         except Person.DoesNotExist:
             raise Http404('Person does not exist')
 
-    """
+
     def get_context_data(self, **kwargs):
         context = super(PersonView, self).get_context_data(**kwargs)
 
-        context['bormes'] = [b.cve for b in self.person.in_bormes]
+        context['companies'] = []
+        for cargo in self.company.todos_cargos:
+            if cargo['name'] not in context['companies']:
+                context['companies'].append(cargo['name'])
         return context
-    """
 
 
 class PersonListView(ListView):

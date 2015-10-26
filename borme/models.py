@@ -125,6 +125,10 @@ class Person(Model):
                 self.cargos_actuales.remove(cargo)
             self.cargos_historial.append(cargo)
 
+    @property
+    def todos_cargos(self):
+        return self.cargos_actuales + self.cargos_historial
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(Person, self).save(*args, **kwargs)
@@ -164,6 +168,14 @@ class Company(Model):
     @property
     def cargos_historial(self):
         return self.cargos_historial_p + self.cargos_historial_c
+
+    @property
+    def todos_cargos_c(self):
+        return self.cargos_actuales_c + self.cargos_historial_c
+
+    @property
+    def todos_cargos_p(self):
+        return self.cargos_actuales_p + self.cargos_historial_p
 
     # last access
     # number of visits
