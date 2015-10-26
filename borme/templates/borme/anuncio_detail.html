@@ -24,7 +24,7 @@
     <ul>
     {% for nombre, valor in anuncio.actos.items %}
         <h3>{{ nombre }}</h3>
-        {% if nombre|is_acto_cargo2 %}
+        {% if nombre|is_acto_cargo %}
             <table class="table table-condensed">
                 <thead>
                     <tr>

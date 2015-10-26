@@ -3,7 +3,7 @@
 from django.template.defaulttags import register
 from django.utils.text import slugify
 
-from bormeparser.regex import is_acto_cargo as es_acto_cargo
+from bormeparser.regex import is_acto_cargo as func_acto_cargo
 
 import datetime
 
@@ -36,12 +36,7 @@ def nombre(object):
 
 @register.filter
 def is_acto_cargo(val):
-    return isinstance(val, CargoPerson) or isinstance(val, CargoCompany)
-
-
-@register.filter
-def is_acto_cargo2(val):
-    return es_acto_cargo(val)
+    return func_acto_cargo(val)
 
 
 @register.filter
