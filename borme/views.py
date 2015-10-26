@@ -84,8 +84,6 @@ class BusquedaView(TemplateView):
                 context['persons'].myrange = pagerange
 
         else:
-            context['num_companies'] = 0
-            context['num_persons'] = 0
             context['companies'] = []
             context['persons'] = []
             context['page'] = 1
