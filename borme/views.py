@@ -227,7 +227,7 @@ class PersonView(DetailView):
         context = super(PersonView, self).get_context_data(**kwargs)
 
         context['companies'] = []
-        for cargo in self.company.todos_cargos:
+        for cargo in self.person.todos_cargos:
             if cargo['name'] not in context['companies']:
                 context['companies'].append(cargo['name'])
         return context
