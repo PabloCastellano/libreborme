@@ -181,20 +181,23 @@ class Company(Model):
 
         for cargo in cargos:
             if cargo['type'] == 'company':
+                del cargo['type']
                 self.cargos_actuales_c.append(cargo)
             elif cargo['type'] == 'person':
+                del cargo['type']
                 self.cargos_actuales_p.append(cargo)
-        #self.cargos_actuales_p.extend(cargos)
 
     def update_cargos_salientes(self, cargos):
         """ cargos = [CargoCompany/CargoPerson] """
 
         for cargo in cargos:
             if cargo['type'] == 'company':
+                del cargo['type']
                 if cargo in self.cargos_actuales_c:
                     self.cargos_actuales_c.remove(cargo)
                 self.cargos_historial_c.append(cargo)
             elif cargo['type'] == 'person':
+                del cargo['type']
                 if cargo in self.cargos_actuales_p:
                     self.cargos_actuales_p.remove(cargo)
                 self.cargos_historial_p.append(cargo)
