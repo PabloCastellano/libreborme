@@ -70,12 +70,8 @@ class Borme(Model):
     date = DateField()
     #year = IntegerField()
     url = URLField()
-    #url = CharField(max_length=100)
-    #type = CharField(max_length=1)
     from_reg = IntegerField()
     until_reg = IntegerField()
-    #from_page = IntegerField()
-    #until_page = IntegerField()
     #province = CharField(max_length=100, choices=PROVINCES)
     province = CharField(max_length=100)
     section = CharField(max_length=20)
@@ -96,6 +92,7 @@ class Person(Model):
     in_companies = ArrayField(CharField(max_length=250), default=list)
     in_bormes = ArrayField(hstore.DictionaryField(), default=list)
 
+    date_updated = DateField()
     cargos_actuales = ArrayField(hstore.DictionaryField(), default=list)
     cargos_historial = ArrayField(hstore.DictionaryField(), default=list)
 
@@ -112,10 +109,7 @@ class Person(Model):
 
     def update_cargos_entrantes(self, cargos):
         """ cargos = [CargoCompany] """
-
         self.cargos_actuales.extend(cargos)
-        #for cargo in cargos:
-        #    self.cargos_actuales_c.append(cargo)
 
     def update_cargos_salientes(self, cargos):
         """ cargos = [CargoCompany] """
@@ -149,6 +143,7 @@ class Company(Model):
     is_active = BooleanField(default=False)
     type = CharField(max_length=50, choices=SOCIEDADES)
 
+    date_updated = DateField()
     in_bormes = ArrayField(hstore.DictionaryField(), default=list)
     anuncios = ArrayField(IntegerField(), default=list)
 

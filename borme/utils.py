@@ -154,6 +154,7 @@ def _import1(borme):
                                     cargo['date_to'] = borme.date.isoformat()
                                     cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_to': borme.date.isoformat(), 'type': 'company'}
                                     c.update_cargos_salientes([cargo_embed])
+                                c.date_updated = borme.date
                                 c.save()
                             else:
                                 results['total_persons'] += 1
@@ -183,6 +184,7 @@ def _import1(borme):
                                     cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_from': borme.date.isoformat(), 'type': 'person'}
                                     p.update_cargos_salientes([cargo_embed])
 
+                                p.date_updated = borme.date
                                 p.save()
                             lista_cargos.append(cargo)
 
@@ -201,6 +203,7 @@ def _import1(borme):
                     nuevo_anuncio.actos[kk] = acto.value
 
             company.anuncios.append(anuncio.id)
+            company.date_updated = borme.date
             company.save()
             nuevo_anuncio.company = company
             nuevo_anuncio.save()
