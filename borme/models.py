@@ -12,7 +12,7 @@ from django_hstore import hstore
 
 #from borme_parser import DICT_KEYWORDS
 DICT_KEYWORDS = {}  # FIXME
-SOCIEDADES = tuple(SOCIEDADES_DICT.items())
+SOCIEDADES = sorted(SOCIEDADES_DICT.items())
 
 # TODO: i18n 2o valor
 PROVINCES = (
@@ -63,6 +63,7 @@ class CargoPerson(Model):
             d_to = 'To: %s' % self.date_to.strftime('%x')
         return '%s: %s (%s %s)' % (self.title, self.name, d_from, d_to)
 """
+
 
 class Borme(Model):
     """ Edicion de BORME """
