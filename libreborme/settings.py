@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django_hstore',
     'bootstrap',
     'tastypie',
+    'haystack',
     'borme',
     'libreborme',
 )
@@ -99,6 +100,21 @@ DATABASES = {
         'PORT': '',
     }
 }
+
+# haystack search using elasticsearch
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'haystack',
+    },
+}
+
+# http://django-haystack.readthedocs.org/en/latest/signal_processors.html
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+# increase the default number of results (from 20)
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 25
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

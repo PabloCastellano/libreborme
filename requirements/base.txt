@@ -4,12 +4,16 @@ Django==1.8.5
 django-bootstrap-static==3.3.5
 django-debug-toolbar==1.3.2
 django-hstore==1.4
+#django-haystack==4.2.0 bug
+git+https://github.com/django-haystack/django-haystack
 django-tastypie==0.12.2
 ecdsa==0.13
+elasticsearch==1.9.0
 Fabric==1.10.2
 greenlet==0.4.9
 paramiko==1.15.2
 psycopg2==2.6.1
 pycrypto==2.6.1
+pyelasticsearch==1.4
 sqlparse==0.1.16
 wheel==0.26.0
