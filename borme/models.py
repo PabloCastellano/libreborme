@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib import admin
 from django.utils.text import slugify
 from django.core.urlresolvers import reverse
 from django.core.exceptions import FieldError
@@ -234,7 +233,7 @@ class Anuncio(Model):
         return reverse('borme-anuncio', args=[str(self.id_anuncio)])
 
     def __str__(self):
-        return '%d (%d actos)' % (self.id_anuncio, len(self.actos.keys()))
+        return '%d - %d (%d actos)' % (self.id_anuncio, self.year, len(self.actos.keys()))
 
 
 class Config(Model):
@@ -251,14 +250,5 @@ class BormeLog(Model):
     errors = IntegerField(default=0)
     path = CharField(max_length=200)
 
-
-admin.site.register(Borme)
-admin.site.register(Person)
-admin.site.register(Company)
-admin.site.register(Anuncio)
-admin.site.register(Config)
-admin.site.register(BormeLog)
-"""
-admin.site.register(CargoPerson)
-admin.site.register(CargoCompany)
-"""
+    def __str__(self):
+        return 'Log(%s): %d errors' % (self.borme.cve, self.errors)
