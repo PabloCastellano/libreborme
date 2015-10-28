@@ -1,5 +1,9 @@
 from django.test import TestCase
+
 from borme.models import Company
+
+import datetime
+today = datetime.date.today()
 
 c1_id = None
 
@@ -14,7 +18,7 @@ class TestCompanyModel(TestCase):
         global c1_id
 
         # Create two objects for test
-        c1 = Company(name='PATATAS JUAN SL')
+        c1 = Company(name='PATATAS JUAN SL', date_updated=today)
         c1.save()
 
         # Save the id of objects to match in the test
@@ -29,6 +33,7 @@ class TestCompanyModel(TestCase):
         find = Company.objects.filter(name='PATATAS JUAN SL')
         self.assertEqual(len(find), 1)
         self.assertEqual(find[0].id, self.c1_id)
+        self.assertEqual(find[0].date_updated, today)
         find = Company.objects.filter(slug='patatas-juan-sl')
         self.assertEqual(len(find), 1)
         self.assertEqual(find[0].id, self.c1_id)

@@ -10,6 +10,9 @@ from django.test import TestCase
 #from django.contrib.auth.models import User
 from django.utils import timezone
 
+import datetime
+today = datetime.date.today()
+
 import os
 
 
@@ -22,8 +25,8 @@ class TestBasicHttp(TestCase):
     @classmethod
     def setUpClass(cls):
         super(TestBasicHttp, cls).setUpClass()
-        Company.objects.create(name='EMPRESA RANDOM SL')
-        Person.objects.create(name='PERSONA RANDOM')
+        Company.objects.create(name='EMPRESA RANDOM SL', date_updated=today)
+        Person.objects.create(name='PERSONA RANDOM', date_updated=today)
         Config.objects.create(version='test', last_modified=timezone.now())
         #self.user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
         #self.user = User.create_user(username='john', email='lennon@thebeatles.com', password='johnpassword')

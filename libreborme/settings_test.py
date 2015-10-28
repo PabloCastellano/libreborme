@@ -5,8 +5,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'libreborme',
         'USER': 'postgres',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '',
+#        'PASSWORD': '',
+#        'HOST': 'localhost',
+#        'PORT': '',
     }
 }
