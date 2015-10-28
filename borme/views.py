@@ -1,13 +1,17 @@
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
+from django.template import RequestContext
+from django.shortcuts import render_to_response
 from django.views.generic import TemplateView
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger, InvalidPage
 from django.http import Http404, HttpResponse
 from django.utils.safestring import mark_safe
 
 from .models import Company, Person, Anuncio, Config, Borme
 from .utils import LibreBormeCalendar, estimate_count_fast
+
+from haystack.views import SearchView
 
 import datetime
 import csv
@@ -96,6 +100,67 @@ class HomeView(TemplateView):
         calendar = LibreBormeCalendar().formatmonth(today.year, today.month)
         context['calendar'] = mark_safe(calendar)
         return context
+
+
+class LBSearchView(SearchView):
+    template = "search/search3.html"
+
+    def __init__(self, template=None, load_all=True, form_class=LBSearchForm, searchqueryset=None, context_class=RequestContext, results_per_page=None):
+        super(LBSearchView, self).__init__(template, load_all, form_class, searchqueryset, context_class, results_per_page)
+
+    def build_page(self):
+        """
+        Paginates the results appropriately.
+
+        In case someone does not want to use Django's built-in pagination, it
+        should be a simple matter to override this method to do what they would
+        like.
+        """
+        try:
+            page_no = int(self.request.GET.get('page', 1))
+        except (TypeError, ValueError):
+            raise Http404("Not a valid number for page.")
+
+        if page_no < 1:
+            raise Http404("Pages should be 1 or greater.")
+
+        start_offset = (page_no - 1) * self.results_per_page
+        if self.results['Company']:
+            self.results['Company'][start_offset:start_offset + self.results_per_page]
+            paginator_company = Paginator(self.results['Company'], self.results_per_page)
+        if self.results['Person']:
+            self.results['Person'][start_offset:start_offset + self.results_per_page]
+            paginator_person = Paginator(self.results['Person'], self.results_per_page)
+
+        try:
+            page_company = paginator_company.page(page_no)
+            page_person = paginator_person.page(page_no)
+        except InvalidPage:
+            raise Http404("No such page!")
+
+        return (paginator_company, page_company, paginator_person, page_person)
+
+    def create_response(self):
+        """
+        Generates the actual HttpResponse to send back to the user.
+        """
+        (paginator_company, page_company, paginator_person, page_person) = self.build_page()
+        import pdb; pdb.set_trace()
+        context = {
+            'query': self.query,
+            'form': self.form,
+            'page_company': page_company,
+            'page_person': page_person,
+            'paginator_company': paginator_company,
+            'paginator_person': paginator_person,
+            'suggestion': None,
+        }
+
+        if self.results and hasattr(self.results, 'query') and self.results.query.backend.include_spelling:
+            context['suggestion'] = self.form.get_suggestion()
+
+        context.update(self.extra_context())
+        return render_to_response(self.template, context, context_instance=self.context_class(self.request))
 
 
 class BusquedaView(TemplateView):

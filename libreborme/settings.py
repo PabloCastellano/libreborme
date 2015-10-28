@@ -35,6 +35,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_hstore',
     'bootstrap',
+    'haystack',
     'tastypie',
     'haystack',
     'borme',

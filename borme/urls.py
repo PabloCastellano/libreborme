@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url, include
 
 from .views import AnuncioView, CompanyView, PersonView, HomeView, PersonListView, CompanyListView, BusquedaView,\
-                    BormeView, BormeProvinciaView, BormeDateView, generate_company_csv_cargos_actual, generate_company_csv_cargos_historial,\
+                    BormeView, BormeProvinciaView, BormeDateView, LBSearchView, generate_company_csv_cargos_actual, generate_company_csv_cargos_historial,\
                     generate_person_csv_cargos_actual, generate_person_csv_cargos_historial
 
 from tastypie.api import Api
@@ -29,4 +29,5 @@ urlpatterns = patterns('',
     url(r'^busqueda/$', BusquedaView.as_view(), name='borme-search'),
     url(r'^api/', include(v1_api.urls)),
     url(r'^search/', include('haystack.urls')),
+    url(r'^search3/', LBSearchView(), name='borme-search3'),
 )
