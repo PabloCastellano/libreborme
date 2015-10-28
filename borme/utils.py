@@ -1,7 +1,6 @@
 from .models import Company, Borme, Anuncio, Person, BormeLog
 
 from django.conf import settings
-from django.db import IntegrityError
 from django.utils.text import slugify
 from django.utils import timezone
 
@@ -96,18 +95,18 @@ def _import1(borme):
         try:
             logger.debug('%d: Importando anuncio: %s' % (n, anuncio))
             results['total_companies'] += 1
+            slug_c = slugify(anuncio.empresa)
             try:
-                company = Company.objects.get(name=anuncio.empresa)
+                company = Company.objects.get(slug=slug_c)
+                if company.name != anuncio.empresa:
+                    logger.warn('[%s] WARNING: Empresa similar. Mismo slug: %s' % (borme.cve, slug_c))
+                    logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, company.name, borme.cve, anuncio.empresa))
+                    results['errors'] += 1
             except Company.DoesNotExist:
                 company = Company(name=anuncio.empresa)
                 logger.debug('Creando empresa %s' % anuncio.empresa)
                 results['created_companies'] += 1
-            except IntegrityError:
-                slug_c = slugify(anuncio.empresa)
-                company = Company.objects.get(slug=slug_c)
-                logger.warn('[%s] WARNING: Empresa similar. Mismo slug: %s' % (borme.cve, slug_c))
-                logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, company.name, borme.cve, anuncio.empresa))
-                results['errors'] += 1
+
             company.add_in_bormes(borme_embed)
 
             try:
@@ -129,18 +128,17 @@ def _import1(borme):
                             logger.debug('  %s' % nombre)
                             if is_company(nombre):
                                 results['total_companies'] += 1
+                                slug_c = slugify(nombre)
                                 try:
-                                    c, created = Company.objects.get_or_create(name=nombre)
-                                    if created:
-                                        logger.debug('Creando empresa: %s' % nombre)
-                                        results['created_companies'] += 1
-
-                                except IntegrityError:
-                                    slug_c = slugify(nombre)
                                     c = Company.objects.get(slug=slug_c)
-                                    logger.warn('[%s] WARNING: Empresa similar. Mismo slug: %s' % (borme.cve, slug_c))
-                                    logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, c.name, borme.cve, nombre))
-                                    results['errors'] += 1
+                                    if c.name != nombre:
+                                        logger.warn('[%s] WARNING: Empresa similar. Mismo slug: %s' % (borme.cve, slug_c))
+                                        logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, c.name, borme.cve, nombre))
+                                        results['errors'] += 1
+                                except Company.DoesNotExist:
+                                    c = Company(name=nombre)
+                                    logger.debug('Creando empresa: %s' % nombre)
+                                    results['created_companies'] += 1
 
                                 c.anuncios.append(anuncio.id)
                                 c.add_in_bormes(borme_embed)
@@ -158,18 +156,17 @@ def _import1(borme):
                                 c.save()
                             else:
                                 results['total_persons'] += 1
+                                slug_p = slugify(nombre)
                                 try:
-                                    p, created = Person.objects.get_or_create(name=nombre)
-                                    if created:
-                                        logger.debug('Creando persona: %s' % nombre)
-                                        results['created_persons'] += 1
-
-                                except IntegrityError:
-                                    slug_p = slugify(nombre)
                                     p = Person.objects.get(slug=slug_p)
-                                    logger.warn('[%s] WARNING: Persona similar. Mismo slug: %s' % (borme.cve, slug_p))
-                                    logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, p.name, borme.cve, nombre))
-                                    results['errors'] += 1
+                                    if p.name != nombre:
+                                        logger.warn('[%s] WARNING: Persona similar. Mismo slug: %s' % (borme.cve, slug_p))
+                                        logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, p.name, borme.cve, nombre))
+                                        results['errors'] += 1
+                                except Person.DoesNotExist:
+                                    p = Person(name=nombre)
+                                    logger.debug('Creando persona: %s' % nombre)
+                                    results['created_persons'] += 1
 
                                 p.add_in_companies(company.name)
                                 p.add_in_bormes(borme_embed)
