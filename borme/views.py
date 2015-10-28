@@ -17,12 +17,21 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
+
+        # FIXME: performance-killer: .count()
+
+        last_modified = Config.objects.first().last_modified.date()
         context['total_companies'] = Company.objects.count()
         context['total_persons'] = Person.objects.count()
         context['total_anuncios'] = Anuncio.objects.count()
-        context['random_companies'] = Company.objects.all().order_by('?')[:10]
-        context['random_persons'] = Person.objects.all().order_by('?')[:10]
-        context['last_modified'] = Config.objects.first().last_modified
+        #context['random_companies'] = Company.objects.all().order_by('?')[:10]
+        #context['random_persons'] = Person.objects.all().order_by('?')[:10]
+        #context['last_modified'] = Config.objects.first().last_modified
+        context['random_companies'] = Company.objects.all().order_by('-date_updated')[:10]
+        context['random_persons'] = Person.objects.all().order_by('-date_updated')[:10]
+        #context['random_companies'] = Company.objects.filter(date_updated=last_modified).order_by('?')[:10]
+        #context['random_persons'] = Person.objects.filter(date_updated=last_modified).order_by('?')[:10]
+        context['last_modified'] = last_modified
 
         today = datetime.date.today()
         calendar = LibreBormeCalendar().formatmonth(today.year, today.month)
@@ -219,7 +228,6 @@ class PersonView(DetailView):
             return self.person
         except Person.DoesNotExist:
             raise Http404('Person does not exist')
-
 
     def get_context_data(self, **kwargs):
         context = super(PersonView, self).get_context_data(**kwargs)
