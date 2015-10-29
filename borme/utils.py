@@ -199,12 +199,12 @@ def _import1(borme):
                     kk = acto.name.replace('.', '||')
                     nuevo_anuncio.actos[kk] = acto.value
 
-            company.anuncios.append(anuncio.id)
+            company.anuncios.append(anuncio.id)  # TODO: year
             company.date_updated = borme.date
             company.save()
             nuevo_anuncio.company = company
             nuevo_anuncio.save()
-            nuevo_borme.anuncios.append(anuncio.id)
+            nuevo_borme.anuncios.append(anuncio.id)  # TODO: year
 
         except Exception as e:
             logger.error('[%s] ERROR importing anuncio %d' % (borme.cve, anuncio.id))
