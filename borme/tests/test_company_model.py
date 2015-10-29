@@ -22,7 +22,7 @@ class TestCompanyModel(TestCase):
         c1.save()
 
         # Save the id of objects to match in the test
-        c1_id = c1.id
+        c1_id = c1.slug
 
     # This method run on every test
     def setUp(self):
@@ -32,11 +32,11 @@ class TestCompanyModel(TestCase):
     def test_company_object(self):
         find = Company.objects.filter(name='PATATAS JUAN SL')
         self.assertEqual(len(find), 1)
-        self.assertEqual(find[0].id, self.c1_id)
+        self.assertEqual(find[0].slug, self.c1_id)
         self.assertEqual(find[0].date_updated, today)
         find = Company.objects.filter(slug='patatas-juan-sl')
         self.assertEqual(len(find), 1)
-        self.assertEqual(find[0].id, self.c1_id)
+        self.assertEqual(find[0].slug, self.c1_id)
 
 """
 def test_company():
