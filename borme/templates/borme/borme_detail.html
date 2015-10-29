@@ -24,13 +24,17 @@
 
     <div class="borme-cities">
      {% for bs in bormes_dia|rows_distributed:3 %}
+        {% if bormes_dia|length > 5 %}
         <div class="col-md-4">
+            {% endif %}
             <ul>
             {% for b in bs %}
                 <li><a href="{{ b.get_absolute_url }}">{{ b.province }}</a></li>
             {% endfor %}
             </ul>
+            {% if bormes_dia|length > 5 %}
         </div>
+        {% endif %}
      {% endfor %}
     </div>
 

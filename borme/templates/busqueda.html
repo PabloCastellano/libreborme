@@ -10,13 +10,17 @@
 <h2>Empresas:</h2>
     <div class="search-companies">
         {% for cs in companies.object_list|rows_distributed:3 %}
+        {% if companies.object_list|length > 5 %}
         <div class="col-md-4">
+            {% endif %}
             <ul>
             {% for company in cs %}
                 <li><a href="{% url "borme-empresa" company.slug %}">{{ company.name }}</a></li>
             {% endfor %}
             </ul>
+            {% if companies.object_list|length > 5 %}
         </div>
+        {% endif %}
         {% empty %}
             <i>No se encontraron empresas.</i>
         {% endfor %}
@@ -57,13 +61,17 @@
 <h2>Personas:</h2>
     <div class="search-persons">
         {% for ps in persons.object_list|rows_distributed:3 %}
+        {% if persons.object_list|length > 5 %}
         <div class="col-md-4">
+            {% endif %}
             <ul>
             {% for person in ps %}
                 <li><a href="{% url "borme-persona" person.slug %}">{{ person.name|title }}</a></li>
             {% endfor %}
             </ul>
+            {% if persons.object_list|length > 5 %}
         </div>
+        {% endif %}
         {% empty %}
             <i>No se encontraron personas.</i>
         {% endfor %}

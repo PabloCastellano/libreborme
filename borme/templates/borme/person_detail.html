@@ -82,13 +82,17 @@
 
     <div class="related-companies">
      {% for cs in companies|rows_distributed:3 %}
+        {% if companies|length > 5 %}
         <div class="col-md-4">
+            {% endif %}
             <ul>
             {% for c in cs %}
                 <li><a href="{% url 'borme-empresa' c|slug %}">{{ c }}</a></li>
             {% endfor %}
             </ul>
+            {% if companies|length > 5 %}
         </div>
+        {% endif %}
      {% endfor %}
     </div>
 
