@@ -69,7 +69,7 @@
 
     <ul>
         {% for borme in person.in_bormes %}
-            <li><a href="{{ borme.get_absolute_url }}">{{ borme.cve }}</a>
+            <li><a href="{% url 'borme-borme' borme.cve %}">{{ borme.cve }}</a>
             <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
             <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
         </li>
