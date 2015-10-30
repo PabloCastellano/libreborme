@@ -7,7 +7,8 @@ from django.http import Http404
 from django.utils.safestring import mark_safe
 
 from .models import Company, Person, Anuncio, Config, Borme
-from .utils import LibreBormeCalendar
+from .forms import LBSearchForm
+from .utils import LibreBormeCalendar, estimate_count_fast
 
 import datetime
 
@@ -21,9 +22,9 @@ class HomeView(TemplateView):
         # FIXME: performance-killer: .count()
 
         last_modified = Config.objects.first().last_modified.date()
-        context['total_companies'] = Company.objects.count()
-        context['total_persons'] = Person.objects.count()
-        context['total_anuncios'] = Anuncio.objects.count()
+        context['total_companies'] = estimate_count_fast('borme_company')  #
+        context['total_persons'] = estimate_count_fast('borme_person')  #
+        context['total_anuncios'] = estimate_count_fast('borme_anuncio')  #
         #context['random_companies'] = Company.objects.all().order_by('?')[:10]
         #context['random_persons'] = Person.objects.all().order_by('?')[:10]
         #context['last_modified'] = Config.objects.first().last_modified

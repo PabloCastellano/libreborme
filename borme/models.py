@@ -91,7 +91,7 @@ class Person(Model):
     in_companies = ArrayField(CharField(max_length=250), default=list)
     in_bormes = ArrayField(hstore.DictionaryField(), default=list)
 
-    date_updated = DateField()
+    date_updated = DateField(db_index=True)
     cargos_actuales = ArrayField(hstore.DictionaryField(), default=list)
     cargos_historial = ArrayField(hstore.DictionaryField(), default=list)
 
@@ -142,7 +142,7 @@ class Company(Model):
     is_active = BooleanField(default=False)
     type = CharField(max_length=50, choices=SOCIEDADES)
 
-    date_updated = DateField()
+    date_updated = DateField(db_index=True)
     in_bormes = ArrayField(hstore.DictionaryField(), default=list)
     anuncios = ArrayField(IntegerField(), default=list)
 
