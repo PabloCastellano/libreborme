@@ -6,39 +6,41 @@
 {% if query %}
 <h1>Resultados de la búsqueda «{{ query }}»</h1>
 
-<p><strong>{{ companies.count }}</strong> empresas y <strong>{{ persons.count }}</strong> personas.</p>
+<p><strong>{{ paginator_companies.count }}</strong> empresas y <strong>{{ paginator_persons.count }}</strong> personas.</p>
 <h2>Empresas:</h2>
     <div class="search-companies">
-        {% for cs in companies.object_list|rows_distributed:3 %}
-        {% if companies.object_list|length > 5 %}
-        <div class="col-md-4">
-            {% endif %}
-            <ul>
-            {% for company in cs %}
-                <li><a href="{% url "borme-empresa" company.slug %}">{{ company.name }}</a></li>
+        {% if page_companies.object_list %}
+            {% for cs in page_companies.object_list|rows_distributed:3 %}
+                {% if page_companies.object_list|length > 5 %}
+                    <div class="col-md-4">
+                {% endif %}
+                <ul>
+                {% for company in cs %}
+                    <li><a href="{% url "borme-empresa" company.slug %}">{{ company.name }}</a></li>
+                {% endfor %}
+                </ul>
+                {% if page_companies.object_list|length > 5 %}
+                    </div>
+                {% endif %}
             {% endfor %}
-            </ul>
-            {% if companies.object_list|length > 5 %}
-        </div>
-        {% endif %}
-        {% empty %}
+        {% else %}
             <i>No se encontraron empresas.</i>
-        {% endfor %}
+        {% endif %}
     </div>
 
 
-{% if companies.object_list %}
+{% if page_companies.object_list %}
 <nav>
   <ul class="pagination">
-    {% if companies.has_previous %}
+    {% if page_companies.has_previous %}
     <li>
-      <a href="?q={{ query }}&page={{ companies.previous_page_number }}" aria-label="Previous">
+      <a href="?q={{ query }}&page={{ page_companies.previous_page_number }}" aria-label="Previous">
         <span aria-hidden="true">&laquo; Anterior</span>
       </a>
     </li>
     {% endif %}
-    {% for num in companies.myrange %}
-        {% if num == companies.number %}
+    {% for num in page_companies.myrange %}
+        {% if num == page_companies.number %}
         <li class="active"><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
         {% else %}
         <li><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
@@ -47,9 +49,9 @@
         <li class="active"><a href="?q={{ query }}&page=1">1</a></li>
     {% endfor %}
 
-    {% if companies.has_next %}
+    {% if page_companies.has_next %}
     <li>
-      <a href="?q={{ query }}&page={{ companies.next_page_number }}" aria-label="Next">
+      <a href="?q={{ query }}&page={{ page_companies.next_page_number }}" aria-label="Next">
         <span aria-hidden="true">Siguiente &raquo;</span>
       </a>
     </li>
@@ -60,35 +62,37 @@
 
 <h2>Personas:</h2>
     <div class="search-persons">
-        {% for ps in persons.object_list|rows_distributed:3 %}
-        {% if persons.object_list|length > 5 %}
-        <div class="col-md-4">
-            {% endif %}
-            <ul>
-            {% for person in ps %}
-                <li><a href="{% url "borme-persona" person.slug %}">{{ person.name|title }}</a></li>
+        {% if page_persons.object_list %}
+            {% for ps in page_persons.object_list|rows_distributed:3 %}
+                {% if page_persons.object_list|length > 5 %}
+                    <div class="col-md-4">
+                {% endif %}
+                <ul>
+                {% for person in ps %}
+                    <li><a href="{% url "borme-persona" person.slug %}">{{ person.name|title }}</a></li>
+                {% endfor %}
+                </ul>
+                {% if page_persons.object_list|length > 5 %}
+                    </div>
+                {% endif %}
             {% endfor %}
-            </ul>
-            {% if persons.object_list|length > 5 %}
-        </div>
-        {% endif %}
-        {% empty %}
+        {% else %}
             <i>No se encontraron personas.</i>
-        {% endfor %}
+        {% endif %}
     </div>
 
-{% if persons.object_list %}
+{% if page_persons.object_list %}
 <nav>
   <ul class="pagination">
-    {% if persons.has_previous %}
+    {% if page_persons.has_previous %}
     <li>
-      <a href="?q={{ query }}&page={{ persons.previous_page_number }}" aria-label="Previous">
+      <a href="?q={{ query }}&page={{ page_persons.previous_page_number }}" aria-label="Previous">
         <span aria-hidden="true">&laquo; Anterior</span>
       </a>
     </li>
     {% endif %}
-    {% for num in persons.myrange %}
-        {% if num == persons.number %}
+    {% for num in page_persons.myrange %}
+        {% if num == page_persons.number %}
         <li class="active"><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
         {% else %}
         <li><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
@@ -97,9 +101,9 @@
         <li class="active"><a href="?q={{ query }}&page=1">1</a></li>
     {% endfor %}
 
-    {% if persons.has_next %}
+    {% if page_persons.has_next %}
     <li>
-      <a href="?q={{ query }}&page={{ persons.next_page_number }}" aria-label="Next">
+      <a href="?q={{ query }}&page={{ page_persons.next_page_number }}" aria-label="Next">
         <span aria-hidden="true">Siguiente &raquo;</span>
       </a>
     </li>

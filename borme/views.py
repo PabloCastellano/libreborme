@@ -67,14 +67,15 @@ class BusquedaView(TemplateView):
                 # If page is out of range (e.g. 9999), deliver last page of results.
                 pg_companies = companies.page(companies.num_pages)
             finally:
-                context['companies'] = pg_companies
+                context['page_companies'] = pg_companies
+                context['paginator_companies'] = companies
                 pagerange = companies.page_range[:3] + companies.page_range[-3:]
                 pagerange.append(pg_companies.number)
                 pagerange = list(set(pagerange))
                 pagerange.sort()
                 if len(pagerange) == 1:
                     pagerange = []
-                context['companies'].myrange = pagerange
+                context['page_companies'].myrange = pagerange
 
             try:
                 pg_persons = persons.page(page)
@@ -84,18 +85,19 @@ class BusquedaView(TemplateView):
             except EmptyPage:
                 pg_persons = persons.page(persons.num_pages)
             finally:
-                context['persons'] = pg_persons
+                context['page_persons'] = pg_persons
+                context['paginator_persons'] = persons
                 pagerange = persons.page_range[:3] + persons.page_range[-3:]
                 pagerange.append(pg_persons.number)
                 pagerange = list(set(pagerange))
                 pagerange.sort()
                 if len(pagerange) == 1:
                     pagerange = []
-                context['persons'].myrange = pagerange
+                context['page_persons'].myrange = pagerange
 
         else:
-            context['companies'] = []
-            context['persons'] = []
+            context['page_companies'] = []
+            context['page_persons'] = []
             context['page'] = 1
 
         return context
