@@ -235,6 +235,13 @@ def get_borme_pdf_path(date):
     return os.path.join(settings.BORME_PDF_ROOT, year, month, day)
 
 
+def get_borme_json_path(borme):
+    year = '%02d' % borme.date.year
+    month = '%02d' % borme.date.month
+    day = '%02d' % borme.date.day
+    return os.path.join(settings.BORME_JSON_ROOT, year, month, day, '%s.json' % borme.cve)
+
+
 def update_previous_xml(date):
     """ Dado una fecha, comprueba si el XML anterior es definitivo y si no lo es lo descarga de nuevo """
     xml_path = get_borme_xml_filepath(date)
@@ -301,7 +308,7 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
     return ret
 
 
-def _import_borme_download_range2(begin, end, seccion, download, strict=False):
+def _import_borme_download_range2(begin, end, seccion, download, strict=False, create_json=True):
     """
     strict: Para en caso de error grave
     """
@@ -381,6 +388,11 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
                         logger.error('[%s]   python manage.py importbormetoday local' % borme.cve)
                         return False, total_results
 
+                if create_json:
+                    json_path = get_borme_json_path(borme)
+                    os.makedirs(os.path.dirname(json_path), exist_ok=True)
+                    borme.to_json(json_path)
+
                 total_results['created_anuncios'] += results['created_anuncios']
                 total_results['created_bormes'] += results['created_bormes']
                 total_results['created_companies'] += results['created_companies']
@@ -411,7 +423,7 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False):
     return True, total_results
 
 
-def import_borme_pdf(filename):
+def import_borme_pdf(filename, create_json=True):
     """
     Import BORME PDF to database
     """
@@ -420,6 +432,10 @@ def import_borme_pdf(filename):
     try:
         borme = bormeparser.parse(filename)
         results = _import1(borme)
+        if create_json:
+            json_path = get_borme_json_path(borme)
+            os.makedirs(os.path.dirname(json_path), exist_ok=True)
+            borme.to_json(json_path)
     except Exception as e:
         logger.error('[X] Error grave en bormeparser.parse(): %s' % filename)
         logger.error('[X] %s: %s' % (e.__class__.__name__, e))
