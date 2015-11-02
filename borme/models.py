@@ -157,11 +157,33 @@ class Company(Model):
 
     @property
     def cargos_actuales(self):
-        return self.cargos_actuales_p + self.cargos_actuales_c
+        """ TODO: order by date"""
+        #next(map(lambda x: x.update({'type': 'person'}), self.cargos_actuales_p))
+        # sorted(c.cargos_actuales, key=lambda k: k['date_from'])
+        l = []
+        for cargo in self.cargos_actuales_p:
+            cargop = cargo
+            cargop['type'] = 'person'
+            l.append(cargop)
+        for cargo in self.cargos_actuales_c:
+            cargoc = cargo
+            cargoc['type'] = 'company'
+            l.append(cargoc)
+        return l
 
     @property
     def cargos_historial(self):
-        return self.cargos_historial_p + self.cargos_historial_c
+        """ TODO: order by date"""
+        l = []
+        for cargo in self.cargos_historial_p:
+            cargop = cargo
+            cargop['type'] = 'person'
+            l.append(cargop)
+        for cargo in self.cargos_historial_c:
+            cargoc = cargo
+            cargoc['type'] = 'company'
+            l.append(cargoc)
+        return l
 
     @property
     def todos_cargos_c(self):
