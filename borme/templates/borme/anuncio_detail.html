@@ -9,11 +9,11 @@
 
     <strong>Empresa:</strong> <a href="{% url 'borme-empresa' anuncio.company|slug %}">{{ anuncio.company }}</a>
     <br/>
-    <strong>Fecha:</strong> {{ borme.date|date }}
+    <strong>Fecha:</strong> <a href="{% url 'borme-fecha' borme.date|date_isoformat %}">{{ borme.date|date }}</a>
     <br/>
     <strong>Fuente:</strong> <a href="{{ borme.get_absolute_url }}">{{ borme.cve }}</a> <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
     <br/>
-    <strong>Provincia:</strong> {{ borme.province }}
+    <strong>Provincia:</strong> <a href="{% url 'borme-provincia' borme.province %}">{{ borme.province }}</a>
     <br/>
     <strong>Datos registrales:</strong> {{ anuncio.datos_registrales }}
     <br/>
@@ -34,6 +34,8 @@
                 </thead>
                 <tbody>
                 {% for cargo in valor %}
+                    {% url 'borme-fecha' cargo.date_from as url_from %}
+                    {% url 'borme-fecha' cargo.date_to as url_to %}
                     <tr>
                         <td>{{ cargo.title }} ({{ cargo|get_class }})</td>
                         {% if cargo.type == 'person' %}
@@ -41,8 +43,16 @@
                         {% else %}
                             <td><a href="{% url 'borme-empresa' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
                         {% endif %}
-                        <td>{{ cargo.date_from|default:"Desconocido" }}</td>
-                        <td>{{ cargo.date_to|default:"Desconocido" }}</td>
+                        {% if url_from %}
+                            <td><a href="{% url 'borme-fecha' cargo.date_from %}">{{ cargo.date_from }}</a></td>
+                        {% else %}
+                            <td>{{ cargo.date_from|default:"Desconocido" }}</td>
+                        {% endif %}
+                        {% if url_to %}
+                            <td><a href="{% url 'borme-fecha' cargo.date_to %}">{{ cargo.date_to }}</a></td>
+                        {% else %}
+                            <td>{{ cargo.date_to|default:"Desconocido" }}</td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>

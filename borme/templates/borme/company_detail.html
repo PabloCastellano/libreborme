@@ -25,6 +25,8 @@
             </thead>
             <tbody>
             {% for cargo in company.cargos_actuales %}
+                {% url 'borme-fecha' cargo.date_from as url_from %}
+                {% url 'borme-fecha' cargo.date_to as url_to %}
                 <tr>
                     <td>{{ cargo.title }}</td>
                     {% if cargo.type == 'person' %}
@@ -32,8 +34,17 @@
                     {% else %}
                         <td><a href="{% url 'borme-empresa' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
                     {% endif %}
-                    <td>{{ cargo.date_from|default:"Desconocido" }}</td>
-                    <td>{{ cargo.date_to|default:"Desconocido" }}</td>
+
+                    {% if url_from %}
+                        <td><a href="{% url 'borme-fecha' cargo.date_from %}">{{ cargo.date_from }}</a></td>
+                    {% else %}
+                        <td>{{ cargo.date_from|default:"Desconocido" }}</td>
+                    {% endif %}
+                    {% if url_to %}
+                        <td><a href="{% url 'borme-fecha' cargo.date_to %}">{{ cargo.date_to }}</a></td>
+                    {% else %}
+                        <td>{{ cargo.date_to|default:"Desconocido" }}</td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>
@@ -55,6 +66,8 @@
             </thead>
             <tbody>
             {% for cargo in company.cargos_historial %}
+                {% url 'borme-fecha' cargo.date_from as url_from %}
+                {% url 'borme-fecha' cargo.date_to as url_to %}
                 <tr>
                     <td>{{ cargo.title }}</td>
                     {% if cargo.type == 'person' %}
@@ -62,8 +75,17 @@
                     {% else %}
                         <td><a href="{% url 'borme-empresa' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
                     {% endif %}
-                    <td>{{ cargo.date_from|default:"Desconocido" }}</td>
-                    <td>{{ cargo.date_to|default:"Desconocido" }}</td>
+
+                    {% if url_from %}
+                        <td><a href="{% url 'borme-fecha' cargo.date_from %}">{{ cargo.date_from }}</a></td>
+                    {% else %}
+                        <td>{{ cargo.date_from|default:"Desconocido" }}</td>
+                    {% endif %}
+                    {% if url_to %}
+                        <td><a href="{% url 'borme-fecha' cargo.date_to %}">{{ cargo.date_to }}</a></td>
+                    {% else %}
+                        <td>{{ cargo.date_to|default:"Desconocido" }}</td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>
