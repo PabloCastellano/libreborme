@@ -13,7 +13,7 @@ v1_api.register(PersonResource())
 
 urlpatterns = patterns('',
     url(r'^$', HomeView.as_view(), name='borme-home'),
-    url(r'^anuncio/(?P<id>\d+)$', AnuncioView.as_view(), name='borme-anuncio'),
+    url(r'^anuncio/(?P<year>\d+)/(?P<id>\d+)$', AnuncioView.as_view(), name='borme-anuncio'),
     url(r'^borme/(?P<cve>[\w-]+)$', BormeView.as_view(), name='borme-borme'),
     url(r'^provincia/(?P<provincia>[\w -]+)$', BormeProvinciaView.as_view(), name='borme-provincia'),
     url(r'^fecha/(?P<date>[\d-]+)$', BormeDateView.as_view(), name='borme-fecha'),

@@ -106,7 +106,7 @@ class AnuncioView(DetailView):
 
     def get_object(self):
         try:
-            self.anuncio = Anuncio.objects.get(id_anuncio=self.kwargs['id'])
+            self.anuncio = Anuncio.objects.get(id_anuncio=self.kwargs['id'], year=self.kwargs['year'])
             return self.anuncio
         except Anuncio.DoesNotExist:
             raise Http404('Anuncio does not exist')

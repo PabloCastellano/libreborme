@@ -68,7 +68,6 @@ class Borme(Model):
     """ Edicion de BORME """
     cve = CharField(max_length=30, primary_key=True)
     date = DateField()
-    #year = IntegerField()
     url = URLField()
     from_reg = IntegerField()
     until_reg = IntegerField()
@@ -230,7 +229,7 @@ class Anuncio(Model):
     #objects = hstore.HStoreManager()
 
     def get_absolute_url(self):
-        return reverse('borme-anuncio', args=[str(self.id_anuncio)])
+        return reverse('borme-anuncio', args=[str(self.year), str(self.id_anuncio)])
 
     def __str__(self):
         return '%d - %d (%d actos)' % (self.id_anuncio, self.year, len(self.actos.keys()))

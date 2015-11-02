@@ -2,16 +2,14 @@
 
 {% load utils %}
 
-{% block title %}Anuncio {{ anuncio.id_anuncios }} | LibreBORME{% endblock %}
+{% block title %}Anuncio {{ anuncio.id_anuncio }} de {{ anuncio.year }} | LibreBORME{% endblock %}
 
 {% block content %}
-    <h1>Anuncio {{ anuncio.id_anuncio }}</h1>
+    <h1>Anuncio {{ anuncio.id_anuncio }} de {{ anuncio.year }}</h1>
 
     <strong>Empresa:</strong> <a href="{% url 'borme-empresa' anuncio.company|slug %}">{{ anuncio.company }}</a>
     <br/>
     <strong>Fecha:</strong> {{ borme.date|date }}
-    <br/>
-    <strong>Número total de actos mercantiles:</strong> {{ anuncio.actos|length }}
     <br/>
     <strong>Fuente:</strong> <a href="{{ borme.get_absolute_url }}">{{ borme.cve }}</a> <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
     <br/>
@@ -20,7 +18,7 @@
     <strong>Datos registrales:</strong> {{ anuncio.datos_registrales }}
     <br/>
 
-    <h2>Actos mercantiles:</h2>
+    <h2>{{ anuncio.actos|length }} acto{{ anuncio.actos|length|pluralize }} mercantil{{ anuncio.actos|length|pluralize:"es" }}:</h2>
     <ul>
     {% for nombre, valor in anuncio.actos.items %}
         <h3>{{ nombre }}</h3>
@@ -55,7 +53,7 @@
     {% endfor %}
     </ul>
 
-    <a href="{% url 'borme-anuncio' anuncio.id_anuncio|add:"-1" %}">&lt; Anterior</a> |
-    <a href="{% url 'borme-anuncio' anuncio.id_anuncio|add:"1" %}">Siguiente &gt;</a>
+    <a href="{% url 'borme-anuncio' anuncio.year anuncio.id_anuncio|add:"-1" %}">&lt; Anterior</a> |
+    <a href="{% url 'borme-anuncio' anuncio.year anuncio.id_anuncio|add:"1" %}">Siguiente &gt;</a>
 
 {% endblock %}
