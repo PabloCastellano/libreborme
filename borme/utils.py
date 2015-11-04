@@ -89,7 +89,6 @@ def _import1(borme):
         return results
 
     borme_log.save()  # date_updated
-    #import pdb; pdb.set_trace()
 
     borme_embed = {'cve': nuevo_borme.cve, 'url': nuevo_borme.url}
     for n, anuncio in enumerate(borme.get_anuncios(), 1):

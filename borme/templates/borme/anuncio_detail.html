@@ -15,7 +15,7 @@
     <br/>
     <strong>Provincia:</strong> <a href="{% url 'borme-provincia' borme.province %}">{{ borme.province }}</a>
     <br/>
-    <strong>Datos registrales:</strong> {{ anuncio.datos_registrales }}
+    <strong>Datos registrales:</strong> <i>{{ anuncio.datos_registrales }}</i>
     <br/>
 
     <h2>{{ anuncio.actos|length }} acto{{ anuncio.actos|length|pluralize }} mercantil{{ anuncio.actos|length|pluralize:"es" }}:</h2>

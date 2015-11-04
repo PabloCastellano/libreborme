@@ -148,6 +148,8 @@
             {% if persons|length > 5 %}
         </div>
         {% endif %}
+     {% empty %}
+        <p><i>No hay datos.</i></p>
      {% endfor %}
     </div>
 
@@ -166,6 +168,8 @@
             {% if companies|length > 5 %}
         </div>
         {% endif %}
+     {% empty %}
+        <p><i>No hay datos.</i></p>
      {% endfor %}
     </div>
 

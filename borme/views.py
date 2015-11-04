@@ -8,6 +8,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger, Invali
 from django.http import Http404, HttpResponse
 from django.utils.safestring import mark_safe
 
+from .forms import LBSearchForm
 from .models import Company, Person, Anuncio, Config, Borme
 from .utils import LibreBormeCalendar, estimate_count_fast
 
@@ -127,10 +128,10 @@ class LBSearchView(SearchView):
         start_offset = (page_no - 1) * self.results_per_page
         if self.results['Company']:
             self.results['Company'][start_offset:start_offset + self.results_per_page]
-            paginator_company = Paginator(self.results['Company'], self.results_per_page)
+        paginator_company = Paginator(self.results['Company'], self.results_per_page)
         if self.results['Person']:
             self.results['Person'][start_offset:start_offset + self.results_per_page]
-            paginator_person = Paginator(self.results['Person'], self.results_per_page)
+        paginator_person = Paginator(self.results['Person'], self.results_per_page)
 
         try:
             page_company = paginator_company.page(page_no)
@@ -145,14 +146,13 @@ class LBSearchView(SearchView):
         Generates the actual HttpResponse to send back to the user.
         """
         (paginator_company, page_company, paginator_person, page_person) = self.build_page()
-        import pdb; pdb.set_trace()
         context = {
             'query': self.query,
             'form': self.form,
-            'page_company': page_company,
-            'page_person': page_person,
-            'paginator_company': paginator_company,
-            'paginator_person': paginator_person,
+            'page_companies': page_company,
+            'page_persons': page_person,
+            'paginator_companies': paginator_company,
+            'paginator_persons': paginator_person,
             'suggestion': None,
         }
 

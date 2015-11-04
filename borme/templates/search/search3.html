@@ -1,5 +1,7 @@
 {% extends 'borme/base.html' %}
 
+{% load utils %}
+
 {% block content %}
     <h2>Resultados de la búsqueda «{{ query }}»</h2>
 
@@ -15,45 +17,176 @@
         </table>
 
         {% if query %}
-            <h3>Results</h3>
+                <h1>Resultados de la búsqueda «{{ query }}»</h1>
 
-            <h3>Companies</h3>
-
-            {% for result in page_company.object_list %}
-                <p>
-                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
-                </p>
-            {% empty %}
-                <p>No results found.</p>
-            {% endfor %}
-
-
-            {% if page_company.has_previous or page_company.has_next %}
-                <div>
-                    {% if page_company.has_previous %}<a href="?q={{ query }}&amp;page={{ page_company.previous_page_number }}">{% endif %}&laquo; Previous{% if page_company.has_previous %}</a>{% endif %}
-                    |
-                    {% if page_company.has_next %}<a href="?q={{ query }}&amp;page={{ page_company.next_page_number }}">{% endif %}Next &raquo;{% if page_company.has_next %}</a>{% endif %}
-                </div>
+    <p><strong>{{ paginator_companies.count }}</strong> empresas y <strong>{{ paginator_persons.count }}</strong> personas.</p>
+    <h2>Empresas:</h2>
+        <div class="search-companies">
+            {% if page_companies.object_list %}
+                {% for cs in page_companies.object_list|rows_distributed:3 %}
+                    {% if page_companies.object_list|length > 5 %}
+                        <div class="col-md-4">
+                    {% endif %}
+                    <ul>
+                    {% for company in cs %}
+                        <li><a href="{% url "borme-empresa" company.object.slug %}">{{ company.object.name }}</a></li>
+                    {% endfor %}
+                    </ul>
+                    {% if page_companies.object_list|length > 5 %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <i>No se encontraron empresas.</i>
             {% endif %}
+        </div>
 
-            <h3>Persons</h3>
-            {% for result in page_person.object_list %}
-                <p>
-                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
-                </p>
-            {% empty %}
-                <p>No results found.</p>
-            {% endfor %}
 
-            {% if page_person.has_previous or page_person.has_next %}
-                <div>
-                    {% if page_person.has_previous %}<a href="?q={{ query }}&amp;page={{ page_person.previous_page_number }}">{% endif %}&laquo; Previous{% if page_person.has_previous %}</a>{% endif %}
-                    |
-                    {% if page_person.has_next %}<a href="?q={{ query }}&amp;page={{ page_person.next_page_number }}">{% endif %}Next &raquo;{% if page_person.has_next %}</a>{% endif %}
-                </div>
+    {% if page_companies.object_list %}
+    <nav>
+      <ul class="pagination">
+        {% if page_companies.has_previous %}
+        <li>
+          <a href="?q={{ query }}&page={{ page_companies.previous_page_number }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo; Anterior</span>
+          </a>
+        </li>
+        {% endif %}
+        {% for num in page_companies.myrange %}
+            {% if num == page_companies.number %}
+            <li class="active"><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
+            {% else %}
+            <li><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
             {% endif %}
-        {% else %}
-            {# Show some example queries to run, maybe query syntax, something else? #}
+        {% empty %}
+            <li class="active"><a href="?q={{ query }}&page=1">1</a></li>
+        {% endfor %}
+
+        {% if page_companies.has_next %}
+        <li>
+          <a href="?q={{ query }}&page={{ page_companies.next_page_number }}" aria-label="Next">
+            <span aria-hidden="true">Siguiente &raquo;</span>
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+
+    <h2>Personas:</h2>
+        <div class="search-persons">
+            {% if page_persons.object_list %}
+                {% for ps in page_persons.object_list|rows_distributed:3 %}
+                    {% if page_persons.object_list|length > 5 %}
+                        <div class="col-md-4">
+                    {% endif %}
+                    <ul>
+                    {% for person in ps %}
+                        <li><a href="{% url "borme-persona" person.object.slug %}">{{ person.object.name|title }}</a></li>
+                    {% endfor %}
+                    </ul>
+                    {% if page_persons.object_list|length > 5 %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <i>No se encontraron personas.</i>
+            {% endif %}
+        </div>
+
+    {% if page_persons.object_list %}
+    <nav>
+      <ul class="pagination">
+        {% if page_persons.has_previous %}
+        <li>
+          <a href="?q={{ query }}&page={{ page_persons.previous_page_number }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo; Anterior</span>
+          </a>
+        </li>
+        {% endif %}
+        {% for num in page_persons.myrange %}
+            {% if num == page_persons.number %}
+            <li class="active"><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
+            {% else %}
+            <li><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+        {% empty %}
+            <li class="active"><a href="?q={{ query }}&page=1">1</a></li>
+        {% endfor %}
+
+        {% if page_persons.has_next %}
+        <li>
+          <a href="?q={{ query }}&page={{ page_persons.next_page_number }}" aria-label="Next">
+            <span aria-hidden="true">Siguiente &raquo;</span>
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+
+    <h1>Búsqueda avanzada</h1>
+
+      <form class="form-horizontal" role="search" action="{% url "borme-search" %}" method="get">
+
+      <div class="form-group">
+        <div class="form-group">
+          <label for="searchtitle" class="col-sm-2 control-label">Nombre:</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="searchtitle">
+          </div>
+        </div>
+
+        <input type="hidden" name="page" value="1">
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Tipo:</label>
+          <div class="col-sm-6">
+            <input type="radio" name="type" value="all" checked>Todos
+            <input type="radio" name="type" value="company"> Empresa
+            <input type="radio" name="type" value="person"> Persona
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <div class="checkbox">
+              <label for="exactmatch">
+                <input type="checkbox" name="exactmatch" id="exactmatch" value="1"> Búsqueda exacta
+              </label>
+            </div>
+          <p class="help-block">Palabras claves exactas (no contenidas en otras palabras)</p>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Años de actividad</label>
+          <div class="col-sm-6">
+            Desde:
+            <select>
+              <option value="2007">2007</option>
+              <option value="2008">2008</option>
+              <option value="2009">2009</option>
+              <option value="2010">2010</option>
+            </select>
+            hasta:
+            <select>
+              <option value="2007">2007</option>
+              <option value="2008">2008</option>
+              <option value="2009">2009</option>
+              <option value="2010">2010</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"> Buscar</i></button>
+          </div>
+        </div>
+
+      </form>
         {% endif %}
     </form>
 {% endblock %}

@@ -1,8 +1,8 @@
 {% extends 'borme/base.html' %}
 
 {% block content %}
-    <h2>Resultados de la búsqueda «{{ query }}»</h2>
 
+    <h2>Results</h2>
     <form method="get" action=".">
         <table>
             {{ form.as_table }}
@@ -15,7 +15,7 @@
         </table>
 
         {% if query %}
-            <h3>Results</h3>
+            <h3>Resultados de la búsqueda «{{ query }}»</h3>
 
             {% for result in page.object_list %}
                 <p>

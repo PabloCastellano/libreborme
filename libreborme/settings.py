@@ -37,7 +37,6 @@ INSTALLED_APPS = (
     'bootstrap',
     'haystack',
     'tastypie',
-    'haystack',
     'borme',
     'libreborme',
 )
