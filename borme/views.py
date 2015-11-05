@@ -7,7 +7,6 @@ from django.http import Http404
 from django.utils.safestring import mark_safe
 
 from .models import Company, Person, Anuncio, Config, Borme
-from .forms import LBSearchForm
 from .utils import LibreBormeCalendar, estimate_count_fast
 
 import datetime
