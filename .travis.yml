@@ -7,6 +7,7 @@ language: python
 
 services:
     - postgresql
+    - elasticsearch
 
 python:
   - "3.4"
@@ -20,6 +21,7 @@ install:
   - wget http://www.boe.es/borme/dias/2015/02/10/pdfs/BORME-A-2015-27-10.pdf -O ~/.bormes/pdf/2015/02/10/BORME-A-2015-27-10.pdf
 
 before_script:
+  - sleep 10  # Elasticsearch
   - psql template1 -c 'CREATE EXTENSION hstore;'
   - psql -U postgres -c 'CREATE DATABASE libreborme;'
   - psql -U postgres -c "CREATE USER libreborme WITH PASSWORD 'password';"
