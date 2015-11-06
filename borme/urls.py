@@ -1,7 +1,8 @@
 from django.conf.urls import patterns, url, include
 
 from .views import AnuncioView, CompanyView, PersonView, HomeView, PersonListView, CompanyListView, BusquedaView,\
-                    BormeView, BormeProvinciaView, BormeDateView, generate_csv_cargos_actual, generate_csv_cargos_historial
+                    BormeView, BormeProvinciaView, BormeDateView, generate_company_csv_cargos_actual, generate_company_csv_cargos_historial,\
+                    generate_person_csv_cargos_actual, generate_person_csv_cargos_historial
 
 from tastypie.api import Api
 from borme.api.resources import CompanyResource, PersonResource
@@ -18,10 +19,12 @@ urlpatterns = patterns('',
     url(r'^provincia/(?P<provincia>[\w -]+)$', BormeProvinciaView.as_view(), name='borme-provincia'),
     url(r'^fecha/(?P<date>[\d-]+)$', BormeDateView.as_view(), name='borme-fecha'),
     url(r'^empresa/(?P<slug>[\w-]+)$', CompanyView.as_view(), name='borme-empresa'),
-    url(r'^empresa/(?P<slug>[\w-]+)/cargos_actual.csv$', generate_csv_cargos_actual, name='borme-empresa-csv-actual'),
-    url(r'^empresa/(?P<slug>[\w-]+)/cargos_historial.csv$', generate_csv_cargos_historial, name='borme-empresa-csv-historial'),
+    url(r'^empresa/(?P<slug>[\w-]+)/cargos_actual.csv$', generate_company_csv_cargos_actual, name='borme-empresa-csv-actual'),
+    url(r'^empresa/(?P<slug>[\w-]+)/cargos_historial.csv$', generate_company_csv_cargos_historial, name='borme-empresa-csv-historial'),
     url(r'^empresas/$', CompanyListView.as_view(), name='borme-empresas-list'),
     url(r'^persona/(?P<slug>[\w-]+)$', PersonView.as_view(), name='borme-persona'),
+    url(r'^persona/(?P<slug>[\w-]+)/cargos_actual.csv$', generate_person_csv_cargos_actual, name='borme-persona-csv-actual'),
+    url(r'^persona/(?P<slug>[\w-]+)/cargos_historial.csv$', generate_person_csv_cargos_historial, name='borme-persona-csv-historial'),
     url(r'^personas/$', PersonListView.as_view(), name='borme-personas-list'),
     url(r'^busqueda/$', BusquedaView.as_view(), name='borme-search'),
     url(r'^api/', include(v1_api.urls)),

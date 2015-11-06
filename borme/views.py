@@ -13,7 +13,36 @@ import datetime
 import csv
 
 
-def generate_csv_cargos_actual(context, slug):
+def generate_person_csv_cargos_actual(context, slug):
+    person = Person.objects.get(slug=slug)
+    filename = 'cargos_actuales_%s_%s' % (slug, datetime.date.today().isoformat())
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
+
+    writer = csv.writer(response)
+    writer.writerow(['Cargo', 'Nombre', 'Desde'])
+    for cargo in person.cargos_actuales:
+        writer.writerow([cargo['title'], cargo['name'], cargo['date_from']])
+
+    return response
+
+
+def generate_person_csv_cargos_historial(context, slug):
+    person = Person.objects.get(slug=slug)
+    filename = 'cargos_historial_%s_%s' % (slug, datetime.date.today().isoformat())
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
+
+    writer = csv.writer(response)
+    writer.writerow(['Cargo', 'Nombre', 'Desde', 'Hasta'])
+    for cargo in person.cargos_historial:
+        date_from = cargo.get('date_from', '')
+        writer.writerow([cargo['title'], cargo['name'], date_from, cargo['date_to']])
+
+    return response
+
+
+def generate_company_csv_cargos_actual(context, slug):
     company = Company.objects.get(slug=slug)
     filename = 'cargos_actuales_%s_%s' % (slug, datetime.date.today().isoformat())
     response = HttpResponse(content_type='text/csv')
@@ -27,7 +56,7 @@ def generate_csv_cargos_actual(context, slug):
     return response
 
 
-def generate_csv_cargos_historial(context, slug):
+def generate_company_csv_cargos_historial(context, slug):
     company = Company.objects.get(slug=slug)
     filename = 'cargos_historial_%s_%s' % (slug, datetime.date.today().isoformat())
     response = HttpResponse(content_type='text/csv')
