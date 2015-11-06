@@ -175,11 +175,11 @@ def _import1(borme):
                                 cargo = {'title': nombre_cargo, 'name': p.name, 'type': 'person'}
                                 if is_acto_cargo_entrante(acto.name):
                                     cargo['date_from'] = borme.date.isoformat()
-                                    cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_from': borme.date.isoformat(), 'type': 'person'}
+                                    cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_from': borme.date.isoformat()}
                                     p.update_cargos_entrantes([cargo_embed])
                                 else:
                                     cargo['date_to'] = borme.date.isoformat()
-                                    cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_from': borme.date.isoformat(), 'type': 'person'}
+                                    cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_to': borme.date.isoformat()}
                                     p.update_cargos_salientes([cargo_embed])
 
                                 p.date_updated = borme.date
