@@ -14,6 +14,7 @@
 
     <h2>Cargos directivos (actuales):</h2>
     {% if company.cargos_actuales %}
+        <a href="{% url 'borme-empresa-csv-actual' company.slug %}" alt="Descargar CSV de cargos actuales" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
         <table class="table table-condensed">
             <thead>
                 <tr>
@@ -55,6 +56,7 @@
 
     <h2>Cargos directivos (historial):</h2>
     {% if company.cargos_historial %}
+        <a href="{% url 'borme-empresa-csv-historial' company.slug %}" alt="Descargar CSV de historial de cargos" title="Descargar CSV de historial de cargos"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
         <table class="table table-condensed">
             <thead>
                 <tr>

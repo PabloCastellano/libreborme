@@ -3,13 +3,43 @@ from django.views.generic.detail import DetailView
 
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.utils.safestring import mark_safe
 
 from .models import Company, Person, Anuncio, Config, Borme
 from .utils import LibreBormeCalendar, estimate_count_fast
 
 import datetime
+import csv
+
+
+def generate_csv_cargos_actual(context, slug):
+    company = Company.objects.get(slug=slug)
+    filename = 'cargos_actuales_%s_%s' % (slug, datetime.date.today().isoformat())
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
+
+    writer = csv.writer(response)
+    writer.writerow(['Cargo', 'Nombre', 'Desde', 'Tipo'])
+    for cargo in company.cargos_actuales:
+        writer.writerow([cargo['title'], cargo['name'], cargo['date_from'], cargo['type']])
+
+    return response
+
+
+def generate_csv_cargos_historial(context, slug):
+    company = Company.objects.get(slug=slug)
+    filename = 'cargos_historial_%s_%s' % (slug, datetime.date.today().isoformat())
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
+
+    writer = csv.writer(response)
+    writer.writerow(['Cargo', 'Nombre', 'Desde', 'Hasta', 'Tipo'])
+    for cargo in company.cargos_historial:
+        date_from = cargo.get('date_from', '')
+        writer.writerow([cargo['title'], cargo['name'], date_from, cargo['date_to'], cargo['type']])
+
+    return response
 
 
 class HomeView(TemplateView):
