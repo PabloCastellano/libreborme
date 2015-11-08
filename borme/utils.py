@@ -323,6 +323,11 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False, c
             xml_path = get_borme_xml_filepath(next_date)
             try:
                 bxml = BormeXML.from_file(xml_path)
+                if bxml.next_borme is None:
+                    bxml = BormeXML.from_date(next_date)
+                    os.makedirs(os.path.dirname(xml_path), exist_ok=True)
+                    bxml.save_to_file(xml_path)
+
             except FileNotFoundError:
                 bxml = BormeXML.from_date(next_date)
                 os.makedirs(os.path.dirname(xml_path), exist_ok=True)
