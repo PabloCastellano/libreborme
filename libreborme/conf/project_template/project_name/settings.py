@@ -15,7 +15,6 @@ WSGI_APPLICATION = '{{ project_name }}.wsgi.application'
 # ------ END DON'T TOUCH AREA ------ #
 
 
-DEBUG = True
 DOMAIN = '<domain>'
 SUBDIR = '/'  # edit this line if you are installing in a sub directory, like /libreborme
 SITE_NAME = '{{ project_name }}'  # site name, you can change this
@@ -27,7 +26,7 @@ from libreborme.settings import *
 
 
 # ------ All settings customizations must go here ------ #
-
+DEBUG = True
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
