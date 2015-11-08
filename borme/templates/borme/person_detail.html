@@ -2,7 +2,7 @@
 
 {% load utils %}
 
-{% block title %}{{ person.name }} | LibreBORME{% endblock %}
+{% block title %}{{ person.name|title }} | LibreBORME{% endblock %}
 
 {% block content %}
     <h1>Persona «{{ person.name }}»</h1>
