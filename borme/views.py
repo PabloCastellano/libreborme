@@ -4,7 +4,7 @@ from django.views.generic.detail import DetailView
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.views.generic import TemplateView
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger, InvalidPage
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404, HttpResponse
 from django.utils.safestring import mark_safe
 
@@ -109,52 +109,56 @@ class LBSearchView(SearchView):
     def __init__(self, template=None, load_all=True, form_class=LBSearchForm, searchqueryset=None, context_class=RequestContext, results_per_page=None):
         super(LBSearchView, self).__init__(template, load_all, form_class, searchqueryset, context_class, results_per_page)
 
-    def build_page(self):
-        """
-        Paginates the results appropriately.
-
-        In case someone does not want to use Django's built-in pagination, it
-        should be a simple matter to override this method to do what they would
-        like.
-        """
-        try:
-            page_no = int(self.request.GET.get('page', 1))
-        except (TypeError, ValueError):
-            raise Http404("Not a valid number for page.")
-
-        if page_no < 1:
-            raise Http404("Pages should be 1 or greater.")
-
-        start_offset = (page_no - 1) * self.results_per_page
-        if self.results['Company']:
-            self.results['Company'][start_offset:start_offset + self.results_per_page]
-        paginator_company = Paginator(self.results['Company'], self.results_per_page)
-        if self.results['Person']:
-            self.results['Person'][start_offset:start_offset + self.results_per_page]
-        paginator_person = Paginator(self.results['Person'], self.results_per_page)
-
-        try:
-            page_company = paginator_company.page(page_no)
-            page_person = paginator_person.page(page_no)
-        except InvalidPage:
-            raise Http404("No such page!")
-
-        return (paginator_company, page_company, paginator_person, page_person)
-
     def create_response(self):
         """
         Generates the actual HttpResponse to send back to the user.
         """
-        (paginator_company, page_company, paginator_person, page_person) = self.build_page()
+        paginator_companies = Paginator(self.results['Company'], self.results_per_page)
+        paginator_persons = Paginator(self.results['Person'], self.results_per_page)
+        page_no = int(self.request.GET.get('page', 1))
+
         context = {
+            'page_no': page_no,
             'query': self.query,
             'form': self.form,
-            'page_companies': page_company,
-            'page_persons': page_person,
-            'paginator_companies': paginator_company,
-            'paginator_persons': paginator_person,
             'suggestion': None,
         }
+
+        try:
+            page_companies = paginator_companies.page(page_no)
+        except PageNotAnInteger:
+            page_companies = paginator_companies.page(1)
+            context['page_no'] = 1
+        except EmptyPage:
+            page_companies = paginator_companies.page(paginator_companies.num_pages)
+        finally:
+            context['paginator_companies'] = paginator_companies
+            pagerange = paginator_companies.page_range[:3] + paginator_companies.page_range[-3:]
+            pagerange.append(page_companies.number)
+            pagerange = list(set(pagerange))
+            pagerange.sort()
+            if len(pagerange) == 1:
+                pagerange = []
+            page_companies.myrange = pagerange
+            context['page_companies'] = page_companies
+
+        try:
+            page_persons = paginator_persons.page(page_no)
+        except PageNotAnInteger:
+            page_persons = paginator_persons.page(1)
+            context['page_no'] = 1
+        except EmptyPage:
+            page_persons = paginator_persons.page(paginator_persons.num_pages)
+        finally:
+            context['paginator_persons'] = paginator_persons
+            pagerange = paginator_persons.page_range[:3] + paginator_persons.page_range[-3:]
+            pagerange.append(page_persons.number)
+            pagerange = list(set(pagerange))
+            pagerange.sort()
+            if len(pagerange) == 1:
+                pagerange = []
+            page_companies.myrange = pagerange
+            context['page_persons'] = page_persons
 
         if self.results and hasattr(self.results, 'query') and self.results.query.backend.include_spelling:
             context['suggestion'] = self.form.get_suggestion()

@@ -3,7 +3,9 @@
 {% load utils %}
 
 {% block content %}
-    <h2>Resultados de la búsqueda «{{ query }}»</h2>
+        {% if query %}
+                <h1>Resultados de la búsqueda «{{ query }}»</h1>
+        {% endif %}
 
     <form method="get" action=".">
         <table>
@@ -17,8 +19,6 @@
         </table>
 
         {% if query %}
-                <h1>Resultados de la búsqueda «{{ query }}»</h1>
-
     <p><strong>{{ paginator_companies.count }}</strong> empresas y <strong>{{ paginator_persons.count }}</strong> personas.</p>
     <h2>Empresas:</h2>
         <div class="search-companies">
