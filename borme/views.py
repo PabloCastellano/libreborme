@@ -106,7 +106,7 @@ class HomeView(TemplateView):
 class LBSearchView(SearchView):
     template = "search/search3.html"
 
-    def __init__(self, template=None, load_all=True, form_class=LBSearchForm, searchqueryset=None, context_class=RequestContext, results_per_page=None):
+    def __init__(self, template=None, load_all=True, form_class=LBSearchForm, searchqueryset=None, context_class=RequestContext, results_per_page=25):
         super(LBSearchView, self).__init__(template, load_all, form_class, searchqueryset, context_class, results_per_page)
 
     def create_response(self):
@@ -118,7 +118,6 @@ class LBSearchView(SearchView):
         page_no = int(self.request.GET.get('page', 1))
 
         context = {
-            'page_no': page_no,
             'query': self.query,
             'form': self.form,
             'suggestion': None,
@@ -157,7 +156,7 @@ class LBSearchView(SearchView):
             pagerange.sort()
             if len(pagerange) == 1:
                 pagerange = []
-            page_companies.myrange = pagerange
+            page_persons.myrange = pagerange
             context['page_persons'] = page_persons
 
         if self.results and hasattr(self.results, 'query') and self.results.query.backend.include_spelling:

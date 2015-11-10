@@ -3,9 +3,9 @@
 {% load utils %}
 
 {% block content %}
-        {% if query %}
-                <h1>Resultados de la búsqueda «{{ query }}»</h1>
-        {% endif %}
+    {% if query %}
+        <h1>Resultados de la búsqueda «{{ query }}»</h1>
+    {% endif %}
 
     <form method="get" action=".">
         <table>
@@ -19,7 +19,9 @@
         </table>
 
         {% if query %}
-    <p><strong>{{ paginator_companies.count }}</strong> empresas y <strong>{{ paginator_persons.count }}</strong> personas.</p>
+    <p>Se encontraron {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company'%} <strong>{{ paginator_companies.count }}</strong> empresas{% endif %}{% if form.cleaned_data.type == 'all' %} y {% endif %}{% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'person'%}<strong>{{ paginator_persons.count }}</strong> personas{% endif %}.</p>
+
+            {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company' %}
     <h2>Empresas:</h2>
         <div class="search-companies">
             {% if page_companies.object_list %}
@@ -72,7 +74,9 @@
       </ul>
     </nav>
     {% endif %}
+            {% endif %}
 
+            {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'person' %}
     <h2>Personas:</h2>
         <div class="search-persons">
             {% if page_persons.object_list %}
@@ -123,6 +127,7 @@
         {% endif %}
       </ul>
     </nav>
+    {% endif %}
     {% endif %}
 
     {% else %}
