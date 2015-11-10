@@ -28,6 +28,5 @@ urlpatterns = patterns('',
     url(r'^personas/$', PersonListView.as_view(), name='borme-personas-list'),
     url(r'^busqueda/$', BusquedaView.as_view(), name='borme-busqueda'),
     url(r'^api/', include(v1_api.urls)),
-    url(r'^search/', include('haystack.urls')),
-    url(r'^search3/', LBSearchView(), name='borme-search'),
+    url(r'^search/', LBSearchView(), name='borme-search'),
 )

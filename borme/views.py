@@ -104,7 +104,7 @@ class HomeView(TemplateView):
 
 
 class LBSearchView(SearchView):
-    template = "search/search3.html"
+    template = "search/search.html"
 
     def __init__(self, template=None, load_all=True, form_class=LBSearchForm, searchqueryset=None, context_class=RequestContext, results_per_page=25):
         super(LBSearchView, self).__init__(template, load_all, form_class, searchqueryset, context_class, results_per_page)
