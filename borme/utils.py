@@ -394,6 +394,7 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False, c
                                 logger.error('[X]   python manage.py importbormetoday local')  # TODO: --from date
                                 return False, total_results
                 else:
+                    logger.error('[X] Faltan archivos PDF y JSON que no se desea descargar.')
                     return False, total_results
 
             for borme in sorted(bormes):
