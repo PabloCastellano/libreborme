@@ -263,7 +263,7 @@ class Config(Model):
 
 
 class BormeLog(Model):
-    borme = ForeignKey('Borme')
+    borme = OneToOneField('Borme', primary_key=True)
     date_created = DateTimeField(auto_now_add=True)
     date_updated = DateTimeField(auto_now=True)
     date_parsed = DateTimeField(blank=True, null=True)
