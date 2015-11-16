@@ -262,6 +262,9 @@ def update_previous_xml(date):
 
     return True
 
+def files_exist(files):
+    return all([os.path.exists(f) for f in files])
+
 
 def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
     """
@@ -346,13 +349,13 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False, c
             fh2.setLevel(logging.WARNING)
             logger.addHandler(fh2)
 
+            json_path = get_borme_json_path(bxml.date)
             pdf_path = get_borme_pdf_path(bxml.date)
             os.makedirs(pdf_path, exist_ok=True)
             logger.info('============================================================')
             logger.info('Ran import_borme_download at %s' % timezone.now())
             logger.info('  Import date: %s. Section: %s' % (bxml.date.isoformat(), seccion))
             logger.info('============================================================')
-            logger.info(pdf_path)
 
             print('\nPATH: %s\nDATE: %s\nSECCION: %s\n' % (pdf_path, bxml.date, seccion))
 
@@ -360,23 +363,38 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False, c
             if download:
                 _, files = bxml.download_pdfs(pdf_path, seccion=seccion)
             else:
-                _, _, files = next(os.walk(pdf_path))
-                files = list(map(lambda x: os.path.join(pdf_path, x), files))
+                cves = bxml.get_cves(bormeparser.SECCION.A)
+                files_json = list(map(lambda x: os.path.join(json_path, '%s.json' % x), cves))
+                files_pdf = list(map(lambda x: os.path.join(pdf_path, '%s.pdf' % x), cves))
 
-            for filepath in files:
-                if filepath.endswith('-99.pdf'):
-                    continue
-                logger.info('%s' % filepath)
-                total_results['total_bormes'] += 1
-                try:
-                    bormes.append(bormeparser.parse(filepath))
-                except Exception as e:
-                    logger.error('[X] Error grave en bormeparser.parse(): %s' % filepath)
-                    logger.error('[X] %s: %s' % (e.__class__.__name__, e))
-                    if strict:
-                        logger.error('[X] Una vez arreglado, reanuda la importación:')
-                        logger.error('[X]   python manage.py importbormetoday local')
-                        return False, total_results
+                if files_exist(files_json):
+                    for filepath in files_json:
+                        logger.info('%s' % filepath)
+                        total_results['total_bormes'] += 1
+                        try:
+                            bormes.append(bormeparser.Borme.from_json(filepath))
+                        except Exception as e:
+                            logger.error('[X] Error grave en bormeparser.Borme.from_json(): %s' % filepath)
+                            logger.error('[X] %s: %s' % (e.__class__.__name__, e))
+                            if strict:
+                                logger.error('[X] Una vez arreglado, reanuda la importación:')
+                                logger.error('[X]   python manage.py importbormetoday local')  # TODO: --from date
+                                return False, total_results
+                elif files_exist(files_pdf):
+                    for filepath in files_pdf:
+                        logger.info('%s' % filepath)
+                        total_results['total_bormes'] += 1
+                        try:
+                            bormes.append(bormeparser.parse(filepath))
+                        except Exception as e:
+                            logger.error('[X] Error grave en bormeparser.parse(): %s' % filepath)
+                            logger.error('[X] %s: %s' % (e.__class__.__name__, e))
+                            if strict:
+                                logger.error('[X] Una vez arreglado, reanuda la importación:')
+                                logger.error('[X]   python manage.py importbormetoday local')  # TODO: --from date
+                                return False, total_results
+                else:
+                    return False, total_results
 
             for borme in sorted(bormes):
                 total_results['total_anuncios'] += len(borme.get_anuncios())
@@ -394,7 +412,6 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False, c
                         return False, total_results
 
                 if create_json:
-                    json_path = get_borme_json_path(borme)
                     os.makedirs(os.path.dirname(json_path), exist_ok=True)
                     borme.to_json(json_path)
 
