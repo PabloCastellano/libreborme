@@ -474,10 +474,10 @@ def import_borme_json(filename):
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
 
     try:
-        borme = bormeparser.from_json(filename)
+        borme = bormeparser.Borme.from_json(filename)
         results = _import1(borme)
     except Exception as e:
-        logger.error('[X] Error grave en bormeparser.parse(): %s' % filename)
+        logger.error('[X] Error grave en bormeparser.Borme.from_json(): %s' % filename)
         logger.error('[X] %s: %s' % (e.__class__.__name__, e))
 
     if not all(map(lambda x: x == 0, results.values())):

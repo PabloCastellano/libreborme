@@ -33,7 +33,7 @@ class Command(BaseCommand):
         if args:
             for filename in args:
                 print(filename)
-                import_borme_pdf(filename)
+                import_borme_json(filename)
 
             config = Config.objects.first()
             if config:
