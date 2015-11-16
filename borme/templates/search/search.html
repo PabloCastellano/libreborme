@@ -5,20 +5,50 @@
 {% block content %}
     {% if query %}
         <h1>Resultados de la búsqueda «{{ query }}»</h1>
-    {% endif %}
 
+      <form class="form-horizontal" role="search" action="{% url "borme-search" %}" method="get">
+
+      <div class="form-group">
+        <div class="form-group">
+          <label for="searchtitle" class="col-sm-2 control-label">Nombre:</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="searchtitle" name="q" value="{{ query }}">
+          </div>
+        </div>
+
+        <input type="hidden" name="page" value="1">
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Tipo:</label>
+          <div class="col-sm-6">
+            <input type="radio" name="type" value="all" {% if form.cleaned_data.type == 'all' %}checked{% endif %}>Todos
+            <input type="radio" name="type" value="company" {% if form.cleaned_data.type == 'company' %}checked{% endif %}> Empresa
+            <input type="radio" name="type" value="person" {% if form.cleaned_data.type == 'person' %}checked{% endif %}> Persona
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"> Buscar</i></button>
+          </div>
+        </div>
+
+      </form>
+<!--
     <form method="get" action=".">
         <table>
             {{ form.as_table }}
             <tr>
                 <td>&nbsp;</td>
                 <td>
-                    <input type="submit" value="Search">
+                    <input type="submit" value="Buscar">
                 </td>
             </tr>
         </table>
+    </form>
 
-        {% if query %}
+-->
+
     <p>Se encontraron {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company'%} <strong>{{ paginator_companies.count }}</strong> empresas{% endif %}{% if form.cleaned_data.type == 'all' %} y {% endif %}{% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'person'%}<strong>{{ paginator_persons.count }}</strong> personas{% endif %}.</p>
 
             {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company' %}
@@ -140,7 +170,7 @@
         <div class="form-group">
           <label for="searchtitle" class="col-sm-2 control-label">Nombre:</label>
           <div class="col-sm-6">
-            <input type="text" class="form-control" id="searchtitle">
+            <input type="text" class="form-control" id="searchtitle" name="q">
           </div>
         </div>
 
@@ -193,5 +223,4 @@
 
       </form>
         {% endif %}
-    </form>
 {% endblock %}
