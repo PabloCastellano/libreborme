@@ -8,12 +8,12 @@
         </div>
 
     <div class="anuncios">
-            {% for k, v in resumen_dia.items %}
-                {{ k }}: {{ v }}<br/>
-            {% empty %}
-                <i>No hay anuncios para este día.</i>
-            {% endfor %}
-        </div>
+        {% for k, v in resumen_dia %}
+            <strong>{{ k }}:</strong> {{ v }}<br/>
+        {% empty %}
+            <i>No hay anuncios para este día.</i>
+        {% endfor %}
+    </div>
 
     #########################
 

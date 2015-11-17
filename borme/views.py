@@ -2,7 +2,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import redirect, render_to_response
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404, HttpResponse
@@ -273,19 +273,34 @@ class BormeView(DetailView):
 class BormeDateView(TemplateView):
     template_name = 'borme/borme_fecha.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        year, month, day = self.kwargs['date'].split('-')
+        redirect_today = False
+
+        try:
+            self.date = datetime.date(int(year), int(month), int(day))
+            if self.date > datetime.date.today():
+                redirect_today = True
+        except ValueError:
+            redirect_today = True
+
+        if redirect_today:
+            return redirect('borme-fecha', date=datetime.date.today().isoformat())
+
+        return super(BormeDateView, self).dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(BormeDateView, self).get_context_data(**kwargs)
 
-        year, month, _ = self.kwargs['date'].split('-')
-        calendar = LibreBormeCalendar().formatmonth(int(year), int(month))  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
+        calendar = LibreBormeCalendar().formatmonth(self.date.year, self.date.month)  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
         #calendar = HTMLCalendar().formatyear(int(year))  # formatyearpage()
 
         resumen_dia = {}
-        bormes = Borme.objects.filter(date=self.kwargs['date'])
+        bormes = Borme.objects.filter(date=self.date)
         if len(bormes) > 0:
             from_reg = min([b.from_reg for b in bormes])
             until_reg = max([b.until_reg for b in bormes])
-            anuncios = Anuncio.objects.filter(id_anuncio__gte=from_reg, id_anuncio__lte=until_reg)
+            anuncios = Anuncio.objects.filter(id_anuncio__gte=from_reg, id_anuncio__lte=until_reg, year=self.date.year)
 
             # FIXME: performance-killer. Guardar resultados en el modelo Borme
             from collections import Counter
@@ -295,9 +310,9 @@ class BormeDateView(TemplateView):
 
         # TODO: Guardar la fecha en el anuncio
         context['calendar'] = mark_safe(calendar)
-        context['date'] = self.kwargs['date']
+        context['date'] = self.date
         context['bormes'] = bormes
-        context['resumen_dia'] = dict(resumen_dia)
+        context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
         return context
 
 
