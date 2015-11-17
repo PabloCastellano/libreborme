@@ -3,10 +3,11 @@
 {% block content %}
     <h2>Anuncios mercantiles del día {{ date }}</h2>
 
-        <div class="calendar">
-            {{ calendar }}
-        </div>
+    <div class="calendar">
+        {{ calendar }}
+    </div>
 
+    <h3>Resumen de actos para el día {{ date }}</h3>
     <div class="anuncios">
         {% for k, v in resumen_dia %}
             <strong>{{ k }}:</strong> {{ v }}<br/>
@@ -15,14 +16,15 @@
         {% endfor %}
     </div>
 
-    #########################
-
-        <div class="bormes">
-            {% for borme in bormes %}
-                {{ borme.cve }}<br/>
-            {% empty %}
-                <i>No hay bormes para este día.</i>
-            {% endfor %}
-        </div>
+    <h3>Ciudades que publicaron BORME el día {{ date }}</h3>
+    <div class="bormes">
+        <ul>
+        {% for borme in bormes %}
+            <li><a href="{% url 'borme-borme' borme.cve %}">{{ borme.province }}</a></li>
+        {% empty %}
+            <i>No hay bormes para este día.</i>
+        {% endfor %}
+        </ul>
+    </div>
 
 {% endblock %}
