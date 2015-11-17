@@ -2,6 +2,7 @@ from .models import Company, Borme, Anuncio, Person, BormeLog
 
 from django.conf import settings
 from django.db import connection
+from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 from django.utils import timezone
 
@@ -46,11 +47,15 @@ class LibreBormeCalendar(HTMLCalendar):
         elif self.today == datetime.date(self.year, self.month, day):
             last_modified = Config.objects.first().last_modified.date()
             if self.today == last_modified:
-                return '<td class="day today"><a href="/borme/fecha/%d-%d-%d">%d</a></td>' % (self.year, self.month, day, day)
+                date = '%d-%02d-%02d' % (self.year, self.month, day)
+                url = reverse('borme-fecha', kwargs={'date': date})
+                return '<td class="day today"><a href="%s">%d</a></td>' % (url, day)
             else:
                 return '<td class="day today">%d</td>' % day
         elif self.today > datetime.date(self.year, self.month, day) and weekday not in (5, 6):
-            return '<td class="day %s"><a href="/borme/fecha/%d-%d-%d">%d</a></td>' % (self.cssclasses[weekday], self.year, self.month, day, day)
+            date = '%d-%02d-%02d' % (self.year, self.month, day)
+            url = reverse('borme-fecha', kwargs={'date': date})
+            return '<td class="day %s"><a href="%s">%d</a></td>' % (self.cssclasses[weekday], url, day)
         else:
             return '<td class="day %s">%d</td>' % (self.cssclasses[weekday], day)
 
