@@ -261,9 +261,17 @@ class BormeView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(BormeView, self).get_context_data(**kwargs)
 
+        anuncios = Anuncio.objects.filter(id_anuncio__gte=self.borme.from_reg, id_anuncio__lte=self.borme.until_reg, year=self.borme.date.year)
+        from collections import Counter
+        resumen_dia = Counter()
+        for anuncio in anuncios:
+            resumen_dia += Counter(anuncio.actos.keys())
+
+        context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
+
         context['total_anuncios'] = self.borme.until_reg - self.borme.from_reg + 1
-        context['bormes_dia'] = Borme.objects.filter(date=self.borme.date).order_by('cve')
-        bormes_dia = list(context['bormes_dia'])
+        bormes_dia = Borme.objects.filter(date=self.borme.date).order_by('cve')
+        bormes_dia = list(bormes_dia)
         bormes_dia.remove(self.borme)
         bormes_dia.sort(key=lambda b: b.province)
         context['bormes_dia'] = bormes_dia
