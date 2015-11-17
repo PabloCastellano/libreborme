@@ -64,7 +64,7 @@ def _import1(borme):
     """
     borme: bormeparser.Borme
     """
-    logger.info('\nBORME CVE: %s (%s)' % (borme.cve, borme.provincia))
+    logger.info('\nBORME CVE: %s (%s, %s, [%d-%d])' % (borme.cve, borme.date, borme.provincia, borme.anuncios_rango[0], borme.anuncios_rango[1]))
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0,
                'total_companies': 0, 'total_persons': 0, 'errors': 0}
 
@@ -261,6 +261,7 @@ def update_previous_xml(date):
         prev_bxml.save_to_file(prev_xml_path)
 
     return True
+
 
 def files_exist(files):
     return all([os.path.exists(f) for f in files])
