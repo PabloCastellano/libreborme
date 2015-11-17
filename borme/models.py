@@ -88,7 +88,7 @@ class Person(Model):
     """ Persona """
     name = CharField(max_length=200, db_index=True)
     slug = CharField(max_length=200, primary_key=True)
-    in_companies = ArrayField(CharField(max_length=250), default=list)
+    in_companies = ArrayField(CharField(max_length=260), default=list)
     in_bormes = ArrayField(hstore.DictionaryField(), default=list)
 
     date_updated = DateField(db_index=True)
@@ -135,9 +135,9 @@ class Person(Model):
 
 class Company(Model):
     """ Sociedad """
-    name = CharField(max_length=250, db_index=True)
+    name = CharField(max_length=260, db_index=True)
     nif = CharField(max_length=10)
-    slug = CharField(max_length=250, primary_key=True)
+    slug = CharField(max_length=260, primary_key=True)
     date_creation = DateField(blank=True, null=True)
     is_active = BooleanField(default=False)
     type = CharField(max_length=50, choices=SOCIEDADES)
@@ -238,10 +238,10 @@ class Company(Model):
 
 
 class Anuncio(Model):
-    id_anuncio = IntegerField(primary_key=True)
+    id_anuncio = IntegerField()
+    year = IntegerField()
     borme = ForeignKey('Borme')
     company = ForeignKey('Company')
-    year = IntegerField()
     datos_registrales = CharField(max_length=70)
     actos = hstore.SerializedDictionaryField()  # TODO: schema={...}  # TODO: Actos repetidos
 
