@@ -98,8 +98,8 @@ class HomeView(TemplateView):
         context['last_modified'] = last_modified
 
         today = datetime.date.today()
-        calendar = LibreBormeCalendar().formatmonth(today.year, today.month)
-        context['calendar'] = mark_safe(calendar)
+        lb_calendar = LibreBormeCalendar().formatmonth(today.year, today.month)
+        context['calendar'] = mark_safe(lb_calendar)
         return context
 
 
@@ -267,14 +267,15 @@ class BormeView(DetailView):
         for anuncio in anuncios:
             resumen_dia += Counter(anuncio.actos.keys())
 
-        context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
-
-        context['total_anuncios'] = self.borme.until_reg - self.borme.from_reg + 1
         bormes_dia = Borme.objects.filter(date=self.borme.date).order_by('cve')
         bormes_dia = list(bormes_dia)
         bormes_dia.remove(self.borme)
         bormes_dia.sort(key=lambda b: b.province)
+
         context['bormes_dia'] = bormes_dia
+        context['total_anuncios'] = self.borme.until_reg - self.borme.from_reg + 1
+        context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
+
         return context
 
 
@@ -300,27 +301,26 @@ class BormeDateView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BormeDateView, self).get_context_data(**kwargs)
 
-        calendar = LibreBormeCalendar().formatmonth(self.date.year, self.date.month)  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
-        #calendar = HTMLCalendar().formatyear(int(year))  # formatyearpage()
+        lb_calendar = LibreBormeCalendar().formatmonth(self.date.year, self.date.month)  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
 
-        resumen_dia = {}
         bormes = Borme.objects.filter(date=self.date)
         if len(bormes) > 0:
             from_reg = min([b.from_reg for b in bormes])
             until_reg = max([b.until_reg for b in bormes])
             anuncios = Anuncio.objects.filter(id_anuncio__gte=from_reg, id_anuncio__lte=until_reg, year=self.date.year)
 
-            # FIXME: performance-killer. Guardar resultados en el modelo Borme
+            # FIXME: performance-killer? Guardar resultados en el modelo Borme
             from collections import Counter
             resumen_dia = Counter()
             for anuncio in anuncios:
                 resumen_dia += Counter(anuncio.actos.keys())
 
-        # TODO: Guardar la fecha en el anuncio
-        context['calendar'] = mark_safe(calendar)
-        context['date'] = self.date
+            context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
+
+        # TODO: Guardar la fecha en el anuncio?
+        context['calendar'] = mark_safe(lb_calendar)
         context['bormes'] = bormes
-        context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
+
         return context
 
 
@@ -338,7 +338,7 @@ class BormeProvinciaView(TemplateView):
         context['calendar'] = mark_safe(calendar)
         #context['date'] = self.kwargs['date']
         context['bormes'] = bormes
-        context['anuncios'] = []
+
         return context
 
 
