@@ -41,7 +41,7 @@
                         {% if cargo.type == 'person' %}
                             <td><a href="{% url 'borme-persona' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
                         {% else %}
-                            <td><a href="{% url 'borme-empresa' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
+                            <td><a href="{% url 'borme-empresa' cargo.name|slug2 %}">{{ cargo.name }}</a></td>
                         {% endif %}
                         {% if url_from %}
                             <td><a href="{% url 'borme-fecha' cargo.date_from %}">{{ cargo.date_from }}</a></td>

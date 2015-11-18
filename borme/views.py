@@ -56,7 +56,8 @@ def generate_company_csv_cargos_actual(context, slug):
     writer = csv.writer(response)
     writer.writerow(['Cargo', 'Nombre', 'Desde', 'Tipo'])
     for cargo in company.cargos_actuales:
-        writer.writerow([cargo['title'], cargo['name'], cargo['date_from'], cargo['type']])
+        name = cargo['name'] if cargo['type'] == 'company' else cargo['name'].title()
+        writer.writerow([cargo['title'], name, cargo['date_from'], cargo['type']])
 
     return response
 
@@ -71,7 +72,8 @@ def generate_company_csv_cargos_historial(context, slug):
     writer.writerow(['Cargo', 'Nombre', 'Desde', 'Hasta', 'Tipo'])
     for cargo in company.cargos_historial:
         date_from = cargo.get('date_from', '')
-        writer.writerow([cargo['title'], cargo['name'], date_from, cargo['date_to'], cargo['type']])
+        name = cargo['name'] if cargo['type'] == 'company' else cargo['name'].title()
+        writer.writerow([cargo['title'], name, date_from, cargo['date_to'], cargo['type']])
 
     return response
 

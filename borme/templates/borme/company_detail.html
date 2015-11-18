@@ -2,10 +2,10 @@
 
 {% load utils %}
 
-{% block title %}{{ company.name }} | LibreBORME{% endblock %}
+{% block title %}{{ company.fullname }} | LibreBORME{% endblock %}
 
 {% block content %}
-    <h1>Sociedad «{{ company.name }}»</h1>
+    <h1>Sociedad «{{ company.fullname }}»</h1>
 
     <strong>NIF:</strong> {{ company.nif|default:"Desconocido" }}
     <br/>
@@ -14,7 +14,7 @@
 
     <h2>Cargos directivos (actuales):</h2>
     {% if company.cargos_actuales %}
-        <a href="{% url 'borme-empresa-csv-actual' company.slug %}" alt="Descargar CSV de cargos actuales" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
+        <a href="{% url 'borme-empresa-csv-actual' company.name|slug2 %}" alt="Descargar CSV de cargos actuales" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
         <table class="table table-condensed">
             <thead>
                 <tr>
@@ -33,7 +33,7 @@
                     {% if cargo.type == 'person' %}
                         <td><a href="{% url 'borme-persona' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
                     {% else %}
-                        <td><a href="{% url 'borme-empresa' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
+                        <td><a href="{% url 'borme-empresa' cargo.name|slug2 %}">{{ cargo.name }}</a></td>
                     {% endif %}
 
                     {% if url_from %}
@@ -75,7 +75,7 @@
                     {% if cargo.type == 'person' %}
                         <td><a href="{% url 'borme-persona' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
                     {% else %}
-                        <td><a href="{% url 'borme-empresa' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
+                        <td><a href="{% url 'borme-empresa' cargo.name|slug2 %}">{{ cargo.name }}</a></td>
                     {% endif %}
 
                     {% if url_from %}
@@ -162,7 +162,7 @@
             {% endif %}
             <ul>
             {% for c in cs %}
-                <li><a href="{% url 'borme-empresa' c|slug %}">{{ c }}</a></li>
+                <li><a href="{% url 'borme-empresa' c|slug2 %}">{{ c }}</a></li>
             {% endfor %}
             </ul>
             {% if companies|length > 5 %}

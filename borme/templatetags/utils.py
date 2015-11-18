@@ -4,6 +4,7 @@ from django.template.defaulttags import register
 from django.utils.text import slugify
 
 from bormeparser.regex import is_acto_cargo as func_acto_cargo
+from bormeparser.regex import regex_empresa_tipo
 
 import datetime
 
@@ -115,3 +116,9 @@ def date_isoformat(date):
 @register.filter
 def slug(val):
   return slugify(val)
+
+
+@register.filter
+def slug2(val):
+  empresa, _ = regex_empresa_tipo(val)
+  return slugify(empresa)

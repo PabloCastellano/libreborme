@@ -156,6 +156,10 @@ class Company(Model):
             self.in_bormes.append(borme)
 
     @property
+    def fullname(self):
+        return '%s %s' % (self.name.title(), self.type)
+
+    @property
     def cargos_actuales(self):
         """ TODO: order by date"""
         #next(map(lambda x: x.update({'type': 'person'}), self.cargos_actuales_p))

@@ -9,7 +9,7 @@ from django.utils import timezone
 import bormeparser
 from bormeparser.borme import BormeXML
 from bormeparser.exceptions import BormeDoesntExistException
-from bormeparser.regex import is_company, is_acto_cargo_entrante
+from bormeparser.regex import is_company, is_acto_cargo_entrante, regex_empresa_tipo
 from bormeparser.utils import FIRST_BORME
 
 import datetime
@@ -133,16 +133,19 @@ def _import1(borme):
         try:
             logger.debug('%d: Importando anuncio: %s' % (n, anuncio))
             results['total_companies'] += 1
-            slug_c = slugify(anuncio.empresa)
+            empresa, tipo = regex_empresa_tipo(anuncio.empresa)
+            if tipo == '':
+                logger.warn('[%s]: Tipo de empresa no detectado: %s' % (borme.cve, empresa))
+            slug_c = slugify(empresa)
             try:
                 company = Company.objects.get(slug=slug_c)
-                if company.name != anuncio.empresa:
+                if company.name != empresa:
                     logger.warn('[%s] WARNING: Empresa similar. Mismo slug: %s' % (borme.cve, slug_c))
-                    logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, company.name, borme.cve, anuncio.empresa))
+                    logger.warn('[%s] %s\n[%s] %s %s\n' % (borme.cve, company.name, borme.cve, empresa, tipo))
                     results['errors'] += 1
             except Company.DoesNotExist:
-                company = Company(name=anuncio.empresa)
-                logger.debug('Creando empresa %s' % anuncio.empresa)
+                company = Company(name=empresa, type=tipo)
+                logger.debug('Creando empresa %s %s' % (empresa, tipo))
                 results['created_companies'] += 1
 
             company.add_in_bormes(borme_embed)
@@ -152,7 +155,7 @@ def _import1(borme):
             except Anuncio.DoesNotExist:
                 nuevo_anuncio = Anuncio(id_anuncio=anuncio.id, year=borme.date.year, borme=nuevo_borme,
                                         datos_registrales=anuncio.datos_registrales)
-                logger.debug('Creando anuncio %d: %s' % (anuncio.id, anuncio.empresa))
+                logger.debug('Creando anuncio %d: %s %s' % (anuncio.id, empresa, tipo))
                 results['created_anuncios'] += 1
 
             for acto in anuncio.get_borme_actos():
@@ -166,29 +169,30 @@ def _import1(borme):
                             logger.debug('  %s' % nombre)
                             if is_company(nombre):
                                 results['total_companies'] += 1
-                                slug_c = slugify(nombre)
+                                empresa, tipo = regex_empresa_tipo(nombre)
+                                slug_c = slugify(empresa)
                                 try:
                                     c = Company.objects.get(slug=slug_c)
-                                    if c.name != nombre:
+                                    if c.name != empresa:
                                         logger.warn('[%s] WARNING: Empresa similar. Mismo slug: %s' % (borme.cve, slug_c))
-                                        logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, c.name, borme.cve, nombre))
+                                        logger.warn('[%s] %s\n[%s] %s %s\n' % (borme.cve, c.name, borme.cve, empresa, tipo))
                                         results['errors'] += 1
                                 except Company.DoesNotExist:
-                                    c = Company(name=nombre)
-                                    logger.debug('Creando empresa: %s' % nombre)
+                                    c = Company(name=empresa, type=tipo)
+                                    logger.debug('Creando empresa: %s %s' % (empresa, tipo))
                                     results['created_companies'] += 1
 
                                 c.anuncios.append(anuncio.id)
                                 c.add_in_bormes(borme_embed)
 
-                                cargo = {'title': nombre_cargo, 'name': c.name, 'type': 'company'}
+                                cargo = {'title': nombre_cargo, 'name': c.fullname, 'type': 'company'}
                                 if is_acto_cargo_entrante(acto.name):
                                     cargo['date_from'] = borme.date.isoformat()
-                                    cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_from': borme.date.isoformat(), 'type': 'company'}
+                                    cargo_embed = {'title': nombre_cargo, 'name': company.fullname, 'date_from': borme.date.isoformat(), 'type': 'company'}
                                     c.update_cargos_entrantes([cargo_embed])
                                 else:
                                     cargo['date_to'] = borme.date.isoformat()
-                                    cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_to': borme.date.isoformat(), 'type': 'company'}
+                                    cargo_embed = {'title': nombre_cargo, 'name': company.fullname, 'date_to': borme.date.isoformat(), 'type': 'company'}
                                     c.update_cargos_salientes([cargo_embed])
                                 c.date_updated = borme.date
                                 c.save()
@@ -212,11 +216,11 @@ def _import1(borme):
                                 cargo = {'title': nombre_cargo, 'name': p.name, 'type': 'person'}
                                 if is_acto_cargo_entrante(acto.name):
                                     cargo['date_from'] = borme.date.isoformat()
-                                    cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_from': borme.date.isoformat()}
+                                    cargo_embed = {'title': nombre_cargo, 'name': company.fullname, 'date_from': borme.date.isoformat()}
                                     p.update_cargos_entrantes([cargo_embed])
                                 else:
                                     cargo['date_to'] = borme.date.isoformat()
-                                    cargo_embed = {'title': nombre_cargo, 'name': company.name, 'date_to': borme.date.isoformat()}
+                                    cargo_embed = {'title': nombre_cargo, 'name': company.fullname, 'date_to': borme.date.isoformat()}
                                     p.update_cargos_salientes([cargo_embed])
 
                                 p.date_updated = borme.date

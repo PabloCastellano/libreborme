@@ -21,7 +21,7 @@
         <h2>Ejemplos de empresas</h2>
         <ul>
             {% for company in random_companies %}
-                <li><a href="{% url "borme-empresa" company.slug %}">{{ company.name }}</a></li>
+                <li><a href="{% url "borme-empresa" company.slug %}">{{ company.fullname }}</a></li>
             {% empty %}
                 <li><a href="{% url "borme-empresa" "el-corte-ingles-sa" %}">EL CORTE INGLES SA</a></li>
                 <li><a href="{% url "borme-empresa" "mercadona-sa" %}">MERCADONA SA</a></li>
