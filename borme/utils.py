@@ -12,21 +12,14 @@ from bormeparser.exceptions import BormeDoesntExistException
 from bormeparser.regex import is_company, is_acto_cargo_entrante
 from bormeparser.utils import FIRST_BORME
 
-import calendar
 import datetime
+import logging
 import time
 import os
 
-# FIXME:
-#settings.BORME_DIR
-# descarga -> parse -> import -> mueve a carpeta archive
-# Problema: download_pdfs va a bajar de nuevo los archivos en tmp si ya estan procesados
-
-from calendar import HTMLCalendar
+from calendar import HTMLCalendar, monthrange
 from .models import Config
 
-
-import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -63,6 +56,46 @@ class LibreBormeCalendar(HTMLCalendar):
         self.year, self.month = year, month
         self.today = datetime.date.today()
         return super(LibreBormeCalendar, self).formatmonth(year, month)
+
+
+class LibreBormeAvailableCalendar(HTMLCalendar):
+
+    def formatday(self, day, weekday):
+        """
+        Return a day as a table cell.
+        Este calendario tiene enlaces al día si hay Borme.
+        """
+
+        if day == 0:
+            return '<td class="noday">&nbsp;</td>'  # day outside month
+        elif weekday in (5, 6):
+            return '<td class="day %s">%d</td>' % (self.cssclasses[weekday], day)
+        elif self.today == datetime.date(self.year, self.month, day):
+            if (self.month, day) in self.days_bormes:
+                url = self.days_bormes[(self.month, day)].get_absolute_url()
+                return '<td class="day today"><a href="%s">%d</a></td>' % (url, day)
+            else:
+                return '<td class="day today">%d</td>' % day
+        else:
+            if (self.month, day) in self.days_bormes:
+                url = self.days_bormes[(self.month, day)].get_absolute_url()
+                return '<td class="day"><a href="%s">%d</a></td>' % (url, day)
+            else:
+                return '<td class="day">%d</td>' % day
+
+    def formatmonth(self, year, month, withyear=True):
+        self.month = month
+        return super(LibreBormeAvailableCalendar, self).formatmonth(year, month, withyear=withyear)
+
+    def formatyear(self, theyear, bormes, width=3):
+        self.year = theyear
+        self.today = datetime.date.today()
+
+        self.days_bormes = {}
+        for borme in bormes:
+            self.days_bormes[(borme.date.month, borme.date.day)] = borme
+
+        return super(LibreBormeAvailableCalendar, self).formatyear(theyear, width=width)
 
 
 def _import1(borme):
@@ -291,7 +324,7 @@ def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
                 logger.info('It looks like there is no BORME for this date. Nothing was downloaded')
                 return False
         elif len(date) == 2:  # 2015-06
-            _, lastday = calendar.monthrange(*date)
+            _, lastday = monthrange(*date)
             end = datetime.date(date[0], date[1], lastday)
             try:
                 begin = datetime.date(date[0], date[1], 1)
