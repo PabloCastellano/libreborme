@@ -10,7 +10,7 @@ from django.utils.safestring import mark_safe
 
 from .forms import LBSearchForm
 from .models import Company, Person, Anuncio, Config, Borme
-from .utils import LibreBormeCalendar, estimate_count_fast
+from .utils import LibreBormeCalendar, LibreBormeAvailableCalendar, estimate_count_fast
 
 from haystack.views import SearchView
 
@@ -327,16 +327,37 @@ class BormeDateView(TemplateView):
 class BormeProvinciaView(TemplateView):
     template_name = 'borme/borme_provincia.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not 'year' in self.kwargs:
+            return redirect('borme-provincia-fecha', provincia=self.kwargs['provincia'], year=datetime.date.today().year)
+
+        return super(BormeProvinciaView, self).dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(BormeProvinciaView, self).get_context_data(**kwargs)
-        bormes = Borme.objects.filter(province=self.kwargs['provincia'])
 
-        year, month = 2015, 1
-        calendar = LibreBormeCalendar().formatmonth(int(year), int(month))  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
-        #calendar = HTMLCalendar().formatyear(int(year))  # formatyearpage()
+        year = int(self.kwargs['year'])
+        bormes = Borme.objects.filter(date__gte=datetime.date(year, 1, 1), date__lte=datetime.date(year, 12, 31), province=self.kwargs['provincia'])
+        lb_calendar = LibreBormeAvailableCalendar().formatyear(year, bormes)  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
 
-        context['calendar'] = mark_safe(calendar)
-        #context['date'] = self.kwargs['date']
+        if len(bormes) > 0:
+            # FIXME: No se puede hacer minimo y maximo. Hacer where in
+            #from_reg = min([b.from_reg for b in bormes])
+            #until_reg = max([b.until_reg for b in bormes])
+            from_reg = bormes[0].from_reg
+            until_reg = bormes[0].until_reg
+
+            anuncios = Anuncio.objects.filter(id_anuncio__gte=from_reg, id_anuncio__lte=until_reg, year=year)
+
+            # FIXME: performance-killer. Guardar resultados en el modelo Borme
+            from collections import Counter
+            resumen_dia = Counter()
+            for anuncio in anuncios:
+                resumen_dia += Counter(anuncio.actos.keys())
+
+            context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
+
+        context['calendar'] = mark_safe(lb_calendar)
         context['bormes'] = bormes
 
         return context

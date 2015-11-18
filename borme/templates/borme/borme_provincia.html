@@ -1,11 +1,11 @@
 {% extends "borme/base.html" %}
 
 {% block content %}
-    <h2>Anuncios mercantiles del día {{ date }}</h2>
+    <h2>Anuncios mercantiles para el año {{ year }} en {{ provincia }}</h2>
 
-        <div class="calendar">
-            {{ calendar }}
-        </div>
+    <div class="calendar">
+        {{ calendar }}
+    </div>
 
     <h3>Resumen de actos para el año {{ year }} en {{ provincia }}</h3>
     <div class="anuncios">
