@@ -21,15 +21,26 @@
         </table>
     </div>
 
-    <h3>Ciudades que publicaron BORME el día {{ date }}</h3>
-    <div class="bormes">
-        <ul>
-        {% for borme in bormes %}
-            <li><a href="{% url 'borme-borme' borme.cve %}">{{ borme.province }}</a></li>
-        {% empty %}
-            <i>No hay bormes para este día.</i>
-        {% endfor %}
-        </ul>
+    <h3>Provincias que publicaron BORME el día {{ date }}</h3>
+    <div class="borme-cities">
+        {% if bormes %}
+     {% for bs in bormes|rows_distributed:3 %}
+        {% if bormes|length > 5 %}
+        <div class="col-md-4">
+            {% endif %}
+            <ul>
+            {% for b in bs %}
+                <li><a href="{{ b.get_absolute_url }}">{{ b.province }}</a></li>
+            {% endfor %}
+            </ul>
+            {% if bormes|length > 5 %}
+        </div>
+        {% endif %}
+     {% endfor %}
+
+        {% else %}
+        <i>No hay más BORMEs para este día.</i>
+        {% endif %}
     </div>
 
 {% endblock %}

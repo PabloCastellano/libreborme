@@ -106,6 +106,7 @@
     <h3>Sociedades relacionadas</h3>
 
     <div class="related-companies">
+     {% if companies %}
      {% for cs in companies|rows_distributed:3 %}
         {% if companies|length > 5 %}
         <div class="col-md-4">
@@ -119,6 +120,9 @@
         </div>
         {% endif %}
      {% endfor %}
+     {% else %}
+        <p><i>No hay datos.</i></p>
+     {% endif %}
     </div>
 
     <h3>Personas relacionadas</h3>
