@@ -21,13 +21,18 @@
     ({% if total_anuncios == 1 %}{{ borme.from_reg }}{% else %}del <a href="{% url 'borme-anuncio' borme.date.year borme.from_reg %}">{{ borme.from_reg }}</a> al <a href="{% url 'borme-anuncio' borme.date.year borme.until_reg %}">{{ borme.until_reg }}</a>{% endif %})
 
     <h3>Resumen de actos:</h3>
-        <div class="anuncios">
-            {% for k, v in resumen_dia %}
-                <strong>{{ k }}:</strong> {{ v }}<br/>
-            {% empty %}
-                <i>No hay anuncios para este día.</i>
-            {% endfor %}
-        </div>
+    <div class="anuncios">
+        <table class="table table-striped table-hover table-condensed">
+        {% for k, v in resumen_dia %}
+            <tr>
+                <td>{{ k }}</td>
+                <td>{{ v }}</td>
+            </tr>
+        {% empty %}
+            <i>No hay anuncios para este día.</i>
+        {% endfor %}
+        </table>
+    </div>
 
     <h3>Bormes del mismo día:</h3>
 
