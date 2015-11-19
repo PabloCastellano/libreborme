@@ -7,6 +7,7 @@
 {% block content %}
     <h1>Persona «{{ person.name|title }}»</h1>
 
+    <p>Fuente de los datos: Agencia Estatal del Boletín Oficial del Estado. Última actualización: {{ person.date_updated }}.</p>
     <strong>Total empresas:</strong> {{ person.empresas|default:"Desconocido" }}
     <br/>
 
