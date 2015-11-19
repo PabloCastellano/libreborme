@@ -4,7 +4,12 @@ Estas instrucciones se han comprobado que funcionan en Ubuntu 14.04 32 bits. Par
 
 Dependencias:
 
-    sudo apt-get install python3-software-properties software-properties-common build-essential python3-pip python3-dev python3-venv python3-wheel python3-setuptools libxml2-dev libxslt1-dev libgmp-dev zlib1g-devsudo apt-get install nginx-full nginx-common uwsgi-plugin-python3 openssl supervisor checkinstall wget git libpq-dev postgresql postgresql-contrib python-psycopg2 openjdk-7-jre elasticsearch
+    sudo apt-get install python3-software-properties software-properties-common \
+    build-essential python3-pip python3-dev python3-venv python3-wheel \
+    python3-setuptools libxml2-dev libxslt1-dev libgmp-dev zlib1g-devsudo \
+    nginx-full nginx-common uwsgi-plugin-python3 openssl supervisor checkinstall \
+    wget git libpq-dev postgresql postgresql-contrib python-psycopg2 \
+    openjdk-7-jre elasticsearch
 
     echo ". ~/.virtualenvs/libreborme/bin/activate" >> ~/.bashrc
 
@@ -17,7 +22,11 @@ Instalación de libreborme:
 
 Configuración de PostgreSQL:
 
-    TODO
+    sudo su postgres
+    psql template1 -c 'CREATE EXTENSION hstore;'
+    psql -U postgres -c 'CREATE DATABASE libreborme;'
+    psql -U postgres -c "CREATE USER libreborme WITH PASSWORD 'password';"
+    psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE libreborme TO libreborme;"
 
 Ajusta tu configuración en libreborme/settings.py con tus rutas y especialmente cambia la variable SECRET_KEY.
 
