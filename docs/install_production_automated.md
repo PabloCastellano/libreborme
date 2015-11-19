@@ -15,6 +15,10 @@ Para instalar Ansible en tu máquina:
 
 [Aquí](http://docs.ansible.com/intro_installation.html#latest-releases-via-apt-ubuntu) puedes consultar las instrucciones de instalación de Ansible más detalladas y para otras distribuciones.
 
+La versión actual de Ansible no soporta Python 3, por lo que tu máquina remota deberá tener instalado el intérprete de Python 2. Asegúrate de que lo está instalando python-minimal:
+
+    sudo apt-get install python-minimal
+
 ## Descargar libreborme-ansible
 
 Descarga el archivo:
@@ -39,20 +43,18 @@ Alternativamente también puedes usar Git:
 
 A continuación necesitas tener acceso SSH al servidor con el usuario root o con un usuario en el grupo *sudo*. Cambia la IP y el usuario de tu host en el archivo *hosts*.
 
-Si tienes acceso SSH con clave y acceso como usuario root solo debes ejecutar:
-
-    ansible-playbook install_root.yml
-
-Si no tienes tienes acceso como root:
+Solo debes ejecutar:
 
     ansible-playbook install.yml
 
-Si en cualquiera de los casos no tienes acceso SSH con clave añade *--ask-pass*.
+Si no tienes acceso SSH con clave pública añade *--ask-pass*.
 
-    ansible-playbook install_root.yml --ask-pass
+    ansible-playbook install.yml --ask-pass
 
 # Actualización de una instancia existente
 
-TODO
-
     ansible-playbook update.yml
+
+Si hubiera cambios en el esquema de la base de datos hay que ejecutar también:
+
+    ./manage.py migrate

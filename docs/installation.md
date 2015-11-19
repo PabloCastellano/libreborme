@@ -4,45 +4,31 @@ Estas instrucciones se han comprobado que funcionan en Ubuntu 14.04 32 bits. Par
 
 Dependencias:
 
-    sudo apt-get install virtualenvwrapper
-    sudo apt-get install libpq-dev postgresql postgresql-contrib
-    sudo apt-get install libxml2-dev libxslt1-dev python-dev zlib1g-dev
+    sudo apt-get install python3-software-properties software-properties-common build-essential python3-pip python3-dev python3-venv python3-wheel python3-setuptools libxml2-dev libxslt1-dev libgmp-dev zlib1g-devsudo apt-get install nginx-full nginx-common uwsgi-plugin-python3 openssl supervisor checkinstall wget git libpq-dev postgresql postgresql-contrib python-psycopg2 openjdk-7-jre elasticsearch
 
-    echo "export WORKON_HOME=$HOME/.virtualenvs" >> ~/.bashrc
-    echo "source /usr/share/virtualenvwrapper/virtualenvwrapper.sh" >> ~/.bashrc
-    source ~/.bashrc
+    echo ". ~/.virtualenvs/libreborme/bin/activate" >> ~/.bashrc
 
 Instalación de libreborme:
 
     git clone https://github.com/PabloCastellano/libreborme.git
     cd libreborme
-    mkvirtualenv libreborme
+    mkvirtualenv libreborme -p /usr/bin/python3
     pip install -r requirements/base.txt
-    cp libreborme/local_settings.py.example libreborme/local_settings.py
 
-Ajusta tu configuración en libreborme/local_settings.py con tus rutas y especialmente cambia la variable SECRET_KEY.
+Configuración de PostgreSQL:
 
-    ./manage.py syncdb
-    Puedes crear aquí tu superusuario o decir "no" y ejecutar:
+    TODO
+
+Ajusta tu configuración en libreborme/settings.py con tus rutas y especialmente cambia la variable SECRET_KEY.
+
+    ./manage.py migrate
     ./manage.py loaddata libreborme/fixtures/users.json
     Esto por defecto crea la cuenta `admin` con la contraseña `0000`.
 
 ## Ejecución
 
-    source ~/.bash_aliases
     cd libreborme
-    workon libreborme
-    ./manage.py runserver --settings=libreborme.local_settings
-
-### Opcional
-
-Incluye el siguiente alias:
-
-    echo "alias libreborme_run='workon libreborme && cd ~/libreborme && ./manage.py runserver --settings=libreborme.local_settings'" >> ~/.bash_aliases
-
-y ejecuta simplemente:
-
-    libreborme_run
+    ./manage.py runserver
 
 ## Herramientas de desarrollo
 
@@ -77,7 +63,7 @@ Para actualizar a la última versión:
 
 Tests:
 
-    ./manage.py test --settings=libreborme.local_settings
+    ./runtests.sh
 
 # Rellenar la BD con datos
 
@@ -85,4 +71,19 @@ LibreBorme usa la librería **bormeparser** para extraer la información de los 
 
     ./manage.py importborme -- --init local
 
-TODO: cron sincronizador diario.
+# Tareas periódicas
+
+LibreBorme usa cron para sincronizar diariamente los nuevos BORMEs.
+
+    crontab -e
+
+Añadir la siguiente línea al final
+
+    0 8 * * 1-5     /var/www/libreborme/script.sh
+
+El archivo script.sh debe tener el siguiente contenido:
+
+    #!/bin/sh
+    
+    . ~/.virtualenvs/libreborme/bin/activate
+    cd /var/www/libreborme && ./manage.py importbormetoday
