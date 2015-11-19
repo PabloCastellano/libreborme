@@ -154,7 +154,6 @@
     </div>
 
     <h2>Sociedades relacionadas</h2>
-
     <div class="related-companies">
      {% if companies %}
      {% for cs in companies|rows_distributed:3 %}
@@ -176,15 +175,28 @@
     </div>
 
     <h2>BORMEs relacionados</h2>
-    <ul>
-        {% for borme in company.in_bormes %}
-        <li><a href="{% url 'borme-borme' borme.cve %}">{{ borme.cve }}</a>
-            <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
-            <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
-        </li>
-        {% empty %}
-            <p><i>No hay actos registrados.</i></p>
-        {% endfor %}
-    </ul>
+    <div class="related-bormes">
+     {% if company.in_bormes %}
+     {% for bs in company.in_bormes|rows_distributed:3 %}
+        {% if company.in_bormes|length > 5 %}
+        <div class="col-md-4">
+            {% endif %}
+            <ul>
+            {% for borme in bs %}
+                <li><a href="{% url 'borme-borme' borme.cve %}">{{ borme.cve }}</a>
+                    <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
+                    <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
+                </li>
+            {% endfor %}
+            </ul>
+            {% if company.in_bormes|length > 5 %}
+        </div>
+        {% endif %}
+     {% endfor %}
+     {% else %}
+        <p><i>No hay actos registrados.</i></p>
+     {% endif %}
+    </div>
+
 
 {% endblock %}
