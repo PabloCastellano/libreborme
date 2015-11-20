@@ -7,12 +7,20 @@
 {% block content %}
     <h1>Sociedad «{{ company.fullname }}»</h1>
 
-    <p>Fuente de los datos: Agencia Estatal del Boletín Oficial del Estado. Última actualización: {{ company.date_updated }}.</p>
+    <p>Última actualización: {{ company.date_updated }}.<br/>
+    Fuente de los datos: Agencia Estatal del Boletín Oficial del Estado.</p>
 
+    <p>
+    <strong>Empresas relacionadas:</strong> {{ companies|length }}<br/>
+    <strong>Personas relacionadas:</strong> {{ persons|length }}
+    </p>
+
+{% comment %}
     <strong>NIF:</strong> {{ company.nif|default:"Desconocido" }}
     <br/>
     <strong>Fecha de constitución:</strong> {{ company.date_creation|date|default:"Desconocido" }}
     <br/>
+{% endcomment %}
 
     <h2>Cargos directivos (actuales):</h2>
     {% if company.cargos_actuales %}

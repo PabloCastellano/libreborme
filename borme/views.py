@@ -84,12 +84,11 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
 
-        # FIXME: performance-killer: .count()
-
+        # Use estimate_count_fast() due to .count() being performance-killer in PostgreSQL
         last_modified = Config.objects.first().last_modified.date()
-        context['total_companies'] = estimate_count_fast('borme_company')  #
-        context['total_persons'] = estimate_count_fast('borme_person')  #
-        context['total_anuncios'] = estimate_count_fast('borme_anuncio')  #
+        context['total_companies'] = estimate_count_fast('borme_company')
+        context['total_persons'] = estimate_count_fast('borme_person')
+        context['total_anuncios'] = estimate_count_fast('borme_anuncio')
         #context['random_companies'] = Company.objects.all().order_by('?')[:10]
         #context['random_persons'] = Person.objects.all().order_by('?')[:10]
         #context['last_modified'] = Config.objects.first().last_modified
@@ -390,6 +389,9 @@ class CompanyView(DetailView):
         for cargo in self.company.todos_cargos_c:
             if cargo['name'] not in context['companies']:
                 context['companies'].append(cargo['name'])
+
+        context['companies'] = set(context['companies'])
+        context['persons'] = set(context['persons'])
         return context
 
 
@@ -411,6 +413,8 @@ class PersonView(DetailView):
         for cargo in self.person.todos_cargos:
             if cargo['name'] not in context['companies']:
                 context['companies'].append(cargo['name'])
+
+        context['companies'] = set(context['companies'])
         return context
 
 
