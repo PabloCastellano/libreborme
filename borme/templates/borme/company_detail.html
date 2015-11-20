@@ -5,6 +5,7 @@
 {% block title %}{{ company.fullname }} | LibreBORME{% endblock %}
 
 {% block content %}
+<div class="col-md-10 col-md-offset-1">
     <h1>Sociedad «{{ company.fullname }}»</h1>
 
     <p>Última actualización: {{ company.date_updated }}.<br/>
@@ -23,6 +24,8 @@
 {% endcomment %}
 
     <h2>Cargos directivos (actuales):</h2>
+    <div class="row">
+    <div class="col-md-10">
     {% if company.cargos_actuales %}
         <a href="{% url 'borme-empresa-csv-actual' company.name|slug2 %}" alt="Descargar CSV de cargos actuales" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
         <table class="table table-condensed">
@@ -63,8 +66,12 @@
     {% else %}
         <i>No hay datos</i>
     {% endif %}
+    </div>
+    </div>
 
     <h2>Cargos directivos (historial):</h2>
+    <div class="row">
+    <div class="col-md-10">
     {% if company.cargos_historial %}
         <a href="{% url 'borme-empresa-csv-historial' company.slug %}" alt="Descargar CSV de historial de cargos" title="Descargar CSV de historial de cargos"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
         <table class="table table-condensed">
@@ -105,11 +112,17 @@
     {% else %}
         <i>No hay datos</i>
     {% endif %}
+    </div>
+    </div>
 
     <h2>Anuncios en boletines oficiales</h2>
+    <div class="row">
+    <div class="col-md-10">
+        <p>Actos mercantiles publicados en la edición digital del BORME relacionados o inscritos por {{ company.fullname }}.</p>
         {% for anuncio in anuncios %}
             <h3>{{ anuncio.borme.date|date:"d b Y" }}</h3>
             Detalles del anuncio <a href="{{ anuncio.get_absolute_url }}">{{ anuncio.id_anuncio }}</a>.
+        <div class="col-md-10 col-md-offset-1">
         <ul>
            {% for acto_name, value in anuncio.actos.items %}
               <li><strong>{{ acto_name }}</strong>:
@@ -118,6 +131,9 @@
              {% elif value|is_bool %}
                <i class="glyphicon glyphicon-ok"></i>
              {% else %}
+ 
+                <div class="row">
+                <div class="col-md-6 col-md-offset-3">
                  <table class="table table-condensed">
                     <thead>
                         <tr>
@@ -134,17 +150,23 @@
                     {% endfor %}
                     </tbody>
                  </table>
+                </div>
+                </div>
+
              {% endif %}
               </li>
            {% endfor %}
         </ul>
+        </div>
         {% empty %}
             <i>No hay anuncios registrados.</i>
         {% endfor %}
+    </div>
+    </div>
 
     <h2>Personas relacionadas</h2>
-
-    <div class="related-persons">
+    <div class="row related-persons">
+    <div class="col-md-10">
 
      {% for ps in persons|rows_distributed:3 %}
         {% if persons|length > 5 %}
@@ -162,9 +184,11 @@
         <p><i>No hay datos.</i></p>
      {% endfor %}
     </div>
+    </div>
 
     <h2>Sociedades relacionadas</h2>
-    <div class="related-companies">
+    <div class="row related-companies">
+    <div class="col-md-10">
      {% if companies %}
      {% for cs in companies|rows_distributed:3 %}
         {% if companies|length > 5 %}
@@ -183,9 +207,11 @@
         <p><i>No hay datos.</i></p>
      {% endif %}
     </div>
+    </div>
 
     <h2>BORMEs relacionados</h2>
-    <div class="related-bormes">
+    <div class="row related-bormes">
+    <div class="col-md-10">
      {% if company.in_bormes %}
      {% for bs in company.in_bormes|rows_distributed:3 %}
         {% if company.in_bormes|length > 5 %}
@@ -207,6 +233,7 @@
         <p><i>No hay actos registrados.</i></p>
      {% endif %}
     </div>
-
+    </div>
+</div>
 
 {% endblock %}

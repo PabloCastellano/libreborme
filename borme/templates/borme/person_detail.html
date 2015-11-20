@@ -5,6 +5,7 @@
 {% block title %}{{ person.name|title }} | LibreBORME{% endblock %}
 
 {% block content %}
+<div class="col-md-10 col-md-offset-1">
     <h1>Persona «{{ person.name|title }}»</h1>
 
     <p>Última actualización: {{ person.date_updated }}.<br/>
@@ -14,6 +15,8 @@
     <br/>
 
     <h2>Cargos directivos en empresas (actuales):</h2>
+    <div class="row">
+    <div class="col-md-10">
     {% if person.cargos_actuales %}
         <a href="{% url 'borme-persona-csv-actual' person.slug %}" alt="Descargar CSV de cargos actuales" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
         <table class="table table-condensed">
@@ -50,8 +53,12 @@
     {% else %}
         <i>No hay datos</i>
     {% endif %}
+    </div>
+    </div>
 
     <h2>Cargos directivos en empresas (historial):</h2>
+    <div class="row">
+    <div class="col-md-10">
     {% if person.cargos_historial %}
         <a href="{% url 'borme-persona-csv-historial' person.slug %}" alt="Descargar CSV de historial de cargos" title="Descargar CSV de historial de cargos"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
         <table class="table table-condensed">
@@ -88,13 +95,20 @@
     {% else %}
         <i>No hay datos</i>
     {% endif %}
+    </div>
+    </div>
 
     <h3>Anuncios de nombramientos y ceses</h3>
-        <p>Publicaciones en el BORME sobre alteración de cargos para la persona {{ person.name|title }}.</p>
+    <div class="row">
+    <div class="col-md-10">
+        <p>Publicaciones en la edición digital del BORME sobre alteraciones de cargos para la persona {{ person.name|title }}.</p>
         <i>No disponible en esta versión</i>
+    </div>
+    </div>
 
     <h3>Sociedades relacionadas</h3>
-    <div class="related-companies">
+    <div class="row related-companies">
+    <div class="col-md-10">
      {% if companies %}
      {% for cs in companies|rows_distributed:3 %}
         {% if companies|length > 5 %}
@@ -113,12 +127,18 @@
         <p><i>No hay datos.</i></p>
      {% endif %}
     </div>
+    </div>
 
     <h3>Personas relacionadas</h3>
+    <div class="row related-persons">
+    <div class="col-md-10">
         <i>No disponible</i>
+    </div>
+    </div>
 
     <h3>BORMEs relacionados</h3>
-    <div class="related-bormes">
+    <div class="row related-bormes">
+    <div class="col-md-10">
      {% if person.in_bormes %}
      {% for bs in person.in_bormes|rows_distributed:3 %}
         {% if person.in_bormes|length > 5 %}
@@ -140,5 +160,7 @@
         <p><i>No hay actos registrados.</i></p>
      {% endif %}
     </div>
+    </div>
+</div>
     
 {% endblock %}
