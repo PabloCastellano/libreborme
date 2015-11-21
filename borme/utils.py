@@ -141,7 +141,7 @@ def _import1(borme):
                 company = Company.objects.get(slug=slug_c)
                 if company.name != empresa:
                     logger.warn('[%s] WARNING: Empresa similar. Mismo slug: %s' % (borme.cve, slug_c))
-                    logger.warn('[%s] %s\n[%s] %s %s\n' % (borme.cve, company.name, borme.cve, empresa, tipo))
+                    logger.warn('[%s] %s\n[%s] %s\n' % (borme.cve, company.name, borme.cve, empresa, tipo))
                     results['errors'] += 1
             except Company.DoesNotExist:
                 company = Company(name=empresa, type=tipo)
@@ -174,7 +174,7 @@ def _import1(borme):
                                 try:
                                     c = Company.objects.get(slug=slug_c)
                                     if c.name != empresa:
-                                        logger.warn('[%s] WARNING: Empresa similar. Mismo slug: %s' % (borme.cve, slug_c))
+                                        logger.warn('[%s] WARNING: Empresa similar 2. Mismo slug: %s' % (borme.cve, slug_c))
                                         logger.warn('[%s] %s\n[%s] %s %s\n' % (borme.cve, c.name, borme.cve, empresa, tipo))
                                         results['errors'] += 1
                                 except Company.DoesNotExist:
