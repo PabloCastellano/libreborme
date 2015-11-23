@@ -390,8 +390,8 @@ class CompanyView(DetailView):
             if cargo['name'] not in context['companies']:
                 context['companies'].append(cargo['name'])
 
-        context['companies'] = set(context['companies'])
-        context['persons'] = set(context['persons'])
+        context['companies'] = sorted(list(set(context['companies'])))
+        context['persons'] = sorted(list(set(context['persons'])))
         return context
 
 
@@ -414,7 +414,7 @@ class PersonView(DetailView):
             if cargo['name'] not in context['companies']:
                 context['companies'].append(cargo['name'])
 
-        context['companies'] = set(context['companies'])
+        context['companies'] = sorted(list(set(context['companies'])))
         return context
 
 
