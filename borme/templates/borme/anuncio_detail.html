@@ -19,7 +19,6 @@
     <br/>
 
     <h2>{{ anuncio.actos|length }} acto{{ anuncio.actos|length|pluralize }} mercantil{{ anuncio.actos|length|pluralize:"es" }}:</h2>
-    <ul>
     {% for nombre, valor in anuncio.actos.items %}
         <h3>{{ nombre }}</h3>
         {% if nombre|is_acto_cargo %}
@@ -58,10 +57,11 @@
                 </tbody>
             </table>
         {% else %}
+        <ul>
             <li>{{ valor }}</li>
+        </ul>
         {% endif %}
     {% endfor %}
-    </ul>
 
     <a href="{% url 'borme-anuncio' anuncio.year anuncio.id_anuncio|add:"-1" %}">&lt; Anterior</a> |
     <a href="{% url 'borme-anuncio' anuncio.year anuncio.id_anuncio|add:"1" %}">Siguiente &gt;</a>
