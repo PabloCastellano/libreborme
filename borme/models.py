@@ -212,27 +212,29 @@ class Company(Model):
         """ cargos = [CargoCompany/CargoPerson] """
 
         for cargo in cargos:
-            if cargo['type'] == 'company':
-                del cargo['type']
-                self.cargos_actuales_c.append(cargo)
-            elif cargo['type'] == 'person':
-                del cargo['type']
-                self.cargos_actuales_p.append(cargo)
+            cargo_embed = cargo.copy()
+            if cargo_embed['type'] == 'company':
+                del cargo_embed['type']
+                self.cargos_actuales_c.append(cargo_embed)
+            elif cargo_embed['type'] == 'person':
+                del cargo_embed['type']
+                self.cargos_actuales_p.append(cargo_embed)
 
     def update_cargos_salientes(self, cargos):
         """ cargos = [CargoCompany/CargoPerson] """
 
         for cargo in cargos:
-            if cargo['type'] == 'company':
-                del cargo['type']
-                if cargo in self.cargos_actuales_c:
-                    self.cargos_actuales_c.remove(cargo)
-                self.cargos_historial_c.append(cargo)
-            elif cargo['type'] == 'person':
-                del cargo['type']
-                if cargo in self.cargos_actuales_p:
-                    self.cargos_actuales_p.remove(cargo)
-                self.cargos_historial_p.append(cargo)
+            cargo_embed = cargo.copy()
+            if cargo_embed['type'] == 'company':
+                del cargo_embed['type']
+                if cargo_embed in self.cargos_actuales_c:
+                    self.cargos_actuales_c.remove(cargo_embed)
+                self.cargos_historial_c.append(cargo_embed)
+            elif cargo_embed['type'] == 'person':
+                del cargo_embed['type']
+                if cargo_embed in self.cargos_actuales_p:
+                    self.cargos_actuales_p.remove(cargo_embed)
+                self.cargos_historial_p.append(cargo_embed)
 
     def get_absolute_url(self):
         return reverse('borme-empresa', args=[str(self.slug)])
