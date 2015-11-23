@@ -378,7 +378,7 @@ class CompanyView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(CompanyView, self).get_context_data(**kwargs)
 
-        context['anuncios'] = Anuncio.objects.filter(company=self.company).order_by('-id_anuncio')
+        context['anuncios'] = Anuncio.objects.filter(company=self.company).order_by('-year', '-id_anuncio')
 
         context['persons'] = []
         for cargo in self.company.todos_cargos_p:
