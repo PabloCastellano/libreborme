@@ -227,19 +227,14 @@ def _import1(borme):
                                 p.save()
                             lista_cargos.append(cargo)
 
-                        kk = acto.name.replace('.', '||')
-                        nuevo_anuncio.actos[kk] = lista_cargos
+                        nuevo_anuncio.actos[acto.name] = lista_cargos
 
                     if is_acto_cargo_entrante(acto.name):
                         company.update_cargos_entrantes(lista_cargos)
                     else:
                         company.update_cargos_salientes(lista_cargos)
                 else:
-                    # FIXME:
-                    # mongoengine.errors.ValidationError: ValidationError (Anuncio:55b37c97cf28dd2cfa8d069e) (Invalid diction
-                    # ary key name - keys may not contain "." or "$" characters: ['actos'])
-                    kk = acto.name.replace('.', '||')
-                    nuevo_anuncio.actos[kk] = acto.value
+                    nuevo_anuncio.actos[acto.name] = acto.value
 
             company.anuncios.append(anuncio.id)  # TODO: year
             company.date_updated = borme.date
