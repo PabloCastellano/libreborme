@@ -7,9 +7,9 @@
 {% block content %}
     <h1>Anuncio {{ anuncio.id_anuncio }} de {{ anuncio.year }}</h1>
 
-    <strong>Empresa:</strong> <a href="{% url 'borme-empresa' anuncio.company|slug %}">{{ anuncio.company }}</a>
+    <strong>Empresa:</strong> <a href="{% url 'borme-empresa' anuncio.company|slug %}">{{ anuncio.company.fullname }}</a>
     <br/>
-    <strong>Fecha:</strong> <a href="{% url 'borme-fecha' borme.date|date_isoformat %}">{{ borme.date|date }}</a>
+    <strong>Fecha:</strong> <a href="{% url 'borme-fecha' borme.date|date_isoformat %}">{{ borme.date }}</a>
     <br/>
     <strong>Fuente:</strong> <a href="{{ borme.get_absolute_url }}">{{ borme.cve }}</a> <a href="{{ borme.url }}" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
     <br/>
@@ -19,8 +19,10 @@
     <br/>
 
     <h2>{{ anuncio.actos|length }} acto{{ anuncio.actos|length|pluralize }} mercantil{{ anuncio.actos|length|pluralize:"es" }}:</h2>
+    <div class="row">
+    <div class="col-md-10">
     {% for nombre, valor in anuncio.actos.items %}
-        <h3>{{ nombre }}</h3>
+    <h3>{{ forloop.counter }}. {{ nombre }}</h3>
         {% if nombre|is_acto_cargo %}
             <table class="table table-condensed">
                 <thead>
@@ -36,7 +38,7 @@
                     {% url 'borme-fecha' cargo.date_from as url_from %}
                     {% url 'borme-fecha' cargo.date_to as url_to %}
                     <tr>
-                        <td>{{ cargo.title }} ({{ cargo|get_class }})</td>
+                        <td>{{ cargo.title }}</td>
                         {% if cargo.type == 'person' %}
                             <td><a href="{% url 'borme-persona' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
                         {% else %}
@@ -62,6 +64,8 @@
         </ul>
         {% endif %}
     {% endfor %}
+    </div>
+    </div>
 
     <a href="{% url 'borme-anuncio' anuncio.year anuncio.id_anuncio|add:"-1" %}">&lt; Anterior</a> |
     <a href="{% url 'borme-anuncio' anuncio.year anuncio.id_anuncio|add:"1" %}">Siguiente &gt;</a>

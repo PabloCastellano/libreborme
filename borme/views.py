@@ -304,7 +304,7 @@ class BormeDateView(TemplateView):
 
         lb_calendar = LibreBormeCalendar().formatmonth(self.date.year, self.date.month)  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
 
-        bormes = Borme.objects.filter(date=self.date)
+        bormes = Borme.objects.filter(date=self.date).order_by('province')
         if len(bormes) > 0:
             from_reg = min([b.from_reg for b in bormes])
             until_reg = max([b.until_reg for b in bormes])
