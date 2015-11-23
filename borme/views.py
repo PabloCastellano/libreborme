@@ -406,17 +406,6 @@ class PersonView(DetailView):
         except Person.DoesNotExist:
             raise Http404('Person does not exist')
 
-    def get_context_data(self, **kwargs):
-        context = super(PersonView, self).get_context_data(**kwargs)
-
-        context['companies'] = []
-        for cargo in self.person.todos_cargos:
-            if cargo['name'] not in context['companies']:
-                context['companies'].append(cargo['name'])
-
-        context['companies'] = sorted(list(set(context['companies'])))
-        return context
-
 
 class PersonListView(ListView):
     model = Person

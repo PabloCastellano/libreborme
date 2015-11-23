@@ -240,7 +240,7 @@ class Company(Model):
         return reverse('borme-empresa', args=[str(self.slug)])
 
     def __str__(self):
-        return self.name
+        return self.fullname
 
 
 class Anuncio(Model):

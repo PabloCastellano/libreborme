@@ -109,9 +109,9 @@
     <h3>Sociedades relacionadas</h3>
     <div class="row related-companies">
     <div class="col-md-10">
-     {% if companies %}
-     {% for cs in companies|rows_distributed:3 %}
-        {% if companies|length > 5 %}
+     {% if person.in_companies %}
+     {% for cs in person.in_companies|rows_distributed:3 %}
+        {% if person.in_companies|length > 5 %}
         <div class="col-md-4">
             {% endif %}
             <ul>
@@ -119,7 +119,7 @@
                 <li><a href="{% url 'borme-empresa' c|slug2 %}">{{ c }}</a></li>
             {% endfor %}
             </ul>
-            {% if companies|length > 5 %}
+            {% if person.in_companies|length > 5 %}
         </div>
         {% endif %}
      {% endfor %}

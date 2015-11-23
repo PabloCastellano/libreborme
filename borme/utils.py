@@ -210,7 +210,7 @@ def _import1(borme):
                                     logger.debug('Creando persona: %s' % nombre)
                                     results['created_persons'] += 1
 
-                                p.add_in_companies(company.name)
+                                p.add_in_companies(company.fullname)
                                 p.add_in_bormes(borme_embed)
 
                                 cargo = {'title': nombre_cargo, 'name': p.name, 'type': 'person'}
