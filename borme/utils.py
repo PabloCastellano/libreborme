@@ -234,6 +234,7 @@ def _import1(borme):
                     else:
                         company.update_cargos_salientes(lista_cargos)
                 else:
+                    # not bormeparser.borme.BormeActoCargo
                     nuevo_anuncio.actos[acto.name] = acto.value
 
             company.anuncios.append(anuncio.id)  # TODO: year
