@@ -268,7 +268,7 @@ class BormeView(DetailView):
         for anuncio in anuncios:
             resumen_dia += Counter(anuncio.actos.keys())
 
-        bormes_dia = Borme.objects.filter(date=self.borme.date).order_by('cve')
+        bormes_dia = Borme.objects.filter(date=self.borme.date).order_by('province')
         bormes_dia = list(bormes_dia)
         bormes_dia.remove(self.borme)
         bormes_dia.sort(key=lambda b: b.province)
