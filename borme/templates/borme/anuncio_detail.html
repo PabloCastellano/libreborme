@@ -11,7 +11,7 @@
     <br/>
     <strong>Fecha:</strong> <a href="{% url 'borme-fecha' borme.date|date_isoformat %}">{{ borme.date|date }}</a>
     <br/>
-    <strong>Fuente:</strong> <a href="{{ borme.get_absolute_url }}">{{ borme.cve }}</a> <a href="{{ borme.url }}" alt="Descargar PDF" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
+    <strong>Fuente:</strong> <a href="{{ borme.get_absolute_url }}">{{ borme.cve }}</a> <a href="{{ borme.url }}" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
     <br/>
     <strong>Provincia:</strong> <a href="{% url 'borme-provincia' borme.province %}">{{ borme.province }}</a>
     <br/>
