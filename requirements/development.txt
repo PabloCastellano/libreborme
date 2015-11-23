@@ -5,4 +5,3 @@ bpython==0.14.2
 curtsies==0.2.3
 django-extensions==1.5.7
 Pygments==2.0.2
-requests==2.7.0
