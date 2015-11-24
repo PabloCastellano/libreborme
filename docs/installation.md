@@ -55,9 +55,8 @@ Si quieres instalar herramientas de desarrollo:
     mkdir /home/libreborme/run/
     chmod 775 /home/libreborme/run/
     adduser libreborme www-data
-    # Crear /etc/init.d/django-libreborme
-    /etc/init.d/django-libreborme start
-    update-rc.d django-libreborme defaults
+
+TODO: supervisor, uwsgi
 
 # Comandos
 
