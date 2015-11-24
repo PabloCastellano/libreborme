@@ -2,7 +2,6 @@ from .models import Company, Borme, Anuncio, Person, BormeLog
 
 from django.conf import settings
 from django.db import connection
-from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 from django.utils import timezone
 
@@ -18,7 +17,6 @@ import time
 import os
 
 from calendar import HTMLCalendar, monthrange
-from .models import Config
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -33,28 +31,37 @@ class LibreBormeCalendar(HTMLCalendar):
     def formatday(self, day, weekday):
         """
         Return a day as a table cell.
+        Este calendario tiene enlaces al día si hay Borme.
         """
 
         if day == 0:
             return '<td class="noday">&nbsp;</td>'  # day outside month
+        elif weekday in (5, 6):
+            return '<td class="day %s">%d</td>' % (self.cssclasses[weekday], day)
         elif self.today == datetime.date(self.year, self.month, day):
-            last_modified = Config.objects.first().last_modified.date()
-            if self.today == last_modified:
-                date = '%d-%02d-%02d' % (self.year, self.month, day)
-                url = reverse('borme-fecha', kwargs={'date': date})
+            if (self.month, day) in self.days_bormes:
+                url = self.days_bormes[(self.month, day)].get_absolute_url()
                 return '<td class="day today"><a href="%s">%d</a></td>' % (url, day)
             else:
                 return '<td class="day today">%d</td>' % day
-        elif self.today > datetime.date(self.year, self.month, day) and weekday not in (5, 6):
-            date = '%d-%02d-%02d' % (self.year, self.month, day)
-            url = reverse('borme-fecha', kwargs={'date': date})
-            return '<td class="day %s"><a href="%s">%d</a></td>' % (self.cssclasses[weekday], url, day)
         else:
-            return '<td class="day %s">%d</td>' % (self.cssclasses[weekday], day)
+            if (self.month, day) in self.days_bormes:
+                url = self.days_bormes[(self.month, day)].get_absolute_url()
+                return '<td class="day"><a href="%s">%d</a></td>' % (url, day)
+            else:
+                return '<td class="day">%d</td>' % day
 
     def formatmonth(self, year, month):
-        self.year, self.month = year, month
+        self.year = year
+        self.month = month
         self.today = datetime.date.today()
+
+        _, lastday = monthrange(year, month)
+        bormes = Borme.objects.filter(date__gte=datetime.date(year, month, 1), date__lte=datetime.date(year, month, lastday)).distinct('date').order_by('date')
+        self.days_bormes = {}
+        for borme in bormes:
+            self.days_bormes[(borme.date.month, borme.date.day)] = borme
+
         return super(LibreBormeCalendar, self).formatmonth(year, month)
 
 
