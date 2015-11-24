@@ -86,6 +86,7 @@ h2 i.glyphicon {
 
 td.sat {
   background-color: lightgray;
+  color: darkgray;
 }
 
 td.sun {
@@ -112,6 +113,7 @@ td.bormeday {
 
 td.nobormeday {
   text-align: center;
+  color: darkgray;
 }
 
 td.nobormeday:hover {
