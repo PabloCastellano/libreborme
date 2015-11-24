@@ -61,7 +61,7 @@
                     {% endif %}
                     <ul>
                     {% for company in cs %}
-                        <li><a href="{% url "borme-empresa" company.object.slug %}">{{ company.object.name }}</a></li>
+                        <li><a href="{% url "borme-empresa" company.object.slug %}">{{ company.object.fullname }}</a></li>
                     {% endfor %}
                     </ul>
                     {% if page_companies.object_list|length > 5 %}
