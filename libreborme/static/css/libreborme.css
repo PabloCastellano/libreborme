@@ -84,24 +84,63 @@ h2 i.glyphicon {
   font-size: 21px;
 }
 
-
-
 td.sat {
   background-color: lightgray;
 }
 
 td.sun {
   background-color: lightgray;
+  color: darkred;
 }
 
 td.today {
   background-color: lightgreen;
 }
 
+td.day {
+  text-align: center;
+}
+
 td.day:hover {
   background-color: lightblue;
 }
 
-table.month > tbody > tr > th {
+td.bormeday {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+td.nobormeday {
+  text-align: center;
+}
+
+td.nobormeday:hover {
+  background-color: lightblue;
+}
+
+table.calendar > tbody > tr > th {
 	padding: 4px;
+}
+
+.calendar caption {
+  color: white;
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 0px;
+  background-color: darkred;
+  border-radius: 5px 5px 0px 0px;
+}
+
+td.calendar {
+  color: gray;
+}
+
+.calendar {
+  cursor:pointer;
+  padding-top: 10px;
+}
+
+table.year {
+  border-spacing: 30px;
+  border-collapse: separate;
 }
