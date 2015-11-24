@@ -9,6 +9,12 @@
     </div>
     </div>
 
+    <div class="row calendar">
+    <div class="col-md-8 col-md-offset-2">
+    <a href="{% url 'borme-provincia-fecha' provincia year|add:"-1" %}">&lt; Anterior</a> | <a href="{% url 'borme-provincia-fecha' provincia year|add:"1" %}">Siguiente &gt;</a>
+    </div>
+    </div>
+
     <h3>Resumen de actos para el año {{ year }} en {{ provincia }}</h3>
     <div class="row anuncios">
     <div class="col-md-4 col-md-offset-1">

@@ -194,15 +194,15 @@ class LibreBormeAvailableCalendar(HTMLCalendar):
         elif self.today == datetime.date(self.year, self.month, day):
             if (self.month, day) in self.days_bormes:
                 url = self.days_bormes[(self.month, day)].get_absolute_url()
-                return '<td class="day today"><a href="%s">%d</a></td>' % (url, day)
+                return '<td class="day bormeday today"><a href="%s">%d</a></td>' % (url, day)
             else:
-                return '<td class="day today">%d</td>' % day
+                return '<td class="day nobormeday today">%d</td>' % day
         else:
             if (self.month, day) in self.days_bormes:
                 url = self.days_bormes[(self.month, day)].get_absolute_url()
-                return '<td class="day"><a href="%s">%d</a></td>' % (url, day)
+                return '<td class="day bormeday"><a href="%s">%d</a></td>' % (url, day)
             else:
-                return '<td class="day">%d</td>' % day
+                return '<td class="day nobormeday">%d</td>' % day
 
     def formatmonth(self, year, month, withyear=True):
         self.month = month
