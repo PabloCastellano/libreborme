@@ -51,7 +51,11 @@
 
     <p>Se encontraron {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company'%} <strong>{{ paginator_companies.count }}</strong> empresas{% endif %}{% if form.cleaned_data.type == 'all' %} y {% endif %}{% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'person'%}<strong>{{ paginator_persons.count }}</strong> personas{% endif %}.</p>
 
-            {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company' %}
+    {% if suggestion %}
+    <h3>Sugerencias:</h3>
+        {{ suggestion }}
+    {% endif %}
+    {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company' %}
     <h2>Empresas:</h2>
         <div class="search-companies">
             {% if page_companies.object_list %}
