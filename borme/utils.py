@@ -162,9 +162,9 @@ def _import1(borme):
                 logger.debug(acto.name)
                 logger.debug(acto.value)
                 if isinstance(acto, bormeparser.borme.BormeActoCargo):
+                    lista_cargos = []
                     for nombre_cargo, nombres in acto.cargos.items():
                         logger.debug('%s %s %d' % (nombre_cargo, nombres, len(nombres)))
-                        lista_cargos = []
                         for nombre in nombres:
                             logger.debug('  %s' % nombre)
                             if is_company(nombre):
@@ -227,7 +227,7 @@ def _import1(borme):
                                 p.save()
                             lista_cargos.append(cargo)
 
-                        nuevo_anuncio.actos[acto.name] = lista_cargos
+                    nuevo_anuncio.actos[acto.name] = lista_cargos
 
                     if is_acto_cargo_entrante(acto.name):
                         company.update_cargos_entrantes(lista_cargos)
