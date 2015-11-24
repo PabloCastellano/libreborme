@@ -67,7 +67,11 @@
     </div>
     </div>
 
-    <a href="{% url 'borme-anuncio' anuncio.year anuncio.id_anuncio|add:"-1" %}">&lt; Anterior</a> |
-    <a href="{% url 'borme-anuncio' anuncio.year anuncio.id_anuncio|add:"1" %}">Siguiente &gt;</a>
+    {% if anuncio.id_anuncio == 1 %}
+       &lt; Anterior
+    {% else %}
+        <a href="{% url 'borme-anuncio' anuncio.year anuncio.id_anuncio|add:"-1" %}">&lt; Anterior</a>
+    {% endif %}
+    | <a href="{% url 'borme-anuncio' anuncio.year anuncio.id_anuncio|add:"1" %}">Siguiente &gt;</a>
 
 {% endblock %}
