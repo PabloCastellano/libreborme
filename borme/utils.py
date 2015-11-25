@@ -522,6 +522,22 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False, c
             bormes = []
             if download:
                 _, files = bxml.download_pdfs(pdf_path, seccion=seccion)
+
+            for filepath in files:
+                if filepath.endswith('-99.pdf'):
+                    continue
+                logger.info('%s' % filepath)
+                total_results['total_bormes'] += 1
+                try:
+                    bormes.append(bormeparser.parse(filepath))
+                except Exception as e:
+                    logger.error('[X] Error grave en bormeparser.parse(): %s' % filepath)
+                    logger.error('[X] %s: %s' % (e.__class__.__name__, e))
+                    if strict:
+                        logger.error('[X] Una vez arreglado, reanuda la importación:')
+                        logger.error('[X]   python manage.py importbormetoday local')
+                        return False, total_results
+
             else:
                 cves = bxml.get_cves(bormeparser.SECCION.A)
                 files_json = list(map(lambda x: os.path.join(json_path, '%s.json' % x), cves))
