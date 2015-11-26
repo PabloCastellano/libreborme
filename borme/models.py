@@ -9,8 +9,6 @@ from django.db.models import *
 from bormeparser.regex import SOCIEDADES as SOCIEDADES_DICT
 from django_hstore import hstore
 
-#from borme_parser import DICT_KEYWORDS
-DICT_KEYWORDS = {}  # FIXME
 SOCIEDADES = sorted(SOCIEDADES_DICT.items())
 
 # TODO: i18n 2o valor
@@ -75,7 +73,7 @@ class Borme(Model):
     province = CharField(max_length=100)
     section = CharField(max_length=20)
     #pages = IntegerField()
-    anuncios = ArrayField(IntegerField(), default=list)
+    anuncios = ArrayField(IntegerField(), default=list)  # FIXME: {year, id}
 
     def get_absolute_url(self):
         return reverse('borme-borme', args=[str(self.cve)])
@@ -144,7 +142,7 @@ class Company(Model):
 
     date_updated = DateField(db_index=True)
     in_bormes = ArrayField(hstore.DictionaryField(), default=list)
-    anuncios = ArrayField(IntegerField(), default=list)
+    anuncios = ArrayField(IntegerField(), default=list)  # FIXME: {year, id}
 
     cargos_actuales_p = ArrayField(hstore.DictionaryField(), default=list)
     cargos_actuales_c = ArrayField(hstore.DictionaryField(), default=list)
