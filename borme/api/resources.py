@@ -1,5 +1,6 @@
-from tastypie.resources import ModelResource
 from borme.models import Company, Person
+from tastypie.resources import ModelResource
+from .serializers import LibreBormeJSONSerializer
 
 
 class CompanyResource(ModelResource):
@@ -7,7 +8,7 @@ class CompanyResource(ModelResource):
         queryset = Company.objects.all()
         resource_name = 'empresa'
         allowed_methods = ['get']
-        excludes = ['date_updated']
+        serializer = LibreBormeJSONSerializer(formats=['json'])
 
 
 class PersonResource(ModelResource):
@@ -15,4 +16,4 @@ class PersonResource(ModelResource):
         queryset = Person.objects.all()
         resource_name = 'persona'
         allowed_methods = ['get']
-        excludes = ['date_updated']
+        serializer = LibreBormeJSONSerializer(formats=['json'])

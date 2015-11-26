@@ -116,6 +116,8 @@ HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 # increase the default number of results (from 20)
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 25
 
+TASTYPIE_DEFAULT_FORMATS = ['json']
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
