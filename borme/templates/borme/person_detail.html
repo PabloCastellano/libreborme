@@ -11,7 +11,7 @@
     <p>Última actualización: {{ person.date_updated }}.<br/>
     Fuente de los datos: Agencia Estatal del Boletín Oficial del Estado.</p>
 
-    <strong>Empresas relacionadas:</strong> {{ companies|length }}
+    <strong>Empresas relacionadas:</strong> {{ person.in_companies|length }}
     <br/>
 
     <h2>Cargos directivos en empresas (actuales):</h2>
