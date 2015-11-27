@@ -1,6 +1,7 @@
 from .models import Company, Borme, Anuncio, Person, BormeLog
 
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.db import connection
 from django.utils.text import slugify
 from django.utils import timezone
@@ -141,11 +142,13 @@ class HTMLCalendar(Calendar):
 
 
 class LibreBormeCalendar(HTMLCalendar):
+    """
+    Este calendario tiene enlaces al día si hay Borme.
+    """
 
     def formatday(self, day, weekday):
         """
         Return a day as a table cell.
-        Este calendario tiene enlaces al día si hay Borme.
         """
 
         if day == 0:
@@ -154,13 +157,13 @@ class LibreBormeCalendar(HTMLCalendar):
             return '<td class="day %s">%d</td>' % (self.cssclasses[weekday], day)
         elif self.today == datetime.date(self.year, self.month, day):
             if (self.month, day) in self.days_bormes:
-                url = self.days_bormes[(self.month, day)].get_absolute_url()
+                url = reverse('borme-fecha', args=['-'.join([str(self.year), str(self.month), str(day)])])
                 return '<td class="day bormeday today"><a href="%s">%d</a></td>' % (url, day)
             else:
                 return '<td class="day nobormeday today">%d</td>' % day
         else:
             if (self.month, day) in self.days_bormes:
-                url = self.days_bormes[(self.month, day)].get_absolute_url()
+                url = reverse('borme-fecha', args=['-'.join([str(self.year), str(self.month), str(day)])])
                 return '<td class="day bormeday"><a href="%s">%d</a></td>' % (url, day)
             else:
                 return '<td class="day nobormeday">%d</td>' % day
@@ -180,6 +183,9 @@ class LibreBormeCalendar(HTMLCalendar):
 
 
 class LibreBormeAvailableCalendar(HTMLCalendar):
+    """
+    Este calendario tiene enlaces al Borme si existe para ese día.
+    """
 
     def formatday(self, day, weekday):
         """
