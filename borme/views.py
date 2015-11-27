@@ -321,6 +321,11 @@ class BormeDateView(TemplateView):
         # TODO: Guardar la fecha en el anuncio?
         context['calendar'] = mark_safe(lb_calendar)
         context['bormes'] = bormes
+        context['date'] = self.date
+        next_day = self.date + datetime.timedelta(days=1)
+        prev_day = self.date - datetime.timedelta(days=1)
+        context['next_day'] = next_day.isoformat()
+        context['prev_day'] = prev_day.isoformat()
 
         return context
 
