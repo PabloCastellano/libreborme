@@ -9,7 +9,7 @@ import os
 results = None
 
 
-# Hacer Mockup de:
+# TODO: Mockup de:
 # borme = bormeparser.parse(filename)
 # Testear: _import1(borme)
 class TestBormeModel(TestCase):
@@ -37,6 +37,6 @@ class TestBormeModel(TestCase):
         self.assertEqual(b.from_reg, 57315)
         self.assertEqual(b.until_reg, 57344)
         self.assertEqual(b.date, datetime.date(2015, 2, 10))
-        self.assertEqual(b.url, 'http://boe.es/borme/dias/2015/02/10/pdfs/BORME-A-2015-27-10.pdf')
+        self.assertEqual(b.url, 'https://boe.es/borme/dias/2015/02/10/pdfs/BORME-A-2015-27-10.pdf')
         self.assertEqual(b.province, bormeparser.PROVINCIA.CACERES)
         self.assertEqual(b.section, bormeparser.SECCION.A)
