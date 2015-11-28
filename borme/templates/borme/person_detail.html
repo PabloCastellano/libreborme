@@ -4,6 +4,26 @@
 
 {% block title %}{{ person.name|title }} | LibreBORME{% endblock %}
 
+{% block javascript %}
+    <script type="text/javascript">
+        function toggle_positions() {
+            console.log('toggle');
+            var e = document.getElementById('positions_history');
+            if(e.style.display == 'none'){
+                e.style.display = 'block';
+                document.getElementById('toggle_positions_on').style.display = 'none';
+                document.getElementById('toggle_positions_off').style.display = 'block';
+            } else {
+                e.style.display = 'none';
+                document.getElementById('toggle_positions_on').style.display = 'block';
+                document.getElementById('toggle_positions_off').style.display = 'none';
+            }
+            return true;
+        }
+
+    </script>
+{% endblock %}
+
 {% block content %}
 <div class="col-md-10 col-md-offset-1">
     <h1>Persona «{{ person.name|title }}»</h1>
@@ -14,7 +34,8 @@
     <strong>Empresas relacionadas:</strong> {{ person.in_companies|length }}
     <br/>
 
-    <h2>Cargos directivos en empresas (actuales):</h2>
+    <h2>Cargos directivos en empresas:</h2>
+    <div id="positions">
     <div class="row">
     <div class="col-md-10">
     {% if person.cargos_actuales %}
@@ -52,10 +73,14 @@
     </div>
     </div>
 
-    <h2>Cargos directivos en empresas (historial):</h2>
+    {% if person.cargos_historial %}
+    <a id="toggle_positions_on" href="#" onclick="toggle_positions();return false;" title="Mostrar cargos no vigentes"><i class="glyphicon glyphicon-chevron-right"></i> Mostrar cargos no vigentes</a>
+    <a id="toggle_positions_off" style="display:none" href="#" onclick="toggle_positions();return false;" title="Esconder cargos no vigentes"><i class="glyphicon glyphicon-chevron-down"></i> Esconder cargos no vigentes</a>
+
+    <div id="positions_history" style="display:none">
+    <h3>Cargos directivos en empresas (historial):</h3>
     <div class="row">
     <div class="col-md-10">
-    {% if person.cargos_historial %}
         <a href="{% url 'borme-persona-csv-historial' person.slug %}" title="Descargar CSV de historial de cargos"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
         <table class="table table-condensed">
             <thead>
@@ -85,10 +110,10 @@
             {% endfor %}
             </tbody>
         </table>
-    {% else %}
-        <i>No hay datos</i>
-    {% endif %}
     </div>
+    </div>
+    </div>
+    {% endif %}
     </div>
 
 {% comment %}

@@ -4,6 +4,26 @@
 
 {% block title %}{{ company.fullname }} | LibreBORME{% endblock %}
 
+{% block javascript %}
+    <script type="text/javascript">
+        function toggle_positions() {
+            console.log('toggle');
+            var e = document.getElementById('positions_history');
+            if(e.style.display == 'none'){
+                e.style.display = 'block';
+                document.getElementById('toggle_positions_on').style.display = 'none';
+                document.getElementById('toggle_positions_off').style.display = 'block';
+            } else {
+                e.style.display = 'none';
+                document.getElementById('toggle_positions_on').style.display = 'block';
+                document.getElementById('toggle_positions_off').style.display = 'none';
+            }
+            return true;
+        }
+
+    </script>
+{% endblock %}
+
 {% block content %}
 <div class="col-md-10 col-md-offset-1">
     <h1>Sociedad «{{ company.fullname }}»</h1>
@@ -23,7 +43,8 @@
     <br/>
 {% endcomment %}
 
-    <h2>Cargos directivos (actuales):</h2>
+    <h2>Cargos directivos:</h2>
+    <div id="positions">
     <div class="row">
     <div class="col-md-10">
     {% if company.cargos_actuales %}
@@ -66,10 +87,14 @@
     </div>
     </div>
 
-    <h2>Cargos directivos (historial):</h2>
+    {% if company.cargos_historial %}
+    <a id="toggle_positions_on" href="#" onclick="toggle_positions();return false;" title="Mostrar cargos no vigentes"><i class="glyphicon glyphicon-chevron-right"></i> Mostrar cargos no vigentes</a>
+    <a id="toggle_positions_off" style="display:none" href="#" onclick="toggle_positions();return false;" title="Esconder cargos no vigentes"><i class="glyphicon glyphicon-chevron-down"></i> Esconder cargos no vigentes</a>
+
+    <div id="positions_history" style="display:none">
+    <h3>Cargos directivos (historial):</h3>
     <div class="row">
     <div class="col-md-10">
-    {% if company.cargos_historial %}
         <a href="{% url 'borme-empresa-csv-historial' company.slug %}" title="Descargar CSV de historial de cargos"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
         <table class="table table-condensed">
             <thead>
@@ -103,10 +128,10 @@
             {% endfor %}
             </tbody>
         </table>
-    {% else %}
-        <i>No hay datos</i>
-    {% endif %}
     </div>
+    </div>
+    </div>
+    {% endif %}
     </div>
 
     <h2>Anuncios en boletines oficiales</h2>
@@ -164,6 +189,7 @@
     <div class="row related-persons">
     <div class="col-md-10">
 
+    {% if persons %}
      {% for ps in persons|rows_distributed:3 %}
         {% if persons|length > 5 %}
         <div class="col-md-4">
@@ -176,15 +202,17 @@
             {% if persons|length > 5 %}
         </div>
         {% endif %}
-     {% empty %}
-        <p><i>No hay datos.</i></p>
      {% endfor %}
+     {% else %}
+        <p><i>No hay datos.</i></p>
+    {% endif %}
     </div>
     </div>
 
     <h2>Sociedades relacionadas</h2>
     <div class="row related-companies">
     <div class="col-md-10">
+
      {% if companies %}
      {% for cs in companies|rows_distributed:3 %}
         {% if companies|length > 5 %}
