@@ -45,7 +45,6 @@ if DEBUG:
     INSTALLED_APPS += (
         'django_extensions',
         'debug_toolbar',
-#        'django_nose',
     )
 
 MIDDLEWARE_CLASSES = (
@@ -87,6 +86,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'libreborme.wsgi.application'
 
+# DEBUG
+#DEBUG_TOOLBAR_CONFIG{'JQUERY_URL': '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js'}
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
