@@ -4,6 +4,11 @@
 
 {% block title %}{{ company.fullname }} | LibreBORME{% endblock %}
 
+{% block meta %}
+    <meta name="keywords" content="{{ company.fullname|upper }}, Empresas, Informe, CNAE, Registro, Mercantil, Actos, BOE, BORME, Open Data, Cargos, Directivos"/>
+    <meta name="description" content="{{ company.fullname|upper }}. Información mercantil de la empresa {{ company.fullname|upper }}. Cargos directivos de {{ company.fullname|upper }}. Actos publicados en el BORME de {{ company.fullname|upper }}."/>
+{% endblock %}
+
 {% block javascript %}
     <script type="text/javascript">
         function toggle_positions() {

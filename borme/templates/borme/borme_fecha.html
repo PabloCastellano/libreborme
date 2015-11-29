@@ -2,6 +2,13 @@
 
 {% load utils %}
 
+{% block title %}Calendario de BORMEs publicados el día {{ date }} | LibreBORME{% endblock %}
+
+{% block meta %}
+    <meta name="keywords" content="Empresas, Informe, CNAE, Registro, Mercantil, Actos, BOE, BORME, Open Data, Cargos, Directivos"/>
+    <meta name="description" content="BORMEs publicados el día {{ date }}. Resumen de actos. Provincias."/>
+{% endblock %}
+
 {% block content %}
     <h2>Anuncios mercantiles del día {{ date }}</h2>
 

@@ -4,6 +4,11 @@
 
 {% block title %}Anuncio {{ anuncio.id_anuncio }} de {{ anuncio.year }} | LibreBORME{% endblock %}
 
+{% block meta %}
+    <meta name="keywords" content="Anuncio mercantil, Empresas, Informe, CNAE, Registro, Mercantil, Actos, BOE, BORME, Open Data, Cargos, Directivos"/>
+    <meta name="description" content="Información detallada del acto mercantil número {{ anuncio.id_anuncio }} de {{ anuncio.year }} publicado en el BORME."/>
+{% endblock %}
+
 {% block content %}
     <h1>Anuncio {{ anuncio.id_anuncio }} de {{ anuncio.year }}</h1>
 

@@ -5,7 +5,10 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="libreborme, borme, registro mercantil, opendata">
+  {% block meta %}
+      <meta name="keywords" content="Empresas, Informe, CNAE, Registro, Mercantil, Actos, BOE, BORME, Open Data, Cargos, Directivos"/>
+      <meta name="description" content="Libreborme.net ofrece un buscador para el Boletín Oficial del Registro Mercantil. Encuentra información sobre actos mercantiles de empresas."/>
+  {% endblock %}
   <meta name="author" content="Pablo Castellano">
   {% load staticfiles %}
   <link rel="icon" href="{% static "favicon.ico" %}">
