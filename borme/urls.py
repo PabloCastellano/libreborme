@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url, include
 
-from .views import AnuncioView, CompanyView, PersonView, HomeView, PersonListView, CompanyListView, BusquedaView,\
+from .views import AnuncioView, CompanyView, PersonView, HomeView, BusquedaView,\
                     BormeView, BormeProvinciaView, BormeDateView, LBSearchView, generate_company_csv_cargos_actual, generate_company_csv_cargos_historial,\
                     generate_person_csv_cargos_actual, generate_person_csv_cargos_historial
 
