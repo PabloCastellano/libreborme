@@ -412,18 +412,6 @@ class PersonView(DetailView):
             raise Http404('Person does not exist')
 
 
-class PersonListView(ListView):
-    model = Person
-    context_object_name = 'people'
-    queryset = Person.objects.all()[:100]
-
-
-class CompanyListView(ListView):
-    model = Company
-    context_object_name = 'companies'
-    queryset = Company.objects.all()[:100]
-
-
 class CompanyProvinceListView(ListView):
     #model = Company
     context_object_name = 'companies'
