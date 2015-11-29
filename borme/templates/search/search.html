@@ -2,7 +2,11 @@
 
 {% load utils %}
 
-{% block title %}Búsqueda avanzada | LibreBORME{% endblock %}
+{% if query %}
+    {% block title %}Resultados de la búsqueda {{ query|upper }} | LibreBORME{% endblock %}
+{% else %}
+    {% block title %}Búsqueda avanzada | LibreBORME{% endblock %}
+{% endif %}
 
 {% block content %}
     {% if query %}
