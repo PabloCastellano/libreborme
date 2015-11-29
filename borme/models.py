@@ -11,56 +11,14 @@ from django_hstore import hstore
 
 SOCIEDADES = sorted(SOCIEDADES_DICT.items())
 
+"""
 # TODO: i18n 2o valor
 PROVINCES = (
     ('Malaga', 'Málaga'),
     ('Sevilla', 'Sevilla'),
     ('Granada', 'Granada'),
 )
-
-
 """
-class CargoCompany(Model):
-    title = CharField(max_length=50)
-    name = ForeignKey('Company')
-    date_from = DateTimeField()
-    date_to = DateField()
-
-    def get_absolute_url(self):
-        slug = slugify(self.name)
-        return reverse('borme-empresa', args=[slug])
-
-    def __str__(self):
-        d_from = ''
-        d_to = ''
-        if self.date_from:
-            d_from = 'From: %s' % self.date_from.strftime('%x')
-        if self.date_to:
-            d_to = 'To: %s' % self.date_to.strftime('%x')
-        return '%s: %s (%s %s)' % (self.title, self.name, d_from, d_to)
-
-
-# TODO: subclass CargoCompany
-class CargoPerson(Model):
-    title = CharField(max_length=50)
-    name = ForeignKey('Person')
-    date_from = DateTimeField()
-    date_to = DateField()
-
-    def get_absolute_url(self):
-        slug = slugify(self.name)
-        return reverse('borme-persona', args=[slug])
-
-    def __str__(self):
-        d_from = ''
-        d_to = ''
-        if self.date_from:
-            d_from = 'From: %s' % self.date_from.strftime('%x')
-        if self.date_to:
-            d_to = 'To: %s' % self.date_to.strftime('%x')
-        return '%s: %s (%s %s)' % (self.title, self.name, d_from, d_to)
-"""
-
 
 class Borme(Model):
     """ Edicion de BORME """
