@@ -25,8 +25,10 @@ class TestBasicHttp(TestCase):
     @classmethod
     def setUpClass(cls):
         super(TestBasicHttp, cls).setUpClass()
-        Company.objects.create(name='EMPRESA RANDOM SL', date_updated=today)
+        b = Borme.objects.create(cve='BORME-Z-1111', date=today)
+        c = Company.objects.create(name='EMPRESA RANDOM SL', date_updated=today)
         Person.objects.create(name='PERSONA RANDOM', date_updated=today)
+        Anuncio.objects.create(id_anuncio=1, year=1800, borme=b, company=c)
         Config.objects.create(version='test', last_modified=timezone.now())
         #self.user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
         #self.user = User.create_user(username='john', email='lennon@thebeatles.com', password='johnpassword')
@@ -51,6 +53,26 @@ class TestBasicHttp(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
+    def test_anuncio(self):
+        anuncio = Anuncio.objects.get(id_anuncio=1, year=1800)
+        url = reverse('borme-anuncio', args=[anuncio.id_anuncio, anuncio.year])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        url = reverse('borme-anuncio', args=[1, 1700])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_borme(self):
+        borme = Borme.objects.get(cve='BORME-Z-1111')
+        url = reverse('borme-borme', args=[borme.cve])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        url = reverse('borme-borme', args=['BORME-Z-DOESNTEXIST'])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
     def test_index(self):
         url = reverse('home')
         response = self.client.get(url)
@@ -72,15 +94,18 @@ class TestBasicHttp(TestCase):
         self.assertEqual(response.status_code, 200)
         # self.client.post
 
-    def test_empresas(self):
-        url = reverse('borme-empresas-list')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+    """
+    TODO:
 
-    def test_personas(self):
-        url = reverse('borme-personas-list')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
+    'borme-provincia'
+    'borme-provincia-fecha'
+    'borme-fecha'
+    'borme-empresa-csv-actual'
+    'borme-empresa-csv-historial'
+    'borme-persona-csv-actual'
+    'borme-persona-csv-historial'
+    API
+    """
 
 
 class TestCommands(TestCase):
