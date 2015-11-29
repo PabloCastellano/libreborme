@@ -104,6 +104,7 @@ class HomeView(TemplateView):
         return context
 
 
+# TODO:  if 'q' not in request.GET
 class LBSearchView(SearchView):
     template = "search/search.html"
 
