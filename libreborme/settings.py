@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'bootstrap',
     'haystack',
     'tastypie',
+    'maintenancemode',
     'borme',
     'libreborme',
 )
@@ -53,6 +54,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'maintenancemode.middleware.MaintenanceModeMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
