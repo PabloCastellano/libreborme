@@ -5,11 +5,13 @@ from .views import AnuncioView, CompanyView, PersonView, HomeView, BusquedaView,
                     generate_person_csv_cargos_actual, generate_person_csv_cargos_historial
 
 from tastypie.api import Api
-from borme.api.resources import CompanyResource, PersonResource
+from borme.api.resources import CompanyResource, PersonResource, SearchCompanyResource, SearchPersonResource
 
 v1_api = Api(api_name='v1')
 v1_api.register(CompanyResource())
 v1_api.register(PersonResource())
+v1_api.register(SearchCompanyResource())
+v1_api.register(SearchPersonResource())
 
 
 urlpatterns = patterns('',

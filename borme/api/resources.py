@@ -14,6 +14,15 @@ class CompanyResource(ModelResource):
         allowed_methods = ['get']
         serializer = LibreBormeJSONSerializer(formats=['json'])
 
+
+class SearchCompanyResource(ModelResource):
+    class Meta:
+        queryset = Company.objects.all()
+        resource_name = 'empresa'
+        allowed_methods = ['get']
+        fields = ['name', 'slug']
+        serializer = LibreBormeJSONSerializer(formats=['json'])
+
     def prepend_urls(self):
         return [
             url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_search'), name="api_get_search_company"),
@@ -53,6 +62,15 @@ class PersonResource(ModelResource):
         queryset = Person.objects.all()
         resource_name = 'persona'
         allowed_methods = ['get']
+        serializer = LibreBormeJSONSerializer(formats=['json'])
+
+
+class SearchPersonResource(ModelResource):
+    class Meta:
+        queryset = Person.objects.all()
+        resource_name = 'persona'
+        allowed_methods = ['get']
+        fields = ['name', 'slug']
         serializer = LibreBormeJSONSerializer(formats=['json'])
 
     def prepend_urls(self):
