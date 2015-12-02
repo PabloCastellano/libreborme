@@ -129,36 +129,41 @@ class LibreBormeCalendar(HTMLCalendar):
         """
         Return a day as a table cell.
         """
+        if day == self.day:
+            css_selected = 'selected'
+        else:
+            css_selected = ''
 
         if day == 0:
             return '<td class="noday">&nbsp;</td>'  # day outside month
         elif weekday in (5, 6):
-            return '<td class="day %s">%d</td>' % (self.cssclasses[weekday], day)
+            return '<td class="day %s %s">%d</td>' % (self.cssclasses[weekday], css_selected, day)
         elif self.today == datetime.date(self.year, self.month, day):
             if (self.month, day) in self.days_bormes:
                 url = reverse('borme-fecha', args=['-'.join([str(self.year), str(self.month), str(day)])])
-                return '<td class="day bormeday today"><a href="%s">%d</a></td>' % (url, day)
+                return '<td class="day bormeday today %s"><a href="%s">%d</a></td>' % (css_selected, url, day)
             else:
-                return '<td class="day nobormeday today">%d</td>' % day
+                return '<td class="day nobormeday today %s">%d</td>' % (css_selected, day)
         else:
             if (self.month, day) in self.days_bormes:
                 url = reverse('borme-fecha', args=['-'.join([str(self.year), str(self.month), str(day)])])
-                return '<td class="day bormeday"><a href="%s">%d</a></td>' % (url, day)
+                return '<td class="day bormeday %s"><a href="%s">%d</a></td>' % (css_selected, url, day)
             else:
-                return '<td class="day nobormeday">%d</td>' % day
+                return '<td class="day nobormeday %s">%d</td>' % (css_selected, day)
 
-    def formatmonth(self, year, month):
-        self.year = year
-        self.month = month
+    def formatmonth(self, date):
+        self.year = date.year
+        self.month = date.month
+        self.day = date.day
         self.today = datetime.date.today()
 
-        _, lastday = monthrange(year, month)
-        bormes = Borme.objects.filter(date__gte=datetime.date(year, month, 1), date__lte=datetime.date(year, month, lastday)).distinct('date').order_by('date')
+        _, lastday = monthrange(self.year, self.month)
+        bormes = Borme.objects.filter(date__gte=datetime.date(self.year, self.month, 1), date__lte=datetime.date(self.year, self.month, lastday)).distinct('date').order_by('date')
         self.days_bormes = {}
         for borme in bormes:
             self.days_bormes[(borme.date.month, borme.date.day)] = borme
 
-        return super(LibreBormeCalendar, self).formatmonth(year, month)
+        return super(LibreBormeCalendar, self).formatmonth(self.year, self.month)
 
 
 class LibreBormeAvailableCalendar(HTMLCalendar):

@@ -99,8 +99,7 @@ class HomeView(TemplateView):
         #context['random_persons'] = Person.objects.filter(date_updated=last_modified).order_by('?')[:10]
         context['last_modified'] = last_modified
 
-        today = datetime.date.today()
-        lb_calendar = LibreBormeCalendar().formatmonth(today.year, today.month)
+        lb_calendar = LibreBormeCalendar().formatmonth(datetime.date.today())
         context['calendar'] = mark_safe(lb_calendar)
         return context
 
@@ -304,7 +303,7 @@ class BormeDateView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BormeDateView, self).get_context_data(**kwargs)
 
-        lb_calendar = LibreBormeCalendar().formatmonth(self.date.year, self.date.month)  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
+        lb_calendar = LibreBormeCalendar().formatmonth(self.date)  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
 
         bormes = Borme.objects.filter(date=self.date).order_by('province')
         if len(bormes) > 0:

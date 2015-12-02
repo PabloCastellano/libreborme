@@ -95,7 +95,7 @@ td.sun {
 }
 
 td.today {
-  background-color: lightgreen;
+  border-bottom: 1px dashed red;
 }
 
 td.day {
@@ -114,6 +114,11 @@ td.bormeday {
 td.nobormeday {
   text-align: center;
   color: darkgray;
+}
+
+td.selected {
+  background-color: lightgreen;
+  border: none;
 }
 
 td.nobormeday:hover {
