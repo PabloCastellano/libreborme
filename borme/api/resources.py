@@ -20,7 +20,7 @@ class SearchCompanyResource(ModelResource):
         queryset = Company.objects.all()
         resource_name = 'empresa'
         allowed_methods = ['get']
-        fields = ['name', 'slug']
+        fields = ['name', 'slug']  # TODO: fullname
         serializer = LibreBormeJSONSerializer(formats=['json'])
 
     def prepend_urls(self):
@@ -72,6 +72,9 @@ class SearchPersonResource(ModelResource):
         allowed_methods = ['get']
         fields = ['name', 'slug']
         serializer = LibreBormeJSONSerializer(formats=['json'])
+
+    def dehydrate_name(self, bundle):
+        return bundle.data['name'].title()
 
     def prepend_urls(self):
         return [
