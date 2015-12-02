@@ -10,7 +10,8 @@ from django.utils.safestring import mark_safe
 
 from .forms import LBSearchForm
 from .models import Company, Person, Anuncio, Config, Borme
-from .utils import LibreBormeCalendar, LibreBormeAvailableCalendar, estimate_count_fast
+from .calendar import LibreBormeCalendar, LibreBormeAvailableCalendar
+from .utils import estimate_count_fast
 
 from haystack.views import SearchView
 
