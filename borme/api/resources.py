@@ -1,6 +1,5 @@
 from django.conf.urls import url
-from django.core.paginator import Paginator, InvalidPage
-from django.http import Http404
+from django.core.paginator import Paginator
 from haystack.query import SearchQuerySet
 from tastypie.resources import ModelResource
 from tastypie.utils import trailing_slash
@@ -29,17 +28,17 @@ class CompanyResource(ModelResource):
         sqs = SearchQuerySet().models(Company).load_all().auto_query(request.GET.get('q', ''))
         paginator = Paginator(sqs, 20)
 
-        try:
-            page = paginator.page(int(request.GET.get('page', 1)))
-        except InvalidPage:
-            raise Http404("Sorry, no results on that page.")
-
         objects = []
 
-        for result in page.object_list:
-            bundle = self.build_bundle(obj=result.object, request=request)
-            bundle = self.full_dehydrate(bundle)
-            objects.append(bundle)
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+
+            for result in page.object_list:
+                bundle = self.build_bundle(obj=result.object, request=request)
+                bundle = self.full_dehydrate(bundle)
+                objects.append(bundle)
+        except:
+            pass
 
         object_list = {
             'objects': objects,
@@ -70,17 +69,18 @@ class PersonResource(ModelResource):
         sqs = SearchQuerySet().models(Person).load_all().auto_query(request.GET.get('q', ''))
         paginator = Paginator(sqs, 20)
 
-        try:
-            page = paginator.page(int(request.GET.get('page', 1)))
-        except InvalidPage:
-            raise Http404("Sorry, no results on that page.")
-
         objects = []
 
-        for result in page.object_list:
-            bundle = self.build_bundle(obj=result.object, request=request)
-            bundle = self.full_dehydrate(bundle)
-            objects.append(bundle)
+        try:
+            page = paginator.page(int(request.GET.get('page', 1)))
+
+            for result in page.object_list:
+                bundle = self.build_bundle(obj=result.object, request=request)
+                bundle = self.full_dehydrate(bundle)
+                objects.append(bundle)
+        except:
+            pass
+
 
         object_list = {
             'objects': objects,
