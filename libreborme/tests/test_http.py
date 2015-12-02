@@ -25,21 +25,23 @@ class TestBasicHttp(TestCase):
     @classmethod
     def setUpClass(cls):
         super(TestBasicHttp, cls).setUpClass()
-        b = Borme.objects.create(cve='BORME-Z-1111', date=today)
-        c = Company.objects.create(name='EMPRESA RANDOM SL', date_updated=today)
+        b = Borme.objects.create(cve='BORME-Z-1111', date=today, url='http://localhost', from_reg=1, until_reg=10, province='Nowhere', section='A')
+        c = Company(name='EMPRESA RANDOM', type='SL', date_updated=today)
         Person.objects.create(name='PERSONA RANDOM', date_updated=today)
-        Anuncio.objects.create(id_anuncio=1, year=1800, borme=b, company=c)
+        a = Anuncio.objects.create(id_anuncio=1, year=1800, borme=b, company=c)
+        c.anuncios = [a.id]
+        c.save()
         Config.objects.create(version='test', last_modified=timezone.now())
         #self.user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
         #self.user = User.create_user(username='john', email='lennon@thebeatles.com', password='johnpassword')
 
     def test_empresa(self):
-        company = Company.objects.get(name='EMPRESA RANDOM SL')
+        company = Company.objects.get(name='EMPRESA RANDOM')
         url = reverse('borme-empresa', args=[company.slug])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-        url = reverse('borme-empresa', args=['doesnt-exist-sl'])
+        url = reverse('borme-empresa', args=['doesnt-exist'])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
