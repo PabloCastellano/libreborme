@@ -169,7 +169,11 @@
                     {% for cargo in value %}
                         <tr>
                             <td>{{ cargo.title }}</td>
-                            <td><a href="{% url 'borme-persona' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
+                            {% if cargo.type == 'person' %}
+                                <td><a href="{% url 'borme-persona' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
+                            {% else %}
+                                <td><a href="{% url 'borme-empresa' cargo.name|slug2 %}">{{ cargo.name }}</a></td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>
