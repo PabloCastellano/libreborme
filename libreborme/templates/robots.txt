@@ -1,2 +1,4 @@
 User-agent: *
 Disallow: /static/
+Disallow: /borme/borme/
+Disallow: /borme/anuncio/
