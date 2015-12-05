@@ -1,4 +1,6 @@
 User-agent: *
 Disallow: /static/
+Disallow: /borme/api/
 Disallow: /borme/borme/
 Disallow: /borme/anuncio/
+Disallow: /borme/*.csv$
