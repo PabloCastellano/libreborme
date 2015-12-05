@@ -8,6 +8,7 @@ django-hstore==1.4
 #django-haystack==4.2.0 bug
 git+https://github.com/django-haystack/django-haystack
 django-maintenancemode==0.11.1
+django-static-jquery==2.1.4
 django-tastypie==0.12.2
 ecdsa==0.13
 elasticsearch==1.9.0
