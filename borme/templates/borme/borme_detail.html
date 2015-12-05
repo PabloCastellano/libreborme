@@ -22,7 +22,7 @@
     <br/>
     <strong>Sección:</strong> {{ borme.section }}
     <br/>
-    <strong>Fuente:</strong> <a href="{{ borme.url }}" title="Descargar PDF">{{ borme.url }} <i class="glyphicon glyphicon-download-alt"></i></a>
+    <strong>Fuente:</strong> <a href="{{ borme.url }}" title="Descargar PDF" rel="nofollow">{{ borme.url }} <i class="glyphicon glyphicon-download-alt"></i></a>
     <br/>
     <strong>Anuncios:</strong> {{ total_anuncios }}
     ({% if total_anuncios == 1 %}{{ borme.from_reg }}{% else %}del <a href="{% url 'borme-anuncio' borme.date.year borme.from_reg %}">{{ borme.from_reg }}</a> al <a href="{% url 'borme-anuncio' borme.date.year borme.until_reg %}">{{ borme.until_reg }}</a>{% endif %})

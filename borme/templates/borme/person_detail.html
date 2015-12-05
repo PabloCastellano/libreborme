@@ -44,7 +44,7 @@
     <div class="row">
     <div class="col-md-10">
     {% if person.cargos_actuales %}
-        <a href="{% url 'borme-persona-csv-actual' person.slug %}" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
+        <a href="{% url 'borme-persona-csv-actual' person.slug %}" rel="nofollow" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
         <table class="table table-condensed">
             <thead>
                 <tr>
@@ -85,7 +85,7 @@
     <div id="positions_history" style="display:none">
     <div class="row">
     <div class="col-md-10">
-        <a href="{% url 'borme-persona-csv-historial' person.slug %}" title="Descargar CSV de historial de cargos"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
+        <a href="{% url 'borme-persona-csv-historial' person.slug %}" rel="nofollow" title="Descargar CSV de historial de cargos"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
         <table class="table table-condensed">
             <thead>
                 <tr>
@@ -174,7 +174,7 @@
             {% for borme in bs %}
                 <li><a href="{% url 'borme-borme' borme.cve %}">{{ borme.cve }}</a>
                     <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
-                    <a href="{{ borme.url }}" title="Descargar PDF"><i class="glyphicon glyphicon-download-alt"></i></a>
+                    <a href="{{ borme.url }}" title="Descargar PDF" rel="nofollow"><i class="glyphicon glyphicon-download-alt"></i></a>
                 </li>
             {% endfor %}
             </ul>

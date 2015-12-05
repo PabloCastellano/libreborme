@@ -70,24 +70,24 @@
       <ul class="pagination">
         {% if page_companies.has_previous %}
         <li>
-          <a href="?q={{ query }}&page={{ page_companies.previous_page_number }}&type=company" aria-label="Previous">
+          <a href="?q={{ query }}&page={{ page_companies.previous_page_number }}&type=company" rel="nofollow" aria-label="Previous">
             <span aria-hidden="true">&laquo; Anterior</span>
           </a>
         </li>
         {% endif %}
         {% for num in page_companies.myrange %}
             {% if num == page_companies.number %}
-            <li class="active"><a href="?q={{ query }}&page={{ num }}&type=company">{{ num }}</a></li>
+            <li class="active"><a href="?q={{ query }}&page={{ num }}&type=company" rel="nofollow">{{ num }}</a></li>
             {% else %}
-            <li><a href="?q={{ query }}&page={{ num }}&type=company">{{ num }}</a></li>
+            <li><a href="?q={{ query }}&page={{ num }}&type=company" rel="nofollow">{{ num }}</a></li>
             {% endif %}
         {% empty %}
-            <li class="active"><a href="?q={{ query }}&page=1&type=company">1</a></li>
+            <li class="active"><a href="?q={{ query }}&page=1&type=company" rel="nofollow">1</a></li>
         {% endfor %}
 
         {% if page_companies.has_next %}
         <li>
-          <a href="?q={{ query }}&page={{ page_companies.next_page_number }}&type=company" aria-label="Next">
+          <a href="?q={{ query }}&page={{ page_companies.next_page_number }}&type=company" rel="nofollow" aria-label="Next">
             <span aria-hidden="true">Siguiente &raquo;</span>
           </a>
         </li>
@@ -124,24 +124,24 @@
       <ul class="pagination">
         {% if page_persons.has_previous %}
         <li>
-          <a href="?q={{ query }}&page={{ page_persons.previous_page_number }}&type=person" aria-label="Previous">
+          <a href="?q={{ query }}&page={{ page_persons.previous_page_number }}&type=person" rel="nofollow" aria-label="Previous">
             <span aria-hidden="true">&laquo; Anterior</span>
           </a>
         </li>
         {% endif %}
         {% for num in page_persons.myrange %}
             {% if num == page_persons.number %}
-            <li class="active"><a href="?q={{ query }}&page={{ num }}&type=person">{{ num }}</a></li>
+            <li class="active"><a href="?q={{ query }}&page={{ num }}&type=person" rel="nofollow">{{ num }}</a></li>
             {% else %}
-            <li><a href="?q={{ query }}&page={{ num }}&type=person">{{ num }}</a></li>
+            <li><a href="?q={{ query }}&page={{ num }}&type=person" rel="nofollow">{{ num }}</a></li>
             {% endif %}
         {% empty %}
-            <li class="active"><a href="?q={{ query }}&page=1&type=person">1</a></li>
+            <li class="active"><a href="?q={{ query }}&page=1&type=person" rel="nofollow">1</a></li>
         {% endfor %}
 
         {% if page_persons.has_next %}
         <li>
-          <a href="?q={{ query }}&page={{ page_persons.next_page_number }}&type=person" aria-label="Next">
+          <a href="?q={{ query }}&page={{ page_persons.next_page_number }}&type=person" rel="nofollow" aria-label="Next">
             <span aria-hidden="true">Siguiente &raquo;</span>
           </a>
         </li>
