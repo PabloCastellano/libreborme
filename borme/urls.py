@@ -25,7 +25,7 @@ urlpatterns = patterns('',
     url(r'^persona/(?P<slug>[\w-]+)$', PersonView.as_view(), name='borme-persona'),
     url(r'^persona/(?P<slug>[\w-]+)/cargos_actual.csv$', generate_person_csv_cargos_actual, name='borme-persona-csv-actual'),
     url(r'^persona/(?P<slug>[\w-]+)/cargos_historial.csv$', generate_person_csv_cargos_historial, name='borme-persona-csv-historial'),
-    url(r'^busqueda/$', BusquedaView.as_view(), name='borme-busqueda'),
+    #url(r'^busqueda/$', BusquedaView.as_view(), name='borme-busqueda'),
     url(r'^api/', include(v1_api.urls)),
     url(r'^search/', LBSearchView(), name='borme-search'),
 )

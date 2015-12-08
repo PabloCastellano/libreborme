@@ -164,6 +164,7 @@ class LBSearchView(SearchView):
         if self.results and hasattr(self.results, 'query') and self.results.query.backend.include_spelling:
             context['suggestion'] = self.form.get_suggestion()
 
+        context['search_view'] = 1
         context.update(self.extra_context())
         return render_to_response(self.template, context, context_instance=self.context_class(self.request))
 
