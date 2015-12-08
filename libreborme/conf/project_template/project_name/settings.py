@@ -6,8 +6,6 @@ from django.conf import settings
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
-SECRET_KEY = '{{ secret_key }}'
-
 ROOT_URLCONF = '{{ project_name }}.urls'
 
 WSGI_APPLICATION = '{{ project_name }}.wsgi.application'
@@ -27,6 +25,8 @@ from libreborme.settings import *
 
 # ------ All settings customizations must go here ------ #
 DEBUG = True
+
+SECRET_KEY = '{{ secret_key }}'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
