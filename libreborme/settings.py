@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django_hstore',
     'bootstrap',
     'django_static_jquery',
+    'fontawesome',
     'haystack',
     'tastypie',
     'maintenancemode',

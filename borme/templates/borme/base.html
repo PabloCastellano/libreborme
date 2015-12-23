@@ -15,7 +15,8 @@
 
   <title>{% block title %}LibreBORME{% endblock %}</title>
 
-  <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
+  <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+  <link href="{% static "fontawesome/css/font-awesome.min.css" %}" rel="stylesheet">
   <link href="{% static "css/libreborme.css" %}" rel="stylesheet">
 
   {% block javascript %}{% endblock %}
@@ -45,10 +46,6 @@
 </div>
 </div>
 
-    <a href="https://github.com/PabloCastellano/libreborme">
-        <img style="position: absolute; top: 0; right: 0; border: 0;" src="{% static "forkme_right_red_aa0000.png" %}" alt="Fork me on GitHub"
-        data-canonical-src="{% static "forkme_right_red_aa0000.png" %}">
-    </a>
     {% block content %}{% endblock %}
 
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -90,7 +87,9 @@
               <div class="col-lg-8">
                 <p class="text-muted">Esta web muestra únicamente datos públicos disponibles desde el año 2009. <a href="#" data-toggle="modal" data-target="#myModal"><small>¿Por qué?</small></a></p>
                 <p class="text-muted"><small>© LibreBORME 2014-2015 <i>(version: <a href="https://github.com/PabloCastellano/libreborme/commit/{{ version }}">git-{{ version }}</a>)</i>
-                  | <span style="unicode-bidi:bidi-override; direction: rtl;">ten.emroberbil@otcatnoc</span></small>
+                  | <span style="unicode-bidi:bidi-override; direction: rtl;">ten.emroberbil@otcatnoc</span>
+                  | <i class="fa fa-twitter"></i> <a href="https://twitter.com/libreborme">@LibreBORME</a>
+                  | <i class="fa fa-github"></i> <a href="https://github.com/PabloCastellano/libreborme/">Código fuente</a></small>
                 </p>
               </div>
               <div class="col-lg-4">

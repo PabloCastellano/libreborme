@@ -47,7 +47,7 @@ class CompanyResource(ModelResource):
         self.log_throttled_access(request)
         return self.create_response(request, object_list)
 
-    # Based on full_dehydrate
+    # HACK: Based on full_dehydrate
     def search_dehydrate(self, bundle, for_list=False):
         use_in = ['all', 'list' if for_list else 'detail']
 
@@ -122,7 +122,7 @@ class PersonResource(ModelResource):
         self.log_throttled_access(request)
         return self.create_response(request, object_list)
 
-    # Based on full_dehydrate
+    # HACK: Based on full_dehydrate
     def search_dehydrate(self, bundle, for_list=False):
         use_in = ['all', 'list' if for_list else 'detail']
 
