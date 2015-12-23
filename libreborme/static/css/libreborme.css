@@ -151,3 +151,42 @@ table.year {
   border-spacing: 30px;
   border-collapse: separate;
 }
+
+.limiter {
+    margin: 0 auto;
+    width: 993px;
+}
+
+.header-buttonline {
+    display: inline-block;
+}
+
+.header-message {
+    display: inline-block;
+    font-size: 12px !important;
+    font-weight: bold;
+    margin-left: 5px;
+    padding: 10px 0;
+}
+
+#headerCookies {
+    background-color: #5A5A5A;
+    border-bottom: 1px solid #CCC;
+    box-shadow: 0 0 2px #CCC;
+    color: white;
+}
+
+#headerCookies a {
+  color: darkgray;
+}
+
+#headerCookies button {
+  font-weight: bold;
+  background-color: black;
+  border-color: black;
+}
+
+#headerCookies p {
+    margin: 2px;
+    padding: 0
+}

@@ -22,13 +22,44 @@
   {% block javascript %}{% endblock %}
   <script src="{% static 'static_jquery/js/jquery.js' %}"></script>
   <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+  <script src="{% static "jquery.cookie.js" %}"></script>
 
 </head>
 
 <body>
 
+{% if not debug %}
+<!-- Cookies message -->
+<div id="headerCookies" style="display:none;">
+	<div class="limiter">
+		<p class="header-message">LibreBorme.net utiliza cookies para que tengas la mejor experiencia de navegación. Si sigues navegando entendemos que aceptas nuestra <a href="{% url 'cookies' %}">política de cookies</a>.</p>
+		<p class="header-buttonline">
+			<button type="button" class="btn btn-primary btn-sm cookies-header-close">OK</button>
+		</p>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var advice = $("#headerCookies");
+	var closeButton = advice.find(".cookies-header-close");
+	var cookie = $.cookie('cookies');
+
+	if (cookie == null) {
+	    advice.show();
+	    closeButton.click(function(e){
+		var date = new Date();
+	        date.setTime(date.getTime() + (60 * 60 * 24 * 365 * 10 * 1000));
+	        $.cookie("cookies", "valcookiemsg", { expires: date, path: "/", domain: ".libreborme.net" });
+		e.preventDefault();
+		e.stopPropagation();
+		advice.slideUp("fast");
+	    });
+	}
+</script>
+{% endif %}
 
   <div class="container">
+
 
 <div class="header1">
 <div class="row">
