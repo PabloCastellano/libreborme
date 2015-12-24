@@ -1,6 +1,6 @@
 from django.test import TestCase
 from borme.models import Borme
-from borme.utils import _import1
+from borme.importer import _import1
 
 import bormeparser
 import datetime

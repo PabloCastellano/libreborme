@@ -6,7 +6,7 @@ from borme.models import Config
 import time
 from django.utils import timezone
 from libreborme.utils import get_git_revision_short_hash
-from borme.utils import import_borme_download
+from borme.importer import import_borme_download
 
 
 class Command(BaseCommand):

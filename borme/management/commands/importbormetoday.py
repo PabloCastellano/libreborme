@@ -7,7 +7,7 @@ from borme.models import Config
 import datetime
 import time
 
-from borme.utils import import_borme_download, update_previous_xml
+from borme.importer import import_borme_download, update_previous_xml
 
 
 class Command(BaseCommand):

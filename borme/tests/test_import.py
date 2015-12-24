@@ -1,5 +1,5 @@
 from borme.models import Anuncio, Borme, Company, Person
-from borme.utils import import_borme_pdf, _import1
+from borme.importer import import_borme_pdf, _import1
 import os
 
 from django.test import TestCase
