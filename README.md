@@ -40,6 +40,16 @@ Instalación
 
 Para instrucciones de cómo montar tu propia instancia de LibreBORME, echa un vistazo a [INSTALL.md](INSTALL.md).
 
+Documentación
+-------------
+
+La documentación más actualizada del proyecto se encuentra disponible en [https://libreborme.readthedocs.org/es/develop/](https://libreborme.readthedocs.org/es/develop/).
+
+Es posible generarla localmente mediante mkdocs:
+
+    pip install -r requirements/docs.txt
+    mkdocs build
+
 Contribuciones
 --------------
 

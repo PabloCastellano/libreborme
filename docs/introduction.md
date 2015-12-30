@@ -1,9 +1,4 @@
-En estos momentos hay una versión en producción en [https://beta.libreborme.net](https://beta.libreborme.net). Como su dominio indica, es una versión de pruebas, por lo que
-fallará de vez en cuando, sus URLs cambiarán, a veces contendrá más datos y otras veces menos...
-
-Tenlo en cuenta si la usas. De momento no hace falta que se reporten los bugs.
-
-Actualmente los datos importados son los existentes en 2015 hasta marzo, por lo que solo aparecerán sociedades y personas con actos mercantiles en este período.
+En estos momentos hay una instancia en fase de pruebas en [https://libreborme.net](https://libreborme.net). Al ser una instancia de pruebas, las URLs aún pueden cambiar y haber cortos períodos de tiempo en los que no esté disponible.
 
 # Acerca de LibreBORME
 
@@ -22,10 +17,6 @@ Para más información puedes leer las siguientes entradas en el blog del autor:
 # Premios
 
 Este proyecto obtuvo el tercer premio en el [Certamen de Proyectos Libres de la UGR](http://osl.ugr.es/2014/09/26/premios-a-proyectos-libres-de-la-ugr/).
-
-# Instalación
-
-Para instrucciones de cómo montar tu propia instancia de LibreBORME, echa un vistazo a [INSTALL.md](https://github.com/PabloCastellano/libreborme/blob/master/INSTALL.md).
 
 # Contribuciones
 
