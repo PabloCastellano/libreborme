@@ -20,6 +20,7 @@ PROVINCES = (
 )
 """
 
+
 class Borme(Model):
     """ Edicion de BORME """
     cve = CharField(max_length=30, primary_key=True)
@@ -63,15 +64,18 @@ class Person(Model):
             self.in_bormes.append(borme)
 
     def update_cargos_entrantes(self, cargos):
-        """ cargos = [CargoCompany] """
+        """ cargos = [dict] """
         self.cargos_actuales.extend(cargos)
 
     def update_cargos_salientes(self, cargos):
-        """ cargos = [CargoCompany] """
+        """ cargos = [dict] """
 
         for cargo in cargos:
-            if cargo in self.cargos_actuales:
-                self.cargos_actuales.remove(cargo)
+            for cargo_a in self.cargos_actuales:
+                if all(cargo[k] == cargo_a[k] for k in ('name', 'title')):
+                    self.cargos_actuales.remove(cargo_a)
+                    cargo['date_from'] = cargo_a['date_from']
+                    break
             self.cargos_historial.append(cargo)
 
     @property
@@ -165,7 +169,7 @@ class Company(Model):
         super(Company, self).save(*args, **kwargs)
 
     def update_cargos_entrantes(self, cargos):
-        """ cargos = [CargoCompany/CargoPerson] """
+        """ cargos = [dict] """
 
         for cargo in cargos:
             cargo_embed = cargo.copy()
@@ -177,20 +181,28 @@ class Company(Model):
                 self.cargos_actuales_p.append(cargo_embed)
 
     def update_cargos_salientes(self, cargos):
-        """ cargos = [CargoCompany/CargoPerson] """
+        """ cargos = [dict] """
 
         for cargo in cargos:
             cargo_embed = cargo.copy()
             if cargo_embed['type'] == 'company':
                 del cargo_embed['type']
-                if cargo_embed in self.cargos_actuales_c:
-                    self.cargos_actuales_c.remove(cargo_embed)
+                for cargo_a in self.cargos_actuales_c:
+                    if all(cargo[k] == cargo_a[k] for k in ('name', 'title')):
+                        self.cargos_actuales_c.remove(cargo_a)
+                        cargo_embed['date_from'] = cargo_a['date_from']
+                        break
                 self.cargos_historial_c.append(cargo_embed)
             elif cargo_embed['type'] == 'person':
                 del cargo_embed['type']
-                if cargo_embed in self.cargos_actuales_p:
-                    self.cargos_actuales_p.remove(cargo_embed)
+                for cargo_a in self.cargos_actuales_p:
+                    if all(cargo[k] == cargo_a[k] for k in ('name', 'title')):
+                        self.cargos_actuales_p.remove(cargo_a)
+                        cargo_embed['date_from'] = cargo_a['date_from']
+                        break
                 self.cargos_historial_p.append(cargo_embed)
+            else:
+                raise ValueError('type: invalid value')
 
     def get_absolute_url(self):
         return reverse('borme-empresa', args=[str(self.slug)])

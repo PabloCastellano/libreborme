@@ -16,6 +16,7 @@ today = datetime.date.today()
 import os
 
 
+# TODO: Fixtures
 # parametros django call_command
 # what to check django tests
 # Envio de emails
