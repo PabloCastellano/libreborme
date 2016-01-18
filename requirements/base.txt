@@ -11,7 +11,7 @@ django-maintenancemode==0.11.2
 django-static-jquery==2.1.4
 django-tastypie==0.13.0
 ecdsa==0.13
-elasticsearch==2.2.0
+elasticsearch==1.9.0
 Fabric==1.10.2
 greenlet==0.4.9
 IPy==0.83
