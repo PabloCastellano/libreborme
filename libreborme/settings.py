@@ -109,9 +109,9 @@ DATABASES = {
 # haystack search using elasticsearch
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'ENGINE': 'borme.search_backends.AsciifoldingElasticSearchEngine',
         'URL': 'http://127.0.0.1:9200/',
-        'INDEX_NAME': 'haystack',
+        'INDEX_NAME': 'libreborme',
     },
 }
 
