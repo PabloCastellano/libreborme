@@ -377,7 +377,22 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False, c
                                 return False, total_results
                 else:
                     logger.error('[X] Faltan archivos PDF y JSON que no se desea descargar.')
-                    return False, total_results
+                    logger.error('[X] JSON: %s' % ' '.join(files_json))
+                    logger.error('[X] PDF: %s' % ' '.join(files_pdf))
+                    if strict:
+                        return False, total_results
+
+                    for filepath in files_json:
+                        if not os.path.exists(filepath):
+                            logger.warn('[X] Missing JSON: %s' % filepath)
+                            continue
+                        logger.info('%s' % filepath)
+                        total_results['total_bormes'] += 1
+                        try:
+                            bormes.append(bormeparser.Borme.from_json(filepath))
+                        except Exception as e:
+                            logger.error('[X] Error grave en bormeparser.Borme.from_json(): %s' % filepath)
+                            logger.error('[X] %s: %s' % (e.__class__.__name__, e))
 
             for borme in sorted(bormes):
                 total_results['total_anuncios'] += len(borme.get_anuncios())
