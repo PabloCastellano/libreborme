@@ -1,4 +1,4 @@
-En estos momentos hay una instancia en fase de pruebas en [https://libreborme.net](https://libreborme.net). Al ser una instancia de pruebas, las URLs aún pueden cambiar y haber cortos períodos de tiempo en los que no esté disponible.
+En estos momentos hay una versión en producción en [https://libreborme.net](https://libreborme.net).
 
 # Acerca de LibreBORME
 

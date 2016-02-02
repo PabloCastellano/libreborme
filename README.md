@@ -5,12 +5,7 @@
 [![Documentation Status](https://readthedocs.org/projects/libreborme/badge/?version=latest)](https://readthedocs.org/projects/libreborme/?badge=latest)
 [![Requirements Status](https://requires.io/github/PabloCastellano/libreborme/requirements.svg?branch=master)](https://requires.io/github/PabloCastellano/libreborme/requirements/?branch=master)
 
-En estos momentos hay una versión en producción en https://beta.libreborme.net. Como su dominio indica, es una versión de pruebas, por lo que
-fallará de vez en cuando, sus URLs cambiarán, a veces contendrá más datos y otras veces menos...
-
-Tenlo en cuenta si la usas. De momento no hace falta que se reporten los bugs.
-
-Actualmente los datos importados son los existentes en 2015 hasta marzo, por lo que solo aparecerán sociedades y personas con actos mercantiles en este período.
+En estos momentos hay una versión en producción en https://libreborme.net.
 
 Acerca de LibreBORME
 ----------------
