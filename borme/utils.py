@@ -11,6 +11,7 @@ from bormeparser.exceptions import BormeDoesntExistException
 from bormeparser.regex import is_company, is_acto_cargo_entrante, regex_empresa_tipo
 from bormeparser.utils import FIRST_BORME
 
+from calendar import monthrange
 import datetime
 import logging
 import time
