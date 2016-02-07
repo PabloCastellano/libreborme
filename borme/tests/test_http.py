@@ -27,6 +27,7 @@ class TestBasicHttp(TestCase):
         super(TestBasicHttp, cls).setUpClass()
         b = Borme.objects.create(cve='BORME-Z-1111', date=today, url='http://localhost', from_reg=1, until_reg=10, province='Nowhere', section='A')
         c = Company(name='EMPRESA RANDOM', type='SL', date_updated=today)
+        c.save()
         Person.objects.create(name='PERSONA RANDOM', date_updated=today)
         a = Anuncio.objects.create(id_anuncio=1, year=1800, borme=b, company=c)
         c.anuncios = [a.id]
@@ -57,11 +58,11 @@ class TestBasicHttp(TestCase):
 
     def test_anuncio(self):
         anuncio = Anuncio.objects.get(id_anuncio=1, year=1800)
-        url = reverse('borme-anuncio', args=[anuncio.id_anuncio, anuncio.year])
+        url = reverse('borme-anuncio', args=[anuncio.year, anuncio.id_anuncio])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-        url = reverse('borme-anuncio', args=[1, 1700])
+        url = reverse('borme-anuncio', args=[1700, 1])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
