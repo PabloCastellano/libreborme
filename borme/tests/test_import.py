@@ -25,7 +25,7 @@ class TestImport2(TestCase):
         companies = Company.objects.all()
         self.assertEqual(len(companies), 0)
 
-        json_path = os.path.join(os.getcwd(), 'borme', 'tests', 'files', '1_nombramientos.json')
+        json_path = os.path.join(os.getcwd(), '..', 'borme', 'tests', 'files', '1_nombramientos.json')
         ret = import_borme_json(json_path)
         self.assertTrue(ret)
         companies = Company.objects.all()
@@ -34,7 +34,7 @@ class TestImport2(TestCase):
         self.assertEqual(len(company.cargos_actuales), 2)
         self.assertEqual(len(company.cargos_historial), 0)
 
-        json_path = os.path.join(os.getcwd(), 'borme', 'tests', 'files', '2_ceses.json')
+        json_path = os.path.join(os.getcwd(), '..', 'borme', 'tests', 'files', '2_ceses.json')
         ret = import_borme_json(json_path)
         self.assertTrue(ret)
         companies = Company.objects.all()
@@ -50,12 +50,12 @@ class TestImport3(TestCase):
         companies = Company.objects.all()
         self.assertEqual(len(companies), 0)
 
-        json_path = os.path.join(os.getcwd(), 'borme', 'tests', 'files', '3_cese_y_nombramiento.json')
+        json_path = os.path.join(os.getcwd(), '..', 'borme', 'tests', 'files', '3_cese_y_nombramiento.json')
         ret = import_borme_json(json_path)
         self.assertTrue(ret)
         companies = Company.objects.all()
         self.assertEqual(len(companies), 1)
         company = companies[0]
-        self.assertEqual(company.name, 'EMPRESA TRES SL')
+        self.assertEqual(company.name, 'EMPRESA TRES')
         self.assertEqual(len(company.cargos_actuales), 1)
         self.assertEqual(len(company.cargos_historial), 2)
