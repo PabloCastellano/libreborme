@@ -42,3 +42,20 @@ class TestImport2(TestCase):
         company = companies[0]
         self.assertEqual(len(company.cargos_actuales), 0)
         self.assertEqual(len(company.cargos_historial), 2)
+
+
+class TestImport3(TestCase):
+
+    def test_nombramientos_ceses(self):
+        companies = Company.objects.all()
+        self.assertEqual(len(companies), 0)
+
+        json_path = os.path.join(os.getcwd(), 'borme', 'tests', 'files', '3_cese_y_nombramiento.json')
+        ret = import_borme_json(json_path)
+        self.assertTrue(ret)
+        companies = Company.objects.all()
+        self.assertEqual(len(companies), 1)
+        company = companies[0]
+        self.assertEqual(company.name, 'EMPRESA TRES SL')
+        self.assertEqual(len(company.cargos_actuales), 1)
+        self.assertEqual(len(company.cargos_historial), 2)
