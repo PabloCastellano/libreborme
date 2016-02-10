@@ -232,52 +232,35 @@ def files_exist(files):
     return all([os.path.exists(f) for f in files])
 
 
-def import_borme_download(date, seccion=bormeparser.SECCION.A, download=True):
+def import_borme_download(date_from, date_to, seccion=bormeparser.SECCION.A, local_only=False, no_missing=False):
     """
-    date: "2015", "2015-01", "2015-01-30", "--init"
+    date_from: "2015-01-30", "init"
+    date_to: "2015-01-30", "today"
     """
-    if date == '--init':
-        begin = FIRST_BORME[2009]
-        end = datetime.date.today()
+    if date_from == 'init':
+        date_from = FIRST_BORME[2009]
     else:
-        date = tuple(map(int, date.split('-')))  # TODO: exception
+        date = tuple(map(int, date_from.split('-')))  # TODO: exception
+        date_from = datetime.date(*date)
 
-        if len(date) == 3:  # 2015-06-02
-            begin = datetime.date(*date)
-            try:
-                ret, _ = _import_borme_download_range2(begin, begin, seccion, download)
-                return ret
-            except BormeDoesntExistException:
-                logger.info('It looks like there is no BORME for this date. Nothing was downloaded')
-                return False
-        elif len(date) == 2:  # 2015-06
-            _, lastday = monthrange(*date)
-            end = datetime.date(date[0], date[1], lastday)
-            try:
-                begin = datetime.date(date[0], date[1], 1)
-                ret, _ = _import_borme_download_range2(begin, end, seccion, download, strict=True)
-            except BormeDoesntExistException:
-                try:
-                    begin = datetime.date(date[0], date[1], 2)
-                    ret, _ = _import_borme_download_range2(begin, end, seccion, download, strict=True)
-                except BormeDoesntExistException:
-                    try:
-                        begin = datetime.date(date[0], date[1], 3)
-                        ret, _ = _import_borme_download_range2(begin, end, seccion, download, strict=True)
-                    except BormeDoesntExistException:
-                        begin = datetime.date(date[0], date[1], 4)
-                        ret, _ = _import_borme_download_range2(begin, end, seccion, download, strict=True)
-            return ret
+    if date_to == 'today':
+        date_to = datetime.date.today()
+    else:
+        date = tuple(map(int, date_to.split('-')))  # TODO: exception
+        date_to = datetime.date(*date)
 
-        elif len(date) == 1:  # 2015
-            begin = FIRST_BORME[date[0]]
-            end = datetime.date(date[0], 12, 31)
+    if date_from > date_to:
+        raise ValueError('date_from > date_to')
 
-    ret, _ = _import_borme_download_range2(begin, end, seccion, download)
-    return ret
+    try:
+        ret, _ = _import_borme_download_range2(date_from, date_to, seccion, local_only, strict=no_missing)
+        return ret
+    except BormeDoesntExistException:
+        logger.info('It looks like there is no BORME for this date ({}). Nothing was downloaded'.format(date_from))
+        return False
 
 
-def _import_borme_download_range2(begin, end, seccion, download, strict=False, create_json=True):
+def _import_borme_download_range2(begin, end, seccion, local_only, strict=False, create_json=True):
     """
     strict: Para en caso de error grave
     """
@@ -326,7 +309,7 @@ def _import_borme_download_range2(begin, end, seccion, download, strict=False, c
             print('\nPATH: %s\nDATE: %s\nSECCION: %s\n' % (pdf_path, bxml.date, seccion))
 
             bormes = []
-            if download:
+            if not local_only:
                 _, files = bxml.download_pdfs(pdf_path, seccion=seccion)
 
                 for filepath in files:
