@@ -112,6 +112,7 @@ class TestBasicHttp(TestCase):
     """
 
 
+"""
 class TestCommands(TestCase):
 
     def test_importbormepdf(self):
@@ -128,7 +129,6 @@ class TestCommands(TestCase):
         call_command('importborme', stdout=out)
         self.assertIn(out.getvalue(), 'Errors: 0')
 
-"""
 
     def test_login_required(self):
         response = self.client.get(reverse('process_all'))
