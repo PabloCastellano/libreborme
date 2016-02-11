@@ -9,6 +9,9 @@ class CompanyIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return Company
 
+    def get_updated_field(self):
+        return "date_updated"
+
 
 class PersonIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True, model_attr='name')
@@ -16,3 +19,6 @@ class PersonIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Person
+
+    def get_updated_field(self):
+        return "date_updated"

@@ -8,8 +8,8 @@ import time
 import logging
 
 from libreborme.utils import get_git_revision_short_hash
-from borme.utils import import_borme_json
-import borme.utils
+from borme.importer import import_borme_json
+import borme.importer
 
 
 class Command(BaseCommand):
@@ -19,13 +19,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         verbosity = int(options['verbosity'])
         if verbosity == 0:
-            borme.utils.logger.setLevel(logging.ERROR)
+            borme.importer.logger.setLevel(logging.ERROR)
         elif verbosity == 1:  # default
-            borme.utils.logger.setLevel(logging.INFO)
+            borme.importer.logger.setLevel(logging.INFO)
         elif verbosity == 2:
-            borme.utils.logger.setLevel(logging.INFO)
+            borme.importer.logger.setLevel(logging.INFO)
         elif verbosity > 2:
-            borme.utils.logger.setLevel(logging.DEBUG)
+            borme.importer.logger.setLevel(logging.DEBUG)
         if verbosity > 2:
             logging.getLogger().setLevel(logging.DEBUG)
         start_time = time.time()

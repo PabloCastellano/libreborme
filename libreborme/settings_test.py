@@ -6,7 +6,7 @@ DATABASES = {
         'NAME': 'libreborme',
         'USER': 'postgres',
 #        'PASSWORD': '',
-#        'HOST': 'localhost',
+        'HOST': 'localhost',
 #        'PORT': '',
     }
 }

@@ -1,5 +1,5 @@
-from borme.models import Anuncio, Borme, Company, Person
-from borme.utils import import_borme_pdf, _import1
+from borme.models import Anuncio, Borme, Company
+from borme.importer import import_borme_pdf, import_borme_json
 import os
 
 from django.test import TestCase
@@ -17,3 +17,45 @@ class TestImport(TestCase):
         # borme = bormeparser.parse(filename)
         # Testear:
         # results = _import1(borme)
+
+
+class TestImport2(TestCase):
+
+    def test_nombramientos_ceses(self):
+        companies = Company.objects.all()
+        self.assertEqual(len(companies), 0)
+
+        json_path = os.path.join(os.getcwd(), '..', 'borme', 'tests', 'files', '1_nombramientos.json')
+        ret = import_borme_json(json_path)
+        self.assertTrue(ret)
+        companies = Company.objects.all()
+        self.assertEqual(len(companies), 1)
+        company = companies[0]
+        self.assertEqual(len(company.cargos_actuales), 2)
+        self.assertEqual(len(company.cargos_historial), 0)
+
+        json_path = os.path.join(os.getcwd(), '..', 'borme', 'tests', 'files', '2_ceses.json')
+        ret = import_borme_json(json_path)
+        self.assertTrue(ret)
+        companies = Company.objects.all()
+        self.assertEqual(len(companies), 1)
+        company = companies[0]
+        self.assertEqual(len(company.cargos_actuales), 0)
+        self.assertEqual(len(company.cargos_historial), 2)
+
+
+class TestImport3(TestCase):
+
+    def test_nombramientos_ceses(self):
+        companies = Company.objects.all()
+        self.assertEqual(len(companies), 0)
+
+        json_path = os.path.join(os.getcwd(), '..', 'borme', 'tests', 'files', '3_cese_y_nombramiento.json')
+        ret = import_borme_json(json_path)
+        self.assertTrue(ret)
+        companies = Company.objects.all()
+        self.assertEqual(len(companies), 1)
+        company = companies[0]
+        self.assertEqual(company.name, 'EMPRESA TRES')
+        self.assertEqual(len(company.cargos_actuales), 1)
+        self.assertEqual(len(company.cargos_historial), 2)

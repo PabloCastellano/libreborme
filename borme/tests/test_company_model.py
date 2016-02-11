@@ -4,9 +4,7 @@ from borme.models import Company
 
 import datetime
 today = datetime.date.today()
-
-c1_id = None
-
+tomorrow = today + datetime.timedelta(days=1)
 
 class TestCompanyModel(TestCase):
 
@@ -15,45 +13,30 @@ class TestCompanyModel(TestCase):
     def setUpClass(cls):
         super(TestCompanyModel, cls).setUpClass()
 
-        global c1_id
-
-        # Create two objects for test
         c1 = Company(name='PATATAS JUAN SL', date_updated=today)
         c1.save()
-
-        # Save the id of objects to match in the test
-        c1_id = c1.slug
-
-    # This method run on every test
-    def setUp(self):
-        global c1_id
-        self.c1_id = c1_id
 
     def test_company_object(self):
         find = Company.objects.filter(name='PATATAS JUAN SL')
         self.assertEqual(len(find), 1)
-        self.assertEqual(find[0].slug, self.c1_id)
+        self.assertEqual(find[0].slug, 'patatas-juan-sl')
         self.assertEqual(find[0].date_updated, today)
-        find = Company.objects.filter(slug='patatas-juan-sl')
-        self.assertEqual(len(find), 1)
-        self.assertEqual(find[0].slug, self.c1_id)
 
-"""
-def test_company():
-    c = Company.objects.get('asdfg SL')
-    c.in_bormes == ['1', '2', '3']
+    def test_update_cargos(self):
+        c = Company.objects.get(name='PATATAS JUAN SL')
+        self.assertEqual(c.cargos_actuales, [])
+        self.assertEqual(c.cargos_historial, [])
 
-def test_person():
-    p = Person.objects.get('hjkl')
-    p.in_bormes == ['1', '2', '3']
+        cargo_entrante = {'title': 't', 'name': 'n', 'date_from': today, 'type': 'company'}
 
-def test_active():
-    c = Company.objects.get('asdfg SL')
-    c.is_active == False
+        c.update_cargos_entrantes([cargo_entrante])
+        self.assertEqual(c.cargos_actuales_c, [{'title': 't', 'name': 'n', 'date_from': today}])
+        self.assertEqual(c.cargos_actuales_p, [])
+        self.assertEqual(c.cargos_historial, [])
 
-def test_general():
-    Company.objects.count() == 1823
-    Person.objects.count() == 23
-    Borme.objects.count() == 1233
-    Acto.objects.count() == 123385771
-"""
+        cargo_saliente = {'title': 't', 'name': 'n', 'date_to': tomorrow, 'type': 'company'}
+
+        c.update_cargos_salientes([cargo_saliente])
+        self.assertEqual(c.cargos_actuales, [])
+        self.assertEqual(c.cargos_historial_p, [])
+        self.assertEqual(c.cargos_historial_c, [{'title': 't', 'name': 'n', 'date_from': today, 'date_to': tomorrow}])
