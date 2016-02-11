@@ -1,9 +1,9 @@
 ![logo libreborme](libreborme/static/libreborme_logo.png)
 
-[![Travis libreborme](https://travis-ci.org/PabloCastellano/libreborme.svg?branch=develop)](https://travis-ci.org/PabloCastellano/libreborme)
-[![Coverage Status](https://coveralls.io/repos/PabloCastellano/libreborme/badge.svg?branch=develop&service=github)](https://coveralls.io/github/PabloCastellano/libreborme?branch=develop)
+[![Travis libreborme](https://travis-ci.org/PabloCastellano/libreborme.svg?branch=master)](https://travis-ci.org/PabloCastellano/libreborme)
+[![Coverage Status](https://coveralls.io/repos/PabloCastellano/libreborme/badge.svg?branch=master&service=github)](https://coveralls.io/github/PabloCastellano/libreborme?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/libreborme/badge/?version=latest)](https://readthedocs.org/projects/libreborme/?badge=latest)
-[![Requirements Status](https://requires.io/github/PabloCastellano/libreborme/requirements.svg?branch=develop)](https://requires.io/github/PabloCastellano/libreborme/requirements/?branch=develop)
+[![Requirements Status](https://requires.io/github/PabloCastellano/libreborme/requirements.svg?branch=master)](https://requires.io/github/PabloCastellano/libreborme/requirements/?branch=master)
 
 En estos momentos hay una versión en producción en https://libreborme.net.
 
