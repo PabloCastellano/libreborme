@@ -25,9 +25,10 @@ logger.setLevel(logging.INFO)
 
 
 @transaction.atomic
-def _import1(borme):
+def _import1(borme, fetch_url=False):
     """
     borme: bormeparser.Borme
+    fetch_url: Si la instancia borme no contiene la URL, obtenerla de todas formas (necesita conexión a Internet)
     """
     logger.info('\n[{cve}] ({date}, {provincia}, [{rango[0]}-{rango[1]}])'.format(cve=borme.cve, date=borme.date, provincia=borme.provincia, rango=borme.anuncios_rango))
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0,
@@ -36,7 +37,11 @@ def _import1(borme):
     try:
         nuevo_borme = Borme.objects.get(cve=borme.cve)
     except Borme.DoesNotExist:
-        nuevo_borme = Borme(cve=borme.cve, date=borme.date, url=borme.url, from_reg=borme.anuncios_rango[0],
+        if borme._url or fetch_url:
+            borme_url = borme.url
+        else:
+            borme_url = None
+        nuevo_borme = Borme(cve=borme.cve, date=borme.date, url=borme_url, from_reg=borme.anuncios_rango[0],
                             until_reg=borme.anuncios_rango[1], province=borme.provincia.name, section=borme.seccion)
         #year, type, from_page, until_page, pages
         # num?, filename?

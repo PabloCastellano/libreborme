@@ -25,7 +25,7 @@ class Borme(Model):
     """ Edicion de BORME """
     cve = CharField(max_length=30, primary_key=True)
     date = DateField()
-    url = URLField()
+    url = URLField(blank=True, null=True)
     from_reg = IntegerField()
     until_reg = IntegerField()
     #province = CharField(max_length=100, choices=PROVINCES)
