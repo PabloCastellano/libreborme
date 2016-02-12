@@ -1,6 +1,7 @@
 from .models import Company, Borme, Anuncio, Person, BormeLog
 
 from django.conf import settings
+from django.db import transaction
 from django.utils.text import slugify
 from django.utils import timezone
 
@@ -23,6 +24,7 @@ logger.addHandler(ch)
 logger.setLevel(logging.INFO)
 
 
+@transaction.atomic
 def _import1(borme):
     """
     borme: bormeparser.Borme
