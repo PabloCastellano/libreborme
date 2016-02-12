@@ -116,7 +116,7 @@ HAYSTACK_CONNECTIONS = {
 }
 
 # http://django-haystack.readthedocs.org/en/latest/signal_processors.html
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+#HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 # increase the default number of results (from 20)
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 25
