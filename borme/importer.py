@@ -29,7 +29,7 @@ def _import1(borme):
     """
     borme: bormeparser.Borme
     """
-    logger.info('\nBORME CVE: %s (%s, %s, [%d-%d])' % (borme.cve, borme.date, borme.provincia, borme.anuncios_rango[0], borme.anuncios_rango[1]))
+    logger.info('\n[{cve}] ({date}, {provincia}, [{rango[0]}-{rango[1]}])'.format(cve=borme.cve, date=borme.date, provincia=borme.provincia, rango=borme.anuncios_rango))
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0,
                'total_companies': 0, 'total_persons': 0, 'errors': 0}
 
@@ -288,15 +288,20 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
             logpath = os.path.join(settings.BORME_LOG_ROOT, 'imports', '%02d-%02d' % (bxml.date.year, bxml.date.month))
             os.makedirs(logpath, exist_ok=True)
 
-            fh1_path = os.path.join(logpath, '%02d_info.txt' % bxml.date.day)
-            fh1 = logging.FileHandler(fh1_path)
-            fh1.setLevel(logging.INFO)
-            logger.addHandler(fh1)
+            fh_info_path = os.path.join(logpath, '{day:02d}_info.txt'.format(day=bxml.date.day))
+            fh_info = logging.FileHandler(fh_info_path)
+            fh_info.setLevel(logging.INFO)
+            logger.addHandler(fh_info)
 
-            fh2_path = os.path.join(logpath, '%02d_error.txt' % bxml.date.day)
-            fh2 = logging.FileHandler(fh2_path)
-            fh2.setLevel(logging.WARNING)
-            logger.addHandler(fh2)
+            fh_warning_path = os.path.join(logpath, '{day:02d}_warning.txt'.format(day=bxml.date.day))
+            fh_warning = logging.FileHandler(fh_warning_path)
+            fh_warning.setLevel(logging.WARNING)
+            logger.addHandler(fh_warning)
+
+            fh_error_path = os.path.join(logpath, '{day:02d}_error.txt'.format(day=bxml.date.day))
+            fh_error = logging.FileHandler(fh_error_path)
+            fh_error.setLevel(logging.ERROR)
+            logger.addHandler(fh_error)
 
             json_path = get_borme_json_path(bxml.date)
             pdf_path = get_borme_pdf_path(bxml.date)
@@ -411,18 +416,17 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
                     logger.info('[%s] Elapsed time: %.2f seconds' % (borme.cve, elapsed_time))
 
             # Remove handlers
-            logger.removeHandler(fh1)
-            logger.removeHandler(fh2)
+            logger.removeHandler(fh_info)
+            logger.removeHandler(fh_warning)
+            logger.removeHandler(fh_error)
             next_date = bxml.next_borme
     except KeyboardInterrupt:
         logger.info('\nImport aborted.')
 
     elapsed_time = time.time() - total_start_time
-    logger.info('\nBORMEs creados: %d/%d' % (total_results['created_bormes'], total_results['total_bormes']))
-    logger.info('Anuncios creados: %d/%d' % (total_results['created_anuncios'], total_results['total_anuncios']))
-    logger.info('Empresas creadas: %d/%d' % (total_results['created_companies'], total_results['total_companies']))
-    logger.info('Personas creadas: %d/%d' % (total_results['created_persons'], total_results['total_persons']))
-    logger.info('Total elapsed time: %.2f seconds' % elapsed_time)
+    logger.info('\nEn total se han importado {created_bormes}/{total_bormes} BORMEs, {created_anuncios}/{total_anuncios} Anuncios, '
+                '{created_companies}/{total_companies} Empresas, y {created_persons}/{total_persons} Personas.'.format(**total_results))
+    logger.info('Total elapsed time: {:.2f} seconds'.format(elapsed_time))
 
     return True, total_results
 
@@ -469,7 +473,6 @@ def import_borme_json(filename):
 
 
 def print_results(results, borme):
-    logger.info('[%s] BORMEs creados: %d/1' % (borme.cve, results['created_bormes']))
-    logger.info('[%s] Anuncios creados: %d/%d' % (borme.cve, results['created_anuncios'], len(borme.get_anuncios())))
-    logger.info('[%s] Empresas creadas: %d/%d' % (borme.cve, results['created_companies'], results['total_companies']))
-    logger.info('[%s] Personas creadas: %d/%d' % (borme.cve, results['created_persons'], results['total_persons']))
+    logger.info('[{cve}] Se han importado {created_bormes}/1 BORMEs, {created_anuncios}/{total_anuncios} Anuncios, '
+                '{created_companies}/{total_companies} Empresas, y {created_persons}/{total_persons} Personas.'
+                .format(cve=borme.cve, total_anuncios=len(borme.get_anuncios()), **results))
