@@ -232,7 +232,7 @@ def files_exist(files):
     return all([os.path.exists(f) for f in files])
 
 
-def import_borme_download(date_from, date_to, seccion=bormeparser.SECCION.A, local_only=False, no_missing=False):
+def import_borme_download(date_from, date_to, seccion=bormeparser.SECCION.A, local_only=False, no_missing=False, abort_on_error=False, create_json=True):
     """
     date_from: "2015-01-30", "init"
     date_to: "2015-01-30", "today"
@@ -253,16 +253,16 @@ def import_borme_download(date_from, date_to, seccion=bormeparser.SECCION.A, loc
         raise ValueError('date_from > date_to')
 
     try:
-        ret, _ = _import_borme_download_range2(date_from, date_to, seccion, local_only, strict=no_missing)
+        ret, _ = _import_borme_download_range2(date_from, date_to, seccion, local_only, no_missing, abort_on_error, create_json)
         return ret
     except BormeDoesntExistException:
         logger.info('It looks like there is no BORME for this date ({}). Nothing was downloaded'.format(date_from))
         return False
 
 
-def _import_borme_download_range2(begin, end, seccion, local_only, strict=False, create_json=True):
+def _import_borme_download_range2(begin, end, seccion, local_only, no_missing, abort_on_error, create_json):
     """
-    strict: Para en caso de error grave
+    local_only: No se conecta a Internet. No descarga BORMEs ni incluye la URL al generar JSON.
     """
     next_date = begin
     total_results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0,
@@ -327,9 +327,9 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
                     except Exception as e:
                         logger.error('[X] Error grave en bormeparser.parse(): %s' % filepath)
                         logger.error('[X] %s: %s' % (e.__class__.__name__, e))
-                        if strict:
+                        if abort_on_error:
                             logger.error('[X] Una vez arreglado, reanuda la importación:')
-                            logger.error('[X]   python manage.py importbormetoday local')
+                            logger.error('[X]   python manage.py importborme -f {} -t {}'.format(next_date, end))
                             return False, total_results
 
             else:
@@ -346,9 +346,9 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
                         except Exception as e:
                             logger.error('[X] Error grave en bormeparser.Borme.from_json(): %s' % filepath)
                             logger.error('[X] %s: %s' % (e.__class__.__name__, e))
-                            if strict:
+                            if abort_on_error:
                                 logger.error('[X] Una vez arreglado, reanuda la importación:')
-                                logger.error('[X]   python manage.py importbormetoday local')  # TODO: --from date
+                                logger.error('[X]   python manage.py importborme -f {} -t {}'.format(next_date, end))
                                 return False, total_results
                 elif files_exist(files_pdf):
                     for filepath in files_pdf:
@@ -359,15 +359,15 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
                         except Exception as e:
                             logger.error('[X] Error grave en bormeparser.parse(): %s' % filepath)
                             logger.error('[X] %s: %s' % (e.__class__.__name__, e))
-                            if strict:
+                            if abort_on_error:
                                 logger.error('[X] Una vez arreglado, reanuda la importación:')
-                                logger.error('[X]   python manage.py importbormetoday local')  # TODO: --from date
+                                logger.error('[X]   python manage.py importborme -f {} -t {}'.format(next_date, end))
                                 return False, total_results
                 else:
                     logger.error('[X] Faltan archivos PDF y JSON que no se desea descargar.')
                     logger.error('[X] JSON: %s' % ' '.join(files_json))
                     logger.error('[X] PDF: %s' % ' '.join(files_pdf))
-                    if strict:
+                    if abort_on_error or no_missing:
                         return False, total_results
 
                     for filepath in files_json:
@@ -381,6 +381,8 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
                         except Exception as e:
                             logger.error('[X] Error grave en bormeparser.Borme.from_json(): %s' % filepath)
                             logger.error('[X] %s: %s' % (e.__class__.__name__, e))
+                            if abort_on_error:
+                                return False, total_results
 
             for borme in sorted(bormes):
                 total_results['total_anuncios'] += len(borme.get_anuncios())
@@ -388,19 +390,21 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
                 try:
                     results = _import1(borme)
                 except Exception as e:
+                    results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0,
+                               'total_companies': 0, 'total_persons': 0, 'errors': 0}
                     logger.error('[%s] Error grave en _import1:' % borme.cve)
                     logger.error('[%s] %s' % (borme.cve, e))
                     logger.error('[%s] Prueba importar manualmente en modo detallado para ver el error:' % borme.cve)
                     logger.error('[%s]   python manage.py importbormepdf %s -v 3' % (borme.cve, borme.filename))
-                    if strict:
+                    if abort_on_error:
                         logger.error('[%s] Una vez arreglado, reanuda la importación:' % borme.cve)
-                        logger.error('[%s]   python manage.py importbormetoday local' % borme.cve)
+                        logger.error('[{}]   python manage.py importborme -f {} -t {}'.format(borme.cve, next_date, end))
                         return False, total_results
 
                 if create_json:
                     os.makedirs(json_path, exist_ok=True)
                     json_filepath = os.path.join(json_path, '%s.json' % borme.cve)
-                    borme.to_json(json_filepath)
+                    borme.to_json(json_filepath, include_url=not local_only)
 
                 total_results['created_anuncios'] += results['created_anuncios']
                 total_results['created_bormes'] += results['created_bormes']
