@@ -23,7 +23,7 @@ class TestBormeModel(TestCase):
 
         path = os.path.expanduser('~/.bormes/pdf/2015/02/10/BORME-A-2015-27-10.pdf')
         borme = bormeparser.parse(path, bormeparser.SECCION.A)
-        results = _import1(borme)
+        results = _import1(borme, fetch_url=True)
 
     def test_results(self):
         global results
