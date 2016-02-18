@@ -52,7 +52,7 @@ puedes ojear el [listado de bugs](https://github.com/PabloCastellano/libreborme/
 Donaciones
 ----------
 
-Si quieres apoyar económicamente el proyecto puedes hacerlo a través de [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=Y5CAGJMSV6Y52&lc=ES&item_name=LibreBORME&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted) o Bitcoin en la dirección [1Jp6SdEvPWahE5cDQ61StroCRM6Sbvxz94](bitcoin:1Jp6SdEvPWahE5cDQ61StroCRM6Sbvxz94).
+Si quieres apoyar económicamente el proyecto puedes hacerlo a través de [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=contacto%40libreborme%2enet&lc=ES&item_name=LibreBORME&item_number=Servicio%20web&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted) o Bitcoin en la dirección [1Jp6SdEvPWahE5cDQ61StroCRM6Sbvxz94](https://blockchain.info/address/1Jp6SdEvPWahE5cDQ61StroCRM6Sbvxz94).
 
 Licencia
 --------
