@@ -4,10 +4,10 @@ site_author: Pablo Castellano
 copyright: © Copyright 2015-2016, Pablo Castellano
 repo_url: https://github.com/PabloCastellano/libreborme/
 pages:
-- ¡Bienvenido a la documentación de LibreBorme!: index.md
+- ¡Bienvenido a la documentación de LibreBORME!: index.md
 - Acerca de LibreBORME: introduction.md
 - Instalación manual: installation.md
 - Instalación automática: install_production_automated.md
-- Comandos de LibreBorme: commands.md
+- Comandos de LibreBORME: commands.md
 - API: api.md
 theme: readthedocs

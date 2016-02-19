@@ -15,7 +15,7 @@ Instalación de las dependencias:
 
 Configuración de PostgreSQL:
 
-Creamos un usuario y una base de datos para LibreBorme. Previamente tenemos que activar la extensión "hstore":
+Creamos un usuario y una base de datos para LibreBORME. Previamente tenemos que activar la extensión "hstore":
 
     sudo su postgres
     psql template1 -c 'CREATE EXTENSION hstore;'
@@ -23,11 +23,11 @@ Creamos un usuario y una base de datos para LibreBorme. Previamente tenemos que 
     psql -U postgres -c "CREATE USER libreborme WITH PASSWORD 'password';"
     psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE libreborme TO libreborme;"
 
-Instalación de LibreBorme:
+Instalación de LibreBORME:
 
 En este caso la instalación la realizamos en la carpeta /var/www/libreborme pero podría
 ser cualquier otra teniendo en cuenta que tenemos que cambiar esta ruta en otros archivos de
-configuración que la usan. Nos descargamos el paquete de LibreBorme y lo instalamos en
+configuración que la usan. Nos descargamos el paquete de LibreBORME y lo instalamos en
 un entorno virtual de Python junto a sus dependencias (entre ellas, bormeparser):
 
     git clone https://github.com/PabloCastellano/libreborme.git
@@ -39,7 +39,7 @@ A continuación ajusta tu configuración en libreborme/settings.py con tus rutas
 la variable SECRET_KEY.
 
 Ya podemos crear el esquema de las tablas en la base de datos PostgreSQL y
-cargar unos datos predefinidos necesarios para que funcione LibreBorme:
+cargar unos datos predefinidos necesarios para que funcione LibreBORME:
 
     ./manage.py migrate
     ./manage.py loaddata libreborme/fixtures/config.json
@@ -47,7 +47,7 @@ cargar unos datos predefinidos necesarios para que funcione LibreBorme:
 
 ## Ejecución
 
-LibreBorme ya está listo para funcionar. Ejecutamos el servidor de desarrollo de Django para comprobarlo:
+LibreBORME ya está listo para funcionar. Ejecutamos el servidor de desarrollo de Django para comprobarlo:
 
     cd libreborme
     ./manage.py runserver
@@ -140,7 +140,7 @@ Y activamos el sitio:
 
 ## Tareas periódicas
 
-Queremos que cada día LibreBorme descargue los nuevos BORMEs y actualice la base
+Queremos que cada día LibreBORME descargue los nuevos BORMEs y actualice la base
 de datos con los últimos cambios en el Registro Mercantil. Para ello vamos a configurar
 una tarea programada de cron. Creamos el archivo /var/www/libreborme/script.sh con el
 siguiente contenido, al que le daremos también permisos de ejecución:
