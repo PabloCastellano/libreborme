@@ -1,5 +1,14 @@
-LibreBorme ofrece una [API](https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones) para que terceros puedan hacer
-consultas de forma automatizada e integrar los datos en sus aplicaciones.
+Advertencia
+----------
+
+> **La API de LibreBORME es totalmente funcional aunque aún se encuentra en fase experimental.**
+> **Los endpoints y los parámetros aceptados pueden sufrir cambios en el futuro.**
+
+API de LibreBORME
+-----------------
+
+LibreBORME ofrece una [API](https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones)
+para que terceros puedan realizar consultas de forma automatizada e integrar los datos en sus aplicaciones.
 
 Las URLs de los endpoints son similares a las usadas para navegar por la web:
 
@@ -23,15 +32,15 @@ Búsqueda
 - API (Empresa): https://libreborme.net/borme/api/v1/empresa/search/?q=**xxx**&page=**1**
 as respuestas se proporcionan en formato JSON y 
 
-
-## Ejemplos
+Ejemplos
+--------
 
 A continuación se muestran algunos ejemplos de cómo realizar peticiones a la API con curl:
 
-Buscar la empresa "Gowex Málaga":
+Buscar la empresa "Gowex Málaga" ([enlace](https://libreborme.net/borme/api/v1/empresa/search/?q=Gowex+Malaga&page=1)):
 
 ```
-$ curl -s "https://libreborme.net/borme/api/v1/empresa/search/?q=Gowex%20Malaga&page=1" | python -m json.tool
+$ curl -s "https://libreborme.net/borme/api/v1/empresa/search/?q=Gowex+Malaga&page=1" | python -m json.tool
 {
     "objects": [
         {
@@ -43,10 +52,10 @@ $ curl -s "https://libreborme.net/borme/api/v1/empresa/search/?q=Gowex%20Malaga&
 }
 
 ```
-Buscar la persona "Rodrigo Rato":
+Buscar la persona "Rodrigo Rato" ([enlace](https://libreborme.net/borme/api/v1/persona/search/?q=Rodrigo+Rato&page=1)):
 
 ```
-$ curl -s "https://libreborme.net/borme/api/v1/persona/search/?q=Rodrigo%20Rato&page=1" | python -m json.tool
+$ curl -s "https://libreborme.net/borme/api/v1/persona/search/?q=Rodrigo+Rato&page=1" | python -m json.tool
 {
     "objects": [
         {
@@ -72,10 +81,10 @@ Como vemos, aparecen tres aunque todo apunta a que es la misma persona. Esto es 
 muchos datos de forma no estandarizada. 
 
 
-Consultar los datos de la persona "Rodrigo de Rato Figaredo":
+Consultar los datos de la persona "Rodrigo de Rato Figaredo" ([enlace](https://libreborme.net/borme/api/v1/persona/de-rato-figaredo-rodrigo/)):
 
 ```
-$ curl -s libreborme.net/borme/api/v1/persona/de-rato-figaredo-rodrigo/ | python -m json.tool
+$ curl -s "https://libreborme.net/borme/api/v1/persona/de-rato-figaredo-rodrigo/" | python -m json.tool
 {
     "cargos_actuales": [
         {
