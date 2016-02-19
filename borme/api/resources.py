@@ -9,9 +9,10 @@ from .serializers import LibreBormeJSONSerializer
 # FIXME: fullname
 class CompanyResource(ModelResource):
     class Meta:
+        allowed_methods = ['get']
+        max_limit = 100
         queryset = Company.objects.all()
         resource_name = 'empresa'
-        allowed_methods = ['get']
         serializer = LibreBormeJSONSerializer(formats=['json'])
 
     def prepend_urls(self):
@@ -80,9 +81,10 @@ class CompanyResource(ModelResource):
 
 class PersonResource(ModelResource):
     class Meta:
+        allowed_methods = ['get']
+        max_limit = 100
         queryset = Person.objects.all()
         resource_name = 'persona'
-        allowed_methods = ['get']
         serializer = LibreBormeJSONSerializer(formats=['json'])
 
     def dehydrate_name(self, bundle):
