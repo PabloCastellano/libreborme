@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand
 from borme.models import Config
 
 import time
+from django.conf import settings
 from django.utils import timezone
 from libreborme.utils import get_git_revision_short_hash
 from borme.importer import import_borme_download
@@ -21,6 +22,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         start_time = time.time()
+
+        if settings.DEBUG:
+            print('WARNING: DEBUG is ON and so Django will save every query executed.')
+            print('It will result in this command using more and more memory specially when you import several months of BORME.')
+            print('Process will start in 5 seconds.\n')
+            time.sleep(5)
 
         import_borme_download(options['from'][0], options['to'][0], local_only=options['local_only'], no_missing=options['no_missing'])
 
