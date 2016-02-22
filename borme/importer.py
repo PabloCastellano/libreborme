@@ -245,14 +245,12 @@ def import_borme_download(date_from, date_to, seccion=bormeparser.SECCION.A, loc
     if date_from == 'init':
         date_from = FIRST_BORME[2009]
     else:
-        date = tuple(map(int, date_from.split('-')))  # TODO: exception
-        date_from = datetime.date(*date)
+        date_from = datetime.datetime.strptime(date_from, '%Y-%m-%d').date()
 
     if date_to == 'today':
         date_to = datetime.date.today()
     else:
-        date = tuple(map(int, date_to.split('-')))  # TODO: exception
-        date_to = datetime.date(*date)
+        date_to = datetime.datetime.strptime(date_to, '%Y-%m-%d').date()
 
     if date_from > date_to:
         raise ValueError('date_from > date_to')
