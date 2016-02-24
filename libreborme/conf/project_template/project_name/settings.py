@@ -24,7 +24,7 @@ from libreborme.settings import *
 
 
 # ------ All settings customizations must go here ------ #
-DEBUG = True
+DEBUG = False
 
 SECRET_KEY = '{{ secret_key }}'
 
