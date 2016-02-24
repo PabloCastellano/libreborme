@@ -145,7 +145,7 @@ STATIC_URL = '/static/'
 PIWIK_URL = ''
 PIWIK_SITE_ID = ''
 
-# BORME
+# BORME files paths
 BORME_ROOT = os.path.expanduser('~/.bormes')
 BORME_PDF_ROOT = os.path.join(BORME_ROOT, 'pdf')
 BORME_XML_ROOT = os.path.join(BORME_ROOT, 'xml')
