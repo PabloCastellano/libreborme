@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     url(r'^borme/', include('borme.urls')),
 
     url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
+    url(r'^humans\.txt$', TemplateView.as_view(template_name='humans.txt', content_type='text/plain')),
     url(r'^politica-de-cookies$', CookiesView.as_view(), name='cookies')
 )
 
