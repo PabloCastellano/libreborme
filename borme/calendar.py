@@ -53,7 +53,7 @@ class HTMLCalendar(Calendar):
             s = '%s %s' % (month_name[themonth], theyear)
         else:
             s = '%s' % month_name[themonth]
-        return '<caption>%s</captionmont>' % s
+        return '<caption>%s</caption>' % s
 
     def formatmonth(self, theyear, themonth, withyear=True):
         """
@@ -61,7 +61,7 @@ class HTMLCalendar(Calendar):
         """
         v = []
         a = v.append
-        a('<table border="0" cellpadding="0" cellspacing="0" class="calendar">')
+        a('<table class="calendar">')
         a('\n')
         a(self.formatmonthname(theyear, themonth, withyear=withyear))
         a('\n')
@@ -81,7 +81,7 @@ class HTMLCalendar(Calendar):
         v = []
         a = v.append
         width = max(width, 1)
-        a('<table border="0" cellpadding="0" cellspacing="0" class="year">')
+        a('<table class="year">')
         a('\n')
         a('<tr><th colspan="%d" class="year">%s</th></tr>' % (width, theyear))
         for i in range(January, January + 12, width):
