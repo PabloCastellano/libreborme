@@ -6,10 +6,12 @@ from tastypie.utils import trailing_slash
 from borme.models import Company, Person
 from .serializers import LibreBormeJSONSerializer
 
+
 # FIXME: fullname
 class CompanyResource(ModelResource):
     class Meta:
-        allowed_methods = ['get']
+        detail_allowed_methods = ['get']
+        list_allowed_methods = []
         max_limit = 100
         queryset = Company.objects.all()
         resource_name = 'empresa'
@@ -25,21 +27,22 @@ class CompanyResource(ModelResource):
         self.is_authenticated(request)
         self.throttle_check(request)
 
-        # Do the query.
-        sqs = SearchQuerySet().models(Company).load_all().auto_query(request.GET.get('q', ''))
-        paginator = Paginator(sqs, 20)
-
         objects = []
+        query = request.GET.get('q', '')
 
-        try:
-            page = paginator.page(int(request.GET.get('page', 1)))
+        if len(query) > 3:
+            sqs = SearchQuerySet().models(Company).load_all().auto_query(query)
+            paginator = Paginator(sqs, 20)
 
-            for result in page.object_list:
-                bundle = self.build_bundle(obj=result.object, request=request)
-                bundle = self.search_dehydrate(bundle)
-                objects.append(bundle)
-        except:
-            pass
+            try:
+                page = paginator.page(int(request.GET.get('page', 1)))
+
+                for result in page.object_list:
+                    bundle = self.build_bundle(obj=result.object, request=request)
+                    bundle = self.search_dehydrate(bundle)
+                    objects.append(bundle)
+            except:
+                pass
 
         object_list = {
             'objects': objects,
@@ -81,7 +84,8 @@ class CompanyResource(ModelResource):
 
 class PersonResource(ModelResource):
     class Meta:
-        allowed_methods = ['get']
+        detail_allowed_methods = ['get']
+        list_allowed_methods = []
         max_limit = 100
         queryset = Person.objects.all()
         resource_name = 'persona'
@@ -100,22 +104,22 @@ class PersonResource(ModelResource):
         self.is_authenticated(request)
         self.throttle_check(request)
 
-        # Do the query.
-        sqs = SearchQuerySet().models(Person).load_all().auto_query(request.GET.get('q', ''))
-        paginator = Paginator(sqs, 20)
-
         objects = []
+        query = request.GET.get('q', '')
 
-        try:
-            page = paginator.page(int(request.GET.get('page', 1)))
+        if len(query) > 3:
+            sqs = SearchQuerySet().models(Person).load_all().auto_query(query)
+            paginator = Paginator(sqs, 20)
 
-            for result in page.object_list:
-                bundle = self.build_bundle(obj=result.object, request=request)
-                bundle = self.search_dehydrate(bundle)
-                objects.append(bundle)
-        except:
-            pass
+            try:
+                page = paginator.page(int(request.GET.get('page', 1)))
 
+                for result in page.object_list:
+                    bundle = self.build_bundle(obj=result.object, request=request)
+                    bundle = self.search_dehydrate(bundle)
+                    objects.append(bundle)
+            except:
+                pass
 
         object_list = {
             'objects': objects,
