@@ -1,0 +1,49 @@
+{% extends 'borme/base.html' %}
+
+{% block title %}Sobre LibreBORME | LibreBORME{% endblock %}
+
+{% block content %}
+    <h1>¿Qué es LibreBORME?</h1>
+
+    <div class="container">
+      <p><strong>LibreBORME: Plataforma de búsqueda en el Boletín Oficial del Registro Mercantil</strong> nace con la intención de «abrir» los datos del Registro Mercantil de España. Aprovechando que <a href="http://elpais.com/diario/2008/01/03/ciberpais/1199330666_850215.html">desde 2009</a> se publica el <span style="border-bottom: 2px dotted #ba0000;" title="Similar al BOE donde se publican a diario las leyes, en el BORME se publican cambios en sociedades">BORME</span> en formato electrónico, LibreBORME se encarga de <i>leérselo</i> por ti cada mañana y añadir a su base de datos los últimos cambios. De esta manera tú puedes hacer búsquedas semánticas, recibir notificaciones y usar estos datos de manera sencilla y para lo que quieras.</p>
+
+      <h3>Historia</h3>
+      <p>LibreBORME nace a finales de 2014 como Proyecto de Fin de Carrera de <a href="http://twitter.com/_pablog">un estudiante</a> cotutorizado por la <a href="http://www.informatica.uma.es/">Universidad de Málaga</a> y <a href="http://www.civio.es/">Fundación Ciudadana Civio</a> y su desarrollo tiene lugar a lo largo de todo 2015.</p>
+      
+      <p>En junio de 2015, <strong>LibreBORME</strong> recibió el <a href="https://pablog.me/blog/2015/07/libreborme-tercer-premio-en-el-i-certamen-de-proyectos-libres-de-la-ugr/">tercer premio</a> en el <strong>I Certamen de Proyectos Libres de la Universidad de Granada</strong>.</p>
+
+      <p>A principios de 2016 acabó la primera fase del desarrollo y el tribunal otorgó a LibreBORME la calificación de <strong>sobresaliente</strong>. Desde entonces, debido a la repercusión obtenida tras la aparición en diarios online, su autor decidió mantener el servicio <i>online</i> en funcionamiento asumiendo su coste y continuando con su desarrollo.</p>
+
+      <p>La <a href="#">memoria del proyecto</a> estará disponible para su consulta próximamente bajo licencia Creative Commons BY-SA.</p>
+
+      <h3>Casos de uso</h3>
+      <p><strong>LibreBORME</strong> permite a periodistas, juristas y organizaciones de la sociedad civil investigar las sociedades a las que pertenece una persona y a profesionales conocer mejor la empresa a la que contratan servicios.</p>
+
+      <p>Seguro que tú también puedes encontrarle un uso particular.</p>
+
+      <h3>Desarrolladores</h3>
+      <p><strong>LibreBORME</strong> es software libre y su código fuente está accesible en <a href="https://github.com/PabloCastellano/libreborme">GitHub</a> bajo la licencia <a href="https://www.gnu.org/licenses/agpl-3.0.html">Affero GPL v3</a>.</p>
+      <p>LibreBORME cuenta con una <span style="border-bottom: 2px dotted #ba0000;" title="Application Programming Interface"><strong>API</strong></span> que hace posible integrar sus datos en aplicaciones y webs externas.</p>
+
+      Puedes obtener más información en la sección <a href="{% url "developers" %}"><strong>Desarrolladores</strong></a>
+    </div>
+
+    <h1>Sobre los datos</h1>
+      <div class="container">
+        <p>Esta web muestra únicamente datos públicos disponibles desde el año 2009. <a href="#" data-toggle="modal" data-target="#myModal">¿Por qué?</a></p>
+        <p>Los datos aparecidos en <strong>LibreBORME</strong> se han obtenido de fuentes públicas y su uso está bajo las condiciones recogidas en el <a href="http://boe.es/sede_electronica/informacion/aviso_legal.php">Aviso legal del BOE</a>.</p>
+
+        <p>Los datos se han obtenido mediante un proceso informático automatizado que puede contener errores de distinta índole.
+        <br/>
+        Por una parte hay errores que provienen del propio BORME: su elaboración es manual por lo que está sujeto a errores tipográficos; y ni personas ni empresas vienen con un identificador único como el NIF, así que no hay forma de diferenciar los cargos en empresas de dos personas que se llaman igual.
+        <br/>
+        Por la otra parte, al ser procesos informáticos automatizados con tanta cantidad de información, pueden existir fallos difíciles de detectar debido al propio volumen de los datos y a la imposibilidad de revisarlos manualmente por un humano.
+        <br/>
+        Además, como el BORME se publica en formato electrónico desde 2009, LibreBORME no cuenta con datos anteriores a tal fecha.
+        </p>
+
+        <p>LibreBORME no asume responsabilidad alguna por errores, inexactitudes u omisiones de la información facilitada. En consecuencia, el usuario no podrá exigir responsabilidad alguna por los daños y perjuicios derivados de errores y/o incorrección o inexactitud en la información suministrada. </p>
+      </div>
+      
+{% endblock %}

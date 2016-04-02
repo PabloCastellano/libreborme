@@ -1,0 +1,32 @@
+{% extends 'borme/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %} Desarrolladores | LibreBORME{% endblock %}
+
+{% block content %}
+      <h1>Desarrolladores</h1>
+
+    <div class="container">
+
+      <p><img alt="agplv3 logo" src="{% static "agplv3-155x51.png" %}"></p>
+      <p><strong>LibreBORME</strong> es software libre y su código fuente está accesible en la plataforma <a href="https://github.com/PabloCastellano/libreborme">GitHub</a> bajo la licencia <a href="https://www.gnu.org/licenses/agpl-3.0.html">Affero GPL v3</a>.
+      <br/>
+      La librería usada para extraer la información de los BORME se llama <strong>bormeparser</strong> y también es software libre. Está disponible en <a href="https://github.com/PabloCastellano/bormeparser/">GitHub</a> bajo la licencia GPL v3</p>
+
+      <p>Por ello puedes usar el código fuente de esta plataforma, estudiarlo, distribuirlo y mejorarlo (siempre respetando las licencias correspondientes).</p>
+
+      <h3>API</h3>
+
+      <p><strong>LibreBORME</strong> cuenta con una API que hace posible integrar tus datos en aplicaciones y webs externas.
+      <br/>
+      Puedes consultar la documentación en la plataforma <a href="https://libreborme.readthedocs.org/es/latest/api/">ReadTheDocs</a> y probarla hoy mismo.</p>
+
+      Si tu aplicación va a realizar un gran número de peticiones a la API,  <a href="{% url "contact" %}"><strong>contáctanos</strong></a>.</li>
+      <h3>Contribuye</h3>
+        <p>Una de las formas de apoyar <strong>LibreBORME</strong> es contribuir en su desarrollo.</p>
+        <p>En los <a href="https://github.com/PabloCastellano/libreborme/issues">issues</a> de GitHub puedes encontrar las líneas de mejoras que hay abiertas, informar de errores en el software y aportar tus mejoras del código.</p>
+
+    </div>
+
+{% endblock %}

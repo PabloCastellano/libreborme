@@ -1,0 +1,23 @@
+{% extends 'borme/base.html' %}
+
+{% block title %} Servicios | LibreBORME{% endblock %}
+
+{% block content %}
+    <h1>Servicios</h1>
+
+    <div class="container">
+      <p>Desde <strong>LibreBORME</strong> ofrecemos servicios relacionados con los datos del registro mercantil.
+      Algunos de los servicios que ofrecemos son:
+      <ul>
+        <li>Integración de los datos de LibreBORME a través de la API.</li>
+        <li>Cruce de datos con otra aplicación.</li>
+        <li>Acceso a la API para un gran número de peticiones.</li>
+      </ul>
+      
+      </p>
+ 
+      <p>Si estás interesado en en algún tipo de colaboración, <a href="{% url "contact" %}"><strong>contáctanos sin compromiso</strong></a>.</p>
+      
+    </div>
+
+{% endblock %}

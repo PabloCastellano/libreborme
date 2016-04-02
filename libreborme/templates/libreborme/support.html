@@ -1,0 +1,63 @@
+{% extends 'borme/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Apoya LibreBORME | LibreBORME{% endblock %}
+
+{% block content %}
+    <h1>Apoya LibreBORME</h1>
+
+    <div class="container">
+      <p><strong>LibreBORME</strong> es software libre y se mantiene gracias a donaciones, patrocinadores y servicios.
+      <br/>
+      Puedes contribuir de distintas maneras para que el proyecto siga ofreciendo un servicio gratuito y de calidad.</p>
+
+      <h3>1. Colaborando económicamente</h3>
+        <p>Puedes donar directamente al proyecto a través de <strong>Paypal</strong> y mediante <strong>Bitcoin</strong>.
+        <br/>
+        Las donaciones irán destinadas a sufragar los costes de mantenimiento del servicio y a mejorar sus funcionalidades.</p>
+
+        <p>Si estás interesado en un acuerdo de patrocinio con LibreBORME, consulta la sección <a href="{% url "supporters" %}"><strong>Patrocinadores</strong></a>.</p>
+
+        <table class="table">
+        <thead>
+          <tr>
+            <td align="center"><img src="{% static "donate_paypal.jpg" %}"></td>
+            <td align="center"><img src="{% static "donate_bitcoin.png" %}">
+          </tr>
+        </thead>
+          <tr>
+            <td align="center">
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+        ">
+        <input type="image" src="{% static "donate_hand.png" %}" border="0" name="submit" alt="PayPal. La forma rápida y segura de pagar en Internet.">
+        </form></td>
+            <td align="center"><a href="bitcoin:1Jp6SdEvPWahE5cDQ61StroCRM6Sbvxz94"><img src="{% static "libreborme_btc_qr.png" %}"></a>
+            <br/>
+            Blockchain explorer: <a href="https://blockchain.info/address/1Jp6SdEvPWahE5cDQ61StroCRM6Sbvxz94"><strong>1Jp6SdEvPWahE5cDQ61StroCRM6Sbvxz94</strong></a>.
+        </td>
+          </tr>
+        </table>
+
+      <h3>2. Colaborando en su desarrollo</h3>
+
+        <p>Todo el código fuente de <strong>LibreBORME</strong> es <strong>software libre</strong>, lo que permite que cualquiera con los conocimientos informáticos adecuados aporte tu granito de arena con nuevas mejoras de usabilidad, nuevas funcionalidades e incluso incorporando nuevos datos al sistema.</p>
+        <p>En los <a href="https://github.com/PabloCastellano/libreborme/issues">issues</a> de GitHub puedes encontrar las líneas de mejoras que hay abiertas, informar de errores en el software y aportar tus mejoras del código.
+
+        <p>Para más información, consulta la sección <a href="{% url "developers" %}"><strong>Desarrolladores</strong></a>.</p>
+
+      <h3>3. Conocimientos sobre derecho mercantil y registro mercantil</h3>
+
+        <p>Queremos incluir una sección didáctica donde se explique qué significa cada acto mercantil y qué papel tiene cada tipo de cargo en una empresa.
+        <br/>
+        Por otra parte tenemos una lista de denominaciones de <strong>cargos directivos</strong> que no hemos podido «descifrar» al venir de forma abreviada y aquí también necesitamos tu ayuda.
+        <br/>
+        <a href="https://docs.google.com/spreadsheets/d/1JF_XAxVv9rbQCex7W2J3V-1NdnG_scVrK4A7cXZjMQg/edit?usp=sharing"><strong>Hoja de cálculo</strong></a>.
+        </p>
+        <p>Si quieres colaborar, <a href="{% url "contact" %}"><strong>contáctanos</strong></a>.</p>
+
+    </div>
+
+{% endblock %}

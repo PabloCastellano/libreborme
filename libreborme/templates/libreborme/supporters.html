@@ -1,0 +1,22 @@
+{% extends 'borme/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Patrocinadores | LibreBORME{% endblock %}
+
+{% block content %}
+    <h1>Patrocinadores</h1>
+
+    <div class="container">
+      <p><strong>LibreBORME</strong> es software libre y se mantiene gracias a donaciones, patrocinadores y servicios.
+      <br/>
+      Puedes contribuir de distintas maneras para que el proyecto siga ofreciendo un servicio gratuito y de calidad.</p>
+
+      <h3>Acuerdos de patrocinio</h3>
+
+		<p>En este acuerdo podrás incluir el logo de tu organización y un enlace a su página web en la página principal, donde más de 1.000 personas consultan a diario la información mercantil recopilada en LibreBORME.</p>
+      	<p>Si estás interesado en ser patrocinador de LibreBORME, <a href="{% url "contact" %}"><strong>contáctanos</strong></a>.</p>
+
+    </div>
+
+{% endblock %}
