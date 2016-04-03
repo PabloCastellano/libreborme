@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 
 from .views import AnuncioView, CompanyView, PersonView, HomeView, BusquedaView,\
                     BormeView, BormeProvinciaView, BormeDateView, LBSearchView, generate_company_csv_cargos_actual, generate_company_csv_cargos_historial,\
@@ -12,7 +12,7 @@ v1_api.register(CompanyResource())
 v1_api.register(PersonResource())
 
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^$', HomeView.as_view(), name='borme-home'),
     url(r'^anuncio/(?P<year>\d+)/(?P<id>\d+)/$', AnuncioView.as_view(), name='borme-anuncio'),
     url(r'^borme/(?P<cve>[\w-]+)/$', BormeView.as_view(), name='borme-borme'),
@@ -28,4 +28,4 @@ urlpatterns = patterns('',
     #url(r'^busqueda/$', BusquedaView.as_view(), name='borme-busqueda'),
     url(r'^api/', include(v1_api.urls)),
     url(r'^search/', LBSearchView(), name='borme-search'),
-)
+]

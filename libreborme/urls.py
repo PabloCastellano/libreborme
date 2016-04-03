@@ -1,9 +1,9 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.views.generic.base import TemplateView
 
 from .settings import DEBUG
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name="libreborme/index.html"), name='home'),
     url(r'^borme/', include('borme.urls')),
 
@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^services/$', TemplateView.as_view(template_name="libreborme/services.html"), name='services'),
     url(r'^support/$', TemplateView.as_view(template_name="libreborme/support.html"), name='support'),
     url(r'^supporters/$', TemplateView.as_view(template_name="libreborme/supporters.html"), name='supporters'),
-)
+]
 
 if DEBUG:
     from django.contrib import admin
