@@ -5,8 +5,7 @@ django-appconf==1.0.1
 django-bootstrap-static==3.3.6
 django-debug-toolbar==1.4
 django-hstore==1.4.1
-#django-haystack==4.2.0 bug
-git+https://github.com/django-haystack/django-haystack
+django-haystack==2.4.1
 django-maintenancemode==0.11.2
 django-static-jquery==2.1.4
 django-tastypie==0.13.1
