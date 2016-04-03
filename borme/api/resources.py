@@ -2,6 +2,7 @@ from django.conf.urls import url
 from django.core.paginator import Paginator
 from haystack.query import SearchQuerySet
 from tastypie.resources import ModelResource
+from tastypie.throttle import CacheThrottle
 from tastypie.utils import trailing_slash
 from borme.models import Company, Person
 from .serializers import LibreBormeJSONSerializer
@@ -16,6 +17,7 @@ class CompanyResource(ModelResource):
         queryset = Company.objects.all()
         resource_name = 'empresa'
         serializer = LibreBormeJSONSerializer(formats=['json'])
+        throttle = CacheThrottle(throttle_at=60, timeframe=3600)
 
     def prepend_urls(self):
         return [
@@ -90,6 +92,7 @@ class PersonResource(ModelResource):
         queryset = Person.objects.all()
         resource_name = 'persona'
         serializer = LibreBormeJSONSerializer(formats=['json'])
+        throttle = CacheThrottle(throttle_at=60, timeframe=3600)
 
     def dehydrate_name(self, bundle):
         return bundle.data['name'].title()
