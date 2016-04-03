@@ -1,5 +1,6 @@
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.decorators.cache import cache_page
 
 from django.template import RequestContext
 from django.shortcuts import redirect, render_to_response
@@ -12,6 +13,7 @@ from .forms import LBSearchForm
 from .models import Company, Person, Anuncio, Config, Borme
 from .calendar import LibreBormeCalendar, LibreBormeAvailableCalendar
 from .utils import estimate_count_fast
+from .mixins import CacheMixin
 
 from haystack.views import SearchView
 
@@ -19,6 +21,7 @@ import datetime
 import csv
 
 
+@cache_page(3600)
 def generate_person_csv_cargos_actual(context, slug):
     person = Person.objects.get(slug=slug)
     filename = 'cargos_actuales_%s_%s' % (slug, datetime.date.today().isoformat())
@@ -33,6 +36,7 @@ def generate_person_csv_cargos_actual(context, slug):
     return response
 
 
+@cache_page(3600)
 def generate_person_csv_cargos_historial(context, slug):
     person = Person.objects.get(slug=slug)
     filename = 'cargos_historial_%s_%s' % (slug, datetime.date.today().isoformat())
@@ -48,6 +52,7 @@ def generate_person_csv_cargos_historial(context, slug):
     return response
 
 
+@cache_page(3600)
 def generate_company_csv_cargos_actual(context, slug):
     company = Company.objects.get(slug=slug)
     filename = 'cargos_actuales_%s_%s' % (slug, datetime.date.today().isoformat())
@@ -63,6 +68,7 @@ def generate_company_csv_cargos_actual(context, slug):
     return response
 
 
+@cache_page(3600)
 def generate_company_csv_cargos_historial(context, slug):
     company = Company.objects.get(slug=slug)
     filename = 'cargos_historial_%s_%s' % (slug, datetime.date.today().isoformat())
@@ -79,7 +85,7 @@ def generate_company_csv_cargos_historial(context, slug):
     return response
 
 
-class HomeView(TemplateView):
+class HomeView(CacheMixin, TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
@@ -105,7 +111,7 @@ class HomeView(TemplateView):
 
 
 # TODO:  if 'q' not in request.GET
-class LBSearchView(SearchView):
+class LBSearchView(CacheMixin, SearchView):
     template = "search/search.html"
 
     def __init__(self, template=None, load_all=True, form_class=LBSearchForm, searchqueryset=None, context_class=RequestContext, results_per_page=25):
@@ -169,7 +175,7 @@ class LBSearchView(SearchView):
         return render_to_response(self.template, context, context_instance=self.context_class(self.request))
 
 
-class BusquedaView(TemplateView):
+class BusquedaView(CacheMixin, TemplateView):
     template_name = "busqueda.html"
 
     def get_context_data(self, **kwargs):
@@ -232,7 +238,7 @@ class BusquedaView(TemplateView):
         return context
 
 
-class AnuncioView(DetailView):
+class AnuncioView(CacheMixin, DetailView):
     model = Anuncio
     context_object_name = 'anuncio'
 
@@ -250,7 +256,7 @@ class AnuncioView(DetailView):
         return context
 
 
-class BormeView(DetailView):
+class BormeView(CacheMixin, DetailView):
     model = Borme
     context_object_name = 'borme'
 
@@ -282,7 +288,7 @@ class BormeView(DetailView):
         return context
 
 
-class BormeDateView(TemplateView):
+class BormeDateView(CacheMixin, TemplateView):
     template_name = 'borme/borme_fecha.html'
 
     def dispatch(self, request, *args, **kwargs):
@@ -332,7 +338,7 @@ class BormeDateView(TemplateView):
         return context
 
 
-class BormeProvinciaView(TemplateView):
+class BormeProvinciaView(CacheMixin, TemplateView):
     template_name = 'borme/borme_provincia.html'
 
     def dispatch(self, request, *args, **kwargs):
@@ -371,7 +377,7 @@ class BormeProvinciaView(TemplateView):
         return context
 
 
-class CompanyView(DetailView):
+class CompanyView(CacheMixin, DetailView):
     model = Company
     context_object_name = 'company'
 
@@ -402,7 +408,7 @@ class CompanyView(DetailView):
         return context
 
 
-class PersonView(DetailView):
+class PersonView(CacheMixin, DetailView):
     model = Person
     context_object_name = 'person'
 
@@ -414,7 +420,7 @@ class PersonView(DetailView):
             raise Http404('Person does not exist')
 
 
-class CompanyProvinceListView(ListView):
+class CompanyProvinceListView(CacheMixin, ListView):
     #model = Company
     context_object_name = 'companies'
     #queryset = Book.objects.filter(province==X).order_by('-name')
