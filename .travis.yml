@@ -26,7 +26,7 @@ before_script:
   - psql -U postgres -c 'CREATE DATABASE libreborme;'
   - psql -U postgres -c "CREATE USER libreborme WITH PASSWORD 'password';"
   - psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE libreborme TO libreborme;"
-  - ./manage.py migrate --noinput --no-initial-data
+  - ./manage.py migrate --noinput
 
 # command to run tests, e.g. python setup.py test
 #script:
