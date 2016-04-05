@@ -140,7 +140,7 @@ class LBSearchView(CacheMixin, SearchView):
             page_companies = paginator_companies.page(paginator_companies.num_pages)
         finally:
             context['paginator_companies'] = paginator_companies
-            pagerange = paginator_companies.page_range[:3] + paginator_companies.page_range[-3:]
+            pagerange = list(paginator_companies.page_range[:3]) + list(paginator_companies.page_range[-3:])
             pagerange.append(page_companies.number)
             pagerange = list(set(pagerange))
             pagerange.sort()
@@ -158,7 +158,7 @@ class LBSearchView(CacheMixin, SearchView):
             page_persons = paginator_persons.page(paginator_persons.num_pages)
         finally:
             context['paginator_persons'] = paginator_persons
-            pagerange = paginator_persons.page_range[:3] + paginator_persons.page_range[-3:]
+            pagerange = list(paginator_persons.page_range[:3]) + list(paginator_persons.page_range[-3:])
             pagerange.append(page_persons.number)
             pagerange = list(set(pagerange))
             pagerange.sort()
@@ -204,7 +204,7 @@ class BusquedaView(CacheMixin, TemplateView):
             finally:
                 context['page_companies'] = pg_companies
                 context['paginator_companies'] = companies
-                pagerange = companies.page_range[:3] + companies.page_range[-3:]
+                pagerange = list(companies.page_range[:3]) + list(companies.page_range[-3:])
                 pagerange.append(pg_companies.number)
                 pagerange = list(set(pagerange))
                 pagerange.sort()
@@ -222,7 +222,7 @@ class BusquedaView(CacheMixin, TemplateView):
             finally:
                 context['page_persons'] = pg_persons
                 context['paginator_persons'] = persons
-                pagerange = persons.page_range[:3] + persons.page_range[-3:]
+                pagerange = list(persons.page_range[:3]) + list(persons.page_range[-3:])
                 pagerange.append(pg_persons.number)
                 pagerange = list(set(pagerange))
                 pagerange.sort()
