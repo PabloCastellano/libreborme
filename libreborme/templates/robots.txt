@@ -4,3 +4,4 @@ Disallow: /borme/api/
 Disallow: /borme/borme/
 Disallow: /borme/anuncio/
 Disallow: /borme/*.csv$
+Disallow: /aviso-legal/

@@ -159,3 +159,9 @@ BORME_XML_ROOT = os.path.join(BORME_ROOT, 'xml')
 BORME_JSON_ROOT = os.path.join(BORME_ROOT, 'json')
 
 BORME_LOG_ROOT = os.path.join(BASE_DIR, '..', 'log')
+
+LOPD = {'provider': 'Some real name',
+        'id': 'Some real state issued ID number',
+        'domain': 'The domain that hosts this website',
+        'email': 'Some contact email address',
+        'address': 'Some real address'}

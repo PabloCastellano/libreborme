@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
 from django.views.generic.base import TemplateView
 
+from .views import AvisoLegalView
 from .settings import DEBUG
 
 urlpatterns = [
@@ -11,6 +12,7 @@ urlpatterns = [
     url(r'^humans\.txt$', TemplateView.as_view(template_name='humans.txt', content_type='text/plain')),
 
     url(r'^about/$', TemplateView.as_view(template_name="libreborme/about.html"), name='about'),
+    url(r'^aviso-legal/$', AvisoLegalView.as_view(), name='aviso_legal'),
     url(r'^contact/$', TemplateView.as_view(template_name="libreborme/contact.html"), name='contact'),
     url(r'^cookies/$', TemplateView.as_view(template_name="libreborme/cookies.html"), name='cookies'),
     url(r'^developers/$', TemplateView.as_view(template_name="libreborme/developers.html"), name='developers'),
