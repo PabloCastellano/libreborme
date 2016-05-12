@@ -3,7 +3,7 @@ from django.views.generic.detail import DetailView
 from django.views.decorators.cache import cache_page
 
 from django.template import RequestContext
-from django.shortcuts import redirect, render_to_response
+from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404, HttpResponse
@@ -114,8 +114,8 @@ class HomeView(CacheMixin, TemplateView):
 class LBSearchView(CacheMixin, SearchView):
     template = "search/search.html"
 
-    def __init__(self, template=None, load_all=True, form_class=LBSearchForm, searchqueryset=None, context_class=RequestContext, results_per_page=25):
-        super(LBSearchView, self).__init__(template, load_all, form_class, searchqueryset, context_class, results_per_page)
+    def __init__(self, template=None, load_all=True, form_class=LBSearchForm, searchqueryset=None, results_per_page=25):
+        super(LBSearchView, self).__init__(template, load_all, form_class, searchqueryset, results_per_page)
 
     def create_response(self):
         """
@@ -172,7 +172,7 @@ class LBSearchView(CacheMixin, SearchView):
 
         context['search_view'] = 1
         context.update(self.extra_context())
-        return render_to_response(self.template, context, context_instance=self.context_class(self.request))
+        return render(self.request, self.template, context)
 
 
 class BusquedaView(CacheMixin, TemplateView):
