@@ -308,7 +308,7 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
 
             bormes = []
             if not local_only:
-                _, files = bxml.download_pdfs(pdf_path, seccion=seccion)
+                _, files = bxml.download_borme(pdf_path, seccion=seccion)
 
                 for filepath in files:
                     if filepath.endswith('-99.pdf'):
