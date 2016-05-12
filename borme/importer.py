@@ -10,8 +10,6 @@ from bormeparser.exceptions import BormeDoesntExistException
 from bormeparser.regex import is_company, is_acto_cargo_entrante, regex_empresa_tipo
 from bormeparser.utils import FIRST_BORME
 
-from calendar import monthrange
-
 import datetime
 import logging
 import time
@@ -318,7 +316,7 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
                     logger.info('%s' % filepath)
                     total_results['total_bormes'] += 1
                     try:
-                        bormes.append(bormeparser.parse(filepath))
+                        bormes.append(bormeparser.parse(filepath, seccion))
                     except Exception as e:
                         logger.error('[X] Error grave en bormeparser.parse(): %s' % filepath)
                         logger.error('[X] %s: %s' % (e.__class__.__name__, e))
@@ -350,7 +348,7 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
                         logger.info('%s' % filepath)
                         total_results['total_bormes'] += 1
                         try:
-                            bormes.append(bormeparser.parse(filepath))
+                            bormes.append(bormeparser.parse(filepath, seccion))
                         except Exception as e:
                             logger.error('[X] Error grave en bormeparser.parse(): %s' % filepath)
                             logger.error('[X] %s: %s' % (e.__class__.__name__, e))
@@ -434,7 +432,7 @@ def import_borme_pdf(filename, create_json=True):
     results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0, 'errors': 0}
 
     try:
-        borme = bormeparser.parse(filename)
+        borme = bormeparser.parse(filename, bormeparser.SECCION.A)
         results = _import1(borme)
         if create_json:
             json_path = get_borme_json_path(borme.date)
