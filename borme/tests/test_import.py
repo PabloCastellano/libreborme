@@ -16,7 +16,7 @@ class TestImport(TestCase):
         self.assertEqual(Anuncio.objects.count(), 30)
         # Anuncios desde el 57315 al 57344
         # BORME-A-2015-27-10
-        # borme = bormeparser.parse(filename)
+        # borme = bormeparser.parse(filename, bormeparser.SECCION.A)
         # Testear:
         # results = _import1(borme)
 
