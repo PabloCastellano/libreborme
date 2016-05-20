@@ -78,8 +78,12 @@ class Person(Model):
             self.cargos_historial.append(cargo)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        if not self.slug:
+            self.generate_slug()
         super(Person, self).save(*args, **kwargs)
+
+    def generate_slug(self):
+        self.slug = slugify(self.name)
 
     def get_absolute_url(self):
         return reverse('borme-persona', args=[str(self.slug)])
@@ -174,12 +178,12 @@ class Company(Model):
     # number of visits
 
     def save(self, *args, **kwargs):
-        # TODO: Cambiar SOCIEDAD LIMITADA por SL, SOCIEDAD ANONIMA por SA, COOP, SCL...
-        #if self.name.endswith('SOCIEDAD LIMITADA'):
-            #...
-
-        self.slug = slugify(self.name)
+        if not self.slug:
+            self.generate_slug()
         super(Company, self).save(*args, **kwargs)
+
+    def generate_slug(self):
+        self.slug = slugify(self.name)
 
     def update_cargos_entrantes(self, cargos):
         """ cargos = [dict] """

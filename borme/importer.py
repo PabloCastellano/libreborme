@@ -76,6 +76,7 @@ def _import1(borme, fetch_url=False):
                     results['errors'] += 1
             except Company.DoesNotExist:
                 company = Company(name=empresa, type=tipo)
+                company.generate_slug()
                 logger.debug('Creando empresa %s %s' % (empresa, tipo))
                 results['created_companies'] += 1
 
@@ -112,20 +113,21 @@ def _import1(borme, fetch_url=False):
                                         results['errors'] += 1
                                 except Company.DoesNotExist:
                                     c = Company(name=empresa, type=tipo)
+                                    c.generate_slug()
                                     logger.debug('Creando empresa: %s %s' % (empresa, tipo))
                                     results['created_companies'] += 1
 
                                 c.anuncios.append({'id': nuevo_anuncio.id_anuncio, 'year': nuevo_anuncio.year})
                                 c.add_in_bormes(borme_embed)
 
-                                cargo = {'title': nombre_cargo, 'name': c.fullname, 'type': 'company'}
+                                cargo = {'title': nombre_cargo, 'name': c.fullname, 'slug': c.slug, 'type': 'company'}
                                 if is_acto_cargo_entrante(acto.name):
                                     cargo['date_from'] = borme.date.isoformat()
-                                    cargo_embed = {'title': nombre_cargo, 'name': company.fullname, 'date_from': borme.date.isoformat(), 'type': 'company'}
+                                    cargo_embed = {'title': nombre_cargo, 'name': company.fullname, 'slug': company.slug, 'date_from': borme.date.isoformat(), 'type': 'company'}
                                     c.update_cargos_entrantes([cargo_embed])
                                 else:
                                     cargo['date_to'] = borme.date.isoformat()
-                                    cargo_embed = {'title': nombre_cargo, 'name': company.fullname, 'date_to': borme.date.isoformat(), 'type': 'company'}
+                                    cargo_embed = {'title': nombre_cargo, 'name': company.fullname, 'slug': company.slug, 'date_to': borme.date.isoformat(), 'type': 'company'}
                                     c.update_cargos_salientes([cargo_embed])
                                 c.date_updated = borme.date
                                 c.save()
@@ -140,20 +142,21 @@ def _import1(borme, fetch_url=False):
                                         results['errors'] += 1
                                 except Person.DoesNotExist:
                                     p = Person(name=nombre)
+                                    p.generate_slug()
                                     logger.debug('Creando persona: %s' % nombre)
                                     results['created_persons'] += 1
 
                                 p.add_in_companies(company.fullname)
                                 p.add_in_bormes(borme_embed)
 
-                                cargo = {'title': nombre_cargo, 'name': p.name, 'type': 'person'}
+                                cargo = {'title': nombre_cargo, 'name': p.name, 'slug': p.slug, 'type': 'person'}
                                 if is_acto_cargo_entrante(acto.name):
                                     cargo['date_from'] = borme.date.isoformat()
-                                    cargo_embed = {'title': nombre_cargo, 'name': company.fullname, 'date_from': borme.date.isoformat()}
+                                    cargo_embed = {'title': nombre_cargo, 'name': company.fullname, 'slug': company.slug, 'date_from': borme.date.isoformat()}
                                     p.update_cargos_entrantes([cargo_embed])
                                 else:
                                     cargo['date_to'] = borme.date.isoformat()
-                                    cargo_embed = {'title': nombre_cargo, 'name': company.fullname, 'date_to': borme.date.isoformat()}
+                                    cargo_embed = {'title': nombre_cargo, 'name': company.fullname, 'slug': company.slug, 'date_to': borme.date.isoformat()}
                                     p.update_cargos_salientes([cargo_embed])
 
                                 p.date_updated = borme.date

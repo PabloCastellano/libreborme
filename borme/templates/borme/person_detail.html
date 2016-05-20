@@ -60,7 +60,7 @@
                 {% url 'borme-fecha' cargo.date_to as url_to %}
                 <tr>
                     <td>{{ cargo.title }}</td>
-                    <td><a href="{% url 'borme-empresa' cargo.name|slug2 %}">{{ cargo.name }}</a></td>
+                    <td><a href="{% url 'borme-empresa' cargo.slug %}">{{ cargo.name }}</a></td>
                     <td><a href="{{ url_from }}">{{ cargo.date_from }}</a></td>
 
                     {% if url_to %}
@@ -101,7 +101,7 @@
                 {% url 'borme-fecha' cargo.date_to as url_to %}
                 <tr>
                     <td>{{ cargo.title }}</td>
-                    <td><a href="{% url 'borme-empresa' cargo.name|slug2 %}">{{ cargo.name }}</a></td>
+                    <td><a href="{% url 'borme-empresa' cargo.slug %}">{{ cargo.name }}</a></td>
 
                     {% if url_from %}
                         <td><a href="{{ url_from }}">{{ cargo.date_from }}</a></td>

@@ -53,7 +53,7 @@
     <div class="row">
     <div class="col-md-10">
     {% if company.cargos_actuales %}
-        <a href="{% url 'borme-empresa-csv-actual' company.name|slug2 %}" rel="nofollow" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
+        <a href="{% url 'borme-empresa-csv-actual' company.slug %}" rel="nofollow" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
         <table class="table table-condensed">
             <thead>
                 <tr>
@@ -70,9 +70,9 @@
                 <tr>
                     <td>{{ cargo.title }}</td>
                     {% if cargo.type == 'person' %}
-                        <td><a href="{% url 'borme-persona' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
+                        <td><a href="{% url 'borme-persona' cargo.slug %}">{{ cargo.name|title }}</a></td>
                     {% else %}
-                        <td><a href="{% url 'borme-empresa' cargo.name|slug2 %}">{{ cargo.name }}</a></td>
+                        <td><a href="{% url 'borme-empresa' cargo.slug %}">{{ cargo.name }}</a></td>
                     {% endif %}
 
                     <td><a href="{% url 'borme-fecha' cargo.date_from %}">{{ cargo.date_from }}</a></td>
@@ -116,9 +116,9 @@
                 <tr>
                     <td>{{ cargo.title }}</td>
                     {% if cargo.type == 'person' %}
-                        <td><a href="{% url 'borme-persona' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
+                        <td><a href="{% url 'borme-persona' cargo.slug %}">{{ cargo.name|title }}</a></td>
                     {% else %}
-                        <td><a href="{% url 'borme-empresa' cargo.name|slug2 %}">{{ cargo.name }}</a></td>
+                        <td><a href="{% url 'borme-empresa' cargo.slug %}">{{ cargo.name }}</a></td>
                     {% endif %}
 
                     {% if url_from %}
@@ -170,9 +170,9 @@
                         <tr>
                             <td>{{ cargo.title }}</td>
                             {% if cargo.type == 'person' %}
-                                <td><a href="{% url 'borme-persona' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
+                                <td><a href="{% url 'borme-persona' cargo.slug %}">{{ cargo.name|title }}</a></td>
                             {% else %}
-                                <td><a href="{% url 'borme-empresa' cargo.name|slug2 %}">{{ cargo.name }}</a></td>
+                                <td><a href="{% url 'borme-empresa' cargo.slug %}">{{ cargo.name }}</a></td>
                             {% endif %}
                         </tr>
                     {% endfor %}
@@ -204,7 +204,7 @@
             {% endif %}
             <ul>
             {% for person in ps %}
-                <li><a href="{% url 'borme-persona' person|slug %}">{{ person|title }}</a></li>
+                <li><a href="{% url 'borme-persona' person.slug %}">{{ person.name|title }}</a></li>
             {% endfor %}
             </ul>
             {% if persons|length > 5 %}
@@ -228,7 +228,7 @@
             {% endif %}
             <ul>
             {% for c in cs %}
-                <li><a href="{% url 'borme-empresa' c|slug2 %}">{{ c }}</a></li>
+                <li><a href="{% url 'borme-empresa' c.slug %}">{{ c.name }}</a></li>
             {% endfor %}
             </ul>
             {% if companies|length > 5 %}
