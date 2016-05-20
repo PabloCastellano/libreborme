@@ -115,7 +115,7 @@ def _import1(borme, fetch_url=False):
                                     logger.debug('Creando empresa: %s %s' % (empresa, tipo))
                                     results['created_companies'] += 1
 
-                                c.anuncios.append(anuncio.id)
+                                c.anuncios.append({'id': nuevo_anuncio.id_anuncio, 'year': nuevo_anuncio.year})
                                 c.add_in_bormes(borme_embed)
 
                                 cargo = {'title': nombre_cargo, 'name': c.fullname, 'type': 'company'}
@@ -170,12 +170,12 @@ def _import1(borme, fetch_url=False):
                     # not bormeparser.borme.BormeActoCargo
                     nuevo_anuncio.actos[acto.name] = acto.value
 
-            company.anuncios.append(anuncio.id)  # TODO: year
+            company.anuncios.append({'id': nuevo_anuncio.id_anuncio, 'year': nuevo_anuncio.year})
             company.date_updated = borme.date
             company.save()
             nuevo_anuncio.company = company
             nuevo_anuncio.save()
-            nuevo_borme.anuncios.append(anuncio.id)  # TODO: year
+            nuevo_borme.anuncios.append(anuncio.id)
 
         except Exception as e:
             logger.error('[%s] ERROR importing anuncio %d' % (borme.cve, anuncio.id))

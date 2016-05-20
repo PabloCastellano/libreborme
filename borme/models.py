@@ -99,7 +99,7 @@ class Company(Model):
 
     date_updated = DateField(db_index=True)
     in_bormes = ArrayField(hstore.DictionaryField(), default=list)
-    anuncios = ArrayField(IntegerField(), default=list)  # FIXME: {year, id}
+    anuncios = ArrayField(hstore.DictionaryField(), default=list)
 
     cargos_actuales_p = ArrayField(hstore.DictionaryField(), default=list)
     cargos_actuales_c = ArrayField(hstore.DictionaryField(), default=list)
