@@ -60,7 +60,6 @@ def _import1(borme, fetch_url=False):
 
     borme_log.save()  # date_updated
 
-    borme_embed = {'cve': nuevo_borme.cve, 'url': nuevo_borme.url}
     for n, anuncio in enumerate(borme.get_anuncios(), 1):
         try:
             logger.debug('%d: Importando anuncio: %s' % (n, anuncio))
@@ -80,7 +79,6 @@ def _import1(borme, fetch_url=False):
                 logger.debug('Creando empresa %s %s' % (empresa, tipo))
                 results['created_companies'] += 1
 
-            company.add_in_bormes(borme_embed)
 
             try:
                 nuevo_anuncio = Anuncio.objects.get(id_anuncio=anuncio.id, year=borme.date.year)
@@ -89,6 +87,9 @@ def _import1(borme, fetch_url=False):
                                         datos_registrales=anuncio.datos_registrales)
                 logger.debug('Creando anuncio %d: %s %s' % (anuncio.id, empresa, tipo))
                 results['created_anuncios'] += 1
+
+            borme_embed = {'cve': nuevo_borme.cve, 'url': nuevo_borme.url, 'num': nuevo_anuncio.id_anuncio, 'year': nuevo_anuncio.year}
+            company.add_in_bormes(borme_embed)
 
             for acto in anuncio.get_borme_actos():
                 logger.debug(acto.name)

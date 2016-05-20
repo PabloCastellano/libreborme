@@ -32,7 +32,7 @@ class Borme(Model):
     province = CharField(max_length=100)
     section = CharField(max_length=20)
     #pages = IntegerField()
-    anuncios = ArrayField(IntegerField(), default=list)  # FIXME: {year, id}
+    anuncios = ArrayField(IntegerField(), default=list)
 
     def get_absolute_url(self):
         return reverse('borme-borme', args=[str(self.cve)])
