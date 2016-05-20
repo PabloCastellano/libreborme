@@ -2,7 +2,6 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.decorators.cache import cache_page
 
-from django.template import RequestContext
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -392,19 +391,8 @@ class CompanyView(CacheMixin, DetailView):
         context = super(CompanyView, self).get_context_data(**kwargs)
 
         context['anuncios'] = Anuncio.objects.filter(company=self.company).order_by('-year', '-id_anuncio')
-
-        context['persons'] = []
-        for cargo in self.company.todos_cargos_p:
-            if cargo['name'] not in context['persons']:
-                context['persons'].append(cargo['name'])
-
-        context['companies'] = []
-        for cargo in self.company.todos_cargos_c:
-            if cargo['name'] not in context['companies']:
-                context['companies'].append(cargo['name'])
-
-        context['companies'] = sorted(list(set(context['companies'])))
-        context['persons'] = sorted(list(set(context['persons'])))
+        context['persons'] = self.company.get_personas_relacionadas()
+        context['companies'] = self.company.get_empresas_relacionadas()
         return context
 
 

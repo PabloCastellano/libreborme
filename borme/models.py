@@ -2,7 +2,6 @@
 
 from django.utils.text import slugify
 from django.core.urlresolvers import reverse
-from django.core.exceptions import FieldError
 from django.contrib.postgres.fields import ArrayField
 
 from django.db.models import *
@@ -78,10 +77,6 @@ class Person(Model):
                     break
             self.cargos_historial.append(cargo)
 
-    @property
-    def todos_cargos(self):
-        return self.cargos_actuales + self.cargos_historial
-
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(Person, self).save(*args, **kwargs)
@@ -149,13 +144,31 @@ class Company(Model):
             l.append(cargoc)
         return l
 
-    @property
-    def todos_cargos_c(self):
-        return self.cargos_actuales_c + self.cargos_historial_c
+    def get_empresas_relacionadas(self):
+        """ Devuelve una lista sin elementos repetidos de las empresas que tienen algun cargo en esta. """
+        l_cargos = []
+        for cargo in self.cargos_actuales_c:
+            d_cargo = {'name': cargo['name'], 'slug': cargo['slug']}
+            if not d_cargo in l_cargos:
+                l_cargos.append(d_cargo)
+        for cargo in self.cargos_historial_c:
+            d_cargo = {'name': cargo['name'], 'slug': cargo['slug']}
+            if not d_cargo in l_cargos:
+                l_cargos.append(d_cargo)
+        return l_cargos
 
-    @property
-    def todos_cargos_p(self):
-        return self.cargos_actuales_p + self.cargos_historial_p
+    def get_personas_relacionadas(self):
+        """ Devuelve una lista sin elementos repetidos de las personas que tienen algun cargo en esta empresa. """
+        l_cargos = []
+        for cargo in self.cargos_actuales_p:
+            d_cargo = {'name': cargo['name'], 'slug': cargo['slug']}
+            if not d_cargo in l_cargos:
+                l_cargos.append(d_cargo)
+        for cargo in self.cargos_historial_p:
+            d_cargo = {'name': cargo['name'], 'slug': cargo['slug']}
+            if not d_cargo in l_cargos:
+                l_cargos.append(d_cargo)
+        return l_cargos
 
     # last access
     # number of visits
