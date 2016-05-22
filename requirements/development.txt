@@ -1,7 +1,4 @@
 -r base.txt
-coverage==4.0.3
-blessings==1.6
+-r test.txt
 bpython==0.15
-curtsies==0.2.6
-django-extensions==1.6.1
-Pygments==2.1
+django-extensions==1.6.7
