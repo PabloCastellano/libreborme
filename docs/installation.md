@@ -1,15 +1,14 @@
 # Instalación manual
 
-Estas instrucciones se han comprobado que funcionan en Ubuntu 15.04 64 bits. Para otras distribuciones el proceso debería ser similar.
+Estas instrucciones se han comprobado que funcionan en Ubuntu 16.04 64 bits. Para otras distribuciones el proceso debería ser similar.
 
 Instalación de las dependencias:
 
     sudo apt-get install python3-software-properties software-properties-common \
     build-essential python3-pip python3-dev python3-venv python3-wheel \
-    python3-setuptools libxml2-dev libxslt1-dev libgmp-dev zlib1g-devsudo \
-    nginx-full nginx-common uwsgi-plugin-python3 openssl supervisor checkinstall \
+    python3-setuptools libxml2-dev libxslt1-dev libgmp-dev zlib1g-dev \
     wget git libpq-dev postgresql postgresql-contrib python-psycopg2 \
-    openjdk-7-jre elasticsearch
+    openssl checkinstall openjdk-8-jre elasticsearch
 
     echo ". ~/.virtualenvs/libreborme/bin/activate" >> ~/.bashrc
 
@@ -61,6 +60,8 @@ Si quieres instalar herramientas de desarrollo:
 ## Versión en producción:
 
 Si queremos la versión de producción necesitamos configurar además nginx, uwsgi y supervisor.
+
+    sudo apt-get install nginx-full nginx-common uwsgi-plugin-python3 supervisor
 
 Para configurar supervisor crearemos el archivo /etc/supervisor/conf.d/uwsgi.conf con el
 siguiente contenido:
