@@ -17,8 +17,6 @@ from libreborme.settings import *
 
 
 # ------ All settings customizations must go here ------ #
-DEBUG = False
-
 SECRET_KEY = '{{ secret_key }}'
 
 # Local time zone for this installation. Choices can be found here:
