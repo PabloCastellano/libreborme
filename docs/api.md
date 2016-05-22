@@ -2,7 +2,7 @@ Advertencia
 ----------
 
 > **La API de LibreBORME es totalmente funcional aunque aún se encuentra en fase experimental.**
-> **Los endpoints y los parámetros aceptados pueden sufrir cambios en el futuro.**
+> **Los endpoints, los parámetros aceptados y los datos devueltos pueden sufrir cambios en el futuro.**
 
 API de LibreBORME
 -----------------
