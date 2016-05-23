@@ -61,7 +61,9 @@
       <p class="text-muted">© LibreBORME 2014-2016 </i>
         | <i class="fa fa-envelope"></i> {{ email_contact|reverse|safe }}
         | <i class="fa fa-twitter"></i> <a href="https://twitter.com/libreborme" target="_blank" rel="nofollow">@LibreBORME</a>
-        | <i class="fa fa-github"></i> <a href="https://github.com/PabloCastellano/libreborme/" target="_blank" rel="nofollow">Código fuente</a> <i>(<a href="https://github.com/PabloCastellano/libreborme/commit/{{ version }}" target="_blank" rel="nofollow">git-{{ version }}</a>)
+        | <i class="fa fa-github"></i> <a href="https://github.com/PabloCastellano/libreborme/" target="_blank" rel="nofollow">Código fuente</a> <i>(<a href="https://github.com/PabloCastellano/libreborme/commit/{{ version }}" target="_blank" rel="nofollow">git-{{ version }}</a>)</i>
+        | <i class="fa fa-flag-o"></i> <a href="{% url 'aviso_legal' %}">Aviso legal</a>
+        | <i class="fa fa-heart"></i> <a href="{% url 'support' %}">Apoya LibreBORME</a></small>
       </p>
     </div>
 
