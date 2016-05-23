@@ -59,7 +59,7 @@
 
     <div class="footer">
       <p class="text-muted">© LibreBORME 2014-2016 </i>
-        | <i class="fa fa-envelope"></i> <span style="unicode-bidi:bidi-override; direction: rtl;">ten.emroberbil@otcatnoc</span>
+        | <i class="fa fa-envelope"></i> {{ email_contact|reverse|safe }}
         | <i class="fa fa-twitter"></i> <a href="https://twitter.com/libreborme" target="_blank" rel="nofollow">@LibreBORME</a>
         | <i class="fa fa-github"></i> <a href="https://github.com/PabloCastellano/libreborme/" target="_blank" rel="nofollow">Código fuente</a> <i>(<a href="https://github.com/PabloCastellano/libreborme/commit/{{ version }}" target="_blank" rel="nofollow">git-{{ version }}</a>)
       </p>

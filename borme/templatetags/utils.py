@@ -52,7 +52,7 @@ def is_bool(val):
 
 @register.filter(name='get_class')
 def get_class(val):
-  return val.__class__.__name__
+    return val.__class__.__name__
 
 
 # https://djangosnippets.org/snippets/401/
@@ -115,10 +115,19 @@ def date_isoformat(date):
 
 @register.filter
 def slug(val):
-  return slugify(val)
+    return slugify(val)
 
 
 @register.filter
 def slug2(val):
-  empresa, _ = regex_empresa_tipo(val)
-  return slugify(empresa)
+    empresa, _ = regex_empresa_tipo(val)
+    return slugify(empresa)
+
+
+@register.filter
+def reverse(val):
+    """ CSS trick to avoid spam. Usage: {{ var|reverse|safe }}
+        If you try to copy the text, it will be reversed in your clipboard though.
+    """
+    reverse_val = val[::-1]
+    return '<span style="unicode-bidi:bidi-override; direction: rtl;">{}</span>'.format(reverse_val)

@@ -8,4 +8,4 @@ def piwik(request):
 def common(request):
     config = Config.objects.first()
     version = getattr(config, 'version', 'Unknown')
-    return {'version': version}
+    return {'version': version, 'email_contact': settings.EMAIL_CONTACT}

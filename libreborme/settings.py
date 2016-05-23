@@ -160,8 +160,10 @@ BORME_JSON_ROOT = os.path.join(BORME_ROOT, 'json')
 
 BORME_LOG_ROOT = os.path.join(BASE_DIR, '..', 'log')
 
+EMAIL_CONTACT = 'contact@domain'
+
 LOPD = {'provider': 'Some real name',
         'id': 'Some real state issued ID number',
         'domain': 'The domain that hosts this website',
-        'email': 'Some contact email address',
+        'email':  EMAIL_CONTACT,
         'address': 'Some real address'}

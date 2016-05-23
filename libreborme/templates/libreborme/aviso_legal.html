@@ -11,7 +11,7 @@
 
       <p>En cumplimiento del Artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y de Comercio Electrónico, se informa que el prestador de servicios a través del dominio y subdominios de {{ lopd.domain }} es {{ lopd.provider }} con NIF {{ lopd.id }}.</p>
       <p>Los usuarios podrán contactar con la administración del sitio para reportar abusos o ejercer sus derechos mediante los siguientes medios:<br/>
-        - Dirección e-mail: <span style="unicode-bidi:bidi-override; direction: rtl;">ten.emroberbil@otcatnoc</span><br/>
+        - Dirección e-mail: {{ lopd.email|reverse|safe }}<br/>
         - Dirección postal: {{ lopd.address }}
      </p>
 
