@@ -10,3 +10,13 @@ def estimate_count_fast(table):
     cursor.execute("select reltuples from pg_class where relname='%s';" % table)
     row = cursor.fetchone()
     return int(row[0])
+
+
+def convertir_iniciales(name):
+    iniciales = []
+    iniciales.append(name[0])
+    esp_index = name.find(' ')
+    while esp_index != -1:
+        iniciales.append(name[esp_index + 1])
+        esp_index = name.find(' ', esp_index + 1)
+    return '. '.join(iniciales) + '.'
