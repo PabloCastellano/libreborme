@@ -34,6 +34,10 @@ class Borme(Model):
     #pages = IntegerField()
     anuncios = ArrayField(IntegerField(), default=list)  # FIXME: {year, id}
 
+    @property
+    def total_anuncios(self):
+        return len(self.anuncios)
+
     def get_absolute_url(self):
         return reverse('borme-borme', args=[str(self.cve)])
 
@@ -79,6 +83,14 @@ class Person(Model):
             self.cargos_historial.append(cargo)
 
     @property
+    def total_companies(self):
+        return len(self.in_companies)
+
+    @property
+    def total_bormes(self):
+        return len(self.in_bormes)
+
+    @property
     def todos_cargos(self):
         return self.cargos_actuales + self.cargos_historial
 
@@ -114,6 +126,14 @@ class Company(Model):
     def add_in_bormes(self, borme):
         if not borme in self.in_bormes:
             self.in_bormes.append(borme)
+
+    @property
+    def total_anuncios(self):
+        return len(self.anuncios)
+
+    @property
+    def total_bormes(self):
+        return len(self.in_bormes)
 
     @property
     def fullname(self):
@@ -223,6 +243,10 @@ class Anuncio(Model):
         index_together = ['id_anuncio', 'year']
 
     #objects = hstore.HStoreManager()
+
+    @property
+    def total_actos(self):
+        return len(self.actos)
 
     def get_absolute_url(self):
         return reverse('borme-anuncio', args=[str(self.year), str(self.id_anuncio)])
