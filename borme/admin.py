@@ -4,21 +4,25 @@ from borme.models import Anuncio, BormeLog, Borme, Config, Company, Person
 
 class AnuncioAdmin(admin.ModelAdmin):
     list_display = ('id_anuncio', 'year', 'company', 'borme', 'total_actos')
+    list_filter = ('year',)
     search_fields = ['id_anuncio', 'year']
 
 
 class BormeAdmin(admin.ModelAdmin):
     list_display = ('cve', 'date', 'province', 'section', 'total_anuncios')
+    list_filter = ('province', 'section')
     search_fields = ['cve', 'province']
 
 
 class BormeLogAdmin(admin.ModelAdmin):
     list_display = ('borme', 'path', 'date_created', 'date_updated', 'date_parsed', 'parsed')
+    list_filter = ('parsed',)
     search_fields = ['borme__cve']
 
 
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('name', 'type', 'date_updated', 'in_bormes', 'anuncios', 'total_bormes', 'total_anuncios')
+    list_filter = ('type',)
     search_fields = ['name']
 
 
