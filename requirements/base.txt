@@ -1,14 +1,14 @@
 #bormeparser==0.2.3
 git+https://github.com/PabloCastellano/bormeparser.git#egg=bormeparser
-Django==1.9.6
+Django==1.9.8
 django-bootstrap-static==3.3.6
-django-debug-toolbar==1.4
+django-debug-toolbar==1.5
 django-hstore==1.4.2
 git+https://github.com/django-haystack/django-haystack@63a59f0dcfbe891bbb86e4a36d1524240561f1c4
 django-maintenancemode==0.11.2
 django-static-jquery==2.1.4
 django-tastypie==0.13.3
 elasticsearch==1.9.0
-psycopg2==2.6.1
+psycopg2==2.6.2
 pyelasticsearch==1.4
 wheel==0.29.0
