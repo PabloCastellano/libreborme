@@ -20,3 +20,14 @@ def convertir_iniciales(name):
         iniciales.append(name[esp_index + 1])
         esp_index = name.find(' ', esp_index + 1)
     return '. '.join(iniciales) + '.'
+
+
+def get_file(name):
+    """ Si existe el archivo, prueba con name.1, name.2, ...
+        hasta que no exista y devuelve su descriptor """
+    counter = 0
+    base_name = name
+    while os.path.exists(name):
+        counter += 1
+        name = base_name + "." + str(counter)
+    return open(name, "w+")

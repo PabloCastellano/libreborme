@@ -3,7 +3,7 @@ from .models import Company, Borme, Anuncio, Person, BormeLog
 from django.conf import settings
 from django.db import transaction
 from django.utils.text import slugify
-from django.utils import timezone
+from django.utils import get_file, timezone
 
 import bormeparser
 from bormeparser.borme import BormeXML
@@ -79,7 +79,6 @@ def _import1(borme, fetch_url=False):
                 company.generate_slug()
                 logger.debug('Creando empresa %s %s' % (empresa, tipo))
                 results['created_companies'] += 1
-
 
             try:
                 nuevo_anuncio = Anuncio.objects.get(id_anuncio=anuncio.id, year=borme.date.year)
@@ -241,7 +240,7 @@ def files_exist(files):
     return all([os.path.exists(f) for f in files])
 
 
-def import_borme_download(date_from, date_to, seccion=bormeparser.SECCION.A, local_only=False, no_missing=False, abort_on_error=False, create_json=True):
+def import_borme_download(date_from, date_to, seccion=bormeparser.SECCION.A, local_only=False, no_missing=False, abort_on_error=False, create_json=True, save_stats=False):
     """
     date_from: "2015-01-30", "init"
     date_to: "2015-01-30", "today"
@@ -260,14 +259,14 @@ def import_borme_download(date_from, date_to, seccion=bormeparser.SECCION.A, loc
         raise ValueError('date_from > date_to')
 
     try:
-        ret, _ = _import_borme_download_range2(date_from, date_to, seccion, local_only, no_missing, abort_on_error, create_json)
+        ret, _ = _import_borme_download_range2(date_from, date_to, seccion, local_only, no_missing, abort_on_error, create_json, save_stats)
         return ret
     except BormeDoesntExistException:
         logger.info('It looks like there is no BORME for this date ({}). Nothing was downloaded'.format(date_from))
         return False
 
 
-def _import_borme_download_range2(begin, end, seccion, local_only, no_missing, abort_on_error, create_json):
+def _import_borme_download_range2(begin, end, seccion, local_only, no_missing, abort_on_error, create_json, save_stats):
     """
     local_only: No se conecta a Internet. No descarga BORMEs ni incluye la URL al generar JSON.
     """
@@ -275,6 +274,13 @@ def _import_borme_download_range2(begin, end, seccion, local_only, no_missing, a
     total_results = {'created_anuncios': 0, 'created_bormes': 0, 'created_companies': 0, 'created_persons': 0,
                      'total_anuncios': 0, 'total_bormes': 0, 'total_companies': 0, 'total_persons': 0, 'errors': 0}
     total_start_time = time.time()
+
+    if save_stats:
+        filename = datetime.datetime.now().strftime('%Y_%m_%d') + '.log'  # 2016_10_05.log
+        csv_path = os.path.join(settings.BORME_LOG_ROOT, 'imports_time')
+        os.makedirs(csv_path, exist_ok=True)
+        csv_fp = get_file(os.path.join(csv_path, filename))
+        csv_fp.write('CVE,Provincia,Elapsed,n_anuncios,n_empresas,n_personas\n')
 
     try:
         while next_date and next_date <= end:
@@ -426,6 +432,10 @@ def _import_borme_download_range2(begin, end, seccion, local_only, no_missing, a
                     elapsed_time = time.time() - start_time
                     logger.info('[%s] Elapsed time: %.2f seconds' % (borme.cve, elapsed_time))
 
+                    if save_stats:
+                        csv_fp.write('%s,%s,%s,%s,%s,%s\n' % (borme.cve, borme.provincia, elapsed_time, results['created_anuncios'], results['created_companies'], results['created_persons']))
+                        csv_fp.flush()
+
             # Remove handlers
             logger.removeHandler(fh_info)
             logger.removeHandler(fh_warning)
@@ -438,6 +448,9 @@ def _import_borme_download_range2(begin, end, seccion, local_only, no_missing, a
     logger.info('\nEn total se han importado {created_bormes}/{total_bormes} BORMEs, {created_anuncios}/{total_anuncios} Anuncios, '
                 '{created_companies}/{total_companies} Empresas, y {created_persons}/{total_persons} Personas.'.format(**total_results))
     logger.info('Total elapsed time: {:.2f} seconds'.format(elapsed_time))
+
+    if save_stats:
+        csv_fp.close()
 
     return True, total_results
 

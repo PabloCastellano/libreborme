@@ -14,13 +14,14 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--local-only', action='store_true', default=False, help='Do not download any file')
+        parser.add_argument('-s', '--stats', action='store_true', default=False, help='Save stats log file')
 
     def handle(self, *args, **options):
         start_time = time.time()
 
         date = datetime.date.today()
         datestr = date.strftime('%Y-%m-%d')
-        success = import_borme_download(datestr, datestr, local_only=options['local_only'])
+        success = import_borme_download(datestr, datestr, local_only=options['local_only'], save_stats=options['stats'])
         if success:
             update_previous_xml(date)
 

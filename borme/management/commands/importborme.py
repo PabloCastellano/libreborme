@@ -16,6 +16,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('-f', '--from', nargs=1, required=True, help='ISO formatted date (ex. 2015-01-01) or "init"')
         parser.add_argument('-t', '--to', nargs=1, required=True, help='ISO formatted date (ex. 2016-01-01) or "today"')
+        parser.add_argument('-s', '--stats', action='store_true', default=False, help='Save stats log file')
         parser.add_argument('--local-only', action='store_true', default=False, help='Do not download any file')
         parser.add_argument('--no-missing', action='store_true', default=False, help='Abort if local file is not found')
         # json only, pdf only...
@@ -29,7 +30,7 @@ class Command(BaseCommand):
             print('Process will start in 5 seconds.\n')
             time.sleep(5)
 
-        import_borme_download(options['from'][0], options['to'][0], local_only=options['local_only'], no_missing=options['no_missing'])
+        import_borme_download(options['from'][0], options['to'][0], local_only=options['local_only'], no_missing=options['no_missing'], save_stats=options['stats'])
 
         config = Config.objects.first()
         if config:
