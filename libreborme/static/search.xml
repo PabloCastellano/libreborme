@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>Libreborme</ShortName>
+  <Description>Libreborme - Registro mercantil</Description>
+  <Image height="32" width="32" type="image/x-icon">https://libreborme.net/static/favicon.ico</Image>
+  <Url type="text/html" method="get" template="http://libreborme.net/borme/search/?q={searchTerms}&amp;page=1&amp;type=all" />
+  <moz:SearchForm>https://libreborme.net/borme/search</moz:SearchForm>
+</OpenSearchDescription>
