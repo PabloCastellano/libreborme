@@ -278,11 +278,7 @@ def _import_borme_download_range2(begin, end, seccion, local_only, no_missing, a
     total_start_time = time.time()
 
     if save_stats:
-        filename = datetime.datetime.now().strftime('%Y_%m_%d') + '.log'  # 2016_10_05.log
-        csv_path = os.path.join(settings.BORME_LOG_ROOT, 'imports_time')
-        os.makedirs(csv_path, exist_ok=True)
-        csv_fp = get_file(os.path.join(csv_path, filename))
-        csv_fp.write('CVE,Provincia,Elapsed,n_anuncios,n_empresas,n_personas\n')
+        csv_fp = save_stats_begin()
 
     try:
         while next_date and next_date <= end:
@@ -435,7 +431,7 @@ def _import_borme_download_range2(begin, end, seccion, local_only, no_missing, a
                     logger.info('[%s] Elapsed time: %.2f seconds' % (borme.cve, elapsed_time))
 
                     if save_stats:
-                        csv_fp.write('%s,%s,%s,%s,%s,%s\n' % (borme.cve, borme.provincia, elapsed_time, results['created_anuncios'], results['created_companies'], results['created_persons']))
+                        save_stats_writeline(csv_fp, borme, elapsed_time, results)
                         csv_fp.flush()
 
             # Remove handlers
@@ -480,7 +476,21 @@ def import_borme_pdf(filename, create_json=True):
     return True, results
 
 
-def import_borme_json(filename):
+def save_stats_begin():
+    filename = datetime.datetime.now().strftime('%Y_%m_%d') + '.log'  # 2016_10_05.log
+    csv_path = os.path.join(settings.BORME_LOG_ROOT, 'imports_time')
+    os.makedirs(csv_path, exist_ok=True)
+    csv_fp = get_file(os.path.join(csv_path, filename))
+    csv_fp.write('CVE,Provincia,Elapsed,n_anuncios,n_empresas,n_personas\n')
+    csv_fp.flush()
+    return csv_fp
+
+
+def save_stats_writeline(csv_fp, borme, elapsed_time, results):
+    csv_fp.write('%s,%s,%s,%s,%s,%s\n' % (borme.cve, borme.provincia, elapsed_time, results['created_anuncios'], results['created_companies'], results['created_persons']))
+
+
+def import_borme_json(filename, save_stats=False):
     """
     Import BORME JSON to database
     """
@@ -488,10 +498,23 @@ def import_borme_json(filename):
 
     try:
         borme = bormeparser.Borme.from_json(filename)
+
+        if save_stats:
+            csv_fp = save_stats_begin()
+            start_time = time.time()
+
         results = _import1(borme)
+
+        if save_stats:
+            elapsed_time = time.time() - start_time
+            save_stats_writeline(csv_fp, borme, elapsed_time, results)
+
     except Exception as e:
         logger.error('[X] Error grave en bormeparser.Borme.from_json(): %s' % filename)
         logger.error('[X] %s: %s' % (e.__class__.__name__, e))
+
+    if save_stats:
+        csv_fp.close()
 
     if not all(map(lambda x: x == 0, results.values())):
         print_results(results, borme)

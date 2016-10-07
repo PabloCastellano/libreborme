@@ -16,6 +16,10 @@ class Command(BaseCommand):
     args = '<BORME files, ...>'
     help = 'Import BORME JSON file'
 
+    def add_arguments(self, parser):
+        parser.add_argument('filename', help='BORME-JSON filename')
+        parser.add_argument('-s', '--stats', action='store_true', default=False, help='Save stats log file')
+
     def handle(self, *args, **options):
         verbosity = int(options['verbosity'])
         if verbosity == 0:
@@ -30,18 +34,8 @@ class Command(BaseCommand):
             logging.getLogger().setLevel(logging.DEBUG)
         start_time = time.time()
 
-        if args:
-            for filename in args:
-                print(filename)
-                import_borme_json(filename)
-
-            config = Config.objects.first()
-            if config:
-                config.last_modified = timezone.now()
-            else:
-                config = Config(last_modified=timezone.now())
-            config.version = get_git_revision_short_hash()
-            config.save()
+        print(options['filename'])
+        import_borme_json(options['filename'], save_stats=options['stats'])
 
         # Elapsed time
         elapsed_time = time.time() - start_time
