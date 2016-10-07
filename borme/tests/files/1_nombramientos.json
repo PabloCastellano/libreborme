@@ -1,26 +1,31 @@
 {
-  "cve": "BORME-Z-2015-1-04",
-  "date": "2015-01-02",
-  "seccion": "A",
-  "provincia": "Almer\u00eda",
-  "num": 1,
-  "url": "unused_url",
-  "from_anuncio": 1,
-  "to_anuncio": 1,
   "anuncios": {
     "1": {
-      "empresa": "EMPRESA UNO SL",
-      "datos registrales": "T 1 , F 2, S 3, H AL 42885, I/A 2 (19.12.14).",
-      "actos": {
-        "Nombramientos": {
-          "Adm. Solid.": [
-            "GARCIA JUAN",
-            "ORTIZ MARIBEL"
-          ]
+      "actos": [
+        {
+          "Nombramientos": {
+            "Adm. Solid.": [
+              "GARCIA JUAN",
+              "ORTIZ MARIBEL"
+            ]
+          }
         }
-      },
-      "num_actos": 1
+      ],
+      "datos registrales": "T 1 , F 2, S 3, H AL 42885, I/A 2 (19.12.14).",
+      "empresa": "EMPRESA UNO SL",
+      "num_actos": 1,
+      "registro": "Las Palmas (Canarias)"
     }
   },
-  "num_anuncios": 1
+  "cve": "BORME-Z-2015-1-04",
+  "date": "2015-01-02",
+  "from_anuncio": 1,
+  "num": 1,
+  "num_anuncios": 1,
+  "provincia": "Almer\u00eda",
+  "raw_version": "1",
+  "seccion": "A",
+  "to_anuncio": 1,
+  "url": "unused_url",
+  "version": "1001"
 }
