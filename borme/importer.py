@@ -3,7 +3,9 @@ from .models import Company, Borme, Anuncio, Person, BormeLog
 from django.conf import settings
 from django.db import transaction
 from django.utils.text import slugify
-from django.utils import get_file, timezone
+from django.utils import timezone
+
+from borme.utils import get_file
 
 import bormeparser
 from bormeparser.borme import BormeXML

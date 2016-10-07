@@ -1,4 +1,5 @@
 from django.db import connection
+import os.path
 
 
 # http://chase-seibert.github.io/blog/2012/06/01/djangopostgres-optimize-count-by-replacing-with-an-estimate.html
