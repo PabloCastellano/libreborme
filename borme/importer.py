@@ -25,6 +25,9 @@ ch = logging.StreamHandler()
 logger.addHandler(ch)
 logger.setLevel(logging.INFO)
 
+from bormeparser.backends.defaults import OPTIONS
+OPTIONS['SANITIZE_COMPANY_NAME'] = True
+
 
 @transaction.atomic
 def _import1(borme, fetch_url=False):
