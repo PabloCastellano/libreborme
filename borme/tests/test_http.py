@@ -117,7 +117,7 @@ class TestCommands(TestCase):
 
     def test_importbormepdf(self):
         out = StringIO()
-        path = os.path.join(settings.BORME_PDF_ROOT, '2015', '02', '10', 'BORME-A-2015-27-10.pdf')
+        path = os.path.join(EXAMPLES_PATH, 'BORME-A-2015-27-10.pdf')
         call_command('importbormepdf', path, stdout=out)
         self.assertIn(out.getvalue(), 'Errors: 0')
 

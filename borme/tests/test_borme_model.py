@@ -8,6 +8,8 @@ import os
 
 results = None
 
+EXAMPLES_PATH = os.path.join(os.path.dirname(bormeparser.__file__), 'examples')
+
 
 # TODO: Mockup de:
 # borme = bormeparser.parse(filename, bormeparser.SECCION.A)
@@ -21,7 +23,7 @@ class TestBormeModel(TestCase):
 
         global results
 
-        path = os.path.expanduser('~/.bormes/pdf/2015/02/10/BORME-A-2015-27-10.pdf')
+        path = os.path.join(EXAMPLES_PATH, 'BORME-A-2015-27-10.pdf')
         borme = bormeparser.parse(path, bormeparser.SECCION.A)
         results = _import1(borme, fetch_url=True)
 

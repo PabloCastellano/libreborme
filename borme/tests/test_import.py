@@ -1,16 +1,20 @@
 from borme.models import Anuncio, Borme, Company
 from borme.importer import import_borme_pdf, import_borme_json
+
+from bormeparser import __file__ as bp_path
+
 import os
 
 from django.test import TestCase
 
 THIS_PATH = os.path.dirname(os.path.abspath(__file__))
+EXAMPLES_PATH = os.path.join(os.path.dirname(bp_path), 'examples')
 
 
 class TestImport(TestCase):
 
     def test_import_borme(self):
-        import_borme_pdf(os.path.expanduser('~/.bormes/pdf/2015/02/10/BORME-A-2015-27-10.pdf'))
+        import_borme_pdf(os.path.join(EXAMPLES_PATH, 'BORME-A-2015-27-10.pdf'))
         find = Borme.objects.filter(cve='BORME-A-2015-27-10')
         self.assertEqual(len(find), 1)
         self.assertEqual(Anuncio.objects.count(), 30)
