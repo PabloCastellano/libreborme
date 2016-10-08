@@ -86,7 +86,7 @@ def _import1(borme, fetch_url=False):
                 nuevo_anuncio = Anuncio.objects.get(id_anuncio=anuncio.id, year=borme.date.year)
             except Anuncio.DoesNotExist:
                 nuevo_anuncio = Anuncio(id_anuncio=anuncio.id, year=borme.date.year, borme=nuevo_borme,
-                                        datos_registrales=anuncio.datos_registrales)
+                                        datos_registrales=anuncio.datos_registrales, registro=anuncio.registro)
                 logger.debug('Creando anuncio %d: %s %s' % (anuncio.id, empresa, tipo))
                 results['created_anuncios'] += 1
 

@@ -5,9 +5,11 @@ from django.core.urlresolvers import reverse
 from django.contrib.postgres.fields import ArrayField
 
 from django.db.models import *
-from bormeparser.regex import SOCIEDADES as SOCIEDADES_DICT
+from bormeparser.registro import REGISTROS as REGISTROS_DICT
+from bormeparser.sociedad import SOCIEDADES as SOCIEDADES_DICT
 from django_hstore import hstore
 
+REGISTROS = sorted(REGISTROS_DICT.items())
 SOCIEDADES = sorted(SOCIEDADES_DICT.items())
 
 """
@@ -30,8 +32,6 @@ class Borme(Model):
     #province = CharField(max_length=100, choices=PROVINCES)
     province = CharField(max_length=100)
     section = CharField(max_length=20)
-    #pages = IntegerField()
-    anuncios = ArrayField(IntegerField(), default=list)
 
     def get_absolute_url(self):
         return reverse('borme-borme', args=[str(self.cve)])
@@ -233,6 +233,7 @@ class Anuncio(Model):
     year = IntegerField()
     borme = ForeignKey('Borme')
     company = ForeignKey('Company')
+    registro = CharField(max_length=50, choices=REGISTROS, blank=True, null=True)
     datos_registrales = CharField(max_length=70)
     actos = hstore.SerializedDictionaryField()  # TODO: schema={...}  # TODO: Actos repetidos
 
