@@ -182,7 +182,6 @@ def _import1(borme, fetch_url=False):
             company.save()
             nuevo_anuncio.company = company
             nuevo_anuncio.save()
-            nuevo_borme.anuncios.append(anuncio.id)
 
         except Exception as e:
             logger.error('[%s] ERROR importing anuncio %d' % (borme.cve, anuncio.id))
