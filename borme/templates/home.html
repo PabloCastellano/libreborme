@@ -1,5 +1,7 @@
 {% extends 'borme/base.html' %}
 
+{% load ad_rotator_tags %}
+
 {% block content %}
 
     <div class="row">
@@ -41,6 +43,11 @@
                 <li>Monedero Fernandez Juan Carlos</li>
             {% endfor %}
         </ul>
+      </div>
+
+      <div class="publi5 col-sm-3 col-sm-offset-1">
+          <p>Publicidad recomendada</p>
+          {% get_banner 'leaderboard' %}
       </div>
 
     </div>

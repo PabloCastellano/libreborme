@@ -50,6 +50,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER  # used for error reporting
 
 STATIC_ROOT = '%s/static/' % SITE_ROOT
+MEDIA_ROOT = os.path.join(SITE_ROOT, 'media')
 
 PIWIK_URL = ''
 PIWIK_SITE_ID = ''
@@ -71,8 +72,7 @@ elif SUBDIR and SUBDIR.endswith('/'):
 
 SITE_URL = '%s://%s%s%s' % (PROTOCOL, settings.DOMAIN, PORT_STRING, SUBDIR)
 
-MEDIA_URL = '%s/media/' % SITE_URL
-MEDIA_ROOT = '%s/media/' % SITE_ROOT
+MEDIA_URL = '/media/'
 
 # BORME
 BORME_ROOT = os.path.expanduser('~/.bormes')

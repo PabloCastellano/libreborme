@@ -194,3 +194,24 @@ table.year {
     margin: 2px;
     padding: 0
 }
+
+
+div.publi5 {
+  margin-top: 20px;
+  margin-bottom: 100px;
+  padding-bottom: 75px;
+}
+
+@media (min-width: 768px) {
+  div.publi5 {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
+}
+
+@media (min-width: 1200px) {
+  div.publi5 {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+  }
+}
