@@ -31,15 +31,18 @@
 
 {% block content %}
 <div class="col-md-10 col-md-offset-1">
-    <h1>Sociedad «{{ company.fullname }}»</h1>
+    <div class="row">
+        <h1>Sociedad «{{ company.fullname }}»</h1>
 
-    <p>Última actualización: {{ company.date_updated }}.<br/>
-    Fuente de los datos: Agencia Estatal Boletín Oficial del Estado.</p>
+        <p>Última actualización: {{ company.date_updated }}.<br/>
+        Fuente de los datos: Agencia Estatal Boletín Oficial del Estado.</p>
 
-    <p>
-    <strong>Empresas relacionadas:</strong> {{ companies|length }}<br/>
-    <strong>Personas relacionadas:</strong> {{ persons|length }}
-    </p>
+        <p>
+            <strong>Empresas relacionadas:</strong> {{ companies|length }}<br/>
+            <strong>Personas relacionadas:</strong> {{ persons|length }}
+        </p>
+    </div>
+
 
 {% comment %}
     <strong>NIF:</strong> {{ company.nif|default:"Desconocido" }}
@@ -48,224 +51,231 @@
     <br/>
 {% endcomment %}
 
-    <h2>Cargos directivos:</h2>
-    <div id="positions">
     <div class="row">
-    <div class="col-md-10">
-    {% if company.cargos_actuales %}
-        <a href="{% url 'borme-empresa-csv-actual' company.slug %}" rel="nofollow" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
-        <table class="table table-condensed">
-            <thead>
-                <tr>
-                    <th>Cargo</th>
-                    <th>Persona física/jurídica</th>
-                    <th>Desde</th>
-                    <th>Hasta</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for cargo in company.cargos_actuales %}
-                {% url 'borme-fecha' cargo.date_from as url_from %}
-                {% url 'borme-fecha' cargo.date_to as url_to %}
-                <tr>
-                    <td>{{ cargo.title }}</td>
-                    {% if cargo.type == 'person' %}
-                        <td><a href="{% url 'borme-persona' cargo.slug %}">{{ cargo.name|title }}</a></td>
-                    {% else %}
-                        <td><a href="{% url 'borme-empresa' cargo.slug %}">{{ cargo.name }}</a></td>
-                    {% endif %}
-
-                    <td><a href="{% url 'borme-fecha' cargo.date_from %}">{{ cargo.date_from }}</a></td>
-
-                    {% if url_to %}
-                        <td><a href="{{ url_to }}">{{ cargo.date_to }}</a></td>
-                    {% else %}
-                        <td>Actualidad</td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <i>No hay datos</i> <a href="#" data-toggle="modal" data-target="#myModal">[?]</a>
-    {% endif %}
-    </div>
-    </div>
-
-    {% if company.cargos_historial %}
-    <a id="toggle_positions_on" href="#" onclick="toggle_positions();return false;" title="Mostrar cargos no vigentes"><i class="glyphicon glyphicon-chevron-right"></i> Mostrar cargos no vigentes</a>
-    <a id="toggle_positions_off" style="display:none" href="#" onclick="toggle_positions();return false;" title="Esconder cargos no vigentes"><i class="glyphicon glyphicon-chevron-down"></i> Esconder cargos no vigentes</a>
-
-    <div id="positions_history" style="display:none">
-    <div class="row">
-    <div class="col-md-10">
-        <a href="{% url 'borme-empresa-csv-historial' company.slug %}" rel="nofollow" title="Descargar CSV de historial de cargos"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
-        <table class="table table-condensed">
-            <thead>
-                <tr>
-                    <th>Cargo</th>
-                    <th>Persona física/jurídica</th>
-                    <th>Desde</th>
-                    <th>Hasta</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for cargo in company.cargos_historial %}
-                {% url 'borme-fecha' cargo.date_from as url_from %}
-                {% url 'borme-fecha' cargo.date_to as url_to %}
-                <tr>
-                    <td>{{ cargo.title }}</td>
-                    {% if cargo.type == 'person' %}
-                        <td><a href="{% url 'borme-persona' cargo.slug %}">{{ cargo.name|title }}</a></td>
-                    {% else %}
-                        <td><a href="{% url 'borme-empresa' cargo.slug %}">{{ cargo.name }}</a></td>
-                    {% endif %}
-
-                    {% if url_from %}
-                        <td><a href="{{ url_from }}">{{ cargo.date_from }}</a></td>
-                    {% else %}
-                        <td>Desconocido</td>
-                    {% endif %}
-
-                    <td><a href="{% url 'borme-fecha' cargo.date_to %}">{{ cargo.date_to }}</a></td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    </div>
-    </div>
-    {% endif %}
-    </div>
-
-    <h2>Anuncios en boletines oficiales</h2>
-    <div class="row">
-    <div class="col-md-10">
-        <p>Actos mercantiles publicados en la edición digital del BORME relacionados o inscritos por {{ company.fullname }}.</p>
-        {% for anuncio in anuncios %}
-            <h3>{{ anuncio.borme.date|date:"d b Y" }}</h3>
-            Detalles del anuncio <a href="{{ anuncio.get_absolute_url }}">{{ anuncio.id_anuncio }}</a>.
+        <h2>Cargos directivos:</h2>
+        <div id="positions">
         <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-        <ul>
-           {% for acto_name, value in anuncio.actos.items %}
-              <li><strong>{{ acto_name }}</strong>:
-             {% if value|is_string %}
-               {{ value }}
-             {% elif value|is_bool %}
-               <i class="glyphicon glyphicon-ok"></i>
-             {% else %}
- 
-                <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                 <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th>Cargo</th>
-                            <th>Persona física/jurídica</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for cargo in value %}
-                        <tr>
-                            <td>{{ cargo.title }}</td>
-                            {% if cargo.type == 'person' %}
-                                <td><a href="{% url 'borme-persona' cargo.slug %}">{{ cargo.name|title }}</a></td>
-                            {% else %}
-                                <td><a href="{% url 'borme-empresa' cargo.slug %}">{{ cargo.name }}</a></td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                 </table>
-                </div>
-                </div>
+        <div class="col-md-10">
+        {% if company.cargos_actuales %}
+            <a href="{% url 'borme-empresa-csv-actual' company.slug %}" rel="nofollow" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Cargo</th>
+                        <th>Persona física/jurídica</th>
+                        <th>Desde</th>
+                        <th>Hasta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for cargo in company.cargos_actuales %}
+                    {% url 'borme-fecha' cargo.date_from as url_from %}
+                    {% url 'borme-fecha' cargo.date_to as url_to %}
+                    <tr>
+                        <td>{{ cargo.title }}</td>
+                        {% if cargo.type == 'person' %}
+                            <td><a href="{% url 'borme-persona' cargo.slug %}">{{ cargo.name|title }}</a></td>
+                        {% else %}
+                            <td><a href="{% url 'borme-empresa' cargo.slug %}">{{ cargo.name }}</a></td>
+                        {% endif %}
 
-             {% endif %}
-              </li>
-           {% endfor %}
-        </ul>
+                        <td><a href="{% url 'borme-fecha' cargo.date_from %}">{{ cargo.date_from }}</a></td>
+
+                        {% if url_to %}
+                            <td><a href="{{ url_to }}">{{ cargo.date_to }}</a></td>
+                        {% else %}
+                            <td>Actualidad</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <i>No hay datos</i> <a href="#" data-toggle="modal" data-target="#myModal">[?]</a>
+        {% endif %}
         </div>
         </div>
-        {% empty %}
-            <i>No hay anuncios registrados.</i>
-        {% endfor %}
-    </div>
-    </div>
 
-    <h2>Personas relacionadas</h2>
-    <div class="row related-persons">
-    <div class="col-md-10">
+        {% if company.cargos_historial %}
+        <a id="toggle_positions_on" href="#" onclick="toggle_positions();return false;" title="Mostrar cargos no vigentes"><i class="glyphicon glyphicon-chevron-right"></i> Mostrar cargos no vigentes</a>
+        <a id="toggle_positions_off" style="display:none" href="#" onclick="toggle_positions();return false;" title="Esconder cargos no vigentes"><i class="glyphicon glyphicon-chevron-down"></i> Esconder cargos no vigentes</a>
 
-    {% if persons %}
-     {% for ps in persons|rows_distributed:3 %}
-        {% if persons|length > 5 %}
-        <div class="col-md-4">
-            {% endif %}
-            <ul>
-            {% for person in ps %}
-                <li><a href="{% url 'borme-persona' person.slug %}">{{ person.name|title }}</a></li>
-            {% endfor %}
-            </ul>
-            {% if persons|length > 5 %}
+        <div id="positions_history" style="display:none">
+        <div class="row">
+        <div class="col-md-10">
+            <a href="{% url 'borme-empresa-csv-historial' company.slug %}" rel="nofollow" title="Descargar CSV de historial de cargos"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Cargo</th>
+                        <th>Persona física/jurídica</th>
+                        <th>Desde</th>
+                        <th>Hasta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for cargo in company.cargos_historial %}
+                    {% url 'borme-fecha' cargo.date_from as url_from %}
+                    {% url 'borme-fecha' cargo.date_to as url_to %}
+                    <tr>
+                        <td>{{ cargo.title }}</td>
+                        {% if cargo.type == 'person' %}
+                            <td><a href="{% url 'borme-persona' cargo.slug %}">{{ cargo.name|title }}</a></td>
+                        {% else %}
+                            <td><a href="{% url 'borme-empresa' cargo.slug %}">{{ cargo.name }}</a></td>
+                        {% endif %}
+
+                        {% if url_from %}
+                            <td><a href="{{ url_from }}">{{ cargo.date_from }}</a></td>
+                        {% else %}
+                            <td>Desconocido</td>
+                        {% endif %}
+
+                        <td><a href="{% url 'borme-fecha' cargo.date_to %}">{{ cargo.date_to }}</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </div>
         </div>
         {% endif %}
-     {% endfor %}
-     {% else %}
-        <p><i>No hay datos.</i></p>
+        </div>
+    </div>
     {% endif %}
     </div>
+
+    <div class="row">
+        <h2>Anuncios en boletines oficiales</h2>
+        <div class="row">
+        <div class="col-md-10">
+            <p>Actos mercantiles publicados en la edición digital del BORME relacionados o inscritos por {{ company.fullname }}.</p>
+            {% for anuncio in anuncios %}
+                <h3>{{ anuncio.borme.date|date:"d b Y" }}</h3>
+                Detalles del anuncio <a href="{{ anuncio.get_absolute_url }}">{{ anuncio.id_anuncio }}</a>.
+            <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+            <ul>
+               {% for acto_name, value in anuncio.actos.items %}
+                  <li><strong>{{ acto_name }}</strong>:
+                 {% if value|is_string %}
+                   {{ value }}
+                 {% elif value|is_bool %}
+                   <i class="glyphicon glyphicon-ok"></i>
+                 {% else %}
+
+                    <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                     <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Cargo</th>
+                                <th>Persona física/jurídica</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for cargo in value %}
+                            <tr>
+                                <td>{{ cargo.title }}</td>
+                                {% if cargo.type == 'person' %}
+                                    <td><a href="{% url 'borme-persona' cargo.slug %}">{{ cargo.name|title }}</a></td>
+                                {% else %}
+                                    <td><a href="{% url 'borme-empresa' cargo.slug %}">{{ cargo.name }}</a></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                     </table>
+                    </div>
+                    </div>
+
+                 {% endif %}
+                  </li>
+               {% endfor %}
+            </ul>
+            </div>
+            </div>
+            {% empty %}
+                <i>No hay anuncios registrados.</i>
+            {% endfor %}
+        </div>
+        </div>
     </div>
 
-    <h2>Sociedades relacionadas</h2>
-    <div class="row related-companies">
-    <div class="col-md-10">
+    <div class="row">
+        <h2>Personas relacionadas</h2>
+        <div class="row related-persons col-md-10">
 
-     {% if companies %}
-     {% for cs in companies|rows_distributed:3 %}
-        {% if companies|length > 5 %}
-        <div class="col-md-4">
+        {% if persons %}
+         {% for ps in persons|rows_distributed:3 %}
+            {% if persons|length > 5 %}
+            <div class="col-md-4">
+                {% endif %}
+                <ul>
+                {% for person in ps %}
+                    <li><a href="{% url 'borme-persona' person.slug %}">{{ person.name|title }}</a></li>
+                {% endfor %}
+                </ul>
+                {% if persons|length > 5 %}
+            </div>
             {% endif %}
-            <ul>
-            {% for c in cs %}
-                <li><a href="{% url 'borme-empresa' c.slug %}">{{ c.name }}</a></li>
-            {% endfor %}
-            </ul>
+         {% endfor %}
+         {% else %}
+            <p><i>No hay datos.</i></p>
+        {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <h2>Sociedades relacionadas</h2>
+        <div class="row related-companies col-md-10">
+
+         {% if companies %}
+         {% for cs in companies|rows_distributed:3 %}
             {% if companies|length > 5 %}
+            <div class="col-md-4">
+                {% endif %}
+                <ul>
+                {% for c in cs %}
+                    <li><a href="{% url 'borme-empresa' c.slug %}">{{ c.name }}</a></li>
+                {% endfor %}
+                </ul>
+                {% if companies|length > 5 %}
+            </div>
+            {% endif %}
+         {% endfor %}
+         {% else %}
+            <p><i>No hay datos.</i></p>
+         {% endif %}
         </div>
-        {% endif %}
-     {% endfor %}
-     {% else %}
-        <p><i>No hay datos.</i></p>
-     {% endif %}
-    </div>
     </div>
 
-    <h2>BORMEs relacionados</h2>
-    <div class="row related-bormes">
-    <div class="col-md-10">
-     {% if company.in_bormes %}
-     {% for bs in company.in_bormes|rows_distributed:3 %}
-        {% if company.in_bormes|length > 5 %}
-        <div class="col-md-4">
-            {% endif %}
-            <ul>
-            {% for borme in bs %}
-                <li><a href="{% url 'borme-borme' borme.cve %}">{{ borme.cve }}</a>
-                    <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
-                    <a href="{{ borme.url }}" title="Descargar PDF" rel="nofollow"><i class="glyphicon glyphicon-download-alt"></i></a>
-                </li>
-            {% endfor %}
-            </ul>
+    <div class="row">
+        <h2>BORMEs relacionados</h2>
+        <div class="row related-bormes col-md-10">
+         {% if company.in_bormes %}
+         {% for bs in company.in_bormes|rows_distributed:3 %}
             {% if company.in_bormes|length > 5 %}
+            <div class="col-md-4">
+                {% endif %}
+                <ul>
+                {% for borme in bs %}
+                    <li><a href="{% url 'borme-borme' borme.cve %}">{{ borme.cve }}</a>
+                        <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
+                        <a href="{{ borme.url }}" title="Descargar PDF" rel="nofollow"><i class="glyphicon glyphicon-download-alt"></i></a>
+                    </li>
+                {% endfor %}
+                </ul>
+                {% if company.in_bormes|length > 5 %}
+            </div>
+            {% endif %}
+         {% endfor %}
+         {% else %}
+            <p><i>No hay actos registrados.</i></p>
+         {% endif %}
         </div>
-        {% endif %}
-     {% endfor %}
-     {% else %}
-        <p><i>No hay actos registrados.</i></p>
-     {% endif %}
     </div>
-    </div>
+
 </div>
 
 {% endblock %}
