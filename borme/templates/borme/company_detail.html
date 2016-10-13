@@ -1,5 +1,6 @@
 {% extends "borme/base.html" %}
 
+{% load ad_rotator_tags %}
 {% load utils %}
 
 {% block title %}{{ company.fullname }} | LibreBORME{% endblock %}
@@ -143,6 +144,12 @@
         </div>
     </div>
     {% endif %}
+    
+    <div class="row">
+        <div class="publi5 col-sm-4 col-sm-offset-3">
+            <p class="col-sm-offset-3">Publicidad recomendada</p>
+            {% get_banner 'large_mobile' %}
+        </div>
     </div>
 
     <div class="row">

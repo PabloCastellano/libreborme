@@ -1,5 +1,6 @@
 #bormeparser>=0.3.0
 git+https://github.com/PabloCastellano/bormeparser.git#egg=bormeparser
+git+git://github.com/PabloCastellano/django-ad-rotator.git#egg=ad_rotator
 Django==1.9.8
 django-bootstrap-static==3.3.6
 django-debug-toolbar==1.6

@@ -41,3 +41,4 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER  # used for error reporting
 
 STATIC_ROOT = '%s/static/' % SITE_ROOT
+MEDIA_ROOT = os.path.join(SITE_ROOT, 'media')
