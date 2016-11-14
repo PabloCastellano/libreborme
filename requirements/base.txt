@@ -1,5 +1,4 @@
-#bormeparser==0.1.5
-git+https://github.com/PabloCastellano/bormeparser.git#egg=bormeparser
+bormeparser==0.2.4
 Django==1.9.5
 django-appconf==1.0.1
 django-bootstrap-static==3.3.6
