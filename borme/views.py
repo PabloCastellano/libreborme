@@ -26,7 +26,7 @@ import csv
 
 def ajax_empresa_more(request, slug):
     company = Company.objects.get(slug=slug)
-    offset = int(request.GET.get('offset', 0))
+    offset = int(request.GET.get('offset', 0)) + settings.CARGOS_LIMIT
     t = request.GET.get('t', 'actuales')
 
     if t == 'actuales':
@@ -36,8 +36,7 @@ def ajax_empresa_more(request, slug):
         cargos, show_more = company.get_cargos_historial(offset=offset)
         template = get_template('borme/tables/cargos_historial.html')
 
-    next_offset = offset + settings.CARGOS_LIMIT
-    next_ajax_url = reverse('borme-ajax-empresa', kwargs={'slug': slug}) + '?offset=' + str(next_offset) + '?t=' + t
+    next_ajax_url = reverse('borme-ajax-empresa', kwargs={'slug': slug}) + '?offset=' + str(offset) + '?t=' + t
 
     response = ""
     for cargo in cargos:
