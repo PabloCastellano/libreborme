@@ -139,8 +139,7 @@ class Company(Model):
     def fullname(self):
         return '%s %s' % (self.name.title(), self.type)
 
-    @property
-    def cargos_actuales(self):
+    def get_cargos_actuales(self, offset=0, limit=settings.CARGOS_LIMIT):
         cargos_p = self.cargos_actuales_p.copy()
         cargos_c = self.cargos_actuales_c.copy()
         cargos_p = [dict(item, **{'type': 'person'}) for item in cargos_p]
@@ -148,8 +147,7 @@ class Company(Model):
         cargos = sorted(cargos_p + cargos_c, key=lambda k: k['date_from'])
         return cargos
 
-    @property
-    def cargos_historial(self):
+    def get_cargos_historial(self, offset=0, limit=settings.CARGOS_LIMIT):
         cargos_p = self.cargos_historial_p.copy()
         cargos_c = self.cargos_historial_c.copy()
         cargos_p = [dict(item, **{'type': 'person'}) for item in cargos_p]

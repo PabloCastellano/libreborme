@@ -30,7 +30,7 @@ def generate_person_csv_cargos_actual(context, slug):
 
     writer = csv.writer(response)
     writer.writerow(['Cargo', 'Nombre', 'Desde'])
-    for cargo in person.cargos_actuales:
+    for cargo in person.get_cargos_actuales():
         writer.writerow([cargo['title'], cargo['name'], cargo['date_from']])
 
     return response
@@ -45,7 +45,7 @@ def generate_person_csv_cargos_historial(context, slug):
 
     writer = csv.writer(response)
     writer.writerow(['Cargo', 'Nombre', 'Desde', 'Hasta'])
-    for cargo in person.cargos_historial:
+    for cargo in person.get_cargos_historial():
         date_from = cargo.get('date_from', '')
         writer.writerow([cargo['title'], cargo['name'], date_from, cargo['date_to']])
 
@@ -61,7 +61,7 @@ def generate_company_csv_cargos_actual(context, slug):
 
     writer = csv.writer(response)
     writer.writerow(['Cargo', 'Nombre', 'Desde', 'Tipo'])
-    for cargo in company.cargos_actuales:
+    for cargo in company.get_cargos_actuales():
         name = cargo['name'] if cargo['type'] == 'company' else cargo['name'].title()
         writer.writerow([cargo['title'], name, cargo['date_from'], cargo['type']])
 
@@ -77,7 +77,7 @@ def generate_company_csv_cargos_historial(context, slug):
 
     writer = csv.writer(response)
     writer.writerow(['Cargo', 'Nombre', 'Desde', 'Hasta', 'Tipo'])
-    for cargo in company.cargos_historial:
+    for cargo in company.get_cargos_historial():
         date_from = cargo.get('date_from', '')
         name = cargo['name'] if cargo['type'] == 'company' else cargo['name'].title()
         writer.writerow([cargo['title'], name, date_from, cargo['date_to'], cargo['type']])

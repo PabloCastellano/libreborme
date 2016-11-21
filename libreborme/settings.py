@@ -152,6 +152,9 @@ STATIC_URL = '/static/'
 PIWIK_URL = ''
 PIWIK_SITE_ID = ''
 
+# Número de elementos a mostrar en las tablas de cargos
+CARGOS_LIMIT = 20
+
 # BORME
 BORME_ROOT = os.path.expanduser('~/.bormes')
 BORME_PDF_ROOT = os.path.join(BORME_ROOT, 'pdf')

@@ -52,7 +52,7 @@
     <div id="positions">
     <div class="row">
     <div class="col-md-10">
-    {% if company.cargos_actuales %}
+    {% if company.get_cargos_actuales %}
         <a href="{% url 'borme-empresa-csv-actual' company.name|slug2 %}" rel="nofollow" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
         <table class="table table-condensed">
             <thead>
@@ -75,7 +75,7 @@
     </div>
     </div>
 
-    {% if company.cargos_historial %}
+    {% if company.get_cargos_historial %}
     <a id="toggle_positions_on" href="#" onclick="toggle_positions();return false;" title="Mostrar cargos no vigentes"><i class="glyphicon glyphicon-chevron-right"></i> Mostrar cargos no vigentes</a>
     <a id="toggle_positions_off" style="display:none" href="#" onclick="toggle_positions();return false;" title="Esconder cargos no vigentes"><i class="glyphicon glyphicon-chevron-down"></i> Esconder cargos no vigentes</a>
 

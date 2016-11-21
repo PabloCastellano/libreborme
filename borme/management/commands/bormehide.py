@@ -73,8 +73,6 @@ class Command(BaseCommand):
         new_entity.slug = nuevo_slug
         new_entity.in_companies = entity.in_companies
         new_entity.in_bormes = entity.in_bormes
-        new_entity.cargos_actuales = entity.cargos_actuales
-        new_entity.cargos_historial = entity.cargos_historial
         new_entity.date_updated = entity.date_updated
         new_entity.save()
         entity.delete()
