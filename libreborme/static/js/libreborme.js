@@ -1,5 +1,19 @@
 // libreborme.net JS
 
+function toggle_positions() {
+    var e = document.getElementById('positions_history');
+    if (e.style.display == 'none'){
+        e.style.display = 'block';
+        document.getElementById('toggle_positions_on').style.display = 'none';
+        document.getElementById('toggle_positions_off').style.display = 'block';
+    } else {
+        e.style.display = 'none';
+        document.getElementById('toggle_positions_on').style.display = 'block';
+        document.getElementById('toggle_positions_off').style.display = 'none';
+    }
+    return true;
+}
+
 function moreData(urlData, idPagePanel, idTable) {
     document.getElementById(idPagePanel).innerHTML = "Cargando...";
     AjaxRequest(urlData, function (res) {

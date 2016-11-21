@@ -1,5 +1,6 @@
 {% extends "borme/base.html" %}
 
+{% load staticfiles %}
 {% load utils %}
 
 {% block title %}{{ person.name|title }} | LibreBORME{% endblock %}
@@ -10,23 +11,7 @@
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript">
-        function toggle_positions() {
-            console.log('toggle');
-            var e = document.getElementById('positions_history');
-            if(e.style.display == 'none'){
-                e.style.display = 'block';
-                document.getElementById('toggle_positions_on').style.display = 'none';
-                document.getElementById('toggle_positions_off').style.display = 'block';
-            } else {
-                e.style.display = 'none';
-                document.getElementById('toggle_positions_on').style.display = 'block';
-                document.getElementById('toggle_positions_off').style.display = 'none';
-            }
-            return true;
-        }
-
-    </script>
+    <script src="{% static "js/libreborme.js" %}"></script>
 {% endblock %}
 
 {% block content %}
