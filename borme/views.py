@@ -35,14 +35,14 @@ def ajax_empresa_more(request, slug):
     else:
         cargos, show_more = company.get_cargos_historial(offset=offset)
         template = get_template('borme/tables/cargos_historial.html')
-    
-    next_offset = offset + settings.TABLE_OFFSET
+
+    next_offset = offset + settings.CARGOS_LIMIT
     next_ajax_url = reverse('borme-ajax-empresa', kwargs={'slug': slug}) + '?offset=' + str(next_offset) + '?t=' + t
 
     response = ""
     for cargo in cargos:
         response += template.render({'cargo': cargo})
-    
+
     if show_more:
         response += ('<tr id="vermascargos">'
                     '  <td class="text-center" colspan=4>'

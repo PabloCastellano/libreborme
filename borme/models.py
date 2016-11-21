@@ -157,7 +157,7 @@ class Company(Model):
         cargos_c = self.cargos_historial_c.copy()
         cargos_p = [dict(item, **{'type': 'person'}) for item in cargos_p]
         cargos_c = [dict(item, **{'type': 'company'}) for item in cargos_c]
-        cargos = sorted(cargos_p + cargos_c, key=lambda k: k['date_from'])
+        cargos = sorted(cargos_p + cargos_c, key=lambda k: k['date_to'])
 
         show_more = offset+limit < len(cargos)
         if limit == 0: limit = len(cargos)
