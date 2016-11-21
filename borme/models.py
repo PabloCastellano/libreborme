@@ -4,6 +4,7 @@ from django.utils.text import slugify
 from django.core.urlresolvers import reverse
 # from django.core.exceptions import FieldError
 from django.contrib.postgres.fields import ArrayField
+from django.conf import settings
 
 from django.db.models import *
 from bormeparser.regex import SOCIEDADES as SOCIEDADES_DICT
@@ -145,7 +146,11 @@ class Company(Model):
         cargos_p = [dict(item, **{'type': 'person'}) for item in cargos_p]
         cargos_c = [dict(item, **{'type': 'company'}) for item in cargos_c]
         cargos = sorted(cargos_p + cargos_c, key=lambda k: k['date_from'])
-        return cargos
+
+        show_more = offset+limit < len(cargos)
+        if limit == 0: limit = len(cargos)
+
+        return cargos[offset:offset+limit], show_more
 
     def get_cargos_historial(self, offset=0, limit=settings.CARGOS_LIMIT):
         cargos_p = self.cargos_historial_p.copy()
@@ -153,7 +158,11 @@ class Company(Model):
         cargos_p = [dict(item, **{'type': 'person'}) for item in cargos_p]
         cargos_c = [dict(item, **{'type': 'company'}) for item in cargos_c]
         cargos = sorted(cargos_p + cargos_c, key=lambda k: k['date_from'])
-        return cargos
+
+        show_more = offset+limit < len(cargos)
+        if limit == 0: limit = len(cargos)
+
+        return cargos[offset:offset+limit], show_more
 
     @property
     def todos_cargos_c(self):

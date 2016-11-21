@@ -8,6 +8,9 @@ from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404, HttpResponse
 from django.utils.safestring import mark_safe
+from django.core.urlresolvers import reverse
+from django.template.loader import get_template
+from django.conf import settings
 
 from .forms import LBSearchForm
 from .models import Company, Person, Anuncio, Config, Borme
@@ -19,6 +22,34 @@ from haystack.views import SearchView
 
 import datetime
 import csv
+
+
+def ajax_empresa_more(request, slug):
+    company = Company.objects.get(slug=slug)
+    offset = int(request.GET.get('offset', 0))
+    t = request.GET.get('t', 'actuales')
+
+    if t == 'actuales':
+        cargos, show_more = company.get_cargos_actuales(offset=offset)
+        template = get_template('borme/tables/cargos_actuales.html')
+    else:
+        cargos, show_more = company.get_cargos_historial(offset=offset)
+        template = get_template('borme/tables/cargos_historial.html')
+    
+    next_offset = offset + settings.TABLE_OFFSET
+    next_ajax_url = reverse('borme-ajax-empresa', kwargs={'slug': slug}) + '?offset=' + str(next_offset) + '?t=' + t
+
+    response = ""
+    for cargo in cargos:
+        response += template.render({'cargo': cargo})
+    
+    if show_more:
+        response += ('<tr id="vermascargos">'
+                    '  <td class="text-center" colspan=4>'
+                    '    <a href="#" onclick="javascript:moreData(\'{0}\',\'vermascargos\',\'tabla_cargos_actuales\');return false;">Ver más</a>'
+                    '  </td>'
+                    '</tr>').format(next_ajax_url)
+    return HttpResponse(response)
 
 
 @cache_page(3600)

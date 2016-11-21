@@ -1,5 +1,6 @@
 {% extends "borme/base.html" %}
 
+{% load staticfiles %}
 {% load utils %}
 
 {% block title %}{{ company.fullname }} | LibreBORME{% endblock %}
@@ -10,6 +11,7 @@
 {% endblock %}
 
 {% block javascript %}
+    <script src="{% static "js/libreborme.js" %}"></script>
     <script type="text/javascript">
         function toggle_positions() {
             console.log('toggle');
@@ -52,7 +54,7 @@
     <div id="positions">
     <div class="row">
     <div class="col-md-10">
-    {% if company.get_cargos_actuales %}
+    {% if company.get_cargos_actuales.0 %}
         <a href="{% url 'borme-empresa-csv-actual' company.name|slug2 %}" rel="nofollow" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
         <table class="table table-condensed">
             <thead>
@@ -64,9 +66,16 @@
                 </tr>
             </thead>
             <tbody id="tabla_cargos_actuales">
-            {% for cargo in company.get_cargos_actuales %}
+            {% for cargo in company.get_cargos_actuales.0 %}
                 {% include "borme/tables/cargos_actuales.html" %}
             {% endfor %}
+            {% if company.get_cargos_actuales.1 %}
+                <tr id="vermascargos1">
+                    <td class="text-center" colspan=4>
+                        <a href="#" onclick="javascript:moreData('{% url 'borme-ajax-empresa' company.slug %}?offset=2&t=actuales','vermascargos1','tabla_cargos_actuales');return false;">Ver más</a>
+                    </td>
+                </tr>
+            {% endif %}
             </tbody>
         </table>
     {% else %}
@@ -75,7 +84,7 @@
     </div>
     </div>
 
-    {% if company.get_cargos_historial %}
+    {% if company.get_cargos_historial.0 %}
     <a id="toggle_positions_on" href="#" onclick="toggle_positions();return false;" title="Mostrar cargos no vigentes"><i class="glyphicon glyphicon-chevron-right"></i> Mostrar cargos no vigentes</a>
     <a id="toggle_positions_off" style="display:none" href="#" onclick="toggle_positions();return false;" title="Esconder cargos no vigentes"><i class="glyphicon glyphicon-chevron-down"></i> Esconder cargos no vigentes</a>
 
@@ -93,9 +102,16 @@
                 </tr>
             </thead>
             <tbody id="tabla_cargos_historial">
-            {% for cargo in company.get_cargos_historial %}
+            {% for cargo in company.get_cargos_historial.0 %}
                 {% include "borme/tables/cargos_historial.html" %}
             {% endfor %}
+            {% if company.get_cargos_actuales.1 %}
+                <tr id="vermascargos2">
+                    <td class="text-center" colspan=4>
+                        <a href="#" onclick="javascript:moreData('{% url 'borme-ajax-empresa' company.slug %}?offset=2&t=historial','vermascargos2','tabla_cargos_historial');return false;">Ver más</a>
+                    </td>
+                </tr>
+            {% endif %}
             </tbody>
         </table>
     </div>
