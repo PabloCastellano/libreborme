@@ -2,7 +2,7 @@
 
 from django.utils.text import slugify
 from django.core.urlresolvers import reverse
-from django.core.exceptions import FieldError
+# from django.core.exceptions import FieldError
 from django.contrib.postgres.fields import ArrayField
 
 from django.db.models import *
@@ -60,11 +60,11 @@ class Person(Model):
     # number of visits
 
     def add_in_companies(self, company):
-        if not company in self.in_companies:
+        if company not in self.in_companies:
             self.in_companies.append(company)
 
     def add_in_bormes(self, borme):
-        if not borme in self.in_bormes:
+        if borme not in self.in_bormes:
             self.in_bormes.append(borme)
 
     def update_cargos_entrantes(self, cargos):
@@ -124,7 +124,7 @@ class Company(Model):
     cargos_historial_c = ArrayField(hstore.DictionaryField(), default=list)
 
     def add_in_bormes(self, borme):
-        if not borme in self.in_bormes:
+        if borme not in self.in_bormes:
             self.in_bormes.append(borme)
 
     @property
