@@ -141,33 +141,21 @@ class Company(Model):
 
     @property
     def cargos_actuales(self):
-        """ TODO: order by date"""
-        #next(map(lambda x: x.update({'type': 'person'}), self.cargos_actuales_p))
-        # sorted(c.cargos_actuales, key=lambda k: k['date_from'])
-        l = []
-        for cargo in self.cargos_actuales_p:
-            cargop = cargo
-            cargop['type'] = 'person'
-            l.append(cargop)
-        for cargo in self.cargos_actuales_c:
-            cargoc = cargo
-            cargoc['type'] = 'company'
-            l.append(cargoc)
-        return l
+        cargos_p = self.cargos_actuales_p.copy()
+        cargos_c = self.cargos_actuales_c.copy()
+        cargos_p = [dict(item, **{'type': 'person'}) for item in cargos_p]
+        cargos_c = [dict(item, **{'type': 'company'}) for item in cargos_c]
+        cargos = sorted(cargos_p + cargos_c, key=lambda k: k['date_from'])
+        return cargos
 
     @property
     def cargos_historial(self):
-        """ TODO: order by date"""
-        l = []
-        for cargo in self.cargos_historial_p:
-            cargop = cargo
-            cargop['type'] = 'person'
-            l.append(cargop)
-        for cargo in self.cargos_historial_c:
-            cargoc = cargo
-            cargoc['type'] = 'company'
-            l.append(cargoc)
-        return l
+        cargos_p = self.cargos_historial_p.copy()
+        cargos_c = self.cargos_historial_c.copy()
+        cargos_p = [dict(item, **{'type': 'person'}) for item in cargos_p]
+        cargos_c = [dict(item, **{'type': 'company'}) for item in cargos_c]
+        cargos = sorted(cargos_p + cargos_c, key=lambda k: k['date_from'])
+        return cargos
 
     @property
     def todos_cargos_c(self):
