@@ -36,7 +36,7 @@ def ajax_empresa_more(request, slug):
         cargos, show_more = company.get_cargos_historial(offset=offset)
         template = get_template('borme/tables/cargos_historial.html')
 
-    next_ajax_url = reverse('borme-ajax-empresa', kwargs={'slug': slug}) + '?offset=' + str(offset) + '?t=' + t
+    next_ajax_url = reverse('borme-ajax-empresa', kwargs={'slug': slug}) + '?offset=' + str(offset) + '&t=' + t
 
     response = ""
     for cargo in cargos:
