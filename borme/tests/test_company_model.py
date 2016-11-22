@@ -24,19 +24,19 @@ class TestCompanyModel(TestCase):
 
     def test_update_cargos(self):
         c = Company.objects.get(name='PATATAS JUAN SL')
-        self.assertEqual(c.get_cargos_actuales(), [])
-        self.assertEqual(c.get_cargos_historial(), [])
+        self.assertEqual(c.get_cargos_actuales()[0], [])
+        self.assertEqual(c.get_cargos_historial()[0], [])
 
         cargo_entrante = {'title': 't', 'name': 'n', 'date_from': today, 'type': 'company'}
 
         c.update_cargos_entrantes([cargo_entrante])
         self.assertEqual(c.cargos_actuales_c, [{'title': 't', 'name': 'n', 'date_from': today}])
         self.assertEqual(c.cargos_actuales_p, [])
-        self.assertEqual(c.get_cargos_historial(), [])
+        self.assertEqual(c.get_cargos_historial()[0], [])
 
         cargo_saliente = {'title': 't', 'name': 'n', 'date_to': tomorrow, 'type': 'company'}
 
         c.update_cargos_salientes([cargo_saliente])
-        self.assertEqual(c.get_cargos_actuales(), [])
+        self.assertEqual(c.get_cargos_actuales()[0], [])
         self.assertEqual(c.cargos_historial_p, [])
         self.assertEqual(c.cargos_historial_c, [{'title': 't', 'name': 'n', 'date_from': today, 'date_to': tomorrow}])

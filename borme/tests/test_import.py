@@ -33,8 +33,8 @@ class TestImport2(TestCase):
         companies = Company.objects.all()
         self.assertEqual(len(companies), 1)
         company = companies[0]
-        self.assertEqual(len(company.get_cargos_actuales(limit=0)), 2)
-        self.assertEqual(len(company.get_cargos_historial(limit=0)), 0)
+        self.assertEqual(len(company.get_cargos_actuales()[0]), 2)
+        self.assertEqual(len(company.get_cargos_historial()[0]), 0)
 
         json_path = os.path.join(THIS_PATH, 'files', '2_ceses.json')
         ret = import_borme_json(json_path)
@@ -42,8 +42,8 @@ class TestImport2(TestCase):
         companies = Company.objects.all()
         self.assertEqual(len(companies), 1)
         company = companies[0]
-        self.assertEqual(len(company.get_cargos_actuales(limit=0)), 0)
-        self.assertEqual(len(company.get_cargos_historial(limit=0)), 2)
+        self.assertEqual(len(company.get_cargos_actuales()[0]), 0)
+        self.assertEqual(len(company.get_cargos_historial()[0]), 2)
 
 
 class TestImport3(TestCase):
