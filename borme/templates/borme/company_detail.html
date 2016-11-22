@@ -53,9 +53,9 @@
                 {% include "borme/tables/cargos_actuales.html" %}
             {% endfor %}
             {% if company.get_cargos_actuales.1 %}
-                <tr id="vermascargos1">
+                <tr id="vermascargos_actuales">
                     <td class="text-center" colspan=4>
-                        <a href="#" onclick="javascript:moreData('{% url 'borme-ajax-empresa' company.slug %}?t=actuales','vermascargos1','tabla_cargos_actuales');return false;">Ver más</a>
+                        <a href="#" onclick="javascript:moreData('{% url 'borme-ajax-empresa' company.slug %}?t=actuales','vermascargos_actuales','tabla_cargos_actuales');return false;">Ver más</a>
                     </td>
                 </tr>
             {% endif %}
@@ -89,9 +89,9 @@
                 {% include "borme/tables/cargos_historial.html" %}
             {% endfor %}
             {% if company.get_cargos_actuales.1 %}
-                <tr id="vermascargos2">
+                <tr id="vermascargos_historial">
                     <td class="text-center" colspan=4>
-                        <a href="#" onclick="javascript:moreData('{% url 'borme-ajax-empresa' company.slug %}?t=historial','vermascargos2','tabla_cargos_historial');return false;">Ver más</a>
+                        <a href="#" onclick="javascript:moreData('{% url 'borme-ajax-empresa' company.slug %}?t=historial','vermascargos_historial','tabla_cargos_historial');return false;">Ver más</a>
                     </td>
                 </tr>
             {% endif %}

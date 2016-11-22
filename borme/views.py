@@ -36,18 +36,17 @@ def ajax_empresa_more(request, slug):
         cargos, show_more = company.get_cargos_historial(offset=offset)
         template = get_template('borme/tables/cargos_historial.html')
 
-    next_ajax_url = reverse('borme-ajax-empresa', kwargs={'slug': slug}) + '?offset=' + str(offset) + '&t=' + t
-
     response = ""
     for cargo in cargos:
         response += template.render({'cargo': cargo})
 
     if show_more:
-        response += ('<tr id="vermascargos">'
+        next_ajax_url = reverse('borme-ajax-empresa', kwargs={'slug': slug}) + '?offset=' + str(offset) + '&t=' + t
+        response += ('<tr id="vermascargos_{t}">'
                     '  <td class="text-center" colspan=4>'
-                    '    <a href="#" onclick="javascript:moreData(\'{0}\',\'vermascargos\',\'tabla_cargos_actuales\');return false;">Ver más</a>'
+                    '    <a href="#" onclick="javascript:moreData(\'{url}\',\'vermascargos_{t}\',\'tabla_cargos_{t}\');return false;">Ver más</a>'
                     '  </td>'
-                    '</tr>').format(next_ajax_url)
+                    '</tr>').format(t=t, url=next_ajax_url)
     return HttpResponse(response)
 
 
