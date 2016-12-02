@@ -10,12 +10,18 @@ services:
     - elasticsearch
 
 python:
+  - "3.5"
   - "3.4"
+
+env:
+ - DJANGO_VERSION=1.9.12
+ - DJANGO_VERSION=1.10.4
 
 install:
 #  - pip install coveralls
   - pip install -r requirements/test.txt
   - pip install django-extensions
+  - pip install -q Django==$DJANGO_VERSION
   - python setup.py -q develop
   - mkdir -p ~/.bormes/pdf/2015/02/10
   - wget https://www.boe.es/borme/dias/2015/02/10/pdfs/BORME-A-2015-27-10.pdf -O ~/.bormes/pdf/2015/02/10/BORME-A-2015-27-10.pdf
