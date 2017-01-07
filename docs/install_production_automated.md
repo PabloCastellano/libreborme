@@ -4,7 +4,7 @@ Esta sección describe cómo realizar una instalación de LibreBORME automatizad
 
 ## Advertencia
 
-> **Tanto este procedimiento como los playbooks de Ansible dejaron de ser mantenidos en marzo de 2016, por lo que seguramente no funcionará a día de hoy sin modificaciones. Se recomienda por tanto seguir la [instalación manual](installation).**
+> **Tanto esta página como los playbooks de Ansible dejaron de ser mantenidos en marzo de 2016, por lo que seguramente este procedimiento no funcionará a día de hoy sin modificaciones. Se recomienda por tanto seguir la [instalación manual](installation).**
 
 ## Prerrequisitos
 

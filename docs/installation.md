@@ -1,6 +1,6 @@
 # Instalación manual
 
-Estas instrucciones se han comprobado que funcionan en Ubuntu 16.04 64 bits. Para otras distribuciones el proceso debería ser similar.
+Estas instrucciones se han comprobado que funcionan en **Ubuntu 16.04 64 bits**. Para otras distribuciones el proceso debería ser similar.
 
 Instalación de las dependencias:
 

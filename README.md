@@ -40,7 +40,7 @@ La documentación más actualizada del proyecto se encuentra disponible en [http
 
 Es posible generarla localmente mediante mkdocs:
 
-    pip install -r requirements/docs.txt
+    pip install -r requirements/documentation.txt
     mkdocs build
 
 Contribuciones

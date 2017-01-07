@@ -14,13 +14,11 @@ Para más información puedes leer las siguientes entradas en el blog del autor:
 - [Qué es LibreBORME](https://pablog.me/blog/2015/02/que-es-libreborme/) - [What is LibreBORME](https://pablog.me/que-es-libreborme-en.html) (25 de febrero de 2015)
 - [Versión online de LibreBORME](https://pablog.me/blog/2015/03/version-online-de-libreborme/) (31 de marzo de 2015)
 
-# Memoria del proyecto
+## Memoria del proyecto
 
-La memoria del proyecto está disponible para su consulta bajo licencia [Creative Commons BY-SA 3.0 Spain](https://creativecommons.org/licenses/by-sa/3.0/es/).
+La [memoria del proyecto](https://libreborme.net/static/pdf/libreborme_memoria.pdf) está disponible para su consulta bajo licencia [Creative Commons BY-SA 3.0 Spain](https://creativecommons.org/licenses/by-sa/3.0/es/).
 
-[https://libreborme.net/static/pdf/libreborme_memoria.pdf](https://libreborme.net/static/pdf/libreborme_memoria.pdf)
-
-# Premios
+## Premios
 
 Este proyecto obtuvo el tercer premio en el [Certamen de Proyectos Libres de la UGR](http://osl.ugr.es/2014/09/26/premios-a-proyectos-libres-de-la-ugr/).
 
