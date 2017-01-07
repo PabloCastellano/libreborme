@@ -2,5 +2,5 @@
 Instalación
 -----------
 
-- Instalación manual: https://libreborme.readthedocs.org/es/latest/installation/
-- Instalación automatizada: https://libreborme.readthedocs.org/es/latest/install_production_automated/
+- Instalación manual (recomendada): https://libreborme.readthedocs.org/es/latest/installation/
+- Instalación automatizada (desactualizada): https://libreborme.readthedocs.org/es/latest/install_production_automated/
