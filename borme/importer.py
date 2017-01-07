@@ -162,6 +162,10 @@ def _import1(borme):
                     # not bormeparser.borme.BormeActoCargo
                     nuevo_anuncio.actos[acto.name] = acto.value
 
+                    if acto.name == 'Extinción':
+                        company.is_active = False
+                        company._finalizar_cargos(borme.date.isoformat())
+
             company.anuncios.append(anuncio.id)  # TODO: year
             company.date_updated = borme.date
             company.save()
@@ -318,7 +322,7 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
                     try:
                         bormes.append(bormeparser.parse(filepath, seccion))
                     except Exception as e:
-                        logger.error('[X] Error grave en bormeparser.parse(): %s' % filepath)
+                        logger.error('[X] Error grave (I) en bormeparser.parse(): %s' % filepath)
                         logger.error('[X] %s: %s' % (e.__class__.__name__, e))
                         if strict:
                             logger.error('[X] Una vez arreglado, reanuda la importación:')
@@ -337,7 +341,7 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
                         try:
                             bormes.append(bormeparser.Borme.from_json(filepath))
                         except Exception as e:
-                            logger.error('[X] Error grave en bormeparser.Borme.from_json(): %s' % filepath)
+                            logger.error('[X] Error grave (I) en bormeparser.Borme.from_json(): %s' % filepath)
                             logger.error('[X] %s: %s' % (e.__class__.__name__, e))
                             if strict:
                                 logger.error('[X] Una vez arreglado, reanuda la importación:')
@@ -350,7 +354,7 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
                         try:
                             bormes.append(bormeparser.parse(filepath, seccion))
                         except Exception as e:
-                            logger.error('[X] Error grave en bormeparser.parse(): %s' % filepath)
+                            logger.error('[X] Error grave (II) en bormeparser.parse(): %s' % filepath)
                             logger.error('[X] %s: %s' % (e.__class__.__name__, e))
                             if strict:
                                 logger.error('[X] Una vez arreglado, reanuda la importación:')
@@ -372,7 +376,7 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
                         try:
                             bormes.append(bormeparser.Borme.from_json(filepath))
                         except Exception as e:
-                            logger.error('[X] Error grave en bormeparser.Borme.from_json(): %s' % filepath)
+                            logger.error('[X] Error grave (II) en bormeparser.Borme.from_json(): %s' % filepath)
                             logger.error('[X] %s: %s' % (e.__class__.__name__, e))
 
             for borme in sorted(bormes):
@@ -440,7 +444,7 @@ def import_borme_pdf(filename, create_json=True):
             json_filepath = os.path.join(json_path, '%s.json' % borme.cve)
             borme.to_json(json_filepath)
     except Exception as e:
-        logger.error('[X] Error grave en bormeparser.parse(): %s' % filename)
+        logger.error('[X] Error grave (III) en bormeparser.parse(): %s' % filename)
         logger.error('[X] %s: %s' % (e.__class__.__name__, e))
 
     if not all(map(lambda x: x == 0, results.values())):
@@ -458,7 +462,7 @@ def import_borme_json(filename):
         borme = bormeparser.Borme.from_json(filename)
         results = _import1(borme)
     except Exception as e:
-        logger.error('[X] Error grave en bormeparser.Borme.from_json(): %s' % filename)
+        logger.error('[X] Error grave (III) en bormeparser.Borme.from_json(): %s' % filename)
         logger.error('[X] %s: %s' % (e.__class__.__name__, e))
 
     if not all(map(lambda x: x == 0, results.values())):

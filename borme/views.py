@@ -434,6 +434,7 @@ class CompanyView(CacheMixin, DetailView):
 
         context['companies'] = sorted(list(set(context['companies'])))
         context['persons'] = sorted(list(set(context['persons'])))
+        context['activity'] = 'Activa' if self.company.is_active else 'Inactiva'
         return context
 
 
