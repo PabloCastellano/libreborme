@@ -61,8 +61,8 @@ class TestImport3(TestCase):
         self.assertEqual(len(companies), 1)
         company = companies[0]
         self.assertEqual(company.name, 'EMPRESA TRES')
-        self.assertEqual(len(company.get_cargos_actuales(limit=0)), 1)
-        self.assertEqual(len(company.get_cargos_historial(limit=0)), 2)
+        self.assertEqual(len(company.get_cargos_actuales()[0]), 1)
+        self.assertEqual(len(company.get_cargos_historial()[0]), 2)
 
 
 class TestImport4(TestCase):
