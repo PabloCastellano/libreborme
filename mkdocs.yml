@@ -1,7 +1,7 @@
 site_name: Documentación de libreborme
 site_description: Documentación de libreborme
 site_author: Pablo Castellano
-copyright: © Copyright 2015-2016, Pablo Castellano
+copyright: © Copyright 2015-2017, Pablo Castellano
 repo_url: https://github.com/PabloCastellano/libreborme/
 pages:
 - ¡Bienvenido a la documentación de LibreBORME!: index.md
