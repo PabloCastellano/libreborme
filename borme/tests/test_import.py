@@ -1,5 +1,7 @@
 from borme.models import Anuncio, Borme, Company
 from borme.importer import import_borme_pdf, import_borme_json
+
+import datetime
 import os
 
 from django.test import TestCase
@@ -76,5 +78,7 @@ class TestImport4(TestCase):
         self.assertEqual(len(companies), 1)
         company = companies[0]
         self.assertEqual(company.name, 'EMPRESA EXTINGUIDA')
+        self.assertEqual(company.is_active, False)
+        self.assertEqual(company.date_extinction, datetime.date(2015, 1, 4))
         self.assertEqual(len(company.get_cargos_actuales()[0]), 0)
         self.assertEqual(len(company.get_cargos_historial()[0]), 1)
