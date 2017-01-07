@@ -23,7 +23,8 @@
 
     <p>
     <strong>Empresas relacionadas:</strong> {{ companies|length }}<br/>
-    <strong>Personas relacionadas:</strong> {{ persons|length }}
+    <strong>Personas relacionadas:</strong> {{ persons|length }}<br/>
+    <strong>Situación mercantil:</strong> {{ activity }}
     </p>
 
 {% comment %}
@@ -62,7 +63,11 @@
             </tbody>
         </table>
     {% else %}
+        {% if company.is_active %}
         <i>No hay datos</i> <a href="#" data-toggle="modal" data-target="#myModal">[?]</a>
+        {% else %}
+        <i>La sociedad está inactiva.</i>
+        {% endif %}
     {% endif %}
     </div>
     </div>

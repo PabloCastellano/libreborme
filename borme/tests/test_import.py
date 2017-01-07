@@ -47,7 +47,7 @@ class TestImport2(TestCase):
 
 
 class TestImport3(TestCase):
-
+    
     def test_nombramientos_ceses(self):
         companies = Company.objects.all()
         self.assertEqual(len(companies), 0)
@@ -61,3 +61,20 @@ class TestImport3(TestCase):
         self.assertEqual(company.name, 'EMPRESA TRES')
         self.assertEqual(len(company.get_cargos_actuales(limit=0)), 1)
         self.assertEqual(len(company.get_cargos_historial(limit=0)), 2)
+
+
+class TestImport4(TestCase):
+    
+    def test_extincion(self):
+        companies = Company.objects.all()
+        self.assertEqual(len(companies), 0)
+
+        json_path = os.path.join(THIS_PATH, 'files', '4_extincion.json')
+        ret = import_borme_json(json_path)
+        self.assertTrue(ret)
+        companies = Company.objects.all()
+        self.assertEqual(len(companies), 1)
+        company = companies[0]
+        self.assertEqual(company.name, 'EMPRESA EXTINGUIDA')
+        self.assertEqual(len(company.get_cargos_actuales()[0]), 0)
+        self.assertEqual(len(company.get_cargos_historial()[0]), 1)

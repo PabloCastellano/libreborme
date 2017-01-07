@@ -112,7 +112,7 @@ class Company(Model):
     nif = CharField(max_length=10)
     slug = CharField(max_length=260, primary_key=True)
     date_creation = DateField(blank=True, null=True)
-    is_active = BooleanField(default=False)
+    is_active = BooleanField(default=True)
     type = CharField(max_length=50, choices=SOCIEDADES)
 
     date_updated = DateField(db_index=True)
@@ -219,6 +219,22 @@ class Company(Model):
             else:
                 raise ValueError('type: invalid value')
 
+    def _finalizar_cargos(self, date):
+        """ Se llama a este método cuando una sociedad se extingue.
+            Todos los cargos vigentes pasan a estar en la lista de cargos cesados.
+            date: str iso format
+        """
+        for cargo in self.cargos_actuales_c:
+            cargo['date_to'] = date
+            self.cargos_historial_c.append(cargo)
+            
+        for cargo in self.cargos_actuales_p:
+            cargo['date_to'] = date
+            self.cargos_historial_p.append(cargo)
+        
+        self.cargos_actuales_c = []
+        self.cargos_actuales_p = []
+            
     def get_absolute_url(self):
         return reverse('borme-empresa', args=[str(self.slug)])
 
