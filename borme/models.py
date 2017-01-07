@@ -112,6 +112,7 @@ class Company(Model):
     nif = CharField(max_length=10)
     slug = CharField(max_length=260, primary_key=True)
     date_creation = DateField(blank=True, null=True)
+    date_extinction = DateField(blank=True, null=True)
     is_active = BooleanField(default=True)
     type = CharField(max_length=50, choices=SOCIEDADES)
 

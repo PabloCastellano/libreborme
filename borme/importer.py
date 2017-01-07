@@ -164,6 +164,7 @@ def _import1(borme):
 
                     if acto.name == 'Extinción':
                         company.is_active = False
+                        company.date_extinction = borme.date
                         company._finalizar_cargos(borme.date.isoformat())
 
             company.anuncios.append(anuncio.id)  # TODO: year
