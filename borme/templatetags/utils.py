@@ -3,6 +3,7 @@
 from django.template.defaulttags import register
 from django.utils.text import slugify
 
+from borme.utils import slug2 as borme_slug2
 from bormeparser.regex import is_acto_cargo as func_acto_cargo
 from bormeparser.regex import regex_empresa_tipo
 
@@ -120,8 +121,7 @@ def slug(val):
 
 @register.filter
 def slug2(val):
-    empresa, _ = regex_empresa_tipo(val)
-    return slugify(empresa)
+    return borme_slug2(val)
 
 
 @register.filter
