@@ -83,6 +83,18 @@ class Person(Model):
                     break
             self.cargos_historial.append(cargo)
 
+    def _cesar_cargo(self, company, date):
+        """ Se llama a este método cuando una sociedad se extingue.
+            Todos los cargos vigentes que ocupe en la sociedad extinguida pasan a estar en la lista de cargos cesados.
+            company: str
+            date: str iso format
+        """
+        for cargo in self.cargos_actuales:
+            if cargo['name'] == company:
+                self.cargos_actuales.remove(cargo)
+                cargo['date_to'] = date
+                self.cargos_historial.append(cargo)
+
     @property
     def total_companies(self):
         return len(self.in_companies)
@@ -219,23 +231,18 @@ class Company(Model):
                 self.cargos_historial_p.append(cargo_embed)
             else:
                 raise ValueError('type: invalid value')
-
-    def _finalizar_cargos(self, date):
-        """ Se llama a este método cuando una sociedad se extingue.
-            Todos los cargos vigentes pasan a estar en la lista de cargos cesados.
+            
+    def _cesar_cargo(self, company, date):
+        """
+            company: str
             date: str iso format
         """
         for cargo in self.cargos_actuales_c:
-            cargo['date_to'] = date
-            self.cargos_historial_c.append(cargo)
-            
-        for cargo in self.cargos_actuales_p:
-            cargo['date_to'] = date
-            self.cargos_historial_p.append(cargo)
+            if cargo['name'] == company:
+                self.cargos_actuales_c.remove(cargo)
+                cargo['date_to'] = date
+                self.cargos_historial_c.append(cargo)
         
-        self.cargos_actuales_c = []
-        self.cargos_actuales_p = []
-            
     def get_absolute_url(self):
         return reverse('borme-empresa', args=[str(self.slug)])
 

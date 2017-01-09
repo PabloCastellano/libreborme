@@ -163,9 +163,7 @@ def _import1(borme):
                     nuevo_anuncio.actos[acto.name] = acto.value
 
                     if acto.name == 'Extinción':
-                        company.is_active = False
-                        company.date_extinction = borme.date
-                        company._finalizar_cargos(borme.date.isoformat())
+                        extinguir_sociedad(company, borme.date)
 
             company.anuncios.append(anuncio.id)  # TODO: year
             company.date_updated = borme.date
@@ -186,6 +184,35 @@ def _import1(borme):
     borme_log.date_parsed = timezone.now()
     borme_log.save()
     return results
+
+
+def extinguir_sociedad(company, date):
+    """ Se llama a esta función cuando una sociedad se extingue.
+        Todos los cargos vigentes pasan a la lista de cargos cesados (historial).
+        Modifica los modelos Company y Person.
+        company: Company object
+        date: datetime.date object
+    """
+    company.is_active = False
+    company.date_extinction = date
+
+    for cargo in company.cargos_actuales_c:
+        cargo['date_to'] = date.isoformat()
+        company.cargos_historial_c.append(cargo)
+        c_cesada = Company.objects.get(slug=slug2(cargo['name']))
+        c_cesada._cesar_cargo(company.fullname, date.isoformat())
+        c_cesada.save()
+
+    for cargo in company.cargos_actuales_p:
+        cargo['date_to'] = date.isoformat()
+        company.cargos_historial_p.append(cargo)
+        p_cesada = Person.objects.get(slug=slug2(cargo['name']))
+        p_cesada._cesar_cargo(company.fullname, date.isoformat())
+        p_cesada.save()
+
+    company.cargos_actuales_c = []
+    company.cargos_actuales_p = []
+    company.save()
 
 
 def get_borme_xml_filepath(date):
