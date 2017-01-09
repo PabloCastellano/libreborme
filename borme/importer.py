@@ -1,4 +1,5 @@
 from .models import Company, Borme, Anuncio, Person, BormeLog
+from .utils import slug2
 
 from django.conf import settings
 from django.utils.text import slugify
