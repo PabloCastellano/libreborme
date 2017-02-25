@@ -1,21 +1,135 @@
-<ul>
-{% for alerta in alertas_a %}
-    <li>{{ alerta }}</li>
-{% endfor %}
-</ul>
+{% extends "alertas/base_dashboard.html" %}
+
+{% block content %}
+
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li><a href="{% url 'dashboard-index' %}">Overview <span class="sr-only">(current)</span></a></li>
+            <li class="active"><a href="{% url 'alertas-list' %}">Alertas</a></li>
+            <li><a href="{% url 'alertas-billing' %}">Facturación</a></li>
+          </ul>
+        </div>
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Alertas</h1>
+
+          <p>Aquí puedes definir tus alertas de LibreBORME</p>
+
+          <div class="row placeholders">
+
+          </div>
+
+          <h2 class="sub-header">Alertas de empresas</h2>
+          <div class="table-responsive">
+            <a href="#">Añadir nueva alerta</a>
+
+            {% if alertas_c %}
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Empresa</th>
+                  <th>Enviar HTML</th>
+                  <th>Activa</th>
+                </tr>
+              </thead>
+              <tbody>
+            {% for alerta in alertas_c %}
+                <tr>
+                  <td>{{ alerta.id }}</td>
+                  <td>{{ alerta.company }}</td>
+                  <td>{{ alerta.send_html }}</td>
+                  <td>{{ alerta.is_enabled }}</td>
+                </tr>
+            {% endfor %}
+              </tbody>
+            </table>
+            {% endif %}
+
+          </div>
 
 
-<ul>
-{% for alerta in alertas_c %}
-    <li>{{ alerta }}</li>
-{% endfor %}
-</ul>
+          <h2 class="sub-header">Alertas de personas</h2>
+          <div class="table-responsive">
+            <a href="#">Añadir nueva alerta</a>
 
-<ul>
-{% for alerta in alertas_p %}
-    <li>{{ alerta }}</li>
-{% endfor %}
-</ul>
+            {% if alertas_p %}
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Persona</th>
+                  <th>Enviar HTML</th>
+                  <th>Activa</th>
+                </tr>
+              </thead>
+              <tbody>
+            {% for alerta in alertas_p %}
+                <tr>
+                  <td>{{ alerta.id }}</td>
+                  <td>{{ alerta.person }}</td>
+                  <td>{{ alerta.send_html }}</td>
+                  <td>{{ alerta.is_enabled }}</td>
+                </tr>
+            {% endfor %}
+              </tbody>
+            </table>
+            {% endif %}
 
-<a href="#">Añadir nueva alerta</a>
-<a href="{% url 'logout' %}">Log out</a>
+          </div>
+
+
+          <h2 class="sub-header">Alertas de actos mercantiles</h2>
+          <div class="table-responsive">
+            <a href="#" data-toggle="modal" data-target="#login-modal">Añadir nueva alerta</a>
+
+            {% if alertas_a %}
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Evento</th>
+                  <th>Provincia</th>
+                  <th>Periodicidad</th>
+                  <th>Enviar HTML</th>
+                  <th>Activada</th>
+                </tr>
+              </thead>
+              <tbody>
+            {% for alerta in alertas_a %}
+                <tr>
+                  <td>{{ alerta.id }}</td>
+                  <td>{{ alerta.get_evento_display }}</td>
+                  <td>{{ alerta.get_provincia_display }}</td>
+                  <td>{{ alerta.get_periodicidad_display }}</td>
+                  <td>{{ alerta.send_html }}</td>
+                  <td>{{ alerta.is_enabled }}</td>
+                </tr>
+            {% endfor %}
+            
+              </tbody>
+            </table>
+            {% endif %}
+          </div>
+        </div>
+
+
+
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+
+    	  <div class="modal-dialog">
+				<div class="loginmodal-container">
+					<h1>Login to Your Account</h1><br>
+				  <form>
+					<input type="text" name="user" placeholder="Username">
+					<input type="password" name="pass" placeholder="Password">
+					<input type="submit" name="login" class="login loginmodal-submit" value="Login">
+				  </form>
+					
+				  <div class="login-help">
+					<a href="#">Register</a> - <a href="#">Forgot Password</a>
+				  </div>
+				</div>
+			</div>
+		  </div>
+{% endblock %}

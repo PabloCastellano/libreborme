@@ -1,1 +1,22 @@
-{% block content %}{% endblock %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="http://getbootstrap.com/favicon.ico">
+
+    <title>Libreborme - Alertas</title>
+
+    <link href="{% static "css/dashboard_login.css" %}" rel="stylesheet">
+
+  </head>
+
+  {% block content %}{% endblock %}
+
+</body>
+</html>

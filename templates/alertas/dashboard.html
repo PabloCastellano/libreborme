@@ -1,0 +1,36 @@
+{% extends "alertas/base_dashboard.html" %}
+
+{% block content %}
+
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="{% url 'dashboard-index' %}">Overview <span class="sr-only">(current)</span></a></li>
+            <li><a href="{% url 'alertas-list' %}">Alertas</a></li>
+            <li><a href="{% url 'alertas-billing' %}">Facturación</a></li>
+          </ul>
+        </div>
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Dashboard</h1>
+
+          <h2 class="sub-header">Cuenta</h2>
+          <p>Tipo de cuenta: <span>{{ user.profile.get_account_type_display }}</span> (hasta <span>XX/XX/XXXX</span>)</p>
+          <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" class="img-responsive" alt="Generic placeholder thumbnail" width="200" height="200">
+              <h4>Label</h4>
+              <span class="text-muted">Something else</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" class="img-responsive" alt="Generic placeholder thumbnail" width="200" height="200">
+              <h4>Label</h4>
+              <span class="text-muted">Something else</span>
+            </div>
+          
+          </div>
+
+          <h2 class="sub-header">Alertas</h2>
+          <p>Tienes <span>{{ n_alertas }}</span> alerta{{ n_alertas|pluralize }} definida{{ n_alertas|pluralize }}.
+          
+        </div>
+{% endblock %}
