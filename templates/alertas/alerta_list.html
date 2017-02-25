@@ -1,0 +1,21 @@
+<ul>
+{% for alerta in alertas_a %}
+    <li>{{ alerta }}</li>
+{% endfor %}
+</ul>
+
+
+<ul>
+{% for alerta in alertas_c %}
+    <li>{{ alerta }}</li>
+{% endfor %}
+</ul>
+
+<ul>
+{% for alerta in alertas_p %}
+    <li>{{ alerta }}</li>
+{% endfor %}
+</ul>
+
+<a href="#">Añadir nueva alerta</a>
+<a href="{% url 'logout' %}">Log out</a>
