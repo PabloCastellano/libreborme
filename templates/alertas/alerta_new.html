@@ -1,13 +1,33 @@
-Forms:
+{% extends "alertas/base_dashboard.html" %}
+{% load bootstrap %}
 
-<table>
-{{ form_c }}
-</table>
+{% block content %}
 
-<table>
-{{ form_p }}
-</table>
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li><a href="{% url 'dashboard-index' %}">Overview <span class="sr-only">(current)</span></a></li>            
+            <li class="active"><a href="{% url 'alertas-list' %}">Alertas</a></li>
+            <li><a href="{% url 'alertas-billing' %}">Facturación</a></li>
+          </ul>
+        </div>
 
-<table>
-{{ form_a }}
-</table>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Nueva alerta</h1>
+
+          <div class="table-responsive">
+
+            <table>
+            {{ form_c|bootstrap }}
+            </table>
+<hr>
+            <table>
+            {{ form_p|bootstrap }}
+            </table>
+<hr>
+            <table>
+            {{ form_a|bootstrap }}
+            </table>
+          </div>
+        </div>
+{% endblock %}
+

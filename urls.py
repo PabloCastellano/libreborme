@@ -7,8 +7,8 @@ urlpatterns = [
     url(r'^alertas/list/$', views.AlertaListView.as_view(), name='alertas-list'),
     url(r'^alertas/billing/$', views.BillingView.as_view(), name='alertas-billing'),
     url(r'^alertas/new/$', views.alerta_create, name='alertas-index'),
+    url(r'^alertas/new/acto/$', views.alerta_acto_create, name='alertas-new-acto'),
     url(r'^alertas/(?P<id>\d+)/$', views.AlertaDetailView.as_view(), name='alertas-detail'),
-#    url(r'^$', views.alertas_index, name='alertas-index'),
 #    url(r'^(?P<id>\d+)/$', views.alertas_view, name='alertas-detail'),
 
     # Add Django site authentication urls (for login, logout, password management)
