@@ -20,6 +20,20 @@ class AlertaActoAdmin(admin.ModelAdmin):
     search_fields = ['user', 'provincia', 'is_enabled']
 
 
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'account_type')
+    list_filter = ('user', 'account_type')
+    search_fields = ['user', 'account_type']
+
+
+class LBInvoiceAdmin(admin.ModelAdmin):
+    list_display = ('user', 'start_date', 'end_date', 'amount', 'payment_type', 'is_paid')
+    list_filter = ('user', 'payment_type')
+    search_fields = ['user', 'payment_type', 'is_paid']
+
+
 admin.site.register(models.AlertaCompany, AlertaCompanyAdmin)
 admin.site.register(models.AlertaPerson, AlertaPersonAdmin)
 admin.site.register(models.AlertaActo, AlertaActoAdmin)
+admin.site.register(models.Profile, ProfileAdmin)
+admin.site.register(models.LBInvoice, LBInvoiceAdmin)
