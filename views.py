@@ -54,11 +54,31 @@ class AlertaListView(TemplateView):
         context['alertas_c'] = AlertaCompany.objects.filter(user=self.request.user)
         context['alertas_p'] = AlertaPerson.objects.filter(user=self.request.user)
         context['alertas_a'] = AlertaActo.objects.filter(user=self.request.user)
-        context['form_c'] = forms.AlertaCompanyForm()
-        context['form_p'] = forms.AlertaPersonForm()
+        context['form_c'] = forms.AlertaCompanyModelForm()
+        context['form_p'] = forms.AlertaPersonModelForm()
         context['form_a'] = forms.AlertaActoModelForm()
         context['breadcrumb'] = 'TODO BREADCRUMB'
         return context
+
+
+def alerta_person_create(request):
+    if request.method == 'POST':
+        form = forms.AlertaPersonModelForm(request.POST)
+        if form.is_valid():
+            alerta = form.save(commit=False)
+            alerta.user = request.user
+            alerta.save()
+    return redirect(reverse('alertas-list'))
+
+
+def alerta_company_create(request):
+    if request.method == 'POST':
+        form = forms.AlertaCompanyModelForm(request.POST)
+        if form.is_valid():
+            alerta = form.save(commit=False)
+            alerta.user = request.user
+            alerta.save()
+    return redirect(reverse('alertas-list'))
 
 
 def alerta_acto_create(request):
@@ -77,8 +97,8 @@ def alerta_acto_create(request):
 @login_required
 def alerta_create(request):
     context = {}
-    context['form_c'] = forms.AlertaCompanyForm()
-    context['form_p'] = forms.AlertaPersonForm()
+    context['form_c'] = forms.AlertaCompanyModelForm()
+    context['form_p'] = forms.AlertaPersonModelForm()
     context['form_a'] = forms.AlertaActoModelForm()
 
     return render(request, 'alertas/alerta_new.html', context)

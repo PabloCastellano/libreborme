@@ -23,7 +23,7 @@
 
           <h2 class="sub-header">Alertas de empresas</h2>
           <div class="table-responsive">
-            <a href="#">Añadir nueva alerta</a>
+            <a href="#" data-toggle="modal" data-target="#alerta-company-modal">Añadir nueva alerta</a>
 
             {% if alertas_c %}
             <table class="table table-striped">
@@ -53,7 +53,7 @@
 
           <h2 class="sub-header">Alertas de personas</h2>
           <div class="table-responsive">
-            <a href="#">Añadir nueva alerta</a>
+            <a href="#" data-toggle="modal" data-target="#alerta-person-modal">Añadir nueva alerta</a>
 
             {% if alertas_p %}
             <table class="table table-striped">
@@ -83,7 +83,7 @@
 
           <h2 class="sub-header">Alertas de actos mercantiles</h2>
           <div class="table-responsive">
-            <a href="#" data-toggle="modal" data-target="#login-modal">Añadir nueva alerta</a>
+            <a href="#" data-toggle="modal" data-target="#alerta-acto-modal">Añadir nueva alerta</a>
 
             {% if alertas_a %}
             <table class="table table-striped">
@@ -115,7 +115,38 @@
           </div>
         </div>
 
-<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+
+<div class="modal fade" id="alerta-person-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="loginmodal-container">
+      <form action="{% url "alertas-new-person" %}" role="form" method="post">
+        <legend>Añadir una nueva Alerta</legend>
+          {% csrf_token %}
+          {{ form_p|bootstrap }}
+          <div class="form-group">
+            <input type="submit" name="create" class="login loginmodal-submit" value="Crear">
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="alerta-company-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="loginmodal-container">
+      <form action="{% url "alertas-new-company" %}" role="form" method="post">
+        <legend>Añadir una nueva Alerta</legend>
+          {% csrf_token %}
+          {{ form_c|bootstrap }}
+          <div class="form-group">
+            <input type="submit" name="create" class="login loginmodal-submit" value="Crear">
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="alerta-acto-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
   <div class="modal-dialog">
     <div class="loginmodal-container">
       <form action="{% url "alertas-new-acto" %}" role="form" method="post">
