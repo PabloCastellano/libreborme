@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 from borme.models import Company, Person
 
@@ -65,10 +66,11 @@ PERIODICIDAD_CHOICES = (
     ('D', 'Diario')
 )
 
-ACCOUNT_CHOICES = {
-    ('F', "Free"),
-    ('P', "Premium")
-}
+ACCOUNT_CHOICES = (
+    ('free', "Gratuita"),
+    ('paid', "Premium"),
+    ('test', "Período de prueba"),
+)
 
 PAYMENT_CHOICES = (
     ('Paypal', "Paypal"),
@@ -128,7 +130,7 @@ class AlertaActo(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    account_type = models.CharField(max_length=1, choices=ACCOUNT_CHOICES)
+    account_type = models.CharField(max_length=4, choices=ACCOUNT_CHOICES)
     notification_method = models.CharField(max_length=1, choices=NOTIFICATION_CHOICES, default='E')
     notification_email = models.EmailField(blank=True)
     notification_url = models.URLField(blank=True)
@@ -160,9 +162,22 @@ class LBInvoice(models.Model):
     description = models.CharField(max_length=2000, blank=True)
     nif = models.CharField(max_length=20)
     
+    def get_absolute_url(self):
+        return reverse('alertas-invoice-view', args=[str(self.id)])
+
     def __str__(self):
         return "LBInvoice ({}): {}. Pagada: {}".format(self.user, self.amount, self.is_paid)
 
+
+class AlertasConfig(models.Model):
+    key = models.CharField(max_length=30, primary_key=True)
+    value = models.CharField(max_length=100)
+
+    def __str__(self):
+        return "{}: {}".format(self.key, self.value)
+
+
+# max_alertas_free_company
 
 # Tipos de alerta:
 #    - Sale una empresa a la que está suscrita (suscripción por empresa)

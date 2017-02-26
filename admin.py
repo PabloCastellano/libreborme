@@ -32,8 +32,14 @@ class LBInvoiceAdmin(admin.ModelAdmin):
     search_fields = ['user', 'payment_type', 'is_paid']
 
 
+class AlertasConfigAdmin(admin.ModelAdmin):
+    list_display = ('key', 'value')
+    search_fields = ['key']
+    
+
 admin.site.register(models.AlertaCompany, AlertaCompanyAdmin)
 admin.site.register(models.AlertaPerson, AlertaPersonAdmin)
 admin.site.register(models.AlertaActo, AlertaActoAdmin)
 admin.site.register(models.Profile, ProfileAdmin)
 admin.site.register(models.LBInvoice, LBInvoiceAdmin)
+admin.site.register(models.AlertasConfig, AlertasConfigAdmin)

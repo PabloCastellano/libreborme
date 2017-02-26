@@ -9,16 +9,19 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.contrib.auth.models import User
 
-from .models import AlertaActo, AlertaCompany, AlertaPerson, LBInvoice, Profile
+from .models import AlertaActo, AlertaCompany, AlertaPerson, AlertasConfig, LBInvoice, Profile
 from . import forms
+import datetime
+
+from .utils import get_alertas_config
 
 
 @method_decorator(login_required, name='dispatch')
-class DashboardView(TemplateView):
+class DashboardIndexView(TemplateView):
     template_name = 'alertas/dashboard.html'
 
     def get_context_data(self, **kwargs):
-        context = super(DashboardView, self).get_context_data(**kwargs)
+        context = super(DashboardIndexView, self).get_context_data(**kwargs)
 
         context['active'] = 'dashboard'
 
@@ -27,9 +30,15 @@ class DashboardView(TemplateView):
         context['count_a'] = AlertaActo.objects.filter(user=self.request.user).count()
         context['n_alertas'] = context['count_c'] + context['count_p'] + context['count_a']
 
-        context['limite_c'] = 5
-        context['limite_p'] = 5
-        context['limite_a'] = 5
+        today = datetime.date.today()
+        context['subscriptions'] = LBInvoice.objects.filter(user=self.request.user, end_date__gt=today)
+
+        alertas_config = get_alertas_config()
+        account_type = self.request.user.profile.account_type
+
+        context['limite_c'] = alertas_config['max_alertas_company_' + account_type]
+        context['limite_p'] = alertas_config['max_alertas_person_' + account_type]
+        context['limite_a'] = alertas_config['max_alertas_actos_' + account_type]
         return context
 
 
@@ -119,13 +128,16 @@ class AlertaListView(TemplateView):
         context['count_p'] = context['alertas_p'].count()
         context['count_a'] = context['alertas_a'].count()
 
-        context['limite_c'] = 5
-        context['limite_p'] = 5
-        context['limite_a'] = 5
+        alertas_config = get_alertas_config()
+        account_type = self.request.user.profile.account_type
 
-        context['restantes_c'] = context['limite_c'] - context['count_c']
-        context['restantes_p'] = context['limite_p'] - context['count_p']
-        context['restantes_a'] = context['limite_a'] - context['count_a']
+        context['limite_c'] = alertas_config['max_alertas_company_' + account_type]
+        context['limite_p'] = alertas_config['max_alertas_person_' + account_type]
+        context['limite_a'] = alertas_config['max_alertas_actos_' + account_type]
+
+        context['restantes_c'] = int(context['limite_c']) - context['count_c']
+        context['restantes_p'] = int(context['limite_p']) - context['count_p']
+        context['restantes_a'] = int(context['limite_a']) - context['count_a']
 
         context['active'] = 'alertas'
         return context

@@ -3,7 +3,7 @@ from django.conf.urls import url, include
 from . import views
 
 urlpatterns = [
-    url(r'^alertas/$', views.DashboardView.as_view(), name='dashboard-index'),
+    url(r'^alertas/$', views.DashboardIndexView.as_view(), name='dashboard-index'),
     url(r'^alertas/list/$', views.AlertaListView.as_view(), name='alertas-list'),
     url(r'^alertas/billing/$', views.BillingView.as_view(), name='alertas-billing'),
     url(r'^alertas/billing/(?P<id>\d+)/$', views.BillingDetailView.as_view(), name='alertas-invoice-view'),

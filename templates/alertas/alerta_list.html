@@ -39,7 +39,7 @@
 
           <h2 class="sub-header">Alertas de empresas (restantes: {{ restantes_c }})</h2>
           <div class="table-responsive">
-            {% if count_c < limite_c %}
+            {% if restantes_c > 0 %}
             <a href="#" data-toggle="modal" data-target="#alerta-company-modal">Añadir nueva alerta</a>
             {% endif %}
 
@@ -82,7 +82,7 @@
 
           <h2 class="sub-header">Alertas de personas (restantes: {{ restantes_p }})</h2>
           <div class="table-responsive">
-            {% if count_p < limite_p %}
+            {% if restantes_p > 0 %}
             <a href="#" data-toggle="modal" data-target="#alerta-person-modal">Añadir nueva alerta</a>
             {% endif %}
             {% if alertas_p %}
@@ -124,7 +124,7 @@
 
           <h2 class="sub-header">Alertas de actos mercantiles (restantes: {{ restantes_a }})</h2>
           <div class="table-responsive">
-            {% if count_a < limite_a %}
+            {% if restantes_a > 0 %}
             <a href="#" data-toggle="modal" data-target="#alerta-acto-modal">Añadir nueva alerta</a>
             {% endif %}
             {% if alertas_a %}
