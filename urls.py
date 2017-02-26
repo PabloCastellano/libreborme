@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^alertas/$', views.DashboardView.as_view(), name='dashboard-index'),
     url(r'^alertas/list/$', views.AlertaListView.as_view(), name='alertas-list'),
     url(r'^alertas/billing/$', views.BillingView.as_view(), name='alertas-billing'),
+    url(r'^alertas/billing/(?P<id>\d+)/$', views.BillingDetailView.as_view(), name='alertas-invoice-view'),
     url(r'^alertas/new/$', views.alerta_create, name='alertas-index'),
     url(r'^alertas/new/acto/$', views.alerta_acto_create, name='alertas-new-acto'),
     url(r'^alertas/new/person/$', views.alerta_person_create, name='alertas-new-person'),

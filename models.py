@@ -158,7 +158,8 @@ class LBInvoice(models.Model):
     address = models.CharField(max_length=200)
     is_paid = models.BooleanField()
     description = models.CharField(max_length=2000, blank=True)
-
+    nif = models.CharField(max_length=20)
+    
     def __str__(self):
         return "LBInvoice ({}): {}. Pagada: {}".format(self.user, self.amount, self.is_paid)
 

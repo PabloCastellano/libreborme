@@ -1,21 +1,11 @@
 {% extends "alertas/base_dashboard.html" %}
+{% load staticfiles %}
 
 {% block content %}
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Facturación</h1>
+          <h1 class="page-header">Listado de facturas</h1>
 
-          <div class="row placeholders">
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" class="img-responsive" alt="Generic placeholder thumbnail" width="200" height="200">
-              <h4>Label</h4>
-              <span class="text-muted">Billing</span>
-            </div>
-            <p>Suscripción hasta:</p>
-          
-          </div>
-
-          <h2 class="sub-header">Facturas</h2>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
@@ -26,6 +16,7 @@
                   <th>Cantidad</th>
                   <th>Forma de pago</th>
                   <th>Pagado</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -42,6 +33,11 @@
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     {% endif %}
                   </td>
+                  <td>
+                    <button type="button" class="btn btn-primary btn-xs">
+                      <a href="{% url 'alertas-invoice-view' invoice.id %}"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Ver</a>
+                    </button>
+                  </td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -50,3 +46,7 @@
         </div>
 {% endblock %}
 
+
+{% block extrastyles %}
+    <link href="{% static "css/dashboard_form.css" %}" rel="stylesheet">
+{% endblock %}

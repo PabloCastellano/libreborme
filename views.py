@@ -65,6 +65,20 @@ class BillingView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
+class BillingDetailView(DetailView):
+    model = LBInvoice
+    
+    def get_object(self):
+        self.invoice = LBInvoice.objects.get(user=self.request.user, pk=self.kwargs['id'])
+        return self.invoice
+
+    def get_context_data(self, **kwargs):
+        context = super(BillingDetailView, self).get_context_data(**kwargs)
+        context['active'] = 'billing'
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
 class AlertaDetailView(DetailView):
     model = AlertaActo
     context_object_name = 'alerta'
@@ -73,10 +87,6 @@ class AlertaDetailView(DetailView):
         self.alerta = AlertaActo.objects.get(pk=self.kwargs['id'])
         return self.alerta
 
-    def get_context_data(self, **kwargs):
-        context = super(AlertaDetailView, self).get_context_data(**kwargs)
-        context['breadcrumb'] = 'TODO BREADCRUMB'
-        return context
 
 
 @method_decorator(login_required, name='dispatch')
