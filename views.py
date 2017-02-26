@@ -75,6 +75,16 @@ class DashboardSettingsView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
+class DashboardHistoryView(TemplateView):
+    template_name = 'alertas/dashboard_history.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DashboardHistoryView, self).get_context_data(**kwargs)
+        context['active'] = 'history'
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
 class BillingView(TemplateView):
     template_name = 'alertas/billing.html'
 
