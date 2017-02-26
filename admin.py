@@ -16,7 +16,7 @@ class AlertaPersonAdmin(admin.ModelAdmin):
 
 class AlertaActoAdmin(admin.ModelAdmin):
     list_display = ('user', 'provincia', 'is_enabled', 'send_html')
-    list_filter = ('user',)
+    list_filter = ('user', 'send_html')
     search_fields = ['user', 'provincia', 'is_enabled']
 
 

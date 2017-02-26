@@ -60,9 +60,9 @@ PROVINCIAS_CHOICES = (
 
 
 PERIODICIDAD_CHOICES = (
-    ('W', 'Weekly'),
-    ('M', 'Monthly'),
-    ('D', 'Daily')
+    ('W', 'Semanal'),
+    ('M', 'Mensual'),
+    ('D', 'Diario')
 )
 
 ACCOUNT_CHOICES = {
@@ -76,11 +76,19 @@ PAYMENT_CHOICES = {
     ('Bitcoin', "Bitcoin")
 }
 
+NOTIFICATION_CHOICES = {
+    ('E', "E-mail"),
+    ('U', "URL"),
+}
+
 EVENTOS_CHOICES = (
     ('CON', 'Concursos de acreedores'),
     ('LIQ', 'Liquidación de empresas'),
 )
 EVENTOS_DICT = dict(EVENTOS_CHOICES)
+
+
+User._meta.get_field('email').blank = False
 
 
 class AlertaCompany(models.Model):
@@ -121,7 +129,15 @@ class AlertaActo(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     account_type = models.CharField(max_length=1, choices=ACCOUNT_CHOICES)
+    notification_method = models.CharField(max_length=1, choices=NOTIFICATION_CHOICES, default='E')
+    notification_email = models.EmailField(blank=True)
+    notification_url = models.URLField(blank=True)
 
+    def save(self, force_insert=False, force_update=False):
+        if not self.notification_email:
+            self.notification_email = self.user.email
+        super(Profile, self).save(force_insert, force_update)
+    
     def is_premium(self):
         pass
         #return all(for invoice in self.invoices:

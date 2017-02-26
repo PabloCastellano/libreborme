@@ -33,8 +33,8 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Perfil</a></li>
-            <li><a href="#">Soporte</a></li>
+            <li {% if active == 'settings' %}class="active"{% endif %}><a href="{% url 'alertas-settings' %}">Configuración</a></li>
+            <li {% if active == 'soporte' %}class="active"{% endif %}><a href="{% url 'alertas-soporte' %}">Soporte</a></li>
             <li><a href="{% url 'logout' %}">Salir</a></li>
           </ul>
         </div>
@@ -46,6 +46,14 @@
     <div class="container-fluid">
       <div class="row">
         
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li {% if active == 'dashboard' %}class="active"{% endif %}><a href="{% url 'dashboard-index' %}">Dashboard <span class="sr-only">(current)</span></a></li>
+            <li {% if active == 'alertas' %}class="active"{% endif %}><a href="{% url 'alertas-list' %}">Alertas</a></li>
+            <li {% if active == 'billing' %}class="active"{% endif %}><a href="{% url 'alertas-billing' %}">Facturación</a></li>
+          </ul>
+        </div>
+
       {% block content %}{% endblock %}
 
       </div>

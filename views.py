@@ -22,12 +22,44 @@ class DashboardView(TemplateView):
         n_alertas += AlertaCompany.objects.filter(user=self.request.user).count()
         n_alertas += AlertaPerson.objects.filter(user=self.request.user).count()
         context['n_alertas'] = n_alertas
+        context['active'] = 'dashboard'
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class DashboardSupportView(TemplateView):
+    template_name = 'alertas/dashboard_support.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DashboardSupportView, self).get_context_data(**kwargs)
+        n_alertas = AlertaActo.objects.filter(user=self.request.user).count()
+        n_alertas += AlertaCompany.objects.filter(user=self.request.user).count()
+        n_alertas += AlertaPerson.objects.filter(user=self.request.user).count()
+        context['n_alertas'] = n_alertas
+        context['active'] = 'soporte'
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class DashboardSettingsView(TemplateView):
+    template_name = 'alertas/dashboard_settings.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DashboardSettingsView, self).get_context_data(**kwargs)
+        context['active'] = 'settings'
+        context['form_personal'] = forms.PersonalSettingsForm(initial={'email': self.request.user.email })
+        context['form_notification'] = forms.NotificationSettingsForm()
         return context
 
 
 @method_decorator(login_required, name='dispatch')
 class BillingView(TemplateView):
     template_name = 'alertas/billing.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BillingView, self).get_context_data(**kwargs)
+        context['active'] = 'billing'
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
@@ -57,10 +89,24 @@ class AlertaListView(TemplateView):
         context['form_c'] = forms.AlertaCompanyModelForm()
         context['form_p'] = forms.AlertaPersonModelForm()
         context['form_a'] = forms.AlertaActoModelForm()
-        context['breadcrumb'] = 'TODO BREADCRUMB'
+
+        context['count_c'] = context['alertas_c'].count()
+        context['count_p'] = context['alertas_p'].count()
+        context['count_a'] = context['alertas_a'].count()
+
+        context['limite_c'] = 5
+        context['limite_p'] = 5
+        context['limite_a'] = 5
+
+        context['restantes_c'] = context['limite_c'] - context['count_c']
+        context['restantes_p'] = context['limite_p'] - context['count_p']
+        context['restantes_a'] = context['limite_a'] - context['count_a']
+
+        context['active'] = 'alertas'
         return context
 
 
+@login_required
 def alerta_person_create(request):
     if request.method == 'POST':
         form = forms.AlertaPersonModelForm(request.POST)
@@ -71,6 +117,7 @@ def alerta_person_create(request):
     return redirect(reverse('alertas-list'))
 
 
+@login_required
 def alerta_company_create(request):
     if request.method == 'POST':
         form = forms.AlertaCompanyModelForm(request.POST)
@@ -81,6 +128,7 @@ def alerta_company_create(request):
     return redirect(reverse('alertas-list'))
 
 
+@login_required
 def alerta_acto_create(request):
     if request.method == 'POST':
         form = forms.AlertaActoModelForm(request.POST)
@@ -90,6 +138,12 @@ def alerta_acto_create(request):
             alerta.save()
     return redirect(reverse('alertas-list'))
 
+
+@login_required
+def alerta_remove(request, id):
+    alerta = AlertaActo.objects.get(user=request.user, pk=id)
+    alerta.delete()
+    return redirect(reverse('alertas-list'))
 
 # TODO: una funcion por cada tipo de form
 # No mezclarlas

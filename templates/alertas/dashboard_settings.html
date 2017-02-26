@@ -1,0 +1,36 @@
+{% extends "alertas/base_dashboard.html" %}
+{% load bootstrap %}
+
+{% block content %}
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Configuración</h1>
+
+        <div class="col-sm-4">
+            <form action="{% url "alertas-new-person" %}" role="form" method="post">
+            <legend>Datos personales</legend>
+            {% csrf_token %}
+        <div>
+            <div class="form-group">
+                <p>Nombre: {{ user.get_full_name }}</p>
+                <p>Tipo de cuenta: {{ user.profile.get_account_type_display }}</p>
+            </div>
+            {{ form_personal|bootstrap }}
+            <div class="form-group">
+                <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
+            </div>
+            </form>
+            
+            <form action="{% url "alertas-new-person" %}" role="form" method="post">
+            <legend>Notificaciones</legend>
+            {% csrf_token %}
+            {{ form_notification|bootstrap }}
+            <div class="form-group">
+                <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
+            </div>
+            </form>
+        </div>
+
+        
+        </div>
+
+{% endblock %}
