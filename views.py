@@ -18,11 +18,17 @@ class DashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
-        n_alertas = AlertaActo.objects.filter(user=self.request.user).count()
-        n_alertas += AlertaCompany.objects.filter(user=self.request.user).count()
-        n_alertas += AlertaPerson.objects.filter(user=self.request.user).count()
-        context['n_alertas'] = n_alertas
+
         context['active'] = 'dashboard'
+
+        context['count_c'] = AlertaCompany.objects.filter(user=self.request.user).count()
+        context['count_p'] = AlertaPerson.objects.filter(user=self.request.user).count()
+        context['count_a'] = AlertaActo.objects.filter(user=self.request.user).count()
+        context['n_alertas'] = context['count_c'] + context['count_p'] + context['count_a']
+
+        context['limite_c'] = 5
+        context['limite_p'] = 5
+        context['limite_a'] = 5
         return context
 
 

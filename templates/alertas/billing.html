@@ -34,9 +34,11 @@
                     {% endif %}
                   </td>
                   <td>
+                    <a href="{% url 'alertas-invoice-view' invoice.id %}">
                     <button type="button" class="btn btn-primary btn-xs">
-                      <a href="{% url 'alertas-invoice-view' invoice.id %}"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Ver</a>
+                      <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Ver
                     </button>
+                    </a>
                   </td>
                 </tr>
                 {% endfor %}

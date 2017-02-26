@@ -20,8 +20,32 @@
           
           </div>
 
-          <h2 class="sub-header">Alertas</h2>
-          <p>Tienes <span>{{ n_alertas }}</span> alerta{{ n_alertas|pluralize }} definida{{ n_alertas|pluralize }}.
+          <h2 class="sub-header">Alertas definidas</h2>
+          <p>Tienes <span>{{ n_alertas }}</span> alerta{{ n_alertas|pluralize }} definida{{ n_alertas|pluralize }} en total.
           
+          <div class="col-sm-3">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Tipo de alerta</th>
+                  <th>Alertas definidas</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Personas</td>
+                  <td>{{ count_p }} / {{ limite_p }}</td>
+                </tr>
+                <tr>
+                  <td>Empresas</td>
+                  <td>{{ count_c }} / {{ limite_c }}</td>
+                </tr>
+                <tr>
+                  <td>Acto</td>
+                  <td>{{ count_a }} / {{ limite_a }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 {% endblock %}
