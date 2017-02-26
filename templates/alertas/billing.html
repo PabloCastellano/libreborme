@@ -15,63 +15,38 @@
           
           </div>
 
-          <h2 class="sub-header">Section title</h2>
+          <h2 class="sub-header">Facturas</h2>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
+                  <th>Comienzo</th>
+                  <th>Final</th>
+                  <th>Cantidad</th>
+                  <th>Forma de pago</th>
+                  <th>Pagado</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                  <td>dolor</td>
-                  <td>sit</td>
+                {% for invoice in invoices %}
+                <tr {% if not invoice.is_paid %}class="danger"{% endif %}>
+                  <td>{{ invoice.id }}</td>
+                  <td>{{ invoice.start_date }}</td>
+                  <td>{{ invoice.end_date }}</td>
+                  <td>{{ invoice.amount }}</td>
+                  <td>{{ invoice.get_payment_type_display }}</td>
+                  <td>{% if invoice.is_paid %}
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    {% else %}
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    {% endif %}
+                  </td>
                 </tr>
-                <tr>
-                  <td>1,002</td>
-                  <td>amet</td>
-                  <td>consectetur</td>
-                  <td>adipiscing</td>
-                  <td>elit</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>Integer</td>
-                  <td>nec</td>
-                  <td>odio</td>
-                  <td>Praesent</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>libero</td>
-                  <td>Sed</td>
-                  <td>cursus</td>
-                  <td>ante</td>
-                </tr>
-                <tr>
-                  <td>1,004</td>
-                  <td>dapibus</td>
-                  <td>diam</td>
-                  <td>Sed</td>
-                  <td>nisi</td>
-                </tr>
-                <tr>
-                  <td>1,005</td>
-                  <td>Nulla</td>
-                  <td>quis</td>
-                  <td>sem</td>
-                  <td>at</td>
-                </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>
         </div>
 {% endblock %}
+

@@ -72,7 +72,7 @@ ACCOUNT_CHOICES = {
 
 PAYMENT_CHOICES = {
     ('Paypal', "Paypal"),
-    ('Bank', "Bank transfer"),
+    ('Bank', "Transferencia bancaria"),
     ('Bitcoin', "Bitcoin")
 }
 
@@ -148,11 +148,11 @@ class Profile(models.Model):
 
 
 class LBInvoice(models.Model):
-    user = models.ForeignKey(Profile)
+    user = models.ForeignKey(User)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     amount = models.FloatField()
-    type = models.CharField(max_length=10)
+    type = models.CharField(max_length=10, blank=True)  # reservado
     payment_type = models.CharField(max_length=10, choices=PAYMENT_CHOICES)
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=200)

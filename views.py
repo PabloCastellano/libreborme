@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 
-from .models import AlertaActo, AlertaCompany, AlertaPerson
+from .models import AlertaActo, AlertaCompany, AlertaPerson, LBInvoice
 from . import forms
 
 
@@ -59,6 +59,8 @@ class BillingView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BillingView, self).get_context_data(**kwargs)
         context['active'] = 'billing'
+        context['invoices'] = LBInvoice.objects.filter(user=self.request.user)
+
         return context
 
 
