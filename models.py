@@ -70,16 +70,16 @@ ACCOUNT_CHOICES = {
     ('P', "Premium")
 }
 
-PAYMENT_CHOICES = {
+PAYMENT_CHOICES = (
     ('Paypal', "Paypal"),
     ('Bank', "Transferencia bancaria"),
     ('Bitcoin', "Bitcoin")
-}
+)
 
-NOTIFICATION_CHOICES = {
+NOTIFICATION_CHOICES = (
     ('E', "E-mail"),
     ('U', "URL"),
-}
+)
 
 EVENTOS_CHOICES = (
     ('CON', 'Concursos de acreedores'),
@@ -157,7 +157,8 @@ class LBInvoice(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=200)
     is_paid = models.BooleanField()
-    
+    description = models.CharField(max_length=2000, blank=True)
+
     def __str__(self):
         return "LBInvoice ({}): {}. Pagada: {}".format(self.user, self.amount, self.is_paid)
 
