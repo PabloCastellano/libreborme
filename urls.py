@@ -15,6 +15,10 @@ urlpatterns = [
     url(r'^alertas/remove/(?P<id>\d+)/$', views.alerta_remove, name='alerta-remove-acto'),
     url(r'^alertas/soporte/$', views.DashboardSupportView.as_view(), name='alertas-soporte'),
     url(r'^alertas/settings/$', views.DashboardSettingsView.as_view(), name='alertas-settings'),
+    url(r'^alertas/settings/update/personal/$', views.settings_update_personal, name='alertas-settings-personal'),
+    url(r'^alertas/settings/update/notifications/$', views.settings_update_notifications, name='alertas-settings-notifications'),
+
+
 
 #    url(r'^(?P<id>\d+)/$', views.alertas_view, name='alertas-detail'),
 

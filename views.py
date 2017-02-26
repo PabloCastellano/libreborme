@@ -7,8 +7,9 @@ from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
+from django.contrib.auth.models import User
 
-from .models import AlertaActo, AlertaCompany, AlertaPerson, LBInvoice
+from .models import AlertaActo, AlertaCompany, AlertaPerson, LBInvoice, Profile
 from . import forms
 
 
@@ -54,7 +55,13 @@ class DashboardSettingsView(TemplateView):
         context = super(DashboardSettingsView, self).get_context_data(**kwargs)
         context['active'] = 'settings'
         context['form_personal'] = forms.PersonalSettingsForm(initial={'email': self.request.user.email })
-        context['form_notification'] = forms.NotificationSettingsForm()
+
+        initial = {}
+        initial['notification_method'] = self.request.user.profile.notification_method
+        initial['notification_email'] = self.request.user.profile.notification_email
+        initial['notification_url'] = self.request.user.profile.notification_url
+
+        context['form_notification'] = forms.NotificationSettingsForm(initial=initial)
         return context
 
 
@@ -155,6 +162,29 @@ def alerta_acto_create(request):
             alerta.user = request.user
             alerta.save()
     return redirect(reverse('alertas-list'))
+
+
+@login_required
+def settings_update_notifications(request):
+    if request.method == 'POST':
+        form = forms.NotificationSettingsForm(request.POST)
+        if form.is_valid():
+            profile = Profile.objects.get(user=request.user)
+            profile.notification_method = form.cleaned_data['notification_method']
+            profile.notification_email = form.cleaned_data['notification_email']
+            profile.notification_url = form.cleaned_data['notification_url']
+            profile.save()
+    return redirect(reverse('alertas-settings'))
+
+
+@login_required
+def settings_update_personal(request):
+    if request.method == 'POST':
+        instance = User.objects.get(pk=request.user.id)
+        form = forms.PersonalSettingsForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+    return redirect(reverse('alertas-settings'))
 
 
 @login_required

@@ -6,7 +6,7 @@
           <h1 class="page-header">Configuración</h1>
 
         <div class="col-sm-4">
-            <form action="{% url "alertas-new-person" %}" role="form" method="post">
+            <form action="{% url "alertas-settings-personal" %}" role="form" method="post">
                 <legend>Datos personales</legend>
                 {% csrf_token %}
                 <div class="form-group">
@@ -14,24 +14,16 @@
                     <p>Tipo de cuenta: {{ user.profile.get_account_type_display }}</p>
                 </div>
                 {{ form_personal|bootstrap }}
+                <p><a href="{% url 'password_change' %}">Cambiar contraseña</a></p>
                 <div class="form-group">
                     <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
                 </div>
             </form>
-            
-            <br/>
-            <form action="{% url "alertas-new-person" %}" role="form" method="post">
-                <legend>Notificaciones</legend>
-                {% csrf_token %}
-                {{ form_notification|bootstrap }}
-                <div class="form-group">
-                    <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
-                </div>
-            </form>
-        </div>
+          </div>
+
         <div class="col-sm-4 col-sm-offset-1">
-            <form action="{% url "alertas-new-person" %}" role="form" method="post">
-                <legend>Datos de facturación</legend>
+            <form action="{% url "alertas-settings-notifications" %}" role="form" method="post">
+                <legend>Notificaciones</legend>
                 {% csrf_token %}
                 {{ form_notification|bootstrap }}
                 <div class="form-group">
