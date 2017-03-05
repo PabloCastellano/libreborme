@@ -1,0 +1,25 @@
+<html>
+<body>
+
+<h1>Notificationes de libreborme</h1>
+<p>Hola {{ name }}.</p>
+
+{% if companies %}
+<p>Estas son las empresas:</p>
+
+TODO: DIA
+
+<ul>
+{% for company in companies %}
+<li>{{ company.name }}</li>
+{% endfor %}
+</ul>
+
+{% else %}
+<p>No ha habido empresas esta semana/mes/día para tu suscripción.</p>
+{% endif %}
+
+<p>Recuerda que desde tu panel de usuario puedes descargar el listado de tus notificaciones en formato CSV.</p>
+
+</body>
+</html>
