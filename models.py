@@ -61,10 +61,11 @@ PROVINCIAS_CHOICES = (
 
 
 PERIODICIDAD_CHOICES = (
-    ('W', 'Semanal'),
-    ('M', 'Mensual'),
-    ('D', 'Diario')
+    ('weekly', 'Semanal'),
+    ('monthly', 'Mensual'),
+    ('daily', 'Diario')
 )
+PERIODICIDAD_DICT = dict(PERIODICIDAD_CHOICES)
 
 ACCOUNT_CHOICES = (
     ('free', "Gratuita"),
@@ -73,25 +74,32 @@ ACCOUNT_CHOICES = (
 )
 
 PAYMENT_CHOICES = (
-    ('Paypal', "Paypal"),
-    ('Bank', "Transferencia bancaria"),
-    ('Bitcoin', "Bitcoin")
+    ('paypal', "Paypal"),
+    ('bank', "Transferencia bancaria"),
+    #('bitcoin', "Bitcoin")
 )
 
 NOTIFICATION_CHOICES = (
-    ('E', "E-mail"),
-    ('U', "URL"),
+    ('email', "E-mail"),
+    ('url', "URL"),
+    #('telegram', "Telegram"),
 )
 
 EVENTOS_CHOICES = (
-    ('CON', 'Concursos de acreedores'),
-    ('LIQ', 'Liquidación de empresas'),
+    ('con', 'Concursos de acreedores'),
+    ('liq', 'Liquidación de empresas'),
+    ('new', 'Empresas de nueva creación'),
 )
 EVENTOS_DICT = dict(EVENTOS_CHOICES)
 
+LANGUAGE_CHOICES = (
+    ('es', 'Español'),
+)
 
 User._meta.get_field('email').blank = False
 
+
+# TODO: agrupar todas las alertas en una misma tabla?
 
 class AlertaCompany(models.Model):
     user = models.ForeignKey(User)
@@ -121,7 +129,7 @@ class AlertaActo(models.Model):
     provincia = models.CharField(max_length=100, choices=PROVINCIAS_CHOICES)
     is_enabled = models.BooleanField(default=True)
     send_html = models.BooleanField(default=True)
-    periodicidad = models.CharField(max_length=1, choices=PERIODICIDAD_CHOICES)
+    periodicidad = models.CharField(max_length=10, choices=PERIODICIDAD_CHOICES)
 
     def __str__(self):
         enabled = "activada" if self.is_enabled else "desactivada"
@@ -131,9 +139,10 @@ class AlertaActo(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     account_type = models.CharField(max_length=4, choices=ACCOUNT_CHOICES)
-    notification_method = models.CharField(max_length=1, choices=NOTIFICATION_CHOICES, default='E')
+    notification_method = models.CharField(max_length=10, choices=NOTIFICATION_CHOICES, default='email')
     notification_email = models.EmailField(blank=True)
     notification_url = models.URLField(blank=True)
+    language = models.CharField(max_length=3, choices=LANGUAGE_CHOICES, default='es')
 
     def save(self, force_insert=False, force_update=False):
         if not self.notification_email:
