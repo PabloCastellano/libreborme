@@ -49,11 +49,6 @@ class Command(BaseCommand):
         parser.add_argument("--dry-run", action="store_true", default=False, help="Notifications are printed to stdout but not sent")
 
     def handle(self, *args, **options):
-
-        #if len(args) != 1:
-        #    print('Usage: bormehide <slug>')
-        #    return
-
         periodo = options["periodo"]
         evento = options["evento"]
 
@@ -112,7 +107,7 @@ def send_email_notification(alerta, evento, periodo, companies):
     if provincia not in companies:
         LOG.debug("No se envia a {} porque no hay alertas para {}/{}".format(email, provincia, evento))
         return False
-    LOG.debug("Se va a enviar a {} porque hay alertas para {}/{}".format(email, provincia, evento))
+    LOG.info("Se va a enviar a {} porque hay alertas para {}/{}".format(email, provincia, evento))
 
     companies = companies[provincia][evento]
 
@@ -135,7 +130,6 @@ def send_email_notification(alerta, evento, periodo, companies):
         template_name = base_dir + "templates/email/alerta_acto_template_{lang}.html".format(lang=language)
         html_message = loader.render_to_string(template_name, context)
 
-    LOG.debug("Sending email to {}".format(email))
     sent_emails = send_mail("Notificaciones de libreborme",
                             message,
                             "noreply@libreborme.net",
@@ -152,6 +146,7 @@ def send_email_notification(alerta, evento, periodo, companies):
 
 def send_url_notification(alerta, evento, periodo, companies):
     endpoint_url = alerta.user.profile.notification_url
+    # TODO
     raise NotImplementedError
 
 
@@ -163,7 +158,7 @@ def busca_evento(evento, begin_date, end_date):
         borme_path = os.path.join(BORME_JSON_PATH, str(cur_date.year), "{:02d}".format(cur_date.month), "{:02d}".format(cur_date.day))
         if os.path.isdir(borme_path):
             files = os.listdir(borme_path)
-            #LOG.debug(files)
+            # LOG.debug(files)
             files = [os.path.join(borme_path, f) for f in files if f.endswith(".json")]
             for filepath in files:
                 borme = Borme.from_json(filepath)

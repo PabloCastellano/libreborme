@@ -14,3 +14,30 @@ urls.py:
 Añadir a urlpatterns:
 
 url(r'', include('alertas.urls')),
+
+Cron (opción 1)
+---------------
+
+TODO: virtualenv
+
+```
+00 9    * * 1-5     libreborme    cd /home/libreborme && .. && ./manage.py send_notifications day new
+05 9    * * 1-5     libreborme    cd /home/libreborme && .. && ./manage.py send_notifications day liq
+10 9    * * 1-5     libreborme    cd /home/libreborme && .. && ./manage.py send_notifications day con
+15 9    * * 5       libreborme    cd /home/libreborme && .. && ./manage.py send_notifications weekly new
+20 9    * * 5       libreborme    cd /home/libreborme && .. && ./manage.py send_notifications weekly liq
+25 9    * * 5       libreborme    cd /home/libreborme && .. && ./manage.py send_notifications weekly con
+30 9    1 * *       libreborme    cd /home/libreborme && .. && ./manage.py send_notifications monthly new
+35 9    1 * *       libreborme    cd /home/libreborme && .. && ./manage.py send_notifications monthly liq
+40 9    1 * *       libreborme    cd /home/libreborme && .. && ./manage.py send_notifications monthly con
+```
+
+Cron (opción 2)
+---------------
+
+```
+0 9     * * 1-5     {{ libreborme_dir }}/cron_send_notifications_daily.sh
+15 9    * * 5       {{ libreborme_dir }}/cron_send_notifications_weekly.sh
+30 9    1 * *       {{ libreborme_dir }}/cron_send_notifications_monthly.sh
+```
+
