@@ -5,42 +5,47 @@
 # monthly: must be run on 1st day of the month
 #
 # Otherwise a CommandError exception is raised
-
+#
+# Example usage:
+# 	./manage.py send_notifications weekly liq
+#       ./manage.py send_notifications weekly liq -v 3
+#
 from django.core.management.base import BaseCommand, CommandError
-from django.core.mail import send_email
+from django.core.mail import send_mail
+from django.core.validators import validate_email
 from django.conf import settings
 from django.db import connection
 from django.template import loader
-from alertas.models import EVENTOS_DICT, PERIODICIDAD_DICT
-from borme.models import Anuncio, Company, Person
+from alertas.models import AlertaActo, EVENTOS_DICT, PERIODICIDAD_DICT
 from borme.utils import convertir_iniciales
 from borme.templatetags.utils import slug2
 from bormeparser.regex import is_acto_cargo
+
+from bormeparser import Borme
 
 import datetime
 import logging
 import os
 
-BORME_JSON_PATH = os.expand("~/.bormes/json")
+BORME_JSON_PATH = os.path.expanduser("~/.bormes/json")
 
-ACTOS {
+ACTOS = {
     "liq": ("Liquidación"),
     "con": (),
     "new": ("Constitución", "Nueva sucursal"),
 }
 
 
-LOG = logging.get_logger(__file__)
-
+LOG = logging.getLogger(__file__)
+LOG.setLevel(logging.INFO)
 
 class Command(BaseCommand):
-    #args = '<PERIODO> <EVENTO> [--dry-run] [user]'
-    help = 'Send monthly email subscriptions (AlertaActo only)'
+    help = 'Send periodic email subscriptions (AlertaActo only)'
 
     def add_arguments(self, parser):
         parser.add_argument("periodo")
         parser.add_argument("evento")
-        #parser.add_argument("--user", help="If specified, notifications will be sent only to this user")
+        parser.add_argument("--user", help="Notifications will be sent only to this user (TODO)")
         parser.add_argument("--dry-run", action="store_true", default=False, help="Notifications are printed to stdout but not sent")
 
     def handle(self, *args, **options):
@@ -52,60 +57,85 @@ class Command(BaseCommand):
         periodo = options["periodo"]
         evento = options["evento"]
 
+        ch = logging.StreamHandler()
+        if options["verbosity"] > 1:
+            LOG.setLevel(logging.DEBUG)
+            ch.setLevel(logging.DEBUG)
+        else:
+            ch.setLevel(logging.INFO)
+        LOG.addHandler(ch)
+
         # TODO: no es necesario, el backend puede ser EmailConsole
         if settings.DEBUG:
-            LOG.info("forcing --dry-run since DEBUG=True")
+            LOG.info("forcing --dry-run since DEBUG=True\n")
             dry_run = False
         else:
             dry_run = options["dry_run"]
 
         if periodo not in ('daily', 'weekly', 'monthly'):
-            print('Periodo {} is invalid. Valid values are: {}'.format(periodo, ', '.join(PERIODICIDAD_DICT.keys()))
+            print('Periodo {} is invalid. Valid values are: {}'.format(periodo, ', '.join(PERIODICIDAD_DICT.keys())))
             return
  
         if evento not in EVENTOS_DICT:
             print('Evento {} is invalid. Valid values are: {}'.format(evento, ', '.join(EVENTOS_DICT.keys())))
             return
         
-        companies = busca_empresas(periodo, evento)
         alertas = busca_subscriptores(periodo, evento)
-        LOG.info("Total {} companies for event {}.".format(len(companies), evento))
-        LOG.info("Total {} users are subscribed to this event and will be notified.".format(len(users), evento))
+        if len(alertas) == 0:
+            LOG.info("0 alertas. END")
+            return
+
+        companies = busca_empresas(periodo, evento)
+        if len(companies) == 0:
+            LOG.info("0 companies. END")
+            return
 
         if dry_run:
             print("Notifications were not sent because --dry-run")
             return
 
         for alerta in alertas:
-            if user.notification_method == "email":
-                send_email_notification(user, evento, periodo, companies)
-            elif user.notification_method == "url":
-                send_url_notification(user, evento, periodo, companies)
+            if alerta.user.profile.notification_method == "email":
+                send_email_notification(alerta, evento, periodo, companies)
+            elif alerta.user.profile.notification_method == "url":
+                send_url_notification(alerta, evento, periodo, companies)
 
         # TODO: añade a historial
 
 
 def send_email_notification(alerta, evento, periodo, companies):
     email = alerta.user.profile.notification_email
-    language = alerta.user.language
-    provincia = alerta.provincia
+    language = alerta.user.profile.language
+    provincia = alerta.get_provincia_display()
     send_html = alerta.send_html
+    # TODO: si no hay
     companies = companies[provincia][evento]
 
-    template_name = "alertas/email/alerta_acto_template_{lang}.txt".format(lang=language)
-    message = loader.render_to_string(template_name, {"objects": companies, "name": alerta.user.name})
+    try:
+        validate_email(email)
+    except django.core.exceptions.ValidationError:
+        LOG.error("User {} has an invalid notification email: {}. Nothing was sent to him!".format(alerta.user.get_full_name(), email))
+        # Notify user about it
+        # Add to history anyways
+        return False
+
+    # FIXME
+    base_dir = "/home/ubuntu/libreborme.lan/deps/libreborme/alertas/" 
+    template_name = base_dir + "templates/email/alerta_acto_template_{lang}.txt".format(lang=language)
+    message = loader.render_to_string(template_name, {"companies": companies, "name": alerta.user.first_name})
     html_message = None
 
     if send_html:
-        template_name = "alertas/email/alerta_acto_template_{lang}.html".format(lang=language)
-        html_message = loader.render_to_string(template_name, {"objects": companies, "name": alerta.user.name})
+        template_name = base_dir + "templates/email/alerta_acto_template_{lang}.html".format(lang=language)
+        html_message = loader.render_to_string(template_name, {"companies": companies, "name": alerta.user.first_name})
 
     LOG.debug("Sending email to {}".format(email))
-    alerta.user.send_mail("Notificaciones de libreborme",
-                          message,
-                          "noreply@libreborme.net",
-                          email,
-                          html_message=html_message)
+    sent_emails = send_mail("Notificaciones de libreborme",
+                            message,
+                            "noreply@libreborme.net",
+                            [email],
+                            html_message=html_message)
+    return sent_emails == 1
 
 
 # TODO: send_mass_email()
@@ -114,31 +144,35 @@ def send_email_notification(alerta, evento, periodo, companies):
 #send_mass_mail((message1, message2), fail_silently=False)
 
 
-def send_url_notification(user, evento, periodo, companies):
+def send_url_notification(alerta, evento, periodo, companies):
     endpoint_url = alerta.user.profile.notification_url
+    raise NotImplementedError
 
 
 def busca_evento(evento, begin_date, end_date):
-    LOG.info("Buscando eventos de tipo {} del {} al {}".format(evento, begin_date, end_date))
     actos = {}
+    total = 0
     cur_date = begin_date
-    while cur_date <= end_date
-        borme_path = os.path.join(BORME_JSON_PATH, cur_date.year, cur_date.month, cur_date.day)
+    while cur_date <= end_date:
+        borme_path = os.path.join(BORME_JSON_PATH, str(cur_date.year), "{:02d}".format(cur_date.month), "{:02d}".format(cur_date.day))
         if os.path.isdir(borme_path):
             files = os.listdir(borme_path)
-            LOG.debug(files)
+            #LOG.debug(files)
             files = [os.path.join(borme_path, f) for f in files if f.endswith(".json")]
             for filepath in files:
-                borme = Borme.load(filepath)
-                for acto in borme.get_actos():
-                    if acto.name in ACTOS[evento]:
-                        if borme.provincia not in actos:
-                            actos[borme.provincia = []
-                        actos[borme.provincia].append({"date": borme.date, "company": acto})
+                borme = Borme.from_json(filepath)
+                for anuncio in borme.get_anuncios():
+                    for acto in anuncio.actos:
+                        if acto.name in ACTOS[evento]:
+                            if borme.provincia not in actos:
+                                actos[borme.provincia.name] = {"liq": [], "con": [], "new": []}
+                            actos[borme.provincia.name][evento].append({"date": borme.date, "name": anuncio.empresa})
+                            total += 1
 
         cur_date += datetime.timedelta(days=1)
 
-    return actos
+    LOG.info("Total {} companies for event {} between {} and {}.".format(total, evento, begin_date, end_date))
+    return (actos, total)
 
 
 def busca_empresas(periodo, evento):
@@ -160,14 +194,21 @@ def busca_empresas(periodo, evento):
         begin_date = datetime.date(today.year, today.month, 1)
         end_date = today
 
-    companies = busca_evento(evento, begin_date, end_date)
+    companies, total = busca_evento(evento, begin_date, end_date)
+
+    provincias = sorted(companies.keys())
+    LOG.debug("Found in provinces: {}".format(", ".join(provincias)))
+    #for provincia, data in companies.items():
+    #    for company in data:
+    #        LOG.debug("-- {name} ({provincia})".format(name=company["name"], provincia=provincia))
+
     return companies
 
 
 def busca_subscriptores(periodo, evento):
     alertas = AlertaActo.objects.filter(evento=evento, periodicidad=periodo, is_enabled=True)
     # join .user
-    LOG.info("Se han encontrado {} suscriptores.".format(len(alertas)))
+    LOG.info("Total {} users are subscribed to this event and will be notified.".format(len(alertas), evento))
     # TODO: if LOG.debug_level == logging.DEBUG
     for alerta in alertas:
         LOG.debug("-- {} <{}>".format(alerta.user.get_full_name(), alerta.user.email))
