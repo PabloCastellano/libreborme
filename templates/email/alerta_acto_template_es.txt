@@ -3,6 +3,8 @@ Hola {{ name }}.
 {% if companies %}
 Estas son las empresas: 
 
+Provincia: {{ provincia }}
+
 # TODO: DIA
 
 {% for company in companies %}

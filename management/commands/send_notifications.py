@@ -108,7 +108,12 @@ def send_email_notification(alerta, evento, periodo, companies):
     language = alerta.user.profile.language
     provincia = alerta.get_provincia_display()
     send_html = alerta.send_html
-    # TODO: si no hay
+
+    if provincia not in companies:
+        LOG.debug("No se envia a {} porque no hay alertas para {}/{}".format(email, provincia, evento))
+        return False
+    LOG.debug("Se va a enviar a {} porque hay alertas para {}/{}".format(email, provincia, evento))
+
     companies = companies[provincia][evento]
 
     try:
@@ -122,12 +127,13 @@ def send_email_notification(alerta, evento, periodo, companies):
     # FIXME
     base_dir = "/home/ubuntu/libreborme.lan/deps/libreborme/alertas/" 
     template_name = base_dir + "templates/email/alerta_acto_template_{lang}.txt".format(lang=language)
-    message = loader.render_to_string(template_name, {"companies": companies, "name": alerta.user.first_name})
+    context = {"companies": companies, "name": alerta.user.first_name, "provincia": provincia}
+    message = loader.render_to_string(template_name, context)
     html_message = None
 
     if send_html:
         template_name = base_dir + "templates/email/alerta_acto_template_{lang}.html".format(lang=language)
-        html_message = loader.render_to_string(template_name, {"companies": companies, "name": alerta.user.first_name})
+        html_message = loader.render_to_string(template_name, context)
 
     LOG.debug("Sending email to {}".format(email))
     sent_emails = send_mail("Notificaciones de libreborme",
@@ -198,9 +204,9 @@ def busca_empresas(periodo, evento):
 
     provincias = sorted(companies.keys())
     LOG.debug("Found in provinces: {}".format(", ".join(provincias)))
-    #for provincia, data in companies.items():
-    #    for company in data:
-    #        LOG.debug("-- {name} ({provincia})".format(name=company["name"], provincia=provincia))
+    for provincia, data in companies.items():
+        for company in data[evento]:
+            LOG.debug("-- {name} ({provincia})".format(name=company["name"], provincia=provincia))
 
     return companies
 
