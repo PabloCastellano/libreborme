@@ -28,7 +28,7 @@
                   <td>Forma de pago</td>
                   <td>{{ object.payment_type }}</td>
                 </tr>
-                <tr>
+                <tr {% if not object.is_paid %}class="danger"{% endif %}>
                   <td>Pagado</td>
                   <td>{{ object.is_paid }}</td>
                 </tr>
