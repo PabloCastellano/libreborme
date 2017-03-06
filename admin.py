@@ -3,33 +3,34 @@ from . import models
 
 
 class AlertaCompanyAdmin(admin.ModelAdmin):
-    list_display = ('user', 'company', 'is_enabled', 'send_html')
-    list_filter = ('user',)
-    search_fields = ['user', 'company', 'is_enabled']
+    list_display = ('user', 'company', 'send_html', 'is_enabled')
+    list_filter = ('user', 'is_enabled')
+    search_fields = ['user__username', 'user__email', 'company__name']
 
 
 class AlertaPersonAdmin(admin.ModelAdmin):
-    list_display = ('user', 'person', 'is_enabled', 'send_html')
-    list_filter = ('user',)
-    search_fields = ['user', 'person', 'is_enabled']
+    list_display = ('user', 'person', 'send_html', 'is_enabled')
+    list_filter = ('user', 'is_enabled')
+    search_fields = ['user__username', 'user__email', 'person__name']
 
 
 class AlertaActoAdmin(admin.ModelAdmin):
-    list_display = ('user', 'provincia', 'is_enabled', 'send_html')
-    list_filter = ('user', 'send_html')
-    search_fields = ['user', 'provincia', 'is_enabled']
+    list_display = ('user', 'evento', 'periodicidad', 'provincia', 'send_html', 'is_enabled')
+    list_filter = ('evento', 'periodicidad', 'send_html', 'is_enabled')
+    search_fields = ['user__username', 'user__email', 'provincia']
+    # TODO: get_provincia_display
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'account_type')
-    list_filter = ('user', 'account_type')
-    search_fields = ['user', 'account_type']
+    list_display = ('user', 'account_type', 'notification_method', 'notification_email', 'notification_url')
+    list_filter = ('notification_method', 'account_type')
+    search_fields = ['user__username', 'user__email', 'notification_email', 'notification_url']
 
 
 class LBInvoiceAdmin(admin.ModelAdmin):
     list_display = ('user', 'start_date', 'end_date', 'amount', 'payment_type', 'is_paid')
-    list_filter = ('user', 'payment_type')
-    search_fields = ['user', 'payment_type', 'is_paid']
+    list_filter = ('is_paid', 'payment_type')
+    search_fields = ['user__username', 'user__email']
 
 
 class AlertasConfigAdmin(admin.ModelAdmin):
