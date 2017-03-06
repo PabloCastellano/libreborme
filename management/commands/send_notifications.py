@@ -45,7 +45,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("periodo")
         parser.add_argument("evento")
-        parser.add_argument("--user", help="Notifications will be sent only to this user (TODO)")
+        parser.add_argument("--username", help="Notifications will be sent only to this user", default=None)
         parser.add_argument("--dry-run", action="store_true", default=False, help="Notifications are printed to stdout but not sent")
 
     def handle(self, *args, **options):
@@ -80,7 +80,7 @@ class Command(BaseCommand):
             print('Evento {} is invalid. Valid values are: {}'.format(evento, ', '.join(EVENTOS_DICT.keys())))
             return
         
-        alertas = busca_subscriptores(periodo, evento)
+        alertas = busca_subscriptores(periodo, evento, options["username"])
         if len(alertas) == 0:
             LOG.info("0 alertas. END")
             return
@@ -203,19 +203,18 @@ def busca_empresas(periodo, evento):
     companies, total = busca_evento(evento, begin_date, end_date)
 
     provincias = sorted(companies.keys())
+    #for provincia, data in companies.items():
+    #    for company in data[evento]:
+    #        LOG.debug("-- {name} ({provincia})".format(name=company["name"], provincia=provincia))
     LOG.debug("Found in provinces: {}".format(", ".join(provincias)))
-    for provincia, data in companies.items():
-        for company in data[evento]:
-            LOG.debug("-- {name} ({provincia})".format(name=company["name"], provincia=provincia))
-
     return companies
 
 
-def busca_subscriptores(periodo, evento):
+def busca_subscriptores(periodo, evento, username=None):
     alertas = AlertaActo.objects.filter(evento=evento, periodicidad=periodo, is_enabled=True)
-    # join .user
-    LOG.info("Total {} users are subscribed to this event and will be notified.".format(len(alertas), evento))
-    # TODO: if LOG.debug_level == logging.DEBUG
-    for alerta in alertas:
-        LOG.debug("-- {} <{}>".format(alerta.user.get_full_name(), alerta.user.email))
+    if username:
+        alertas = alertas.filter(user__username=username)
+    #for alerta in alertas:
+    #    LOG.debug("-- {} <{}>".format(alerta.user.get_full_name(), alerta.user.email))
+    LOG.info("Total {} alerts for event '{}'.".format(len(alertas), evento))
     return alertas
