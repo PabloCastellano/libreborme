@@ -125,8 +125,13 @@ def send_email_notification(alerta, evento, periodo, companies):
         # Add to history anyways
         return False
 
+    context = {"companies": companies,
+               "name": alerta.user.first_name,
+               "provincia": provincia,
+               "evento": evento_display,
+               "date": TODAY,
+               "SITE_URL": settings.SITE_URL}
     template_name = os.path.join(settings.BASE_DIR, EMAIL_TEMPLATES_PATH, "alerta_acto_template_{lang}.txt".format(lang=language))
-    context = {"companies": companies, "name": alerta.user.first_name, "provincia": provincia, "evento": evento_display, "date": TODAY}
     message = loader.render_to_string(template_name, context)
     html_message = None
 
