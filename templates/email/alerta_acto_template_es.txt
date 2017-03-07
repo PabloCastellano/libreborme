@@ -1,19 +1,13 @@
+Notificationes de {{ evento }}.
+
 Hola {{ name }}.
-
-{% if companies %}
-Estas son las empresas: 
-
-Provincia: {{ provincia }}
-
-# TODO: DIA
+A continuación te enviamos el listado de empresas que han generado una notificación en LibreBORME:
 
 {% for company in companies %}
-- {{ company.name }}
+* {{ company.name }}
 {% endfor %}
 
-{% else %}
-No ha habido empresas esta semana/mes/día para tu suscripción.
-{% endif %}
+Estás recibiendo este email porque has activado la subscripción «{{ evento }}» en «{{ provincia }}».
 
 Recuerda que desde tu panel de usuario puedes descargar el listado de tus notificaciones en formato CSV.
 

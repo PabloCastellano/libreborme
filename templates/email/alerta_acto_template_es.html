@@ -1,15 +1,10 @@
 <html>
 <body>
 
-<h1>Notificationes de libreborme</h1>
+<h1>Notificationes de {{ evento }}</h1>
+
 <p>Hola {{ name }}.</p>
-
-{% if companies %}
-<p>Estas son las empresas:</p>
-
-<p>Provincia: <strong>{{ provincia }}</strong></p>
-
-TODO: DIA
+<p>A continuación te enviamos el listado de empresas que han generado una notificación en LibreBORME:</p>
 
 <ul>
 {% for company in companies %}
@@ -17,11 +12,12 @@ TODO: DIA
 {% endfor %}
 </ul>
 
-{% else %}
-<p>No ha habido empresas esta semana/mes/día para tu suscripción.</p>
-{% endif %}
+<p>Estás recibiendo este email porque has activado la subscripción <strong>{{ evento }}</strong> en <strong>{{ provincia }}</strong>.
 
-<p>Recuerda que desde tu panel de usuario puedes descargar el listado de tus notificaciones en formato CSV.</p>
+<p>Recuerda que desde tu <a href="https://libreborme.net/alertas/">panel de usuario</a> puedes descargar el listado
+   de tus notificaciones en formato CSV.</p>
 
+--
+Alertas de LibreBORME
 </body>
 </html>
