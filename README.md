@@ -21,9 +21,9 @@ Cron (opción 1)
 TODO: virtualenv
 
 ```
-00 9    * * 1-5     libreborme    cd /home/libreborme && .. && ./manage.py send_notifications day new
-05 9    * * 1-5     libreborme    cd /home/libreborme && .. && ./manage.py send_notifications day liq
-10 9    * * 1-5     libreborme    cd /home/libreborme && .. && ./manage.py send_notifications day con
+00 9    * * 1-5     libreborme    cd /home/libreborme && .. && ./manage.py send_notifications daily new
+05 9    * * 1-5     libreborme    cd /home/libreborme && .. && ./manage.py send_notifications daily liq
+10 9    * * 1-5     libreborme    cd /home/libreborme && .. && ./manage.py send_notifications daily con
 15 9    * * 5       libreborme    cd /home/libreborme && .. && ./manage.py send_notifications weekly new
 20 9    * * 5       libreborme    cd /home/libreborme && .. && ./manage.py send_notifications weekly liq
 25 9    * * 5       libreborme    cd /home/libreborme && .. && ./manage.py send_notifications weekly con
