@@ -1,19 +1,18 @@
 Install
 =======
 
-settings.py:
+En `settings.py` añadir alertas a `INSTALLED_APPS`:
 
-Añadir alertas a INSTALLED_APPS 
-
+```
 LOGIN_REDIRECT_URL = '/alertas/'
 LOGOUT_REDIRECT_URL = '/alertas/'
+```
 
-
-urls.py:
-
-Añadir a urlpatterns:
+En `urls.py` añadir a `urlpatterns`:
 
 url(r'', include('alertas.urls')),
+
+TODO: static files
 
 Cron (opción 1)
 ---------------
