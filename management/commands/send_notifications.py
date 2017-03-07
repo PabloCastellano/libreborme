@@ -28,6 +28,7 @@ import logging
 import os
 
 BORME_JSON_PATH = os.path.expanduser("~/.bormes/json")
+EMAIL_TEMPLATES_PATH = os.path.join("alertas", "templates", "email")
 
 ACTOS = {
     "liq": ("Liquidación"),
@@ -119,15 +120,13 @@ def send_email_notification(alerta, evento, periodo, companies):
         # Add to history anyways
         return False
 
-    # FIXME
-    base_dir = "/home/ubuntu/libreborme.lan/deps/libreborme/alertas/" 
-    template_name = base_dir + "templates/email/alerta_acto_template_{lang}.txt".format(lang=language)
+    template_name = os.path.join(settings.BASE_DIR, EMAIL_TEMPLATES_PATH, "alerta_acto_template_{lang}.txt".format(lang=language))
     context = {"companies": companies, "name": alerta.user.first_name, "provincia": provincia}
     message = loader.render_to_string(template_name, context)
     html_message = None
 
     if send_html:
-        template_name = base_dir + "templates/email/alerta_acto_template_{lang}.html".format(lang=language)
+        template_name = os.path.join(settings.BASE_DIR, EMAIL_TEMPLATES_PATH, "alerta_acto_template_{lang}.html".format(lang=language))
         html_message = loader.render_to_string(template_name, context)
 
     sent_emails = send_mail("Notificaciones de libreborme",
