@@ -27,8 +27,12 @@ import datetime
 import logging
 import os
 
+TODAY = datetime.date.today()
 BORME_JSON_PATH = os.path.expanduser("~/.bormes/json")
 EMAIL_TEMPLATES_PATH = os.path.join("alertas", "templates", "email")
+
+NOTIFICATION_SUBJECT = "Notificaciones de libreBORME ({}, {}, {})"
+EMAIL_FROM = "noreply@libreborme.net"
 
 ACTOS = {
     "liq": ("Liquidación"),
@@ -103,6 +107,7 @@ def send_email_notification(alerta, evento, periodo, companies):
     email = alerta.user.profile.notification_email
     language = alerta.user.profile.language
     provincia = alerta.get_provincia_display()
+    evento_display = alerta.get_evento_display()
     send_html = alerta.send_html
 
     if provincia not in companies:
@@ -121,7 +126,7 @@ def send_email_notification(alerta, evento, periodo, companies):
         return False
 
     template_name = os.path.join(settings.BASE_DIR, EMAIL_TEMPLATES_PATH, "alerta_acto_template_{lang}.txt".format(lang=language))
-    context = {"companies": companies, "name": alerta.user.first_name, "provincia": provincia}
+    context = {"companies": companies, "name": alerta.user.first_name, "provincia": provincia, "evento": evento_display, "date": TODAY}
     message = loader.render_to_string(template_name, context)
     html_message = None
 
@@ -129,9 +134,11 @@ def send_email_notification(alerta, evento, periodo, companies):
         template_name = os.path.join(settings.BASE_DIR, EMAIL_TEMPLATES_PATH, "alerta_acto_template_{lang}.html".format(lang=language))
         html_message = loader.render_to_string(template_name, context)
 
-    sent_emails = send_mail("Notificaciones de libreborme",
+    today_format = TODAY.strftime("%d/%m/%Y")
+    subject = NOTIFICATION_SUBJECT.format(today_format, evento_display, provincia)
+    sent_emails = send_mail(subject,
                             message,
-                            "noreply@libreborme.net",
+                            EMAIL_FROM,
                             [email],
                             html_message=html_message)
     return sent_emails == 1
@@ -176,23 +183,21 @@ def busca_evento(evento, begin_date, end_date):
 
 
 def busca_empresas(periodo, evento):
-    today = datetime.date.today()
-
     if periodo == 'daily':
-        if today.weekday() in (5, 6):
+        if TODAY.weekday() in (5, 6):
             raise CommandError("Daily must not be run on Saturday nor Sunday")
-        begin_date = today
-        end_date = today
+        begin_date = TODAY
+        end_date = TODAY
     elif periodo == 'weekly':
-        if today.weekday() not in (4, 5, 6):
+        if TODAY.weekday() not in (4, 5, 6):
             raise CommandError("Weekly must be run on Saturday or Sunday")
-        begin_date = today - datetime.timedelta(days=today.weekday())  # Monday
+        begin_date = TODAY - datetime.timedelta(days=TODAY.weekday())  # Monday
         end_date = begin_date + datetime.timedelta(days=4)             # Friday
     elif periodo == 'monthly':
-        if today.day != 1:
+        if TODAY.day != 1:
             raise CommandError("Monthly must be run on the 1st day of the month")
-        begin_date = datetime.date(today.year, today.month, 1)
-        end_date = today
+        begin_date = datetime.date(TODAY.year, TODAY.month, 1)
+        end_date = TODAY
 
     companies, total = busca_evento(evento, begin_date, end_date)
 
