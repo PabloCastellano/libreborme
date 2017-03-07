@@ -171,7 +171,7 @@ def busca_evento(evento, begin_date, end_date):
                 for anuncio in borme.get_anuncios():
                     for acto in anuncio.actos:
                         if acto.name in ACTOS[evento]:
-                            if borme.provincia not in actos:
+                            if borme.provincia.name not in actos:
                                 actos[borme.provincia.name] = {"liq": [], "con": [], "new": []}
                             actos[borme.provincia.name][evento].append({"date": borme.date, "name": anuncio.empresa})
                             total += 1
