@@ -3,9 +3,7 @@ Notificationes de {{ evento }}.
 Hola {{ name }}.
 A continuación te enviamos el listado de empresas que han generado una notificación en LibreBORME:
 
-{% for company in companies %}
-* {{ company.name }}
-{% endfor %}
+{% for company in companies %}* {{ company.name }}{% endfor %}
 
 Estás recibiendo este email porque has activado la subscripción «{{ evento }}» en «{{ provincia }}».
 
