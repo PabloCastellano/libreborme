@@ -31,7 +31,7 @@ TODAY = datetime.date.today()
 BORME_JSON_PATH = os.path.expanduser("~/.bormes/json")
 EMAIL_TEMPLATES_PATH = os.path.join("alertas", "templates", "email")
 
-NOTIFICATION_SUBJECT = "Notificaciones de libreBORME ({}, {}, {})"
+NOTIFICATION_SUBJECT = "Notificaciones de LibreBORME ({}, {}, {})"
 EMAIL_FROM = "noreply@libreborme.net"
 
 ACTOS = {
