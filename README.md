@@ -1,6 +1,11 @@
 Install
 =======
 
+```
+cd libreborme
+git clone git@github.com:PabloCastellano/libreborme_alertas.git alertas
+```
+
 En `settings.py` añadir alertas a `INSTALLED_APPS`:
 
 ```
