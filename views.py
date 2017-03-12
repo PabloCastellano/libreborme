@@ -214,8 +214,22 @@ def settings_update_personal(request):
 
 
 @login_required
-def alerta_remove(request, id):
+def alerta_remove_acto(request, id):
     alerta = AlertaActo.objects.get(user=request.user, pk=id)
+    alerta.delete()
+    return redirect(reverse('alertas-list'))
+
+
+@login_required
+def alerta_remove_person(request, id):
+    alerta = AlertaPerson.objects.get(user=request.user, pk=id)
+    alerta.delete()
+    return redirect(reverse('alertas-list'))
+
+
+@login_required
+def alerta_remove_company(request, id):
+    alerta = AlertaCompany.objects.get(user=request.user, pk=id)
     alerta.delete()
     return redirect(reverse('alertas-list'))
 

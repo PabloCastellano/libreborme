@@ -65,7 +65,7 @@
                     {% endif %}
                   </td>
                   <td>
-                    <a href="#">
+                    <a href="{% url 'alerta-remove-company' alerta.id %}">
                     <button type="button" class="btn btn-primary btn-xs">
                       <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar
                     </button>
@@ -107,7 +107,7 @@
                     {% endif %}
                   </td>
                   <td>
-                    <a href="#">
+                    <a href="{% url 'alerta-remove-person' alerta.id %}">
                     <button type="button" class="btn btn-primary btn-xs">
                       <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar
                     </button>
