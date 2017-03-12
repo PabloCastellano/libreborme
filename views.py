@@ -1,19 +1,24 @@
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
-from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
-from django.template import RequestContext
 from django.contrib.auth.models import User
 
-from .models import AlertaActo, AlertaCompany, AlertaPerson, AlertasConfig, LBInvoice, Profile
+from .models import AlertaActo, AlertaCompany, AlertaPerson, LBInvoice, Profile
+from borme.models import Company, Person
+from borme.templatetags.utils import slug, slug2
 from . import forms
+
 import datetime
+import json
 
 from .utils import get_alertas_config
+
+from haystack.query import SearchQuerySet
 
 
 @method_decorator(login_required, name='dispatch')
@@ -63,7 +68,7 @@ class DashboardSettingsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(DashboardSettingsView, self).get_context_data(**kwargs)
         context['active'] = 'settings'
-        context['form_personal'] = forms.PersonalSettingsForm(initial={'email': self.request.user.email })
+        context['form_personal'] = forms.PersonalSettingsForm(initial={'email': self.request.user.email})
 
         initial = {}
         initial['notification_method'] = self.request.user.profile.notification_method
@@ -99,7 +104,7 @@ class BillingView(TemplateView):
 @method_decorator(login_required, name='dispatch')
 class BillingDetailView(DetailView):
     model = LBInvoice
-    
+
     def get_object(self):
         self.invoice = LBInvoice.objects.get(user=self.request.user, pk=self.kwargs['id'])
         return self.invoice
@@ -120,7 +125,6 @@ class AlertaDetailView(DetailView):
         return self.alerta
 
 
-
 @method_decorator(login_required, name='dispatch')
 class AlertaListView(TemplateView):
     template_name = "alertas/alerta_list.html"
@@ -130,8 +134,8 @@ class AlertaListView(TemplateView):
         context['alertas_c'] = AlertaCompany.objects.filter(user=self.request.user)
         context['alertas_p'] = AlertaPerson.objects.filter(user=self.request.user)
         context['alertas_a'] = AlertaActo.objects.filter(user=self.request.user)
-        context['form_c'] = forms.AlertaCompanyModelForm()
-        context['form_p'] = forms.AlertaPersonModelForm()
+        context['form_c'] = forms.AlertaCompanyForm()
+        context['form_p'] = forms.AlertaPersonForm()
         context['form_a'] = forms.AlertaActoModelForm()
 
         context['count_c'] = context['alertas_c'].count()
@@ -215,25 +219,43 @@ def alerta_remove(request, id):
     alerta.delete()
     return redirect(reverse('alertas-list'))
 
-# TODO: una funcion por cada tipo de form
-# No mezclarlas
-
-@login_required
-def alerta_create(request):
-    context = {}
-    context['form_c'] = forms.AlertaCompanyModelForm()
-    context['form_p'] = forms.AlertaPersonModelForm()
-    context['form_a'] = forms.AlertaActoModelForm()
-
-    return render(request, 'alertas/alerta_new.html', context)
-
 
 @method_decorator(login_required, name='dispatch')
 class AlertaActoCreateView(CreateView):
     model = AlertaCompany
     fields = ("company", "send_html")
 
-# No vale CreateView porque la lista para elegir empresa/persona sería inmensa 
+
+# TODO: CSRF con POST
+@login_required
+def suggest_company(request):
+    results = []
+    if request.method == "GET" and request.is_ajax():
+        term = request.GET.get("term").strip()
+        if len(term) > 2:
+            search_results = SearchQuerySet().filter(content=term).models(Company)
+
+            for result in search_results:
+                results.append({"id": slug2(result.text), "value": result.text})
+
+    return HttpResponse(json.dumps(results), content_type="application/json")
+
+
+def suggest_person(request):
+    results = []
+    if request.method == "GET" and request.is_ajax():
+        term = request.GET.get("term").strip()
+        if len(term) > 2:
+            search_results = SearchQuerySet().filter(content=term).models(Person)
+
+            for result in search_results:
+                results.append({"id": slug(result.text), "value": result.text})
+
+    return HttpResponse(json.dumps(results), content_type="application/json")
+
+
+
+# No vale CreateView porque la lista para elegir empresa/persona sería inmensa
 
 # #        - En liquidación
 #        - Concurso de acreedores

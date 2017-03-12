@@ -1,8 +1,6 @@
 from django import forms
 from . import models
 
-# TODO: ajax CharField
-
 
 class AlertaCompanyModelForm(forms.ModelForm):
     class Meta:
@@ -14,6 +12,16 @@ class AlertaPersonModelForm(forms.ModelForm):
     class Meta:
         model = models.AlertaPerson
         exclude = ('user', 'is_enabled')
+
+
+class AlertaCompanyForm(forms.Form):
+    company = forms.CharField()
+    send_html = forms.BooleanField()
+
+
+class AlertaPersonForm(forms.Form):
+    person = forms.CharField()
+    send_html = forms.BooleanField()
 
 
 class AlertaActoModelForm(forms.ModelForm):

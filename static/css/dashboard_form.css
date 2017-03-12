@@ -83,3 +83,7 @@
 button.btn-primary a {
   color: white;
 }
+
+ul.ui-autocomplete {
+  z-index: 1100;
+}
