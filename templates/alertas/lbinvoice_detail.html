@@ -22,15 +22,15 @@
                 </tr>
                 <tr>
                   <td>Cantidad:</td>
-                  <td>{{ object.amount }}</td>
+                  <td>{{ object.amount|floatformat:2 }} €</td>
                 </tr>
                 <tr>
                   <td>Forma de pago</td>
-                  <td>{{ object.payment_type }}</td>
+                  <td>{{ object.get_payment_type_display }}</td>
                 </tr>
                 <tr {% if not object.is_paid %}class="danger"{% endif %}>
                   <td>Pagado</td>
-                  <td>{{ object.is_paid }}</td>
+                  <td>{{ object.is_paid|yesno:"Sí,No" }}</td>
                 </tr>
                 <tr>
                   <td>Descripción</td>
