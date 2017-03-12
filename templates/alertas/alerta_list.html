@@ -57,7 +57,7 @@
             {% for alerta in alertas_c %}
                 <tr>
                   <td>{{ alerta.id }}</td>
-                  <td>{{ alerta.company }}</td>
+                  <td><a target="_blank" href="{% url 'borme-empresa' alerta.company.name|slug2 %}">{{ alerta.company }}</a></td>
                   <td>{% if alerta.send_html %}
                     <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                     {% else %}
@@ -99,7 +99,7 @@
             {% for alerta in alertas_p %}
                 <tr>
                   <td>{{ alerta.id }}</td>
-                  <td>{{ alerta.person }}</td>
+                  <td><a target="_blank" href="{% url 'borme-persona' alerta.person.name|slug %}">{{ alerta.person }}</a></td>
                   <td>{% if alerta.send_html %}
                     <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                     {% else %}
