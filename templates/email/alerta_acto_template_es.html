@@ -11,7 +11,7 @@
 
 <ul>
 {% for company in companies %}
-<li><a href="#">{{ company.name }}</a></li>
+<li><a href="{{ SITE_URL }}/borme/empresa/{{ company.slug }}">{{ company.name }}</a></li>
 {% endfor %}
 </ul>
 

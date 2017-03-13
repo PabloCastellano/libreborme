@@ -18,6 +18,7 @@ from django.conf import settings
 from django.template import loader
 from alertas.models import AlertaActo, EVENTOS_DICT, PERIODICIDAD_DICT
 
+from borme.templatetags.utils import slug2
 from bormeparser import Borme
 
 import datetime
@@ -176,12 +177,12 @@ def busca_evento(begin_date, end_date):
                 for anuncio in borme.get_anuncios():
                     # En liquidación
                     if anuncio.liquidacion:
-                        actos[borme.provincia.name]["liq"].append({"date": borme.date, "name": anuncio.empresa})
+                        actos[borme.provincia.name]["liq"].append({"date": borme.date, "name": anuncio.empresa, "slug": slug2(anuncio.empresa)})
                         total["liq"] += 1
                     # Empresas de nueva creación
                     for acto in anuncio.actos:
                         if acto.name in ("Constitución", "Nueva sucursal"):
-                            actos[borme.provincia.name]["new"].append({"date": borme.date, "name": anuncio.empresa})
+                            actos[borme.provincia.name]["new"].append({"date": borme.date, "name": anuncio.empresa, "slug": slug2(anuncio.empresa)})
                             total["new"] += 1
         cur_date += datetime.timedelta(days=1)
 
