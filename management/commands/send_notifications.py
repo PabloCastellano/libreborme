@@ -212,7 +212,7 @@ def busca_empresas(periodo, evento):
         companies, total = busca_evento(begin_date, end_date, evento)
     elif evento == "con":
         companies, total = busca_evento_con(begin_date, end_date)
-    LOG.info("Companies for event {} between {} and {}: {}".format(evento, begin_date, end_date, total))
+    LOG.info("{} companies found for event '{}' between {} and {}".format(total, evento, begin_date, end_date))
 
     provincias = sorted(companies.keys())
     #for provincia, data in companies.items():
