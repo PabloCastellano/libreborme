@@ -148,7 +148,7 @@ class Profile(models.Model):
         if not self.notification_email:
             self.notification_email = self.user.email
         super(Profile, self).save(force_insert, force_update)
-    
+
     def is_premium(self):
         pass
         #return all(for invoice in self.invoices:
@@ -170,7 +170,7 @@ class LBInvoice(models.Model):
     is_paid = models.BooleanField()
     description = models.CharField(max_length=2000, blank=True)
     nif = models.CharField(max_length=20)
-    
+
     def get_absolute_url(self):
         return reverse('alertas-invoice-view', args=[str(self.id)])
 
@@ -194,5 +194,3 @@ class AlertasConfig(models.Model):
 #    - Sale algún acto mercantil al que se está suscrito (suscripción por acto)
 #        - En liquidación
 #        - Concurso de acreedores
-
-

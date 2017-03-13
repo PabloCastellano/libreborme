@@ -36,7 +36,7 @@ class LBInvoiceAdmin(admin.ModelAdmin):
 class AlertasConfigAdmin(admin.ModelAdmin):
     list_display = ('key', 'value')
     search_fields = ['key']
-    
+
 
 admin.site.register(models.AlertaCompany, AlertaCompanyAdmin)
 admin.site.register(models.AlertaPerson, AlertaPersonAdmin)

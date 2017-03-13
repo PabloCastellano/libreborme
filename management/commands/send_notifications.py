@@ -13,13 +13,10 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 from django.conf import settings
-from django.db import connection
 from django.template import loader
 from alertas.models import AlertaActo, EVENTOS_DICT, PERIODICIDAD_DICT
-from borme.utils import convertir_iniciales
-from borme.templatetags.utils import slug2
-from bormeparser.regex import is_acto_cargo
 
 from bormeparser import Borme
 
@@ -36,6 +33,7 @@ EMAIL_FROM = "noreply@libreborme.net"
 
 LOG = logging.getLogger(__file__)
 LOG.setLevel(logging.INFO)
+
 
 class Command(BaseCommand):
     help = 'Send periodic email subscriptions (AlertaActo only)'
@@ -68,11 +66,11 @@ class Command(BaseCommand):
         if periodo not in ('daily', 'weekly', 'monthly'):
             print('Periodo {} is invalid. Valid values are: {}'.format(periodo, ', '.join(PERIODICIDAD_DICT.keys())))
             return
- 
+
         if evento not in EVENTOS_DICT:
             print('Evento {} is invalid. Valid values are: {}'.format(evento, ', '.join(EVENTOS_DICT.keys())))
             return
-        
+
         alertas = busca_subscriptores(periodo, evento, options["username"])
         if len(alertas) == 0:
             LOG.info("0 alertas. END")
@@ -112,7 +110,7 @@ def send_email_notification(alerta, evento, periodo, companies):
 
     try:
         validate_email(email)
-    except django.core.exceptions.ValidationError:
+    except ValidationError:
         LOG.error("User {} has an invalid notification email: {}. Nothing was sent to him!".format(alerta.user.get_full_name(), email))
         # Notify user about it
         # Add to history anyways
@@ -149,7 +147,7 @@ def send_email_notification(alerta, evento, periodo, companies):
 
 
 def send_url_notification(alerta, evento, periodo, companies):
-    endpoint_url = alerta.user.profile.notification_url
+    # endpoint_url = alerta.user.profile.notification_url
     # TODO
     raise NotImplementedError
 
@@ -173,7 +171,7 @@ def busca_evento(begin_date, end_date):
                         actos[borme.provincia.name]["liq"].append({"date": borme.date, "name": anuncio.empresa})
                         total["liq"] += 1
                     for acto in anuncio.actos:
-                        if acto.name in ("Constitución", "Nueva sucursal"),
+                        if acto.name in ("Constitución", "Nueva sucursal"):
                             actos[borme.provincia.name]["new"].append({"date": borme.date, "name": anuncio.empresa})
                             total["new"] += 1
         cur_date += datetime.timedelta(days=1)
