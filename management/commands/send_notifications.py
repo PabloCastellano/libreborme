@@ -76,7 +76,7 @@ class Command(BaseCommand):
             LOG.info("0 alertas. END")
             return
 
-        companies = busca_empresas(periodo)
+        companies = busca_empresas(periodo, evento)
         if len(companies) == 0:
             LOG.info("0 companies. END")
             return
@@ -152,9 +152,16 @@ def send_url_notification(alerta, evento, periodo, companies):
     raise NotImplementedError
 
 
+def busca_evento_con(begin_date, end_date):
+    # Concursos de acreedores
+    actos = {}
+    total = {"con": 0}
+    return (actos, total)
+
+
 def busca_evento(begin_date, end_date):
     actos = {}
-    total = {"liq": 0, "con": 0, "new": 0}
+    total = {"liq": 0, "new": 0}
     cur_date = begin_date
     while cur_date <= end_date:
         borme_path = os.path.join(BORME_JSON_PATH, str(cur_date.year), "{:02d}".format(cur_date.month), "{:02d}".format(cur_date.day))
@@ -165,22 +172,23 @@ def busca_evento(begin_date, end_date):
             for filepath in files:
                 borme = Borme.from_json(filepath)
                 if borme.provincia.name not in actos:
-                    actos[borme.provincia.name] = {"liq": [], "con": [], "new": []}
+                    actos[borme.provincia.name] = {"liq": [], "new": []}
                 for anuncio in borme.get_anuncios():
+                    # En liquidación
                     if anuncio.liquidacion:
                         actos[borme.provincia.name]["liq"].append({"date": borme.date, "name": anuncio.empresa})
                         total["liq"] += 1
+                    # Empresas de nueva creación
                     for acto in anuncio.actos:
                         if acto.name in ("Constitución", "Nueva sucursal"):
                             actos[borme.provincia.name]["new"].append({"date": borme.date, "name": anuncio.empresa})
                             total["new"] += 1
         cur_date += datetime.timedelta(days=1)
 
-    LOG.info("Companies for events between {} and {}: liq:{liq} new:{new} con:{con}".format(total, begin_date, end_date, **total))
     return (actos, total)
 
 
-def busca_empresas(periodo):
+def busca_empresas(periodo, evento):
     if periodo == 'daily':
         if TODAY.weekday() in (5, 6):
             raise CommandError("Daily must not be run on Saturday nor Sunday")
@@ -197,7 +205,11 @@ def busca_empresas(periodo):
         begin_date = datetime.date(TODAY.year, TODAY.month, 1)
         end_date = TODAY
 
-    companies, total = busca_evento(begin_date, end_date)
+    if evento in ("liq", "new"):
+        companies, total = busca_evento(begin_date, end_date)
+    elif evento == "con":
+        companies, total = busca_evento_con(begin_date, end_date)
+    LOG.info("Companies for events between {} and {}: liq:{liq} new:{new} con:{con}".format(begin_date, end_date, **total))
 
     provincias = sorted(companies.keys())
     #for provincia, data in companies.items():
