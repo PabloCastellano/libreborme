@@ -21,6 +21,7 @@ from alertas.models import AlertaActo, EVENTOS_DICT, PERIODICIDAD_DICT
 from borme.templatetags.utils import slug2
 from bormeparser import Borme
 
+import csv
 import datetime
 import logging
 import os
@@ -82,44 +83,54 @@ class Command(BaseCommand):
             LOG.info("0 companies. END")
             return
 
+        # Generar los CSV
+        generar_csv(evento, periodo, companies)
+
         if dry_run:
             print("Notifications were not sent because --dry-run")
             return
-
-        # Generar los CSV
-        generar_csv(alertas, evento, periodo, companies)
 
         for alerta in alertas:
             if alerta.user.profile.notification_method == "email":
                 send_email_notification(alerta, evento, periodo, companies)
             elif alerta.user.profile.notification_method == "url":
                 send_url_notification(alerta, evento, periodo, companies)
+
             # TODO: añade a historial
             # add_alerta_history(alerta.user, periodo, provincia, date.today)
 
 
-def generar_csv(alertas, evento, periodo, companies):
+def generar_csv(evento, periodo, companies):
     # Formato CSV:
     #   Fecha,Nombre,Provincia,Fecha,Evento,
     #   2017-02-01,Patatas SL,Valencia,Empresas de nueva creación
     #
     # Si weekly/monthly:
-    #   Fecha,Nombre,Provincia,Fecha,Evento,
+    #   Fecha,Nombre,Provincia,Evento,
     #   2017-02-01,Patatas SL,Valencia,Empresas de nueva creación
     #   2017-02-02,Patatas SL,Valencia,Empresas de nueva creación
     #   2017-02-03,Patatas SL,Valencia,Empresas de nueva creación
     #   ...
     #
     # alerta.user
-    # provincia = alerta.get_provincia_display()
-    # evento_display = alerta.get_evento_display()
-    """
-    for company in companies:
-    path = os.path.join(settings.BOMRE_ROOT, "csv_alertas", provincia, periodo, year, month)
-    os.makedirs(path, ..silent=True)
-    #
-    """
-    pass
+    begin_date, end_date = get_rango_fechas(periodo)
+    year = str(begin_date.year)
+    month = "{:02d}".format(begin_date.month)
+    day = "{:02d}".format(begin_date.day)
+
+    for provincia, alertas in companies.items():
+        # one CSV per each provincia
+        path = os.path.join(settings.BORME_ROOT, "csv_alertas", provincia.replace(" ", "_"), periodo, year, month)
+        os.makedirs(path, exist_ok=True)
+        filepath = os.path.join(path, day + ".csv")
+
+        with open(filepath, 'w') as csvfile:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow(["Fecha", "Nombre", "Provincia", "Evento"])
+            for alerta in alertas:
+                csvwriter.writerow([alerta["date"], alerta["name"], provincia, evento])
+
+        print("Written " + filepath)
 
 
 def send_email_notification(alerta, evento, periodo, companies):
@@ -134,7 +145,7 @@ def send_email_notification(alerta, evento, periodo, companies):
         return False
     LOG.info("Se va a enviar a {} porque hay alertas para {}/{}".format(email, provincia, evento))
 
-    companies = companies[provincia][evento]
+    companies = companies[provincia]
 
     try:
         validate_email(email)
@@ -200,7 +211,7 @@ def busca_evento(begin_date, end_date, evento):
             for filepath in files:
                 borme = Borme.from_json(filepath)
                 if borme.provincia.name not in actos:
-                    actos[borme.provincia.name] = {"liq": [], "new": []}
+                    actos[borme.provincia.name] = []
                 for anuncio in borme.get_anuncios():
                     # En liquidación
                     if evento == "liq":
@@ -211,14 +222,14 @@ def busca_evento(begin_date, end_date, evento):
                     if evento == "new":
                         for acto in anuncio.actos:
                             if acto.name in ("Constitución", "Nueva sucursal"):
-                                actos[borme.provincia.name]["new"].append({"date": borme.date, "name": anuncio.empresa, "slug": slug2(anuncio.empresa)})
+                                actos[borme.provincia.name].append({"date": borme.date, "name": anuncio.empresa, "slug": slug2(anuncio.empresa)})
                                 total += 1
         cur_date += datetime.timedelta(days=1)
 
     return (actos, total)
 
 
-def busca_empresas(periodo, evento):
+def get_rango_fechas(periodo):
     if periodo == 'daily':
         if TODAY.weekday() in (5, 6):
             raise CommandError("Daily must not be run on Saturday nor Sunday")
@@ -234,6 +245,11 @@ def busca_empresas(periodo, evento):
             raise CommandError("Monthly must be run on the 1st day of the month")
         begin_date = datetime.date(TODAY.year, TODAY.month, 1)
         end_date = TODAY
+    return (begin_date, end_date)
+
+
+def busca_empresas(periodo, evento):
+    begin_date, end_date = get_rango_fechas(periodo)
 
     if evento in ("liq", "new"):
         companies, total = busca_evento(begin_date, end_date, evento)
@@ -246,6 +262,7 @@ def busca_empresas(periodo, evento):
     #    for company in data[evento]:
     #        LOG.debug("-- {name} ({provincia})".format(name=company["name"], provincia=provincia))
     LOG.debug("Found in provinces: {}".format(", ".join(provincias)))
+
     return companies
 
 
@@ -255,5 +272,5 @@ def busca_subscriptores(periodo, evento, username=None):
         alertas = alertas.filter(user__username=username)
     #for alerta in alertas:
     #    LOG.debug("-- {} <{}>".format(alerta.user.get_full_name(), alerta.user.email))
-    LOG.info("Total {} alerts for event '{}'.".format(len(alertas), evento))
+    LOG.info("Total {} subscribers for event '{}'.".format(len(alertas), evento))
     return alertas
