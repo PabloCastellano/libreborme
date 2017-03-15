@@ -2,11 +2,10 @@ Notificationes de {{ evento }}.
 
 Hola {{ name }}.
 A continuación te enviamos el listado de empresas que han generado una notificación en LibreBORME:
+A continuación te enviamos el listado de empresas que han generado una notificación en LibreBORME para tu suscripción «{{ evento }}» en «{{ provincia }}»:
 
 {% for company in companies %}* {{ company.name }}
 {% endfor %}
-
-Estás recibiendo este email porque has activado la subscripción «{{ evento }}» en «{{ provincia }}».
 
 Recuerda que desde tu panel de usuario puedes descargar el listado de tus notificaciones en formato CSV.
 

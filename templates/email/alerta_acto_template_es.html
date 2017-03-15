@@ -7,15 +7,13 @@
 <h1>Notificationes de {{ evento }}</h1>
 
 <p>Hola {{ name }}.</p>
-<p>A continuación te enviamos el listado de empresas que han generado una notificación en LibreBORME:</p>
+<p>A continuación te enviamos el listado de empresas que han generado una notificación en LibreBORME para tu suscripción <strong>{{ evento }}</strong> en <strong>{{ provincia }}</strong>:
 
 <ul>
 {% for company in companies %}
 <li><a href="{{ SITE_URL }}/borme/empresa/{{ company.slug }}">{{ company.name }}</a></li>
 {% endfor %}
 </ul>
-
-<p>Estás recibiendo este email porque has activado la subscripción <strong>{{ evento }}</strong> en <strong>{{ provincia }}</strong>.
 
 <p>Recuerda que desde tu <a href="https://libreborme.net/alertas/">panel de usuario</a> puedes descargar el listado
    de tus notificaciones en formato CSV.</p>
