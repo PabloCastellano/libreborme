@@ -86,13 +86,40 @@ class Command(BaseCommand):
             print("Notifications were not sent because --dry-run")
             return
 
+        # Generar los CSV
+        generar_csv(alertas, evento, periodo, companies)
+
         for alerta in alertas:
             if alerta.user.profile.notification_method == "email":
                 send_email_notification(alerta, evento, periodo, companies)
             elif alerta.user.profile.notification_method == "url":
                 send_url_notification(alerta, evento, periodo, companies)
+            # TODO: añade a historial
+            # add_alerta_history(alerta.user, periodo, provincia, date.today)
 
-        # TODO: añade a historial
+
+def generar_csv(alertas, evento, periodo, companies):
+    # Formato CSV:
+    #   Fecha,Nombre,Provincia,Fecha,Evento,
+    #   2017-02-01,Patatas SL,Valencia,Empresas de nueva creación
+    #
+    # Si weekly/monthly:
+    #   Fecha,Nombre,Provincia,Fecha,Evento,
+    #   2017-02-01,Patatas SL,Valencia,Empresas de nueva creación
+    #   2017-02-02,Patatas SL,Valencia,Empresas de nueva creación
+    #   2017-02-03,Patatas SL,Valencia,Empresas de nueva creación
+    #   ...
+    #
+    # alerta.user
+    # provincia = alerta.get_provincia_display()
+    # evento_display = alerta.get_evento_display()
+    """
+    for company in companies:
+    path = os.path.join(settings.BOMRE_ROOT, "csv_alertas", provincia, periodo, year, month)
+    os.makedirs(path, ..silent=True)
+    #
+    """
+    pass
 
 
 def send_email_notification(alerta, evento, periodo, companies):
