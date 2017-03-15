@@ -6,7 +6,7 @@ cd libreborme
 git clone git@github.com:PabloCastellano/libreborme_alertas.git alertas
 ```
 
-En `settings.py` añadir alertas a `INSTALLED_APPS`:
+En `settings.py` añadir alertas y bootstrapform a `INSTALLED_APPS`:
 
 ```
 LOGIN_REDIRECT_URL = '/alertas/'
