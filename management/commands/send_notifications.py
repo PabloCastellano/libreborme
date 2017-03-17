@@ -216,7 +216,7 @@ def busca_evento(begin_date, end_date, evento):
                     # En liquidación
                     if evento == "liq":
                         if anuncio.liquidacion:
-                            actos[borme.provincia.name]["liq"].append({"date": borme.date, "name": anuncio.empresa, "slug": slug2(anuncio.empresa)})
+                            actos[borme.provincia.name].append({"date": borme.date, "name": anuncio.empresa, "slug": slug2(anuncio.empresa)})
                             total += 1
                     # Empresas de nueva creación
                     if evento == "new":
