@@ -1,7 +1,6 @@
 Notificationes de {{ evento }}.
 
 Hola {{ name }}.
-A continuación te enviamos el listado de empresas que han generado una notificación en LibreBORME:
 A continuación te enviamos el listado de empresas que han generado una notificación en LibreBORME para tu suscripción «{{ evento }}» en «{{ provincia }}»:
 
 {% for company in companies %}* {{ company.name }}
