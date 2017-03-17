@@ -114,9 +114,9 @@ def generar_csv(evento, periodo, companies):
     #
     # alerta.user
     begin_date, end_date = get_rango_fechas(periodo)
-    year = str(begin_date.year)
-    month = "{:02d}".format(begin_date.month)
-    day = "{:02d}".format(begin_date.day)
+    year = str(end_date.year)
+    month = "{:02d}".format(end_date.month)
+    day = "{:02d}".format(end_date.day)
 
     for provincia, alertas in companies.items():
         # one CSV per each provincia
