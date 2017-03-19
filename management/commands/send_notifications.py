@@ -122,7 +122,7 @@ def generar_csv(evento, periodo, companies):
         # one CSV per each provincia
         path = os.path.join(settings.BORME_ROOT, "csv_alertas", provincia.replace(" ", "_"), periodo, year, month)
         os.makedirs(path, exist_ok=True)
-        filepath = os.path.join(path, day + ".csv")
+        filepath = os.path.join(path, day + "_" + evento + ".csv")
 
         with open(filepath, 'w') as csvfile:
             csvwriter = csv.writer(csvfile)
