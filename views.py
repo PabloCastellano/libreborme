@@ -247,7 +247,7 @@ def suggest_company(request):
     if request.method == "GET" and request.is_ajax():
         term = request.GET.get("term").strip()
         if len(term) > 2:
-            search_results = SearchQuerySet().filter(content=term).models(Company)
+            search_results = SearchQuerySet().filter(content=term).models(Company)[:20]
 
             for result in search_results:
                 results.append({"id": slug2(result.text), "value": result.text})
@@ -260,7 +260,7 @@ def suggest_person(request):
     if request.method == "GET" and request.is_ajax():
         term = request.GET.get("term").strip()
         if len(term) > 2:
-            search_results = SearchQuerySet().filter(content=term).models(Person)
+            search_results = SearchQuerySet().filter(content=term).models(Person)[:20]
 
             for result in search_results:
                 results.append({"id": slug(result.text), "value": result.text})
