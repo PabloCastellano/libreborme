@@ -192,7 +192,7 @@ def send_url_notification(alerta, evento, periodo, companies):
 
 
 def busca_evento_con(begin_date, end_date):
-    # Concursos de acreedores
+    # Concursos de acreedores BOE (WIP)
     actos = {}
     total = 0
     return (actos, total)
@@ -224,6 +224,12 @@ def busca_evento(begin_date, end_date, evento):
                             if acto.name in ("Constitución", "Nueva sucursal"):
                                 actos[borme.provincia.name].append({"date": borme.date, "name": anuncio.empresa, "slug": slug2(anuncio.empresa)})
                                 total += 1
+                    # Concursos de acreedores
+                    if evento == "con":
+                        for acto in anuncio.actos:
+                            if acto.name in ("Situación concursal"):
+                                actos[borme.provincia.name].append({"date": borme.date, "name": anuncio.empresa, "slug": slug2(anuncio.empresa)})
+                                total += 1
         cur_date += datetime.timedelta(days=1)
 
     return (actos, total)
@@ -251,9 +257,10 @@ def get_rango_fechas(periodo):
 def busca_empresas(periodo, evento):
     begin_date, end_date = get_rango_fechas(periodo)
 
-    if evento in ("liq", "new"):
+    if evento in ("liq", "new", "con"):
         companies, total = busca_evento(begin_date, end_date, evento)
-    elif evento == "con":
+    elif evento == "con2":
+        # TODO
         companies, total = busca_evento_con(begin_date, end_date)
     LOG.info("{} companies found for event '{}' between {} and {}".format(total, evento, begin_date, end_date))
 
