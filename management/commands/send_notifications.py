@@ -201,6 +201,7 @@ def busca_evento_con(begin_date, end_date):
 def busca_evento(begin_date, end_date, evento):
     actos = {}
     total = 0
+    already_added = []
     cur_date = begin_date
     while cur_date <= end_date:
         borme_path = os.path.join(BORME_JSON_PATH, str(cur_date.year), "{:02d}".format(cur_date.month), "{:02d}".format(cur_date.day))
@@ -227,9 +228,12 @@ def busca_evento(begin_date, end_date, evento):
                     # Concursos de acreedores
                     if evento == "con":
                         for acto in anuncio.actos:
-                            if acto.name in ("Situación concursal"):
-                                actos[borme.provincia.name].append({"date": borme.date, "name": anuncio.empresa, "slug": slug2(anuncio.empresa)})
-                                total += 1
+                            if acto.name == "Situación concursal":
+                                slug = slug2(anuncio.empresa)
+                                if slug not in already_added:
+                                    already_added.append(slug)
+                                    actos[borme.provincia.name].append({"date": borme.date, "name": anuncio.empresa, "slug": slug})
+                                    total += 1
         cur_date += datetime.timedelta(days=1)
 
     return (actos, total)
