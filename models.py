@@ -92,6 +92,13 @@ EVENTOS_CHOICES = (
 )
 EVENTOS_DICT = dict(EVENTOS_CHOICES)
 
+
+ALERTAS_CHOICES = EVENTOS_CHOICES
+ALERTAS_CHOICES += (
+    ('company', "Empresa"),
+    ('person', "Persona"),
+)
+
 LANGUAGE_CHOICES = (
     ('es', 'Español'),
 )
@@ -184,6 +191,18 @@ class AlertasConfig(models.Model):
 
     def __str__(self):
         return "{}: {}".format(self.key, self.value)
+
+
+class AlertaHistory(models.Model):
+    user = models.ForeignKey(User)
+    type = models.CharField(max_length=10, choices=ALERTAS_CHOICES)
+    date = models.DateField()
+    provincia = models.CharField(max_length=3, choices=PROVINCIAS_CHOICES, blank=True, null=True)
+    entidad = models.CharField(max_length=260, blank=True, null=True)
+    periodicidad = models.CharField(max_length=10, choices=PERIODICIDAD_CHOICES, blank=True, null=True)
+
+    def __str__(self):
+        return "{0}, {1}, {2}".format(self.type, self.date, self.user.username)
 
 
 # max_alertas_free_company

@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
-from .models import AlertaActo, AlertaCompany, AlertaPerson, LBInvoice, Profile
+from .models import AlertaActo, AlertaCompany, AlertaHistory, AlertaPerson, LBInvoice, Profile
 from borme.models import Company, Person
 from borme.templatetags.utils import slug, slug2
 from . import forms
@@ -82,12 +82,14 @@ class DashboardSettingsView(TemplateView):
         return context
 
 
+# TODO: Pagination
 @method_decorator(login_required, name='dispatch')
 class DashboardHistoryView(TemplateView):
     template_name = 'alertas/dashboard_history.html'
 
     def get_context_data(self, **kwargs):
         context = super(DashboardHistoryView, self).get_context_data(**kwargs)
+        context['alertas'] = AlertaHistory.objects.filter(user=self.request.user)
         context['active'] = 'history'
         return context
 
