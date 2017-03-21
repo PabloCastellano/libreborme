@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" href="http://getbootstrap.com/favicon.ico">
 
-    <title>Dashboard Template for Bootstrap</title>
+    <title>Panel de alertas | LibreBORME</title>
 
     <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
     <link href="{% static "ie10-viewport-bug-workaround.css" %}" rel="stylesheet">
@@ -48,9 +48,9 @@
         
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li {% if active == 'dashboard' %}class="active"{% endif %}><a href="{% url 'dashboard-index' %}">Dashboard <span class="sr-only">(current)</span></a></li>
+            <li {% if active == 'dashboard' %}class="active"{% endif %}><a href="{% url 'dashboard-index' %}">Información<span class="sr-only">(current)</span></a></li>
             <li {% if active == 'alertas' %}class="active"{% endif %}><a href="{% url 'alertas-list' %}">Alertas</a></li>
-            <li {% if active == 'billing' %}class="active"{% endif %}><a href="{% url 'alertas-billing' %}">Facturación</a></li>
+            <li {% if active == 'billing' %}class="active"{% endif %}><a href="{% url 'alertas-billing' %}">Facturas</a></li>
           </ul>
            <ul class="nav nav-sidebar">
             <li {% if active == 'history' %}class="active"{% endif %}><a href="{% url 'dashboard-history' %}">Historial</a></li>

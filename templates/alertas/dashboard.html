@@ -2,10 +2,10 @@
 
 {% block content %}
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Dashboard</h1>
+          <h1 class="page-header">Información de la cuenta</h1>
 
-          <h2 class="sub-header">Cuenta</h2>
           <p>Tipo de cuenta: <strong>{{ user.profile.get_account_type_display }}</strong></p>
+          <p>Fecha de alta: <strong>{{ user.date_joined.date }}</strong></p>
           
           <h2 class="sub-header">Subscripciones activas</h2>
 
@@ -15,6 +15,8 @@
               <li><a href="{{ subscription.get_absolute_url }}">{{ subscription.description }}</a>, hasta: {{ subscription.end_date | date }}</li>
             {% endfor %}
             </ul>
+          {% else %}
+            <p>Ninguna</p>
           {% endif %}
 
           <h2 class="sub-header">Alertas definidas</h2>

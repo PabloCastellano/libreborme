@@ -39,6 +39,6 @@ class PersonalSettingsForm(forms.ModelForm):
 
 class NotificationSettingsForm(forms.Form):
     #notification_method = forms.ChoiceField(choices=models.NOTIFICATION_CHOICES, widget=forms.RadioSelect(attrs={'class': "radio-inline"}))
-    notification_method = forms.ChoiceField(choices=models.NOTIFICATION_CHOICES)
-    notification_email = forms.EmailField(required=False, help_text='E-mail donde desea recibir las alertas')
-    notification_url = forms.URLField(required=False, help_text='Por ejemplo: http://myexample.org/borme_notifications.php')
+    notification_method = forms.ChoiceField(label="Método de notificación", choices=models.NOTIFICATION_CHOICES)
+    notification_email = forms.EmailField(label="E-mail notificación", required=False, help_text='E-mail donde desea recibir las alertas')
+    notification_url = forms.URLField(label="URL notificación", required=False, help_text='Por ejemplo: http://myexample.org/borme_notifications.php (No disponible)')
