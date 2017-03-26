@@ -20,6 +20,8 @@ urlpatterns = [
     url(r'^alertas/settings/update/notifications/$', views.settings_update_notifications, name='alertas-settings-notifications'),
     url(r'^alertas/history/$', views.DashboardHistoryView.as_view(), name='dashboard-history'),
 
+    url(r'^alertas/history/download/(?P<id>\d+)$', views.download_alerta_history_csv, name='alerta-history-download'),
+
 #    url(r'^(?P<id>\d+)/$', views.alertas_view, name='alertas-detail'),
 
     # AJAX

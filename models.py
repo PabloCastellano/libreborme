@@ -1,8 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from borme.models import Company, Person
+
+import os.path
+
 
 PROVINCIAS_CHOICES = (
     ('1', 'Álava'),
@@ -58,7 +62,7 @@ PROVINCIAS_CHOICES = (
     ('51', 'Ceuta'),
     ('52', 'Melilla')
 )
-
+PROVINCIAS_DICT = dict(PROVINCIAS_CHOICES)
 
 PERIODICIDAD_CHOICES = (
     ('weekly', 'Semanal'),
@@ -200,6 +204,15 @@ class AlertaHistory(models.Model):
     provincia = models.CharField(max_length=3, choices=PROVINCIAS_CHOICES, blank=True, null=True)
     entidad = models.CharField(max_length=260, blank=True, null=True)
     periodicidad = models.CharField(max_length=10, choices=PERIODICIDAD_CHOICES, blank=True, null=True)
+
+    def get_csv_path(self):
+        year = str(self.date.year)
+        month = "{:02d}".format(self.date.month)
+        day = "{:02d}".format(self.date.day)
+        provincia = PROVINCIAS_DICT[self.provincia].replace(" ", "_")
+        path = os.path.join(settings.BORME_ROOT, "csv_alertas", provincia)
+        path = os.path.join(path, self.periodicidad, year, month, day + "_" + self.type + ".csv")
+        return path
 
     def __str__(self):
         return "{0}, {1}, {2}".format(self.type, self.date, self.user.username)

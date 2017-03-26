@@ -260,6 +260,7 @@ def suggest_company(request):
     return HttpResponse(json.dumps(results), content_type="application/json")
 
 
+@login_required
 def suggest_person(request):
     results = []
     if request.method == "GET" and request.is_ajax():
@@ -272,6 +273,21 @@ def suggest_person(request):
 
     return HttpResponse(json.dumps(results), content_type="application/json")
 
+
+@login_required
+def download_alerta_history_csv(request, id):
+    # TODO: Check user is owner
+    alerta = AlertaHistory.objects.get(pk=id, user=request.user)
+    # TODO: if not found?
+
+    path = alerta.get_csv_path()
+    with open(path) as fp:
+        response = HttpResponse(fp, content_type='text/csv')
+
+    filename = '{0}_{1}_{2}_{3}.csv'.format(alerta.type, alerta.provincia, alerta.periodicidad, alerta.date.isoformat())
+    response['Content-Disposition'] = 'attachment; filename="{0}.csv"'.format(filename)
+
+    return response
 
 
 # No vale CreateView porque la lista para elegir empresa/persona sería inmensa
