@@ -56,7 +56,7 @@
               <tbody>
             {% for alerta in alertas_c %}
                 <tr>
-                  <td>{{ alerta.id }}</td>
+                  <td>{{ forloop.counter }}</td>
                   <td><a target="_blank" href="{% url 'borme-empresa' alerta.company.name|slug2 %}">{{ alerta.company }}</a></td>
                   <td>{% if alerta.send_html %}
                     <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
@@ -98,7 +98,7 @@
               <tbody>
             {% for alerta in alertas_p %}
                 <tr>
-                  <td>{{ alerta.id }}</td>
+                  <td>{{ forloop.counter }}</td>
                   <td><a target="_blank" href="{% url 'borme-persona' alerta.person.name|slug %}">{{ alerta.person }}</a></td>
                   <td>{% if alerta.send_html %}
                     <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
@@ -142,7 +142,7 @@
               <tbody>
             {% for alerta in alertas_a %}
                 <tr>
-                  <td>{{ alerta.id }}</td>
+                  <td>{{ forloop.counter }}</td>
                   <td>{{ alerta.get_evento_display }}</td>
                   <td>{{ alerta.get_provincia_display }}</td>
                   <td>{{ alerta.get_periodicidad_display }}</td>
