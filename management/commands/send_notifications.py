@@ -114,7 +114,8 @@ def generar_csv(evento, periodo, companies):
     year = str(end_date.year)
     month = "{:02d}".format(end_date.month)
     day = "{:02d}".format(end_date.day)
-
+    evento = EVENTOS_DICT[evento]
+    
     for provincia, alertas in companies.items():
         # one CSV per each provincia
         path = os.path.join(settings.BORME_ROOT, "csv_alertas", provincia.replace(" ", "_"), periodo, year, month)

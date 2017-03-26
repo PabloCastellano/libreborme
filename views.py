@@ -276,19 +276,23 @@ def suggest_person(request):
 
 @login_required
 def download_alerta_history_csv(request, id):
-    # TODO: Check user is owner
-    alerta = AlertaHistory.objects.get(pk=id, user=request.user)
-    # TODO: if not found?
 
-    path = alerta.get_csv_path()
-    filename = '{0}_{1}_{2}_{3}.csv'.format(alerta.type, alerta.provincia, alerta.periodicidad, alerta.date.isoformat())
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="{0}.csv"'.format(filename)
+    try:
+        alerta = AlertaHistory.objects.get(pk=id, user=request.user)
+    
+        path = alerta.get_csv_path()
+        filename = '{0}_{1}_{2}_{3}.csv'.format(alerta.type, alerta.provincia, alerta.periodicidad, alerta.date.isoformat())
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="{0}"'.format(filename)
 
-    # TODO: Passing iterators
-    # https://docs.djangoproject.com/en/dev/ref/request-response/#passing-iterators
-    with open(path) as fp:
-        response.write(fp.read())
+        # TODO: Passing iterators
+        # https://docs.djangoproject.com/en/dev/ref/request-response/#passing-iterators
+        with open(path) as fp:
+            response.write(fp.read())
+
+    except AlertaHistory.DoesNotExist:
+        response = HttpResponse()
+
     return response
 
 
