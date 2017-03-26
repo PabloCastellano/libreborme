@@ -281,12 +281,14 @@ def download_alerta_history_csv(request, id):
     # TODO: if not found?
 
     path = alerta.get_csv_path()
-    with open(path) as fp:
-        response = HttpResponse(fp, content_type='text/csv')
-
     filename = '{0}_{1}_{2}_{3}.csv'.format(alerta.type, alerta.provincia, alerta.periodicidad, alerta.date.isoformat())
+    response = HttpResponse(fp, content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="{0}.csv"'.format(filename)
 
+    # TODO: Passing iterators
+    # https://docs.djangoproject.com/en/dev/ref/request-response/#passing-iterators
+    with open(path) as fp:
+        response.write(fp.read())
     return response
 
 

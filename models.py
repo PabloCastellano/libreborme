@@ -206,6 +206,7 @@ class AlertaHistory(models.Model):
     periodicidad = models.CharField(max_length=10, choices=PERIODICIDAD_CHOICES, blank=True, null=True)
 
     def get_csv_path(self):
+        # TODO: provicnia and periodicidad can be blank
         year = str(self.date.year)
         month = "{:02d}".format(self.date.month)
         day = "{:02d}".format(self.date.day)
