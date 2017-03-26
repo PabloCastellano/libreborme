@@ -279,9 +279,10 @@ def download_alerta_history_csv(request, id):
 
     try:
         alerta = AlertaHistory.objects.get(pk=id, user=request.user)
-    
+
         path = alerta.get_csv_path()
-        filename = '{0}_{1}_{2}_{3}.csv'.format(alerta.type, alerta.provincia, alerta.periodicidad, alerta.date.isoformat())
+        provincia = alerta.get_provincia_display().replace(" ", "_")
+        filename = '{0}_{1}_{2}.csv'.format(alerta.type, provincia, alerta.date.isoformat())
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="{0}"'.format(filename)
 
