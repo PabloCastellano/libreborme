@@ -115,7 +115,7 @@ def generar_csv(evento, periodo, companies):
     month = "{:02d}".format(end_date.month)
     day = "{:02d}".format(end_date.day)
     evento = EVENTOS_DICT[evento]
-    
+
     for provincia, alertas in companies.items():
         # one CSV per each provincia
         path = os.path.join(settings.BORME_ROOT, "csv_alertas", provincia.replace(" ", "_"), periodo, year, month)
@@ -189,13 +189,6 @@ def send_url_notification(alerta, evento, periodo, companies):
     pass
 
 
-def busca_evento_con(begin_date, end_date):
-    # Concursos de acreedores BOE (WIP)
-    actos = {}
-    total = 0
-    return (actos, total)
-
-
 def busca_evento(begin_date, end_date, evento):
     actos = {}
     total = 0
@@ -259,11 +252,8 @@ def get_rango_fechas(periodo):
 def busca_empresas(periodo, evento):
     begin_date, end_date = get_rango_fechas(periodo)
 
-    if evento in ("liq", "new", "con"):
+    if evento in ("liq", "new"):
         companies, total = busca_evento(begin_date, end_date, evento)
-    elif evento == "con2":
-        # TODO
-        companies, total = busca_evento_con(begin_date, end_date)
     LOG.info("{} companies found for event '{}' between {} and {}".format(total, evento, begin_date, end_date))
 
     provincias = sorted(companies.keys())

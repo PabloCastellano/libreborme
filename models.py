@@ -90,7 +90,7 @@ NOTIFICATION_CHOICES = (
 )
 
 EVENTOS_CHOICES = (
-    ('con', 'Concursos de acreedores'),
+    # ('con', 'Concursos de acreedores'),
     ('liq', 'Liquidación de empresas'),
     ('new', 'Empresas de nueva creación'),
 )
