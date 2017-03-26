@@ -60,7 +60,7 @@ class DashboardSupportView(TemplateView):
         n_alertas += AlertaCompany.objects.filter(user=self.request.user).count()
         n_alertas += AlertaPerson.objects.filter(user=self.request.user).count()
         context['n_alertas'] = n_alertas
-        context['active'] = 'soporte'
+        context['active'] = 'ayuda'
         return context
 
 

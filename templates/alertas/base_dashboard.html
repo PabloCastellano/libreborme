@@ -34,7 +34,7 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li {% if active == 'settings' %}class="active"{% endif %}><a href="{% url 'alertas-settings' %}">Configuración</a></li>
-            <li {% if active == 'soporte' %}class="active"{% endif %}><a href="{% url 'alertas-soporte' %}">Ayuda</a></li>
+            <li {% if active == 'ayuda' %}class="active"{% endif %}><a href="{% url 'alertas-ayuda' %}">Ayuda</a></li>
             <li><a href="{% url 'logout' %}">Salir</a></li>
           </ul>
         </div>
