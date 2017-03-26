@@ -282,7 +282,7 @@ def download_alerta_history_csv(request, id):
 
     path = alerta.get_csv_path()
     filename = '{0}_{1}_{2}_{3}.csv'.format(alerta.type, alerta.provincia, alerta.periodicidad, alerta.date.isoformat())
-    response = HttpResponse(fp, content_type='text/csv')
+    response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="{0}.csv"'.format(filename)
 
     # TODO: Passing iterators
