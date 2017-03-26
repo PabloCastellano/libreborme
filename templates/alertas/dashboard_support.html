@@ -2,8 +2,30 @@
 
 {% block content %}
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Soporte para clientes</h1>
+          <h1 class="page-header">Ayuda</h1>
 
-          <p>Para cualquier consulta puedes contactar con <a href="mailto:soporte@libreborme.net"><strong>soporte@libreborme.net</strong></a> y trataremos de responderte lo antes posible.</p>
+          <h3 class="page-header">Sobre el Panel de Alertas</h3>
+          <p>El <strong>Panel de Alertas</strong> de LibreBORME es un servicio de suscripción para recibir alertas por e-mail.</p>
+          <p>Puedes comenzar a definirlas en la sección <a href="{% url 'alertas-list' %}">Alertas</a>.</p>
+          
+          <h3 class="page-header">¿Cuándo recibiré las alertas?</h3>
+          <p>Esto dependerá del tipo de alerta que hayas definido.</p>
+          <p>Las alertas de tipo Persona o Empresa las recibirás cuando éstas aparezcan en un Boletín Oficial.</p>
+          <p>En el caso de las alertas de actos mercantiles (Por ejemplo: <em>Liquidación de empresas</em>) depende de la periodicidad especificada:
+            <ul>
+              <li>En el caso de ser <strong>diaria</strong> las alertas se enviarán de lunes a viernes sobre las 9AM.</li>
+              <li>En el caso de ser <strong>semanal</strong> las alertas se enviarán los viernes sobre las 9AM.</li>
+              <li>En el caso de ser <strong>mensual</strong> las alertas se enviarán el día 1 de cada mes sobre las 9AM.</li>
+            </ul>
+          </p>
+
+          <h3 class="page-header">Historial de alertas</h3>
+          <p>En la sección <a href="{% url 'dashboard-history' %}">Historial</a> puedes encontrar archivadas todas las alertas que has recibido
+            y descargar los datos en formato CSV.
+          </p>
+
+          <h3 class="page-header">Soporte para clientes</h3>
+
+          <p>Para cualquier otra duda o consulta puedes contactarnos en <a href="mailto:soporte@libreborme.net"><strong>soporte@libreborme.net</strong></a> y trataremos de responderte lo antes posible.</p>
         </div>
 {% endblock %}
