@@ -114,7 +114,7 @@ def generar_csv(evento, periodo, companies):
     year = str(end_date.year)
     month = "{:02d}".format(end_date.month)
     day = "{:02d}".format(end_date.day)
-    evento = EVENTOS_DICT[evento]
+    evento_name = EVENTOS_DICT[evento]
 
     for provincia, alertas in companies.items():
         # one CSV per each provincia
@@ -126,7 +126,7 @@ def generar_csv(evento, periodo, companies):
             csvwriter = csv.writer(csvfile)
             csvwriter.writerow(["Fecha", "Nombre", "Provincia", "Evento"])
             for alerta in alertas:
-                csvwriter.writerow([alerta["date"], alerta["name"], provincia, evento])
+                csvwriter.writerow([alerta["date"], alerta["name"], provincia, evento_name])
 
         print("Written " + filepath)
 
