@@ -1,0 +1,12 @@
+Hola {{ fullname }}.
+
+Te informamos de que tu cuenta en Libreborme Alertas se encontraba en período de pruebas y ha expirado después de {{ test_days }} días.
+
+Esperamos que haya tenido una experiencia satisfactoria probando el servicio. Si ha sido así y quiere contratarlo, escríbanos a contacto@libreborme.net
+
+Atentamente,
+
+--
+Alertas de LibreBORME
+Plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil
+http://libreborme.net/ 

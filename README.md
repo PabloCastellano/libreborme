@@ -48,3 +48,10 @@ Cron (opción 2)
 30 9    1 * *       {{ libreborme_dir }}/cron_send_notifications_monthly.sh
 ```
 
+
+Más crones
+----------
+
+```
+5 0     * * *       libreborme    cd /home/libreborme && .. && ./manage.py expire_test_users
+```

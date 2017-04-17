@@ -2,9 +2,9 @@
 {% load staticfiles %}
 {% block content %}
 
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+{% for key, value in form.errors.items %}
+<p>{{ value }}</p>
+{% endfor %}
 
 {% if next %}
     {% if user.is_authenticated %}
