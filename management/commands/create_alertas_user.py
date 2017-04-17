@@ -20,7 +20,7 @@ LOG.setLevel(logging.INFO)
 
 
 class Command(BaseCommand):
-    help = 'Send periodic email subscriptions (AlertaActo only)'
+    help = 'Create a new customer account for alertas'
 
     def add_arguments(self, parser):
         parser.add_argument("--username")
