@@ -95,6 +95,26 @@ class Person(Model):
                 cargo['date_to'] = date
                 self.cargos_historial.append(cargo)
 
+    def get_cargos_actuales(self, offset=0, limit=settings.CARGOS_LIMIT):
+        cargos = self.cargos_actuales.copy()
+        cargos = [dict(item, **{'type': 'company'}) for item in cargos]
+        cargos = sorted(cargos, key=lambda k: k['date_from'])
+
+        if limit == 0: limit = len(cargos)
+        show_more = offset+limit < len(cargos)
+
+        return cargos[offset:offset+limit], show_more
+
+    def get_cargos_historial(self, offset=0, limit=settings.CARGOS_LIMIT):
+        cargos = self.cargos_historial.copy()
+        cargos = [dict(item, **{'type': 'company'}) for item in cargos]
+        cargos = sorted(cargos, key=lambda k: k['date_to'])
+
+        if limit == 0: limit = len(cargos)
+        show_more = offset+limit < len(cargos)
+
+        return cargos[offset:offset+limit], show_more
+
     @property
     def total_companies(self):
         return len(self.in_companies)
@@ -160,8 +180,8 @@ class Company(Model):
         cargos_c = [dict(item, **{'type': 'company'}) for item in cargos_c]
         cargos = sorted(cargos_p + cargos_c, key=lambda k: k['date_from'])
 
-        show_more = offset+limit < len(cargos)
         if limit == 0: limit = len(cargos)
+        show_more = offset+limit < len(cargos)
 
         return cargos[offset:offset+limit], show_more
 
@@ -172,8 +192,8 @@ class Company(Model):
         cargos_c = [dict(item, **{'type': 'company'}) for item in cargos_c]
         cargos = sorted(cargos_p + cargos_c, key=lambda k: k['date_to'])
 
-        show_more = offset+limit < len(cargos)
         if limit == 0: limit = len(cargos)
+        show_more = offset+limit < len(cargos)
 
         return cargos[offset:offset+limit], show_more
 
