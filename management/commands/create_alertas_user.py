@@ -7,12 +7,12 @@
 # TODO: check type argument
 # TODO: crear factura?
 # TODO: crear alerta de prueba?
+# TODO: generate random password and show/email it
 #
 from django.core.management.base import BaseCommand, CommandError
 
-from django.contrib.auth.models import User
+from alertas.utils import create_alertas_user
 
-from alertas.models import Profile
 import logging
 
 LOG = logging.getLogger(__file__)
@@ -25,6 +25,9 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--username")
         parser.add_argument("--email")
+        parser.add_argument("--first_name")
+        parser.add_argument("--last_name")
+        parser.add_argument("--password")
         parser.add_argument("--type", default="test")
 
     def handle(self, *args, **options):
@@ -41,16 +44,24 @@ class Command(BaseCommand):
         else:
             username = options["username"]
 
-        if 'email' in options:
+        if not options['email']:
             email = input("Please enter email: ")
         else:
             email = options["email"]
 
-        first_name = input("Please enter first name: ")
-        last_name = input("Please enter last name: ")
-        password = input("Please enter password: ")
+        if not options['first_name']:
+            first_name = input("Please enter first name: ")
+        else:
+            first_name = options["first_name"]
+        
+        if not options["last_name"]:
+            last_name = input("Please enter last name: ")
+        else:
+            last_name = options["last_name"]
 
-        new_user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
+        if not options["password"]:
+            password = input("Please enter password: ")
+        else:
+            password = options["password"]
 
-        profile = Profile(user=new_user, account_type=options["type"], notification_email=email)
-        profile.save()
+        create_alertas_user(username, email, password, first_name, last_name, options["type"])
