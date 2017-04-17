@@ -17,6 +17,9 @@ En `urls.py` añadir a `urlpatterns`:
 
 url(r'', include('alertas.urls')),
 
+./manage.py migrate alertas
+./manage.py loaddata alertas/fixtures/alertasconfig.json
+
 TODO: static files
 
 Cron (opción 1)
