@@ -154,6 +154,7 @@ class Profile(models.Model):
     notification_email = models.EmailField(blank=True)
     notification_url = models.URLField(blank=True)
     language = models.CharField(max_length=3, choices=LANGUAGE_CHOICES, default='es')
+    send_html = models.BooleanField(default=True)
 
     def save(self, force_insert=False, force_update=False):
         if not self.notification_email:
