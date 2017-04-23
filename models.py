@@ -214,7 +214,7 @@ class AlertaHistory(models.Model):
     user = models.ForeignKey(User)
     type = models.CharField(max_length=10, choices=ALERTAS_CHOICES)
     date = models.DateField()
-    provincia = models.CharField(max_length=3, choices=PROVINCIAS_CHOICES, blank=True, null=True)
+    provincia = models.CharField(max_length=100, choices=PROVINCIAS_CHOICES, blank=True, null=True)
     entidad = models.CharField(max_length=260, blank=True, null=True)
     periodicidad = models.CharField(max_length=10, choices=PERIODICIDAD_CHOICES, blank=True, null=True)
 
