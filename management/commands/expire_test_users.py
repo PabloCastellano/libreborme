@@ -15,6 +15,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.conf import settings
 
+from alertas.emails import send_expiration_email
 from alertas.models import Profile
 from alertas.utils import get_alertas_config
 
@@ -70,30 +71,3 @@ def expire_user(user, silent):
     user.save()
     if not silent:
         send_expiration_email(user)
-
-
-def send_expiration_email(user):
-    try:
-        validate_email(user.email)
-    except ValidationError:
-        LOG.error("User {0} has an invalid email: {1}, no email sent.".format(user.username, user.email))
-        return
-
-    template_name = os.path.join(settings.BASE_DIR, EMAIL_TEMPLATES_PATH, "user_expired_{lang}.txt".format(lang=user.profile.language))
-    context = {"fullname": user.get_full_name(), 'test_days': EXPIRE_AFTER_DAYS}
-    message = loader.render_to_string(template_name, context)
-    html_message = None
-
-    if user.profile.send_html:
-        template_name = os.path.join(settings.BASE_DIR, EMAIL_TEMPLATES_PATH, "user_expired_{lang}.html".format(lang=user.profile.language))
-        html_message = loader.render_to_string(template_name, context)
-
-    sent_emails = send_mail(NOTIFICATION_SUBJECT,
-                            message,
-                            EMAIL_FROM,
-                            [user.email],
-                            html_message=html_message)
-    if sent_emails == 1:
-        print("Email sent successfully to {0}".format(user.email))
-    else:
-        print("It looks like there was an error while sending the email to {0}".format(user.email))
