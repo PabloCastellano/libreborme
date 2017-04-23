@@ -6,4 +6,4 @@ Si tu experiencia ha sido satisfactoria y quieres contratar el servicio, escríb
 
 Atentamente,
 
-{% include "alertas/email/footer.txt" %}
+{% include "email/footer.txt" %}
