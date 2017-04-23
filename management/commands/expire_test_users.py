@@ -26,14 +26,10 @@ import os.path
 LOG = logging.getLogger(__file__)
 LOG.setLevel(logging.INFO)
 
-EMAIL_FROM = "noreply@libreborme.net"
-EMAIL_TEMPLATES_PATH = os.path.join("alertas", "templates", "email")
-NOTIFICATION_SUBJECT = "Su período de pruebas en Libreborme Alertas ha expirado"
-EXPIRE_AFTER_DAYS = int(get_alertas_config("days_test_subscription_expire"))
-
 
 class Command(BaseCommand):
-    help = 'Expire test accounts after {0} days of creation'.format(EXPIRE_AFTER_DAYS)
+    help = 'Expire test accounts after X days from creation'
+    fixtures = ['alertasconfig.json']
 
     def add_arguments(self, parser):
         parser.add_argument("--username")
@@ -53,18 +49,19 @@ class Command(BaseCommand):
             if user.is_active:
                 expire_user(user, options["silent"])
             else:
-                print("User is already inactive")
+                LOG.info("User is already inactive")
         else:
             # Find users that joined days_test_subscription_expire days ago and more
-            date = timezone.now() - timezone.timedelta(days=EXPIRE_AFTER_DAYS)
+            days = int(get_alertas_config("days_test_subscription_expire"))
+            date = timezone.now() - timezone.timedelta(days=days)
             users = User.objects.filter(profile__account_type='test', date_joined__lte=date, is_active=True)
             if len(users) > 0:
                 for user in users:
                     expire_user(user, options["silent"])
             else:
-                print("No test users found to expire")
+                LOG.info("No test users found to expire")
 
 
 def expire_user(user, silent):
-    print("Expiring test user: {0} ({1})".format(user.username, user.email))
+    LOG.info("Expiring test user: {0} ({1})".format(user.username, user.email))
     user.profile.expire_subscription(send_email=not silent)

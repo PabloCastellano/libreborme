@@ -8,9 +8,6 @@ from alertas.models import Profile
 from alertas.utils import create_alertas_user, get_alertas_config
 
 
-EXPIRE_AFTER_DAYS = int(get_alertas_config("days_test_subscription_expire"))
-
-
 class TestCommandCreateAlertasUser(TestCase):
 
     def test_user_is_created(self):
@@ -41,13 +38,16 @@ class TestCommandCreateAlertasUser(TestCase):
 
 class TestCommandExpireTest(TestCase):
 
+    fixtures = ['alertasconfig.json']
+
     @classmethod
     def setUpClass(cls):
         super(TestCommandExpireTest, cls).setUpClass()
 
         create_alertas_user("fred", "fred@localhost", "secret", "Fred", "Foo", "test")
-        john = create_alertas_user("john", "johnd@localhost", "secret", "John", "Foo", "test")
-        john.date_joined = timezone.now() - timezone.timedelta(days=EXPIRE_AFTER_DAYS)
+        john = create_alertas_user("john", "john@localhost", "secret", "John", "Foo", "test")
+        days = int(get_alertas_config("days_test_subscription_expire"))
+        john.date_joined = timezone.now() - timezone.timedelta(days=days)
         john.save()
 
     def test_user_expired(self):
