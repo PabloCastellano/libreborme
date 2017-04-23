@@ -1,12 +1,22 @@
-Hola {{ fullname }}.
+{% load staticfiles %}
+<html>
+<body>
 
-Te informamos de que tu cuenta en Libreborme Alertas se encontraba en período de pruebas y ha expirado después de {{ test_days }} días.
+<img src="{{ SITE_URL }}{% static 'libreborme_logo.png' %}">
 
-Esperamos que haya tenido una experiencia satisfactoria probando el servicio. Si ha sido así y quiere contratarlo, escríbanos a contacto@libreborme.net
+<p>Hola {{ fullname }}.</p>
 
-Atentamente,
+<p>Te informamos de que tu cuenta en Libreborme Alertas se encontraba en período de pruebas y ha expirado después de {{ test_days }} días.</p>
 
---
-Alertas de LibreBORME
-Plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil
-http://libreborme.net/ 
+<p>Esperamos que haya tenido una experiencia satisfactoria probando el servicio. Si ha sido así y quiere contratarlo, escríbanos a contacto@libreborme.net</p>
+
+<p>Atentamente,</p>
+
+<div>
+--</br>
+Alertas de LibreBORME</br>
+Plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil<br/>
+<a href="http://libreborme.net/">http://libreborme.net/</a>
+</div>
+</body>
+</html>

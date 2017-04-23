@@ -28,7 +28,7 @@ def send_expiration_email(user):
 
     template_name = os.path.join(settings.BASE_DIR, EMAIL_TEMPLATES_PATH, "user_expired_{lang}.txt".format(lang=user.profile.language))
     expire_after_days = int(get_alertas_config("days_test_subscription_expire"))
-    context = {"fullname": user.get_full_name(), 'test_days': expire_after_days}
+    context = {"fullname": user.get_full_name(), 'test_days': expire_after_days, "SITE_URL": settings.SITE_URL}
     message = loader.render_to_string(template_name, context)
     html_message = None
 
