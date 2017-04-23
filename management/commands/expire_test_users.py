@@ -16,6 +16,8 @@ from django.core.exceptions import ValidationError
 from django.conf import settings
 
 from alertas.models import Profile
+from alertas.utils import get_alertas_config
+
 from django.utils import timezone
 import logging
 import os.path
@@ -26,7 +28,7 @@ LOG.setLevel(logging.INFO)
 EMAIL_FROM = "noreply@libreborme.net"
 EMAIL_TEMPLATES_PATH = os.path.join("alertas", "templates", "email")
 NOTIFICATION_SUBJECT = "Su período de pruebas en Libreborme Alertas ha expirado"
-EXPIRE_AFTER_DAYS = 30
+EXPIRE_AFTER_DAYS = int(get_alertas_config("days_test_subscription_expire"))
 
 
 class Command(BaseCommand):
@@ -52,7 +54,7 @@ class Command(BaseCommand):
             else:
                 print("User is already inactive")
         else:
-            # Find users that joined EXPIRE_AFTER_DAYS days ago and more
+            # Find users that joined days_test_subscription_expire days ago and more
             date = timezone.now() - timezone.timedelta(days=EXPIRE_AFTER_DAYS)
             users = User.objects.filter(profile__account_type='test', date_joined__lte=date, is_active=True)
             if len(users) > 0:

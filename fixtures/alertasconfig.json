@@ -1,6 +1,13 @@
 [
 {
     "model": "alertas.alertasconfig",
+    "pk": "days_test_subscription_expire",
+    "fields": {
+        "value": "30"
+    }
+},
+{
+    "model": "alertas.alertasconfig",
     "pk": "max_alertas_actos_free",
     "fields": {
         "value": "0"

@@ -1,13 +1,14 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management import call_command
-
 from django.test import TestCase
+from django.utils import timezone
 
 from alertas.models import Profile
-from alertas.utils import create_alertas_user
+from alertas.utils import create_alertas_user, get_alertas_config
 
-from django.utils import timezone
+
+EXPIRE_AFTER_DAYS = int(get_alertas_config("days_test_subscription_expire"))
 
 
 class TestCommandCreateAlertasUser(TestCase):
@@ -46,7 +47,7 @@ class TestCommandExpireTest(TestCase):
 
         create_alertas_user("fred", "fred@localhost", "secret", "Fred", "Foo", "test")
         john = create_alertas_user("john", "johnd@localhost", "secret", "John", "Foo", "test")
-        john.date_joined = timezone.now() - timezone.timedelta(days=30) # TODO: EXPIRE_AFTER_DAYS
+        john.date_joined = timezone.now() - timezone.timedelta(days=EXPIRE_AFTER_DAYS)
         john.save()
 
     def test_user_expired(self):
