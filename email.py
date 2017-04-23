@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.template import loader
 
-from .models import AlertasConfig
+from .utils import get_alertas_config
 
 import logging
 import os.path
@@ -27,7 +27,7 @@ def send_expiration_email(user):
         return
 
     template_name = os.path.join(settings.BASE_DIR, EMAIL_TEMPLATES_PATH, "user_expired_{lang}.txt".format(lang=user.profile.language))
-    expire_after_days = int(AlertasConfig.objects.get(key="days_test_subscription_expire").value)
+    expire_after_days = int(get_alertas_config("days_test_subscription_expire"))
     context = {"fullname": user.get_full_name(), 'test_days': expire_after_days}
     message = loader.render_to_string(template_name, context)
     html_message = None
