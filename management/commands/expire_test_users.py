@@ -34,8 +34,10 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--username")
         parser.add_argument("--silent", action='store_true', default=False, help="Do not send email to the user")
+        parser.add_argument("--dry-run", action='store_true', default=False, help="Simulate. Don't do any action")
 
     def handle(self, *args, **options):
+        self.options = options
         ch = logging.StreamHandler()
         if options["verbosity"] > 1:
             LOG.setLevel(logging.DEBUG)
@@ -47,7 +49,7 @@ class Command(BaseCommand):
         if options['username']:
             user = User.objects.get(username=options["username"])
             if user.is_active:
-                expire_user(user, options["silent"])
+                self.expire_user(user)
             else:
                 LOG.info("User is already inactive")
         else:
@@ -57,11 +59,11 @@ class Command(BaseCommand):
             users = User.objects.filter(profile__account_type='test', date_joined__lte=date, is_active=True)
             if len(users) > 0:
                 for user in users:
-                    expire_user(user, options["silent"])
+                    self.expire_user(user)
             else:
                 LOG.info("No test users found to expire")
 
-
-def expire_user(user, silent):
-    LOG.info("Expiring test user: {0} ({1})".format(user.username, user.email))
-    user.profile.expire_subscription(send_email=not silent)
+    def expire_user(self, user):
+        LOG.info("Expiring test user: {0} ({1})".format(user.username, user.email))
+        if not self.options["dry_run"]:
+            user.profile.expire_subscription(send_email=not self.options["silent"])
