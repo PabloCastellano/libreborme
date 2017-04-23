@@ -266,7 +266,7 @@ def busca_empresas(periodo, evento):
 
 
 def busca_subscriptores(periodo, evento, username=None):
-    alertas = AlertaActo.objects.filter(evento=evento, periodicidad=periodo, is_enabled=True)
+    alertas = AlertaActo.objects.filter(evento=evento, periodicidad=periodo, is_enabled=True, user__is_active=True)
     if username:
         alertas = alertas.filter(user__username=username)
     #for alerta in alertas:
