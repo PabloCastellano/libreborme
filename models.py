@@ -4,6 +4,8 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from borme.models import Company, Person
+from .email import send_expiration_email
+from .utils import insert_libreborme_log
 
 import os.path
 
@@ -166,6 +168,16 @@ class Profile(models.Model):
         #return all(for invoice in self.invoices:
         #    invoice
 
+    def expire_subscription(self, send_email):
+        if self.user.is_active:
+            self.user.is_active = False
+            self.user.save()
+            insert_libreborme_log("email", "User subscription has expired.", self.user.username)
+            if send_email:
+                send_expiration_email(self.user)
+            return True
+        return False
+
     def __str__(self):
         return "Profile {} ({})".format(self.user, self.account_type)
 
@@ -207,7 +219,7 @@ class AlertaHistory(models.Model):
     periodicidad = models.CharField(max_length=10, choices=PERIODICIDAD_CHOICES, blank=True, null=True)
 
     def get_csv_path(self):
-        # TODO: provicnia and periodicidad can be blank
+        # TODO: provincia and periodicidad can be blank
         year = str(self.date.year)
         month = "{:02d}".format(self.date.month)
         day = "{:02d}".format(self.date.day)

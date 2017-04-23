@@ -67,7 +67,4 @@ class Command(BaseCommand):
 
 def expire_user(user, silent):
     print("Expiring test user: {0} ({1})".format(user.username, user.email))
-    user.is_active = False
-    user.save()
-    if not silent:
-        send_expiration_email(user)
+    user.profile.expire_subscription(send_email=not silent)
