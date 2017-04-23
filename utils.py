@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 
-from .models import AlertasConfig, Profile
+from .models import AlertasConfig, LibrebormeLogs, Profile
 
 
 def get_alertas_config(key=None):
@@ -18,3 +18,8 @@ def create_alertas_user(username, email, password, first_name, last_name, type):
     profile = Profile(user=new_user, account_type=type, notification_email=email)
     profile.save()
     return new_user
+
+
+def insert_libreborme_log(component, log, user=None):
+    log = LibrebormeLogs(component=component, log=log, user=user)
+    log.save()

@@ -220,6 +220,15 @@ class AlertaHistory(models.Model):
         return "{0}, {1}, {2}".format(self.type, self.date, self.user.username)
 
 
+class LibrebormeLogs(models.Model):
+    date = models.DateField(auto_now_add=True)
+    component = models.CharField(max_length=100)
+    log = models.CharField(max_length=1000)
+    user = models.CharField(max_length=50, blank=True, null=True)
+
+    def __str__(self):
+        return "{0} ({1}): {2}".format(self.component, self.date, self.log)
+
 # max_alertas_free_company
 
 # Tipos de alerta:

@@ -43,6 +43,11 @@ class AlertaHistoryAdmin(admin.ModelAdmin):
     search_fields = ['user', 'date']
 
 
+class LibrebormeLogsAdmin(admin.ModelAdmin):
+    list_display = ('date', 'component', 'log', 'user')
+    search_fields = ['date', 'component', 'log', 'user']
+
+
 admin.site.register(models.AlertaCompany, AlertaCompanyAdmin)
 admin.site.register(models.AlertaPerson, AlertaPersonAdmin)
 admin.site.register(models.AlertaActo, AlertaActoAdmin)
@@ -50,3 +55,4 @@ admin.site.register(models.Profile, ProfileAdmin)
 admin.site.register(models.LBInvoice, LBInvoiceAdmin)
 admin.site.register(models.AlertasConfig, AlertasConfigAdmin)
 admin.site.register(models.AlertaHistory, AlertaHistoryAdmin)
+admin.site.register(models.LibrebormeLogs, LibrebormeLogsAdmin)
