@@ -3,11 +3,14 @@ from django.contrib.auth.models import User
 from .models import AlertasConfig, Profile
 
 
-def get_alertas_config():
-    alertas = {}
-    for alerta in AlertasConfig.objects.all():
-        alertas[alerta.key] = alerta.value
-    return alertas
+def get_alertas_config(key=None):
+    if key:
+        return AlertasConfig.objects.get(key=key).value
+    else:
+        alertas = {}
+        for alerta in AlertasConfig.objects.all():
+            alertas[alerta.key] = alerta.value
+        return alertas
 
 
 def create_alertas_user(username, email, password, first_name, last_name, type):
