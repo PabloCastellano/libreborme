@@ -28,5 +28,8 @@ class Command(BaseCommand):
         else:
             users = User.objects.all()
             for user in users:
-                print("* {0}".format(user.username))
+                if user.is_active:
+                    print("* {0}".format(user.username))
+                else:
+                    print("* {0} (disabled)".format(user.username))
             print("Total: {0} users.".format(len(users)))
