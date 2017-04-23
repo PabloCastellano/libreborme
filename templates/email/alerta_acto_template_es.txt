@@ -8,7 +8,4 @@ A continuación te enviamos el listado de empresas que han generado una notifica
 
 Recuerda que desde tu panel de usuario puedes descargar el listado de tus notificaciones en formato CSV.
 
---
-Alertas de LibreBORME
-Plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil
-http://libreborme.net/ 
+{% include "alertas/email/footer.txt" %}

@@ -6,17 +6,13 @@
 
 <p>Hola {{ fullname }}.</p>
 
-<p>Te informamos de que tu cuenta en Libreborme Alertas se encontraba en período de pruebas y ha expirado después de {{ test_days }} días.</p>
+<p>Te informamos de que tu cuenta en <a href="{{ SITE_URL }}/alertas/">Libreborme Alertas</a> se encontraba en período de pruebas y ha expirado después de {{ test_days }} días.</p>
 
-<p>Esperamos que haya tenido una experiencia satisfactoria probando el servicio. Si ha sido así y quiere contratarlo, escríbanos a contacto@libreborme.net</p>
+<p>Si su experiencia ha sido satisfactoria y quiere contratar el servicio, escríbanos a <a href="mailto:contacto@libreborme.net">contacto@libreborme.net</a>.</p>
 
 <p>Atentamente,</p>
 
-<div>
---</br>
-Alertas de LibreBORME</br>
-Plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil<br/>
-<a href="http://libreborme.net/">http://libreborme.net/</a>
-</div>
+{% include "alertas/email/footer.html" %}
+
 </body>
 </html>
