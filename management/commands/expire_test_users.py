@@ -15,7 +15,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.conf import settings
 
-from alertas.emails import send_expiration_email
+from alertas.email import send_expiration_email
 from alertas.models import Profile
 from alertas.utils import get_alertas_config
 
