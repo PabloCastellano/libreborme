@@ -4,11 +4,13 @@
 # weekly: must be run from Friday after the publication to Sunday
 # monthly: must be run on 1st day of the month
 #
+# It generates the alerts by parsing BORME-JSON files. It doesn't take into account data in the database
+#
 # Otherwise a CommandError exception is raised
 #
 # Example usage:
 # 	./manage.py send_notifications weekly liq
-#       ./manage.py send_notifications weekly liq -v 3
+#   ./manage.py send_notifications weekly liq -v 3
 #
 from django.core.management.base import BaseCommand, CommandError
 from django.core.mail import send_mail
@@ -20,14 +22,15 @@ from alertas.models import AlertaActo, AlertaHistory, EVENTOS_DICT, PERIODICIDAD
 
 from borme.templatetags.utils import slug2
 from bormeparser import Borme
+from bormeparser.config import CONFIG as borme_config
 
 import csv
 import datetime
 import logging
 import os
+import time
 
 TODAY = datetime.date.today()
-BORME_JSON_PATH = os.path.expanduser("~/.bormes/json")
 EMAIL_TEMPLATES_PATH = os.path.join("alertas", "templates", "email")
 
 NOTIFICATION_SUBJECT = "Notificaciones de LibreBORME ({}, {}, {})"
@@ -72,6 +75,8 @@ class Command(BaseCommand):
         if evento not in EVENTOS_DICT:
             print('Evento {} is invalid. Valid values are: {}'.format(evento, ', '.join(EVENTOS_DICT.keys())))
             return
+
+        show_warning_date(periodo)
 
         alertas = busca_subscriptores(periodo, evento, options["username"])
         if len(alertas) == 0:
@@ -195,7 +200,7 @@ def busca_evento(begin_date, end_date, evento):
     already_added = []
     cur_date = begin_date
     while cur_date <= end_date:
-        borme_path = os.path.join(BORME_JSON_PATH, str(cur_date.year), "{:02d}".format(cur_date.month), "{:02d}".format(cur_date.day))
+        borme_path = os.path.join(borme_config["borme_root"], str(cur_date.year), "{:02d}".format(cur_date.month), "{:02d}".format(cur_date.day))
         if os.path.isdir(borme_path):
             files = os.listdir(borme_path)
             # LOG.debug(files)
@@ -230,20 +235,24 @@ def busca_evento(begin_date, end_date, evento):
     return (actos, total)
 
 
+def show_warning_date(periodo):
+    if periodo == 'daily' and TODAY.weekday() in (5, 6):
+        LOG.warn("Daily must not be run on Saturday nor Sunday")
+    elif periodo == 'weekly' and TODAY.weekday() not in (4, 5, 6):
+        LOG.warn("Weekly must be run on Saturday or Sunday")
+    elif periodo == 'monthly' and TODAY.day != 1:
+        LOG.warn("Monthly must be run on the 1st day of the month")
+    time.sleep(5)
+    
+
 def get_rango_fechas(periodo):
     if periodo == 'daily':
-        if TODAY.weekday() in (5, 6):
-            raise CommandError("Daily must not be run on Saturday nor Sunday")
         begin_date = TODAY
         end_date = TODAY
     elif periodo == 'weekly':
-        if TODAY.weekday() not in (4, 5, 6):
-            raise CommandError("Weekly must be run on Saturday or Sunday")
         begin_date = TODAY - datetime.timedelta(days=TODAY.weekday())  # Monday
         end_date = begin_date + datetime.timedelta(days=4)             # Friday
     elif periodo == 'monthly':
-        if TODAY.day != 1:
-            raise CommandError("Monthly must be run on the 1st day of the month")
         begin_date = datetime.date(TODAY.year, TODAY.month, 1)
         end_date = TODAY
     return (begin_date, end_date)
