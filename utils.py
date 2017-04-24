@@ -28,3 +28,28 @@ def insert_libreborme_log(component, log, user=None):
 
     log = LibrebormeLogs(component=component, log=log, user=user)
     log.save()
+
+
+def insert_alertas_history(user, type, date, entidad=None, provincia=None, periodicidad=None):
+    """
+        Insert new row in the AlertasHistory table
+        
+        user: User model object
+        type: str
+        date: datetime.date
+        provincia = str
+        entidad = str
+        periodicidad = str
+    """
+    AlertaHistory = apps.get_model("alertas", "AlertaHistory")
+    alerta_history = AlertaHistory(user=user, type=type, date=date)
+
+    if type in ("company", "person"):
+        alerta_history.entidad = entidad
+    else:
+        # evento
+        alerta_history.provincia = provincia
+        alerta_history.periodicidad = periodicidad
+
+    alerta_history.save()
+    return alerta_history

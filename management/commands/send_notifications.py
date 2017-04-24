@@ -13,12 +13,10 @@
 #   ./manage.py send_notifications weekly liq -v 3
 #
 from django.core.management.base import BaseCommand, CommandError
-from django.core.mail import send_mail
-from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
 from django.conf import settings
-from django.template import loader
-from alertas.models import AlertaActo, AlertaHistory, EVENTOS_DICT, PERIODICIDAD_DICT
+
+from alertas.email import send_email_notification
+from alertas.models import AlertaActo, EVENTOS_DICT, PERIODICIDAD_DICT
 
 from borme.templatetags.utils import slug2
 from bormeparser import Borme
@@ -31,10 +29,6 @@ import os
 import time
 
 TODAY = datetime.date.today()
-EMAIL_TEMPLATES_PATH = os.path.join("alertas", "templates", "email")
-
-NOTIFICATION_SUBJECT = "Notificaciones de LibreBORME ({}, {}, {})"
-EMAIL_FROM = "noreply@libreborme.net"
 
 LOG = logging.getLogger(__file__)
 LOG.setLevel(logging.INFO)
@@ -97,7 +91,7 @@ class Command(BaseCommand):
 
         for alerta in alertas:
             if alerta.user.profile.notification_method == "email":
-                send_email_notification(alerta, evento, periodo, companies)
+                send_email_notification(alerta, evento, periodo, companies, TODAY)
             elif alerta.user.profile.notification_method == "url":
                 send_url_notification(alerta, evento, periodo, companies)
 
@@ -134,58 +128,6 @@ def generar_csv(evento, periodo, companies):
                 csvwriter.writerow([alerta["date"], alerta["name"], provincia, evento_name])
 
         print("Written " + filepath)
-
-
-def send_email_notification(alerta, evento, periodo, companies):
-    email = alerta.user.profile.notification_email
-    language = alerta.user.profile.language
-    provincia = alerta.get_provincia_display()
-    evento_display = alerta.get_evento_display()
-    send_html = alerta.send_html
-
-    if provincia not in companies:
-        LOG.debug("No se envia a {} porque no hay alertas para {}/{}".format(email, provincia, evento))
-        return False
-    LOG.info("Se va a enviar a {} porque hay alertas para {}/{}".format(email, provincia, evento))
-
-    companies = companies[provincia]
-
-    try:
-        validate_email(email)
-        context = {"companies": companies,
-                   "name": alerta.user.first_name,
-                   "provincia": provincia,
-                   "evento": evento_display,
-                   "date": TODAY,
-                   "SITE_URL": settings.SITE_URL}
-        template_name = os.path.join(settings.BASE_DIR, EMAIL_TEMPLATES_PATH, "alerta_acto_template_{lang}.txt".format(lang=language))
-        message = loader.render_to_string(template_name, context)
-        html_message = None
-
-        if send_html:
-            template_name = os.path.join(settings.BASE_DIR, EMAIL_TEMPLATES_PATH, "alerta_acto_template_{lang}.html".format(lang=language))
-            html_message = loader.render_to_string(template_name, context)
-
-        today_format = TODAY.strftime("%d/%m/%Y")
-        subject = NOTIFICATION_SUBJECT.format(today_format, evento_display, provincia)
-        sent_emails = send_mail(subject,
-                                message,
-                                EMAIL_FROM,
-                                [email],
-                                html_message=html_message)
-    except ValidationError:
-        LOG.error("User {} has an invalid notification email: {}. Nothing was sent to him!".format(alerta.user.get_full_name(), email))
-        # Notify user about it. Add to history anyways
-    finally:
-        add_history(alerta.user, evento, TODAY, provincia=alerta.provincia, periodicidad=periodo)
-
-    return sent_emails == 1
-
-
-# TODO: send_mass_email()
-#message1 = ('Subject here', 'Here is the message', 'from@example.com', ['first@example.com', 'other@example.com'])
-#message2 = ('Another Subject', 'Here is another message', 'from@example.com', ['second@test.com'])
-#send_mass_mail((message1, message2), fail_silently=False)
 
 
 def send_url_notification(alerta, evento, periodo, companies):
@@ -282,25 +224,3 @@ def busca_subscriptores(periodo, evento, username=None):
     #    LOG.debug("-- {} <{}>".format(alerta.user.get_full_name(), alerta.user.email))
     LOG.info("Total {} subscribers for event '{}'.".format(len(alertas), evento))
     return alertas
-
-
-def add_history(user, type, date, entidad=None, provincia=None, periodicidad=None):
-    """
-        user: User model object
-        type: str
-        date: datetime.date
-        provincia = str
-        entidad = str
-        periodicidad = str
-    """
-    alerta_history = AlertaHistory(user=user, type=type, date=date)
-
-    if type in ("company", "person"):
-        alerta_history.entidad = entidad
-    else:
-        # evento
-        alerta_history.provincia = provincia
-        alerta_history.periodicidad = periodicidad
-
-    alerta_history.save()
-    return alerta_history
