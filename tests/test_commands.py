@@ -4,8 +4,13 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
 
-from alertas.models import Profile
+from alertas.models import AlertaActo, AlertaHistory, Profile
 from alertas.utils import create_alertas_user, get_alertas_config
+from bormeparser.config import CONFIG as borme_config
+
+import os.path
+
+THIS_PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 class TestCommandCreateAlertasUser(TestCase):
@@ -21,7 +26,7 @@ class TestCommandCreateAlertasUser(TestCase):
 
         users = User.objects.all()
         self.assertEqual(len(users), 1)
-        profiles = User.objects.all()
+        profiles = Profile.objects.all()
         self.assertEqual(len(profiles), 1)
 
         user = User.objects.first()
@@ -29,11 +34,9 @@ class TestCommandCreateAlertasUser(TestCase):
         self.assertEqual(user.email, "fred@localhost")
         self.assertEqual(user.first_name, "Fred")
         self.assertEqual(user.last_name, "Foo")
-
-        profile = Profile.objects.first()
-        self.assertEqual(profile.account_type, "test")
-        self.assertEqual(profile.notification_method, "email")
-        self.assertEqual(profile.notification_email, "fred@localhost")
+        self.assertEqual(user.profile.account_type, "test")
+        self.assertEqual(user.profile.notification_method, "email")
+        self.assertEqual(user.profile.notification_email, "fred@localhost")
 
 
 class TestCommandExpireTest(TestCase):
