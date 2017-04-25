@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.template import loader
 
-from .utils import get_alertas_config, insert_alertas_history
+from .utils import get_alertas_config, insert_alertas_history, insert_libreborme_log
 
 import logging
 import os.path
@@ -84,6 +84,8 @@ def send_email_notification(alerta, evento, periodo, companies, today):
                                 EMAIL_FROM,
                                 [email],
                                 html_message=html_message)
+        log_line = "{0} e-mail(s) sent to {1}".format(sent_emails, email)
+        insert_libreborme_log("email", log_line, alerta.user.username)
     except ValidationError:
         LOG.error("User {0} has an invalid notification email: {1}. Nothing was sent to him!".format(alerta.user.get_full_name(), email))
         # Notify user about it. Add to history anyways

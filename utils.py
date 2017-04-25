@@ -32,7 +32,7 @@ def insert_libreborme_log(component, log, user=None):
 
 def insert_alertas_history(user, type, date, entidad=None, provincia=None, periodicidad=None):
     """
-        Insert new row in the AlertasHistory table
+        Insert new row in the AlertaHistory table
         
         user: User model object
         type: str

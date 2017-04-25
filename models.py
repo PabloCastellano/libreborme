@@ -172,7 +172,7 @@ class Profile(models.Model):
         if self.user.is_active:
             self.user.is_active = False
             self.user.save()
-            insert_libreborme_log("email", "User subscription has expired.", self.user.username)
+            insert_libreborme_log("subscription", "User subscription has expired.", self.user.username)
             if send_email:
                 send_expiration_email(self.user)
             return True
