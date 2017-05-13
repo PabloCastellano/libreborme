@@ -185,7 +185,7 @@ def show_warning_date(periodo):
     elif periodo == 'monthly' and TODAY.day != 1:
         LOG.warn("Monthly must be run on the 1st day of the month")
     time.sleep(5)
-    
+
 
 def get_rango_fechas(periodo):
     if periodo == 'daily':
@@ -220,7 +220,7 @@ def busca_subscriptores(periodo, evento, username=None):
     alertas = AlertaActo.objects.filter(evento=evento, periodicidad=periodo, is_enabled=True, user__is_active=True)
     if username:
         alertas = alertas.filter(user__username=username)
-    #for alerta in alertas:
-    #    LOG.debug("-- {} <{}>".format(alerta.user.get_full_name(), alerta.user.email))
-    LOG.info("Total {} subscribers for event '{}'.".format(len(alertas), evento))
+    LOG.info("Total {} subscribers for event '{}' (use -v 3 for more information).".format(len(alertas), evento))
+    for alerta in alertas:
+        LOG.debug("#{0}: {1} <{2}>".format(alerta.id, alerta.user.get_full_name(), alerta.user.email))
     return alertas
