@@ -17,7 +17,7 @@ from django.db.models import (
         OneToOneField,
         PROTECT,
         URLField)
-from bormeparser.regex import SOCIEDADES as SOCIEDADES_DICT
+from bormeparser.sociedad import SOCIEDADES as SOCIEDADES_DICT
 
 SOCIEDADES = sorted(SOCIEDADES_DICT.items())
 

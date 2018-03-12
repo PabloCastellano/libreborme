@@ -1,4 +1,4 @@
-bormeparser==0.2.4
+bormeparser==0.3.0
 Django==2.0.3
 django-bootstrap-static==3.3.7.2
 django-debug-toolbar==1.9.1

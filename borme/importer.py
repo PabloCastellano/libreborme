@@ -251,7 +251,7 @@ def update_previous_xml(date):
             return False
 
         os.unlink(prev_xml_path)
-    except FileNotFoundError:
+    except OSError:
         pass
     finally:
         prev_bxml = BormeXML.from_date(bxml.prev_borme)
@@ -311,7 +311,7 @@ def _import_borme_download_range2(begin, end, seccion, local_only, strict=False,
                     os.makedirs(os.path.dirname(xml_path), exist_ok=True)
                     bxml.save_to_file(xml_path)
 
-            except FileNotFoundError:
+            except OSError:
                 bxml = BormeXML.from_date(next_date)
                 os.makedirs(os.path.dirname(xml_path), exist_ok=True)
                 bxml.save_to_file(xml_path)
