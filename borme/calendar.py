@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from .models import Borme
 from calendar import *
 from calendar import Calendar, January

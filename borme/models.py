@@ -1,14 +1,23 @@
 # -*- coding: utf-8 -*-
 
 from django.utils.text import slugify
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 # from django.core.exceptions import FieldError
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField, JSONField
 from django.conf import settings
 
-from django.db.models import *
+from django.db.models import (
+        BooleanField,
+        CharField,
+        DateField,
+        DateTimeField,
+        ForeignKey,
+        IntegerField,
+        Model,
+        OneToOneField,
+        PROTECT,
+        URLField)
 from bormeparser.regex import SOCIEDADES as SOCIEDADES_DICT
-from django_hstore import hstore
 
 SOCIEDADES = sorted(SOCIEDADES_DICT.items())
 
@@ -29,10 +38,10 @@ class Borme(Model):
     url = URLField()
     from_reg = IntegerField()
     until_reg = IntegerField()
-    #province = CharField(max_length=100, choices=PROVINCES)
+    # province = CharField(max_length=100, choices=PROVINCES)
     province = CharField(max_length=100)
     section = CharField(max_length=20)
-    #pages = IntegerField()
+    # pages = IntegerField()
     anuncios = ArrayField(IntegerField(), default=list)  # FIXME: {year, id}
 
     @property
@@ -50,12 +59,18 @@ class Person(Model):
     """ Persona """
     name = CharField(max_length=200, db_index=True)
     slug = CharField(max_length=200, primary_key=True)
-    in_companies = ArrayField(CharField(max_length=260), default=list)
-    in_bormes = ArrayField(hstore.DictionaryField(), default=list)
+    in_companies = JSONField()
+    in_bormes = JSONField()
+    # in_companies = ArrayField(CharField(max_length=260), default=list)
+    # in_bormes = ArrayField(hstore.DictionaryField(), default=list)
+    # TODO: get/set
 
     date_updated = DateField(db_index=True)
-    cargos_actuales = ArrayField(hstore.DictionaryField(), default=list)
-    cargos_historial = ArrayField(hstore.DictionaryField(), default=list)
+    cargos_actuales = JSONField()
+    cargos_historial = JSONField()
+    # TODO: get/set
+    # cargos_actuales = ArrayField(hstore.DictionaryField(), default=list)
+    # cargos_historial = ArrayField(hstore.DictionaryField(), default=list)
 
     # last access
     # number of visits
@@ -85,9 +100,10 @@ class Person(Model):
 
     def _cesar_cargo(self, company, date):
         """ Se llama a este método cuando una sociedad se extingue.
-            Todos los cargos vigentes que ocupe en la sociedad extinguida pasan a estar en la lista de cargos cesados.
-            company: str
-            date: str iso format
+        Todos los cargos vigentes que ocupe en la sociedad extinguida pasan a
+        estar en la lista de cargos cesados.
+        company: str
+        date: str iso format
         """
         for cargo in self.cargos_actuales:
             if cargo['name'] == company:
@@ -149,13 +165,19 @@ class Company(Model):
     type = CharField(max_length=50, choices=SOCIEDADES)
 
     date_updated = DateField(db_index=True)
-    in_bormes = ArrayField(hstore.DictionaryField(), default=list)
-    anuncios = ArrayField(IntegerField(), default=list)  # FIXME: {year, id}
+    in_bormes = JSONField()
+    anuncios = JSONField()
+    # in_bormes = ArrayField(hstore.DictionaryField(), default=list)
+    # anuncios = ArrayField(IntegerField(), default=list)  # FIXME: {year, id}
 
-    cargos_actuales_p = ArrayField(hstore.DictionaryField(), default=list)
-    cargos_actuales_c = ArrayField(hstore.DictionaryField(), default=list)
-    cargos_historial_p = ArrayField(hstore.DictionaryField(), default=list)
-    cargos_historial_c = ArrayField(hstore.DictionaryField(), default=list)
+    cargos_actuales_p = JSONField()
+    cargos_actuales_c = JSONField()
+    cargos_historial_p = JSONField()
+    cargos_historial_c = JSONField()
+    # cargos_actuales_p = ArrayField(hstore.DictionaryField(), default=list)
+    # cargos_actuales_c = ArrayField(hstore.DictionaryField(), default=list)
+    # cargos_historial_p = ArrayField(hstore.DictionaryField(), default=list)
+    # cargos_historial_c = ArrayField(hstore.DictionaryField(), default=list)
 
     def add_in_bormes(self, borme):
         if borme not in self.in_bormes:
@@ -209,9 +231,10 @@ class Company(Model):
     # number of visits
 
     def save(self, *args, **kwargs):
-        # TODO: Cambiar SOCIEDAD LIMITADA por SL, SOCIEDAD ANONIMA por SA, COOP, SCL...
-        #if self.name.endswith('SOCIEDAD LIMITADA'):
-            #...
+        # TODO:
+        # Cambiar SOCIEDAD LIMITADA por SL,
+        # SOCIEDAD ANONIMA por SA, COOP, SCL...
+        # if self.name.endswith('SOCIEDAD LIMITADA'): ...
 
         self.slug = slugify(self.name)
         super(Company, self).save(*args, **kwargs)
@@ -251,7 +274,7 @@ class Company(Model):
                 self.cargos_historial_p.append(cargo_embed)
             else:
                 raise ValueError('type: invalid value')
-            
+
     def _cesar_cargo(self, company, date):
         """
             company: str
@@ -262,7 +285,7 @@ class Company(Model):
                 self.cargos_actuales_c.remove(cargo)
                 cargo['date_to'] = date
                 self.cargos_historial_c.append(cargo)
-        
+
     def get_absolute_url(self):
         return reverse('borme-empresa', args=[str(self.slug)])
 
@@ -273,25 +296,28 @@ class Company(Model):
 class Anuncio(Model):
     id_anuncio = IntegerField()
     year = IntegerField()
-    borme = ForeignKey('Borme')
-    company = ForeignKey('Company')
+    borme = ForeignKey('Borme', on_delete=PROTECT)
+    company = ForeignKey('Company', on_delete=PROTECT)
     datos_registrales = CharField(max_length=70)
-    actos = hstore.SerializedDictionaryField()  # TODO: schema={...}  # TODO: Actos repetidos
+    actos = JSONField()
+    # TODO: schema={...}  # TODO: Actos repetidos
+    # actos = hstore.SerializedDictionaryField()
 
     class Meta:
         index_together = ['id_anuncio', 'year']
-
-    #objects = hstore.HStoreManager()
 
     @property
     def total_actos(self):
         return len(self.actos)
 
     def get_absolute_url(self):
-        return reverse('borme-anuncio', args=[str(self.year), str(self.id_anuncio)])
+        year = str(self.year)
+        anuncio_id = str(self.id_anuncio)
+        return reverse('borme-anuncio', args=[year, anuncio_id])
 
     def __str__(self):
-        return '%d - %d (%d actos)' % (self.id_anuncio, self.year, len(self.actos.keys()))
+        return '%d - %d (%d actos)' % (
+                    self.id_anuncio, self.year, len(self.actos.keys()))
 
 
 class Config(Model):
@@ -300,7 +326,7 @@ class Config(Model):
 
 
 class BormeLog(Model):
-    borme = OneToOneField('Borme', primary_key=True)
+    borme = OneToOneField('Borme', primary_key=True, on_delete=PROTECT)
     date_created = DateTimeField(auto_now_add=True)
     date_updated = DateTimeField(auto_now=True)
     date_parsed = DateTimeField(blank=True, null=True)

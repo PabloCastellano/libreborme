@@ -28,7 +28,6 @@ install:
 
 before_script:
   - sleep 10  # Elasticsearch
-  - psql template1 -c 'CREATE EXTENSION hstore;'
   - psql -U postgres -c 'CREATE DATABASE libreborme;'
   - psql -U postgres -c "CREATE USER libreborme WITH PASSWORD 'password';"
   - psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE libreborme TO libreborme;"
