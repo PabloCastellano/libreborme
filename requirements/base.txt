@@ -1,7 +1,7 @@
 bormeparser==0.2.4
 Django==1.9.8
 django-bootstrap-static==3.3.6
-django-debug-toolbar==1.4
+django-debug-toolbar==1.9.1
 django-haystack==2.5.1
 django-hstore==1.4.2
 django-maintenancemode==0.11.2
