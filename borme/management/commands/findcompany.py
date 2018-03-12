@@ -3,25 +3,25 @@ from borme.models import Company
 
 
 class Command(BaseCommand):
-    args = '<company name or slug ...>'
     help = 'Find a company and show its information'
 
+    def add_arguments(self, parser):
+        parser.add_argument("keyword", type=str, help="company keyword")
+
     def handle(self, *args, **options):
-        for company_name in args:
+        keyword = options["keyword"]
 
-            companies = Company.objects.filter(name__icontains=company_name)
-            if not companies:
-                companies = Company.objects.filter(slug__contains=company_name)
+        results = Company.objects.filter(name__icontains=keyword)
+        if not results:
+            results = Company.objects.filter(slug__contains=keyword)
 
-            for company in companies:
-                bormes = list(map(lambda c: c['cve'], company.in_bormes))
-                print('Name:', company.name)
-                print('Slug:', company.slug)
-                print('BORMEs:', ', '.join(bormes))
-                print('Last modified:', company.date_updated)
-                #print('Date:', company.date_creation)
-                #print('Active:', company.is_active)
-                print()
-
-            print('Found %d ocurrences with keyword "%s"' % (len(companies), company_name))
+        for company in results:
+            bormes = list(map(lambda c: c['cve'], company.in_bormes))
+            print("Name: {}".format(company.name))
+            print("Slug: {}".format(company.slug))
+            print("BORMEs: {}".format(", ".join(bormes)))
+            print("Last modified: {}".format(company.date_updated))
             print()
+
+        print('Found {} ocurrences with keyword "{}"'.format(len(results), keyword))
+        print()

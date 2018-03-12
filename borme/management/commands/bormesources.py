@@ -3,24 +3,21 @@ from borme.models import Company, Person
 
 
 class Command(BaseCommand):
-    args = '<person or company slug>'
     help = 'Show the sources where the information about some entity was retrieved'
+
+    def add_arguments(self, parser):
+        parser.add_argument("slug", type=str, help="person or company slug")
 
     def handle(self, *args, **options):
 
-        if len(args) != 1:
-            print('Usage: bormesources <slug>')
-            return
-
         try:
-            entity = Person.objects.get(slug=args[0])
+            entity = Person.objects.get(slug=options["slug"])
         except Person.DoesNotExist:
             try:
-                entity = Company.objects.get(slug=args[0])
+                entity = Company.objects.get(slug=options["slug"])
             except Company.DoesNotExist:
                 print('Not found')
                 return
 
-        #print('{} appears in the following BORME gazettes:'.format(entity.name))
         for borme in entity.in_bormes:
             print(borme['url'])

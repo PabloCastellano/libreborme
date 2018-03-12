@@ -3,7 +3,7 @@
 from django.utils.text import slugify
 from django.urls import reverse
 # from django.core.exceptions import FieldError
-from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields import JSONField
 from django.conf import settings
 
 from django.db.models import (
@@ -42,7 +42,7 @@ class Borme(Model):
     province = CharField(max_length=100)
     section = CharField(max_length=20)
     # pages = IntegerField()
-    anuncios = ArrayField(IntegerField(), default=list)  # FIXME: {year, id}
+    anuncios = JSONField(default=list)  # FIXME: {year, id}
 
     @property
     def total_anuncios(self):
@@ -59,18 +59,12 @@ class Person(Model):
     """ Persona """
     name = CharField(max_length=200, db_index=True)
     slug = CharField(max_length=200, primary_key=True)
-    in_companies = JSONField()
-    in_bormes = JSONField()
-    # in_companies = ArrayField(CharField(max_length=260), default=list)
-    # in_bormes = ArrayField(hstore.DictionaryField(), default=list)
-    # TODO: get/set
+    in_companies = JSONField(default=list)
+    in_bormes = JSONField(default=list)
 
     date_updated = DateField(db_index=True)
-    cargos_actuales = JSONField()
-    cargos_historial = JSONField()
-    # TODO: get/set
-    # cargos_actuales = ArrayField(hstore.DictionaryField(), default=list)
-    # cargos_historial = ArrayField(hstore.DictionaryField(), default=list)
+    cargos_actuales = JSONField(default=list)
+    cargos_historial = JSONField(default=list)
 
     # last access
     # number of visits
@@ -165,19 +159,13 @@ class Company(Model):
     type = CharField(max_length=50, choices=SOCIEDADES)
 
     date_updated = DateField(db_index=True)
-    in_bormes = JSONField()
-    anuncios = JSONField()
-    # in_bormes = ArrayField(hstore.DictionaryField(), default=list)
-    # anuncios = ArrayField(IntegerField(), default=list)  # FIXME: {year, id}
+    in_bormes = JSONField(default=list)
+    anuncios = JSONField(default=list)  # FIXME: {year, id}
 
-    cargos_actuales_p = JSONField()
-    cargos_actuales_c = JSONField()
-    cargos_historial_p = JSONField()
-    cargos_historial_c = JSONField()
-    # cargos_actuales_p = ArrayField(hstore.DictionaryField(), default=list)
-    # cargos_actuales_c = ArrayField(hstore.DictionaryField(), default=list)
-    # cargos_historial_p = ArrayField(hstore.DictionaryField(), default=list)
-    # cargos_historial_c = ArrayField(hstore.DictionaryField(), default=list)
+    cargos_actuales_p = JSONField(default=list)
+    cargos_actuales_c = JSONField(default=list)
+    cargos_historial_p = JSONField(default=list)
+    cargos_historial_c = JSONField(default=list)
 
     def add_in_bormes(self, borme):
         if borme not in self.in_bormes:
@@ -299,9 +287,7 @@ class Anuncio(Model):
     borme = ForeignKey('Borme', on_delete=PROTECT)
     company = ForeignKey('Company', on_delete=PROTECT)
     datos_registrales = CharField(max_length=70)
-    actos = JSONField()
-    # TODO: schema={...}  # TODO: Actos repetidos
-    # actos = hstore.SerializedDictionaryField()
+    actos = JSONField(default=dict)  # TODO: Actos repetidos
 
     class Meta:
         index_together = ['id_anuncio', 'year']

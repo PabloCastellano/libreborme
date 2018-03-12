@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.utils import timezone
 from borme.models import Config
 
@@ -13,8 +11,10 @@ import borme.importer
 
 
 class Command(BaseCommand):
-    args = '<BORME files, ...>'
     help = 'Import BORME PDF file'
+
+    def add_arguments(self, parser):
+        parser.add_argument('files', nargs='+', type=str)
 
     def handle(self, *args, **options):
         verbosity = int(options['verbosity'])
@@ -26,22 +26,20 @@ class Command(BaseCommand):
             borme.importer.logger.setLevel(logging.INFO)
         elif verbosity > 2:
             borme.importer.logger.setLevel(logging.DEBUG)
-        if verbosity > 2:
             logging.getLogger().setLevel(logging.DEBUG)
         start_time = time.time()
 
-        if args:
-            for filename in args:
-                print(filename)
-                import_borme_pdf(filename)
+        for filename in options["files"]:
+            print(filename)
+            import_borme_pdf(filename)
 
-            config = Config.objects.first()
-            if config:
-                config.last_modified = timezone.now()
-            else:
-                config = Config(last_modified=timezone.now())
-            config.version = get_git_revision_short_hash()
-            config.save()
+        config = Config.objects.first()
+        if config:
+            config.last_modified = timezone.now()
+        else:
+            config = Config(last_modified=timezone.now())
+        config.version = get_git_revision_short_hash()
+        config.save()
 
         # Elapsed time
         elapsed_time = time.time() - start_time

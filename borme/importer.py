@@ -196,6 +196,7 @@ def extinguir_sociedad(company, date):
     """
     company.is_active = False
     company.date_extinction = date
+    company.date_updated = date
 
     for cargo in company.cargos_actuales_c:
         cargo['date_to'] = date.isoformat()
