@@ -1,32 +1,22 @@
 ---
-version: "2"
+version: "3"
 
 services:
   db:
-    image: aidanlister/postgres-hstore
-    volumes_from:
-      - dbdata
+    image: postgres:9.6
+    volumes:
+      - db-data:/var/lib/postgresql
     ports:
       - "5432:5432"
+    environment:
+      POSTGRES_USER: libreborme
 
   elasticsearch:
     image: elasticsearch:1.7
-    volumes_from:
-      - elasticsearchdata
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
-
-  dbdata:
-    image: aidanlister/postgres-hstore
-    volumes:
-      - /var/lib/postgresql
-    command: "true"
-
-  elasticsearchdata:
-    image: elasticsearch:1.7
-    volumes:
-      - /usr/share/elasticsearch/data
-    command: "true"
 
 #  django:
 #    build: docker/Dockerfile
@@ -37,3 +27,7 @@ services:
 #     - elasticsearch
 #    environment:
 #     - ENV_TYPE: development
+
+volumes:
+  db-data:
+  es-data:
