@@ -1,0 +1,39 @@
+---
+version: "2"
+
+services:
+  db:
+    image: aidanlister/postgres-hstore
+    volumes_from:
+      - dbdata
+    ports:
+      - "5432:5432"
+
+  elasticsearch:
+    image: elasticsearch:1.7
+    volumes_from:
+      - elasticsearchdata
+    ports:
+      - "9200:9200"
+
+  dbdata:
+    image: aidanlister/postgres-hstore
+    volumes:
+      - /var/lib/postgresql
+    command: "true"
+
+  elasticsearchdata:
+    image: elasticsearch:1.7
+    volumes:
+      - /usr/share/elasticsearch/data
+    command: "true"
+
+#  django:
+#    build: docker/Dockerfile
+#    ports:
+#     - "8000:8000"
+#    links:
+#     - db
+#     - elasticsearch
+#    environment:
+#     - ENV_TYPE: development
