@@ -30,13 +30,14 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.postgres',
+    'django.contrib.sessions',
     'django.contrib.staticfiles',
     'bootstrap',
     'django_static_jquery',
+    'django_elasticsearch_dsl',
     'fontawesome',
-    'haystack',
     'tastypie',
     #'maintenancemode',
     'borme',
@@ -111,20 +112,11 @@ DATABASES = {
     }
 }
 
-# haystack search using elasticsearch
-HAYSTACK_CONNECTIONS = {
+ELASTICSEARCH_DSL = {
     'default': {
-        'ENGINE': 'borme.search_backends.AsciifoldingElasticSearchEngine',
-        'URL': 'http://127.0.0.1:9200/',
-        'INDEX_NAME': 'libreborme',
+        'hosts': 'localhost:9200'
     },
 }
-
-# http://django-haystack.readthedocs.org/en/latest/signal_processors.html
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
-
-# increase the default number of results (from 20)
-HAYSTACK_SEARCH_RESULTS_PER_PAGE = 25
 
 TASTYPIE_DEFAULT_FORMATS = ['json']
 

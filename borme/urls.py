@@ -3,11 +3,11 @@ from django.conf.urls import url, include
 from . import views
 
 from tastypie.api import Api
-from borme.api.resources import CompanyResource, PersonResource
+#from borme.api.resources import CompanyResource, PersonResource
 
 v1_api = Api(api_name='v1')
-v1_api.register(CompanyResource())
-v1_api.register(PersonResource())
+#v1_api.register(CompanyResource())
+#v1_api.register(PersonResource())
 
 
 urlpatterns = [
@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^persona/(?P<slug>[\w-]+)/cargos_historial.csv$', views.generate_person_csv_cargos_historial, name='borme-persona-csv-historial'),
     #url(r'^busqueda/$', BusquedaView.as_view(), name='borme-busqueda'),
     url(r'^api/', include(v1_api.urls)),
-    url(r'^search/', views.LBSearchView(), name='borme-search'),
+    #url(r'^search/', views.LBSearchView(), name='borme-search'),
 
     url(r'^ajax/empresa/(?P<slug>[\w-]+)/more', views.ajax_empresa_more, name='borme-ajax-empresa'),
 ]

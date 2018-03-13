@@ -69,6 +69,9 @@ class Person(Model):
     # last access
     # number of visits
 
+    class Meta:
+        ordering = ['name']
+
     def add_in_companies(self, company):
         if company not in self.in_companies:
             self.in_companies.append(company)
@@ -166,6 +169,9 @@ class Company(Model):
     cargos_actuales_c = JSONField(default=list)
     cargos_historial_p = JSONField(default=list)
     cargos_historial_c = JSONField(default=list)
+
+    class Meta:
+        ordering = ['name']
 
     def add_in_bormes(self, borme):
         if borme not in self.in_bormes:

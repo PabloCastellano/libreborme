@@ -11,13 +11,13 @@ from django.urls import reverse
 from django.template.loader import get_template
 from django.conf import settings
 
-from .forms import LBSearchForm
+#from .forms import LBSearchForm
 from .models import Company, Person, Anuncio, Config, Borme
 from .calendar import LibreBormeCalendar, LibreBormeAvailableCalendar
 from .utils import estimate_count_fast
 from .mixins import CacheMixin
 
-from haystack.views import SearchView
+#from haystack.views import SearchView
 
 import datetime
 import csv
@@ -139,68 +139,68 @@ class HomeView(CacheMixin, TemplateView):
 
 
 # TODO:  if 'q' not in request.GET
-class LBSearchView(CacheMixin, SearchView):
-    template = "search/search.html"
-
-    def __init__(self, template=None, load_all=True, form_class=LBSearchForm, searchqueryset=None, results_per_page=25):
-        super(LBSearchView, self).__init__(template, load_all, form_class, searchqueryset, results_per_page)
-
-    def create_response(self):
-        """
-        Generates the actual HttpResponse to send back to the user.
-        """
-        paginator_companies = Paginator(self.results['Company'], self.results_per_page)
-        paginator_persons = Paginator(self.results['Person'], self.results_per_page)
-        page_no = int(self.request.GET.get('page', 1))
-
-        context = {
-            'query': self.query,
-            'form': self.form,
-            'suggestion': None,
-        }
-
-        try:
-            page_companies = paginator_companies.page(page_no)
-        except PageNotAnInteger:
-            page_companies = paginator_companies.page(1)
-            context['page_no'] = 1
-        except EmptyPage:
-            page_companies = paginator_companies.page(paginator_companies.num_pages)
-        finally:
-            context['paginator_companies'] = paginator_companies
-            pagerange = list(paginator_companies.page_range[:3]) + list(paginator_companies.page_range[-3:])
-            pagerange.append(page_companies.number)
-            pagerange = list(set(pagerange))
-            pagerange.sort()
-            if len(pagerange) == 1:
-                pagerange = []
-            page_companies.myrange = pagerange
-            context['page_companies'] = page_companies
-
-        try:
-            page_persons = paginator_persons.page(page_no)
-        except PageNotAnInteger:
-            page_persons = paginator_persons.page(1)
-            context['page_no'] = 1
-        except EmptyPage:
-            page_persons = paginator_persons.page(paginator_persons.num_pages)
-        finally:
-            context['paginator_persons'] = paginator_persons
-            pagerange = list(paginator_persons.page_range[:3]) + list(paginator_persons.page_range[-3:])
-            pagerange.append(page_persons.number)
-            pagerange = list(set(pagerange))
-            pagerange.sort()
-            if len(pagerange) == 1:
-                pagerange = []
-            page_persons.myrange = pagerange
-            context['page_persons'] = page_persons
-
-        if self.results and hasattr(self.results, 'query') and self.results.query.backend.include_spelling:
-            context['suggestion'] = self.form.get_suggestion()
-
-        context['search_view'] = 1
-        context.update(self.extra_context())
-        return render(self.request, self.template, context)
+# class LBSearchView(CacheMixin, SearchView):
+#     template = "search/search.html"
+#
+#     def __init__(self, template=None, load_all=True, form_class=LBSearchForm, searchqueryset=None, results_per_page=25):
+#         super(LBSearchView, self).__init__(template, load_all, form_class, searchqueryset, results_per_page)
+#
+#     def create_response(self):
+#         """
+#         Generates the actual HttpResponse to send back to the user.
+#         """
+#         paginator_companies = Paginator(self.results['Company'], self.results_per_page)
+#         paginator_persons = Paginator(self.results['Person'], self.results_per_page)
+#         page_no = int(self.request.GET.get('page', 1))
+#
+#         context = {
+#             'query': self.query,
+#             'form': self.form,
+#             'suggestion': None,
+#         }
+#
+#         try:
+#             page_companies = paginator_companies.page(page_no)
+#         except PageNotAnInteger:
+#             page_companies = paginator_companies.page(1)
+#             context['page_no'] = 1
+#         except EmptyPage:
+#             page_companies = paginator_companies.page(paginator_companies.num_pages)
+#         finally:
+#             context['paginator_companies'] = paginator_companies
+#             pagerange = list(paginator_companies.page_range[:3]) + list(paginator_companies.page_range[-3:])
+#             pagerange.append(page_companies.number)
+#             pagerange = list(set(pagerange))
+#             pagerange.sort()
+#             if len(pagerange) == 1:
+#                 pagerange = []
+#             page_companies.myrange = pagerange
+#             context['page_companies'] = page_companies
+#
+#         try:
+#             page_persons = paginator_persons.page(page_no)
+#         except PageNotAnInteger:
+#             page_persons = paginator_persons.page(1)
+#             context['page_no'] = 1
+#         except EmptyPage:
+#             page_persons = paginator_persons.page(paginator_persons.num_pages)
+#         finally:
+#             context['paginator_persons'] = paginator_persons
+#             pagerange = list(paginator_persons.page_range[:3]) + list(paginator_persons.page_range[-3:])
+#             pagerange.append(page_persons.number)
+#             pagerange = list(set(pagerange))
+#             pagerange.sort()
+#             if len(pagerange) == 1:
+#                 pagerange = []
+#             page_persons.myrange = pagerange
+#             context['page_persons'] = page_persons
+#
+#         if self.results and hasattr(self.results, 'query') and self.results.query.backend.include_spelling:
+#             context['suggestion'] = self.form.get_suggestion()
+#
+#         context['search_view'] = 1
+#         context.update(self.extra_context())
+#         return render(self.request, self.template, context)
 
 
 class BusquedaView(CacheMixin, TemplateView):
