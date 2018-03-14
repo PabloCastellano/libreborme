@@ -4,6 +4,7 @@ from django.utils.text import slugify
 from django.urls import reverse
 # from django.core.exceptions import FieldError
 from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.search import SearchVectorField
 from django.conf import settings
 
 from django.db.models import (
@@ -65,6 +66,8 @@ class Person(Model):
     date_updated = DateField(db_index=True)
     cargos_actuales = JSONField(default=list)
     cargos_historial = JSONField(default=list)
+
+    document = SearchVectorField(null=True)
 
     # last access
     # number of visits
@@ -166,6 +169,8 @@ class Company(Model):
     cargos_actuales_c = JSONField(default=list)
     cargos_historial_p = JSONField(default=list)
     cargos_historial_c = JSONField(default=list)
+
+    document = SearchVectorField(null=True)
 
     def add_in_bormes(self, borme):
         if borme not in self.in_bormes:

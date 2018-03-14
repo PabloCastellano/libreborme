@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.core.paginator import Paginator
-from haystack.query import SearchQuerySet
+#from haystack.query import SearchQuerySet
 from tastypie.resources import ModelResource
 from tastypie.throttle import CacheThrottle
 from tastypie.utils import trailing_slash
@@ -33,7 +33,8 @@ class CompanyResource(ModelResource):
         query = request.GET.get('q', '')
 
         if len(query) > 3:
-            sqs = SearchQuerySet().models(Company).load_all().auto_query(query)
+            # sqs = SearchQuerySet().models(Company).load_all().auto_query(query)
+            sqs = []
             paginator = Paginator(sqs, 20)
 
             try:
@@ -111,7 +112,8 @@ class PersonResource(ModelResource):
         query = request.GET.get('q', '')
 
         if len(query) > 3:
-            sqs = SearchQuerySet().models(Person).load_all().auto_query(query)
+            # sqs = SearchQuerySet().models(Person).load_all().auto_query(query)
+            sqs = []
             paginator = Paginator(sqs, 20)
 
             try:

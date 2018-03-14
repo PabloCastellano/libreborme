@@ -1,6 +1,7 @@
 from .models import Company, Borme, Anuncio, Person, BormeLog
 from .utils import slug2
 
+from django.db import connection
 from django.conf import settings
 from django.utils.text import slugify
 from django.utils import timezone
@@ -498,6 +499,23 @@ def import_borme_json(filename):
     if not all(map(lambda x: x == 0, results.values())):
         print_results(results, borme)
     return True, results
+
+
+def psql_update_documents():
+    """
+    Update postgresql full text search attributes.
+    This function must be run everytime new records are added to the database
+    """
+    affected_rows = 0
+    with connection.cursor() as cursor:
+        cursor.execute("UPDATE borme_company SET document = to_tsvector(name) WHERE document IS NULL")
+        affected_rows += cursor.rowcount
+        logger.info("Updated {} borme_company records".format(cursor.rowcount))
+    with connection.cursor() as cursor:
+        cursor.execute("UPDATE borme_person SET document = to_tsvector(name) WHERE document IS NULL")
+        affected_rows += cursor.rowcount
+        logger.info("Updated {} borme_company records".format(cursor.rowcount))
+    return affected_rows
 
 
 def print_results(results, borme):

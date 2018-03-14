@@ -2,7 +2,9 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.decorators.cache import cache_page
 
-from django.shortcuts import redirect, render
+from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.db.models import F
+from django.shortcuts import redirect
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404, HttpResponse
@@ -11,13 +13,10 @@ from django.urls import reverse
 from django.template.loader import get_template
 from django.conf import settings
 
-from .forms import LBSearchForm
 from .models import Company, Person, Anuncio, Config, Borme
 from .calendar import LibreBormeCalendar, LibreBormeAvailableCalendar
 from .utils import estimate_count_fast
 from .mixins import CacheMixin
-
-from haystack.views import SearchView
 
 import datetime
 import csv
@@ -139,86 +138,31 @@ class HomeView(CacheMixin, TemplateView):
 
 
 # TODO:  if 'q' not in request.GET
-class LBSearchView(CacheMixin, SearchView):
-    template = "search/search.html"
-
-    def __init__(self, template=None, load_all=True, form_class=LBSearchForm, searchqueryset=None, results_per_page=25):
-        super(LBSearchView, self).__init__(template, load_all, form_class, searchqueryset, results_per_page)
-
-    def create_response(self):
-        """
-        Generates the actual HttpResponse to send back to the user.
-        """
-        paginator_companies = Paginator(self.results['Company'], self.results_per_page)
-        paginator_persons = Paginator(self.results['Person'], self.results_per_page)
-        page_no = int(self.request.GET.get('page', 1))
-
-        context = {
-            'query': self.query,
-            'form': self.form,
-            'suggestion': None,
-        }
-
-        try:
-            page_companies = paginator_companies.page(page_no)
-        except PageNotAnInteger:
-            page_companies = paginator_companies.page(1)
-            context['page_no'] = 1
-        except EmptyPage:
-            page_companies = paginator_companies.page(paginator_companies.num_pages)
-        finally:
-            context['paginator_companies'] = paginator_companies
-            pagerange = list(paginator_companies.page_range[:3]) + list(paginator_companies.page_range[-3:])
-            pagerange.append(page_companies.number)
-            pagerange = list(set(pagerange))
-            pagerange.sort()
-            if len(pagerange) == 1:
-                pagerange = []
-            page_companies.myrange = pagerange
-            context['page_companies'] = page_companies
-
-        try:
-            page_persons = paginator_persons.page(page_no)
-        except PageNotAnInteger:
-            page_persons = paginator_persons.page(1)
-            context['page_no'] = 1
-        except EmptyPage:
-            page_persons = paginator_persons.page(paginator_persons.num_pages)
-        finally:
-            context['paginator_persons'] = paginator_persons
-            pagerange = list(paginator_persons.page_range[:3]) + list(paginator_persons.page_range[-3:])
-            pagerange.append(page_persons.number)
-            pagerange = list(set(pagerange))
-            pagerange.sort()
-            if len(pagerange) == 1:
-                pagerange = []
-            page_persons.myrange = pagerange
-            context['page_persons'] = page_persons
-
-        if self.results and hasattr(self.results, 'query') and self.results.query.backend.include_spelling:
-            context['suggestion'] = self.form.get_suggestion()
-
-        context['search_view'] = 1
-        context.update(self.extra_context())
-        return render(self.request, self.template, context)
-
-
-class BusquedaView(CacheMixin, TemplateView):
+class BusquedaView(TemplateView):
     template_name = "busqueda.html"
+    # template = "search/search.html"
 
     def get_context_data(self, **kwargs):
         context = super(BusquedaView, self).get_context_data(**kwargs)
         if 'q' in self.request.GET:
             page = self.request.GET.get('page', 1)
-            q_companies = Company.objects.filter(name__icontains=self.request.GET['q'])
+            raw_query = self.request.GET['q']
+            words = raw_query.split()
+            query = SearchQuery(words[0])
+            for word in words[1:]:
+                # AND
+                query &= SearchQuery(word)
+            # q_companies = Company.objects.filter(name__icontains=self.request.GET['q'])
+            q_companies = Company.objects.annotate(rank=SearchRank(F('document'), query)).filter(rank__gt=0.01).order_by('-rank')
             q_companies = list(q_companies)  # Force
             companies = Paginator(q_companies, 25)
-            q_persons = Person.objects.filter(name__icontains=self.request.GET['q'])
+            # q_persons = Person.objects.filter(name__icontains=self.request.GET['q'])
+            q_persons = Person.objects.annotate(rank=SearchRank(F('document'), query)).filter(rank__gt=0.01).order_by('-rank')
             q_persons = list(q_persons)  # Force
             persons = Paginator(q_persons, 25)
 
             context['page'] = page
-            context['query'] = self.request.GET['q']
+            context['query'] = raw_query
 
             try:
                 pg_companies = companies.page(page)
