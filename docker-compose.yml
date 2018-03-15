@@ -11,20 +11,12 @@ services:
     environment:
       POSTGRES_USER: libreborme
 
-  elasticsearch:
-    image: elasticsearch:1.7
-    volumes:
-      - es-data:/usr/share/elasticsearch/data
-    ports:
-      - "9200:9200"
-
 #  django:
 #    build: docker/Dockerfile
 #    ports:
 #     - "8000:8000"
 #    links:
 #     - db
-#     - elasticsearch
 #    environment:
 #     - ENV_TYPE: development
 
