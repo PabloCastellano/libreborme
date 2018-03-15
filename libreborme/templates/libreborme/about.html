@@ -1,7 +1,5 @@
 {% extends 'borme/base.html' %}
 
-{% load staticfiles %}
-
 {% block title %}Sobre LibreBORME | LibreBORME{% endblock %}
 
 {% block content %}
@@ -12,12 +10,12 @@
 
       <h3>Historia</h3>
       <p>LibreBORME nace a finales de 2014 como Proyecto de Fin de Carrera de <a href="http://twitter.com/_pablog" target="_blank" rel="nofollow">un estudiante</a> cotutorizado por la <a href="http://www.informatica.uma.es/" target="_blank" rel="nofollow">Universidad de Málaga</a> y <a href="http://www.civio.es/" target="_blank" rel="nofollow">Fundación Ciudadana Civio</a> y su desarrollo tiene lugar a lo largo de todo 2015.</p>
-      
+
       <p>En junio de 2015, <strong>LibreBORME</strong> recibió el <a href="https://pablog.me/blog/2015/07/libreborme-tercer-premio-en-el-i-certamen-de-proyectos-libres-de-la-ugr/" target="_blank" rel="nofollow">tercer premio</a> en el <strong>I Certamen de Proyectos Libres de la Universidad de Granada</strong>.</p>
 
       <p>A principios de 2016 acabó la primera fase del desarrollo y el tribunal otorgó a LibreBORME la calificación de <strong>sobresaliente</strong>. Desde entonces, debido a la repercusión obtenida tras la aparición en diarios online, su autor decidió mantener el servicio <i>online</i> en funcionamiento asumiendo su coste y continuando con su desarrollo.</p>
 
-      <p>La <a href="{% static "pdf/libreborme_memoria.pdf" %}">memoria del proyecto</a> está disponible para su consulta bajo licencia <a href="https://creativecommons.org/licenses/by-sa/3.0/es/" target="_blank" rel="nofollow">Creative Commons BY-SA 3.0 Spain</a>.</p>
+      <p>La <a href="{{ HOST_BUCKET }}/static/libreborme_memoria.pdf" target="_blank" rel="nofollow" %}>memoria del proyecto</a> está disponible para su consulta bajo licencia <a href="https://creativecommons.org/licenses/by-sa/3.0/es/" target="_blank" rel="nofollow">Creative Commons BY-SA 3.0 Spain</a>.</p>
 
       <h3>Casos de uso</h3>
       <p><strong>LibreBORME</strong> permite a periodistas, juristas y organizaciones de la sociedad civil investigar las sociedades a las que pertenece una persona y a profesionales conocer mejor la empresa a la que contratan servicios.</p>
@@ -47,5 +45,5 @@
 
         <p>LibreBORME no asume responsabilidad alguna por errores, inexactitudes u omisiones de la información facilitada. En consecuencia, el usuario no podrá exigir responsabilidad alguna por los daños y perjuicios derivados de errores y/o incorrección o inexactitud en la información suministrada. </p>
       </div>
-      
+
 {% endblock %}

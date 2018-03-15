@@ -153,3 +153,5 @@ LOPD = {'provider': 'Some real name',
         'domain': 'The domain that hosts this website',
         'email':  EMAIL_CONTACT,
         'address': 'Some real address'}
+
+HOST_BUCKET = "https://libreborme-prod.ams3.digitaloceanspaces.com"

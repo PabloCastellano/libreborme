@@ -11,3 +11,12 @@ class AvisoLegalView(CacheMixin, TemplateView):
         context = super(AvisoLegalView, self).get_context_data(**kwargs)
         context['lopd'] = settings.LOPD
         return context
+
+
+class AboutView(CacheMixin, TemplateView):
+    template_name = "libreborme/about.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(AboutView, self).get_context_data(**kwargs)
+        context['HOST_BUCKET'] = settings.HOST_BUCKET
+        return context

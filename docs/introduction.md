@@ -21,7 +21,7 @@ Y en los siguientes medios:
 
 ## Memoria del proyecto
 
-La [memoria del proyecto](https://libreborme.net/static/pdf/libreborme_memoria.pdf) está disponible para su consulta bajo licencia [Creative Commons BY-SA 3.0 Spain](https://creativecommons.org/licenses/by-sa/3.0/es/).
+La [memoria del proyecto](https://libreborme-prod.ams3.digitaloceanspaces.com/static/libreborme_memoria.pdf) está disponible para su consulta bajo licencia [Creative Commons BY-SA 3.0 Spain](https://creativecommons.org/licenses/by-sa/3.0/es/).
 
 ## Premios
 
