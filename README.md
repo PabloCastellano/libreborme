@@ -13,7 +13,7 @@ Acerca de LibreBORME
 LibreBORME es una plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil.
 
 LibreBORME nace en 2014 como un Proyecto de Fin de Carrera con la intención de «abrir» los datos del Registro Mercantil de España.
-Aprovechando que [desde 2009](http://elpais.com/diario/2008/01/03/ciberpais/1199330666_850215.html)
+Aprovechando que [desde 2009](https://elpais.com/diario/2008/01/03/ciberpais/1199330666_850215.html)
 se publica el BORME en formato electrónico, LibreBORME utiliza la librería [bormeparser](https://github.com/PabloCastellano/bormeparser/)
 para *leérselo* por ti cada mañana y añadir a su base de datos los últimos cambios. De esta manera tú puedes hacer búsquedas semánticas,
 recibir notificaciones y usar estos datos de manera sencilla y para lo que quieras.
@@ -24,7 +24,7 @@ Para más información puedes leer las siguientes entradas en el blog del autor:
 - [LibreBORME tercer premio en el I Certamen de Proyectos Libres de la UGR](https://pablog.me/blog/2015/07/libreborme-tercer-premio-en-el-i-certamen-de-proyectos-libres-de-la-ugr/) (15 de julio de 2015)
 
 Y en los siguientes medios:
-- [LibreBORME, la herramienta gratuita para investigar empresas españolas desde casa](http://www.elconfidencial.com/tecnologia/2016-02-14/libreborme-la-herramienta-gratuita-para-investigar-empresas-espanolas-desde-casa_1151596/) (El Confidencial, 14 de febrero de 2016)
+- [LibreBORME, la herramienta gratuita para investigar empresas españolas desde casa](https://www.elconfidencial.com/tecnologia/2016-02-14/libreborme-la-herramienta-gratuita-para-investigar-empresas-espanolas-desde-casa_1151596/) (El Confidencial, 14 de febrero de 2016)
 
 LibreBORME participó en el [I Certamen de Proyectos Libres de la UGR](http://osl.ugr.es/2014/09/26/premios-a-proyectos-libres-de-la-ugr/) [(Bases)](http://osl.ugr.es/bases-de-los-premios-a-proyectos-libres-de-la-ugr/) donde obtuvo el tercer premio.
 
