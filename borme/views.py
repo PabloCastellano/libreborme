@@ -153,11 +153,13 @@ class BusquedaView(TemplateView):
                 # AND
                 query &= SearchQuery(word)
             # q_companies = Company.objects.filter(name__icontains=self.request.GET['q'])
-            q_companies = Company.objects.annotate(rank=SearchRank(F('document'), query)).filter(rank__gt=0.01).order_by('-rank')
+            # q_companies = Company.objects.annotate(rank=SearchRank(F('document'), query)).filter(rank__gt=0.01).order_by('-rank')
+            q_companies = Company.objects.filter(document=query)
             q_companies = list(q_companies)  # Force
             companies = Paginator(q_companies, 25)
             # q_persons = Person.objects.filter(name__icontains=self.request.GET['q'])
-            q_persons = Person.objects.annotate(rank=SearchRank(F('document'), query)).filter(rank__gt=0.01).order_by('-rank')
+            # q_persons = Person.objects.annotate(rank=SearchRank(F('document'), query)).filter(rank__gt=0.01).order_by('-rank')
+            q_persons = Person.objects.filter(document=query)
             q_persons = list(q_persons)  # Force
             persons = Paginator(q_persons, 25)
 
