@@ -3,10 +3,10 @@
 Project Leader: Pablo Castellano
 Site: https://pablog.me
 Twitter: @_pablog
-Location: Málaga, Spain.
+Location: Barcelona, Spain.
 
 /* SITE */
-Last update: 2016/02/26.
+Last update: 2018-03-19.
 Standards: HTML5, CSS3.
 Components: Twitter Bootstrap, jQuery.
-Software: Python, Django, PostgreSQL, ElasticSearch, Ubuntu.
+Software: Python, Django, PostgreSQL, Ubuntu.
