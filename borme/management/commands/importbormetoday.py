@@ -2,12 +2,14 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 import datetime
+import logging
 import time
 
 from borme.models import Config
 from borme.parser.importer.functions import import_borme_download
 from borme.parser.path import update_previous_xml
 from borme.parser.postgres import psql_update_documents
+import borme.parser.importer
 
 
 class Command(BaseCommand):
@@ -20,6 +22,7 @@ class Command(BaseCommand):
                             help='Do not download any file')
 
     def handle(self, *args, **options):
+        self.set_verbosity(int(options['verbosity']))
         start_time = time.time()
 
         date = datetime.date.today()
@@ -44,3 +47,14 @@ class Command(BaseCommand):
         # Elapsed time
         elapsed_time = time.time() - start_time
         print('\nElapsed time: %.2f seconds' % elapsed_time)
+
+    def set_verbosity(self, verbosity):
+        if verbosity == 0:
+            borme.parser.importer.logger.setLevel(logging.ERROR)
+        elif verbosity == 1:  # default
+            borme.parser.importer.logger.setLevel(logging.INFO)
+        elif verbosity == 2:
+            borme.parser.importer.logger.setLevel(logging.INFO)
+        elif verbosity > 2:
+            borme.parser.importer.logger.setLevel(logging.DEBUG)
+            logging.getLogger().setLevel(logging.DEBUG)

@@ -1,11 +1,13 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
+import logging
 import time
 
 from borme.models import Config
 from borme.parser.importer import import_borme_download
 from borme.parser.postgres import psql_update_documents
+import borme.parser.importer
 
 from libreborme.utils import get_git_revision_short_hash
 
@@ -36,6 +38,7 @@ class Command(BaseCommand):
         # json only, pdf only...
 
     def handle(self, *args, **options):
+        self.set_verbosity(int(options['verbosity']))
         start_time = time.time()
 
         import_borme_download(options['from'][0],
@@ -57,3 +60,14 @@ class Command(BaseCommand):
         # Elapsed time
         elapsed_time = time.time() - start_time
         print('\nElapsed time: %.2f seconds' % elapsed_time)
+
+    def set_verbosity(self, verbosity):
+        if verbosity == 0:
+            borme.parser.importer.logger.setLevel(logging.ERROR)
+        elif verbosity == 1:  # default
+            borme.parser.importer.logger.setLevel(logging.INFO)
+        elif verbosity == 2:
+            borme.parser.importer.logger.setLevel(logging.INFO)
+        elif verbosity > 2:
+            borme.parser.importer.logger.setLevel(logging.DEBUG)
+            logging.getLogger().setLevel(logging.DEBUG)
