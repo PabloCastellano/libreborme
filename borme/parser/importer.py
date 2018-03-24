@@ -35,8 +35,14 @@ logger.setLevel(logging.INFO)
 
 
 def _import1(borme):
-    """
-    borme: bormeparser.Borme
+    """Importa en la BD una instancia bormeparser.Borme
+
+    Importa en la BD todos los datos de la instancia BORME (personas, empresas,
+    anuncios, bormes) y por último crea una entrada BormeLog para marcarlo
+    como parseado.
+
+    :param borme: Instancia BORME que se va a importar en la BD
+    :type borme: bormeparser.Borme
     """
     logger.info("\nBORME CVE: {} ({}, {}, [{}-{}])"
                 .format(borme.cve, borme.date, borme.provincia,
@@ -263,12 +269,15 @@ def _import1(borme):
 
 
 def extinguir_sociedad(company, date):
-    """
+    """Marca en la BD una sociedad como extinguida.
+
     Se llama a esta función cuando una sociedad se extingue.
     Todos los cargos vigentes pasan a la lista de cargos cesados (historial).
     Modifica los modelos Company y Person.
     company: Company object
-    date: datetime.date object
+
+    :param date: Fecha de la extinción
+    :type date: datetime.date
     """
     company.is_active = False
     company.date_extinction = date
@@ -295,9 +304,22 @@ def extinguir_sociedad(company, date):
 
 def import_borme_download(date_from, date_to, seccion=bormeparser.SECCION.A,
                           local_only=False, no_missing=False):
-    """
-    date_from: "2015-01-30", "init"
-    date_to: "2015-01-30", "today"
+    """Descarga e importa BORMEs desde la web del Registro Mercantil.
+
+    Descarga BORMEs en formato PDF de la web del Registro Mercantil para
+    un rango de fechas, los convierte a formato BORME-JSON e importa los
+    datos en la BD.
+
+    :param date_from: Fecha desde la que importar ("2015-01-30", "init")
+    :param date_to: Fecha hasta la que importar ("2015-01-30", "today")
+    :param seccion: Seccion del BORME
+    :param local_only: No descarga archivos, solo procesa archivos ya presentes
+    :param no_missing: Aborta el proceso tan pronto como se encuentre un error
+    :type date_from: str
+    :type date_to: str
+    :type seccion: bormeparser.SECCION
+    :type local_only: bool
+    :type no_missing: bool
     """
     if date_from == 'init':
         date_from = FIRST_BORME[2009]
@@ -324,10 +346,83 @@ def import_borme_download(date_from, date_to, seccion=bormeparser.SECCION.A,
         return False
 
 
+def _load_and_append(files_list, strict, seccion=bormeparser.SECCION.A):
+    """Procesa una lista de archivos BORME.
+
+    Procesa una lista de archivos BORME (JSON o PDF) y devuelve una lista
+    con sus instancias.
+
+    :rtype: ([borme], error bool)
+    """
+    bormes = []
+
+    if files_list[0].endswith("json"):
+        file_format = "json"
+        parse_func = bormeparser.Borme.from_json
+    else:
+        file_format = "pdf"
+        parse_func = bormeparser.parse
+
+    for filepath in files_list:
+
+        if not os.path.exists(filepath):
+            logger.warn('[X] Missing JSON: %s' % filepath)
+            continue
+        logger.info(filepath)
+
+        try:
+            if file_format == "json":
+                borme = parse_func(filepath)
+            else:
+                borme = parse_func(filepath, seccion)
+            bormes.append(borme)
+
+        except Exception as e:
+            logger.error("[X] Error grave (I) en {obj}.{method}: {path}"
+                         .format(obj=parse_func.__objclass__,
+                                 method=parse_func.__name__,
+                                 path=filepath))
+            logger.error("[X] {}: {}"
+                         .format(e.__class__.__name__, e))
+            if strict:
+                logger.error('[X] Una vez arreglado, reanuda la importación:')
+                # TODO: --from date
+                logger.error('[X]   python manage.py importbormetoday local')
+                return bormes, True
+
+    return bormes, False
+
+
+def _generate_borme_files_list(bxml, json_path, pdf_path):
+    cves = bxml.get_cves(bormeparser.SECCION.A)
+    files_json = map(lambda x: os.path.join(json_path, '%s.json' % x), cves)
+    files_pdf = map(lambda x: os.path.join(pdf_path, '%s.pdf' % x), cves)
+    return list(files_json), list(files_pdf)
+
+
 def _import_borme_download_range2(begin, end, seccion, local_only,
                                   strict=False, create_json=True):
-    """
-    strict: Para en caso de error grave
+    """Importa los BORMEs data un rango de fechas.
+
+    Itera en el rango de fechas. Por cada día:
+    * Genera los nombres de los archivos BORMEs a partir del archivo BORME-XML
+    * Carga los archivos BORME-JSON, o los BORME-PDF si no existieran los JSON
+    * Importa en la BD los datos de los BORME
+
+    :param begin: Fecha desde la que importar
+    :param end: Fecha hasta la que importar
+    :param seccion: Seccion del BORME
+    :param local_only: No descarga archivos, solo procesa archivos ya presentes
+    :param strict: Aborta el proceso tan pronto como se encuentre un error
+    :param create_json: Crear archivo BORME-JSON
+    :type date_from: datetime.date
+    :type date_to: datetime.date
+    :type seccion: bormeparser.SECCION
+    :type local_only: bool
+    :type strict: bool
+    :type create_json: bool
+
+    :rtype: (bool, dict)
     """
     next_date = begin
     total_results = {
@@ -377,13 +472,13 @@ def _import_borme_download_range2(begin, end, seccion, local_only,
             json_path = get_borme_json_path(bxml.date)
             pdf_path = get_borme_pdf_path(bxml.date)
             os.makedirs(pdf_path, exist_ok=True)
-            logger.info("===================================================\n"
-                        "Ran import_borme_download at {now}\n"
-                        "  Import date: {borme_date}. Section: {section}\n"
-                        "==================================================="
-                        .format(now=timezone.now(),
-                                borme_date=bxml.date.isoformat(),
-                                section=seccion))
+            logger.info(
+                    "===================================================\n"
+                    "Ran import_borme_download at {now}\n"
+                    "  Import date: {borme_date}. Section: {section}\n"
+                    "==================================================="
+                    .format(now=timezone.now(), section=seccion,
+                            borme_date=bxml.date.isoformat()))
             print("\nPATH: {}"
                   "\nDATE: {}"
                   "\nSECCION: {}\n"
@@ -409,54 +504,33 @@ def _import_borme_download_range2(begin, end, seccion, local_only,
                             return False, total_results
 
             else:
-                cves = bxml.get_cves(bormeparser.SECCION.A)
-                files_json = list(map(lambda x: os.path.join(json_path, '%s.json' % x), cves))
-                files_pdf = list(map(lambda x: os.path.join(pdf_path, '%s.pdf' % x), cves))
+                files_json, files_pdf = _generate_borme_files_list(bxml,
+                                                                   json_path,
+                                                                   pdf_path)
 
                 if files_exist(files_json):
-                    for filepath in files_json:
-                        logger.info('%s' % filepath)
-                        total_results['total_bormes'] += 1
-                        try:
-                            bormes.append(bormeparser.Borme.from_json(filepath))
-                        except Exception as e:
-                            logger.error('[X] Error grave (I) en bormeparser.Borme.from_json(): %s' % filepath)
-                            logger.error('[X] %s: %s' % (e.__class__.__name__, e))
-                            if strict:
-                                logger.error('[X] Una vez arreglado, reanuda la importación:')
-                                logger.error('[X]   python manage.py importbormetoday local')  # TODO: --from date
-                                return False, total_results
+                    bormes, err = _load_and_append(files_json, strict)
+                    total_results["total_bormes"] += len(bormes)
+
+                    if err:
+                        return False, total_results
+
                 elif files_exist(files_pdf):
-                    for filepath in files_pdf:
-                        logger.info('%s' % filepath)
-                        total_results['total_bormes'] += 1
-                        try:
-                            bormes.append(bormeparser.parse(filepath, seccion))
-                        except Exception as e:
-                            logger.error('[X] Error grave (II) en bormeparser.parse(): %s' % filepath)
-                            logger.error('[X] %s: %s' % (e.__class__.__name__, e))
-                            if strict:
-                                logger.error('[X] Una vez arreglado, reanuda la importación:')
-                                logger.error('[X]   python manage.py importbormetoday local')  # TODO: --from date
-                                return False, total_results
+                    bormes, err = _load_and_append(files_pdf, strict, seccion)
+                    total_results["total_bormes"] += len(bormes)
+
+                    if err:
+                        return False, total_results
                 else:
                     logger.error('[X] Faltan archivos PDF y JSON que no se desea descargar.')
                     logger.error('[X] JSON: %s' % ' '.join(files_json))
                     logger.error('[X] PDF: %s' % ' '.join(files_pdf))
+
                     if strict:
                         return False, total_results
 
-                    for filepath in files_json:
-                        if not os.path.exists(filepath):
-                            logger.warn('[X] Missing JSON: %s' % filepath)
-                            continue
-                        logger.info('%s' % filepath)
-                        total_results['total_bormes'] += 1
-                        try:
-                            bormes.append(bormeparser.Borme.from_json(filepath))
-                        except Exception as e:
-                            logger.error('[X] Error grave (II) en bormeparser.Borme.from_json(): %s' % filepath)
-                            logger.error('[X] %s: %s' % (e.__class__.__name__, e))
+                    bormes, err = _load_and_append(files_pdf, strict, seccion)
+                    total_results["total_bormes"] += len(bormes)
 
             for borme in sorted(bormes):
                 total_results['total_anuncios'] += len(borme.get_anuncios())
@@ -505,8 +579,13 @@ def _import_borme_download_range2(begin, end, seccion, local_only,
 
 
 def import_borme_pdf(filename, create_json=True):
-    """
-    Import BORME PDF to database
+    """Importa un archivo BORME-PDF en la BD.
+
+    :param filename: Archivo a importar
+    :param create_json: Crear BORME-JSON como paso intermedio
+    :type filename: str
+    :type create_json: bool
+    :rtype: (bool, dict)
     """
     results = {
         'created_anuncios': 0,
@@ -534,8 +613,11 @@ def import_borme_pdf(filename, create_json=True):
 
 
 def import_borme_json(filename):
-    """
-    Import BORME JSON to database
+    """Importa un archivo BORME-JSON en la BD.
+
+    :param filename: Archivo a importar
+    :type filename: str
+    :rtype: (bool, dict)
     """
     results = {
         'created_anuncios': 0,
@@ -558,6 +640,16 @@ def import_borme_json(filename):
 
 
 def print_results(results, borme):
+    """Muestra un resumen del proceso de importación.
+
+    Una vez finalizado el proceso de importación, muestra un resumen con los
+    números de bormes, anuncios, empresas y personas importados.
+
+    :param results: Diccionario que contiene los resultados del proceso
+    :param borme: Instancia BORME
+    :type results: dict.Borme
+    :type borme: bormeparser.Borme
+    """
     log_message = "[{cve}] BORMEs creados: {bormes}/1\n" \
                   "[{cve}] Anuncios creados: {anuncios}/{total_anuncios}\n" \
                   "[{cve}] Empresas creadas: {companies}/{total_companies}\n" \
