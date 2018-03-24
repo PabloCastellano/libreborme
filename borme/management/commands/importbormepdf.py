@@ -1,5 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+
+from borme.importer import psql_update_documents
 from borme.models import Config
 
 import time
@@ -40,6 +42,9 @@ class Command(BaseCommand):
             config = Config(last_modified=timezone.now())
         config.version = get_git_revision_short_hash()
         config.save()
+
+        # Update Full Text Search
+        psql_update_documents()
 
         # Elapsed time
         elapsed_time = time.time() - start_time

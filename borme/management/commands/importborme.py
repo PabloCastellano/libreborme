@@ -1,5 +1,6 @@
-#from django.core.management.base import CommandError
 from django.core.management.base import BaseCommand
+
+from borme.importer import psql_update_documents
 from borme.models import Config
 
 import time
@@ -9,20 +10,37 @@ from borme.importer import import_borme_download
 
 
 class Command(BaseCommand):
-    #args = '<ISO formatted date (ex. 2015-01-01 or --init)> [--local]'
+    # args = '<ISO formatted date (ex. 2015-01-01 or --init)> [--local]'
     help = 'Import BORMEs from date'
 
     def add_arguments(self, parser):
-        parser.add_argument('-f', '--from', nargs=1, required=True, help='ISO formatted date (ex. 2015-01-01) or "init"')
-        parser.add_argument('-t', '--to', nargs=1, required=True, help='ISO formatted date (ex. 2016-01-01) or "today"')
-        parser.add_argument('--local-only', action='store_true', default=False, help='Do not download any file')
-        parser.add_argument('--no-missing', action='store_true', default=False, help='Abort if local file is not found')
+        parser.add_argument(
+                '-f', '--from',
+                nargs=1, required=True,
+                help='ISO formatted date (ex. 2015-01-01) or "init"')
+        parser.add_argument(
+                '-t', '--to',
+                nargs=1, required=True,
+                help='ISO formatted date (ex. 2016-01-01) or "today"')
+        parser.add_argument(
+                '--local-only',
+                action='store_true',
+                default=False,
+                help='Do not download any file')
+        parser.add_argument(
+                '--no-missing',
+                action='store_true',
+                default=False,
+                help='Abort if local file is not found')
         # json only, pdf only...
 
     def handle(self, *args, **options):
         start_time = time.time()
 
-        import_borme_download(options['from'][0], options['to'][0], local_only=options['local_only'], no_missing=options['no_missing'])
+        import_borme_download(options['from'][0],
+                              options['to'][0],
+                              local_only=options['local_only'],
+                              no_missing=options['no_missing'])
 
         config = Config.objects.first()
         if config:
@@ -31,6 +49,9 @@ class Command(BaseCommand):
             config = Config(last_modified=timezone.now())
         config.version = get_git_revision_short_hash()
         config.save()
+
+        # Update Full Text Search
+        psql_update_documents()
 
         # Elapsed time
         elapsed_time = time.time() - start_time
