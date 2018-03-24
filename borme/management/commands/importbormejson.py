@@ -5,7 +5,6 @@ import logging
 import time
 
 from borme.models import Config
-from borme.parser.importer import import_borme_json
 from borme.parser.postgres import psql_update_documents
 import borme.parser.importer
 
@@ -24,7 +23,7 @@ class Command(BaseCommand):
 
         for filename in options["files"]:
             print(filename)
-            import_borme_json(filename)
+            borme.parser.importer.from_json_file(filename)
 
         config = Config.objects.first()
         if config:

@@ -8,7 +8,6 @@ import time
 import logging
 
 from libreborme.utils import get_git_revision_short_hash
-from borme.parser.importer import import_borme_pdf
 import borme.parser.importer
 
 
@@ -24,7 +23,7 @@ class Command(BaseCommand):
 
         for filename in options["files"]:
             print(filename)
-            import_borme_pdf(filename)
+            borme.parser.importer.from_pdf_file(filename)
 
         config = Config.objects.first()
         if config:

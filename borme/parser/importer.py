@@ -34,7 +34,7 @@ logger.addHandler(ch)
 logger.setLevel(logging.INFO)
 
 
-def _import1(borme):
+def _from_instance(borme):
     """Importa en la BD una instancia bormeparser.Borme
 
     Importa en la BD todos los datos de la instancia BORME (personas, empresas,
@@ -337,8 +337,8 @@ def import_borme_download(date_from, date_to, seccion=bormeparser.SECCION.A,
         raise ValueError('date_from > date_to')
 
     try:
-        ret, _ = _import_borme_download_range2(date_from, date_to, seccion,
-                                               local_only, strict=no_missing)
+        ret, _ = _import_borme_download_range(date_from, date_to, seccion,
+                                              local_only, strict=no_missing)
         return ret
     except BormeDoesntExistException:
         logger.info("It looks like there is no BORME for this date ({}). "
@@ -400,8 +400,8 @@ def _generate_borme_files_list(bxml, json_path, pdf_path):
     return list(files_json), list(files_pdf)
 
 
-def _import_borme_download_range2(begin, end, seccion, local_only,
-                                  strict=False, create_json=True):
+def _import_borme_download_range(begin, end, seccion, local_only,
+                                 strict=False, create_json=True):
     """Importa los BORMEs data un rango de fechas.
 
     Itera en el rango de fechas. Por cada día:
@@ -556,7 +556,7 @@ def _import_borme_download_range2(begin, end, seccion, local_only,
                     total_results[key] += results[key]
 
                 if not all(map(lambda x: x == 0, total_results.values())):
-                    print_results(results, borme)
+                    _print_results(results, borme)
                     elapsed_time = time.time() - start_time
                     logger.info('[%s] Elapsed time: %.2f seconds' % (borme.cve, elapsed_time))
 
@@ -578,7 +578,7 @@ def _import_borme_download_range2(begin, end, seccion, local_only,
     return True, total_results
 
 
-def import_borme_pdf(filename, create_json=True):
+def from_pdf_file(filename, create_json=True):
     """Importa un archivo BORME-PDF en la BD.
 
     :param filename: Archivo a importar
@@ -597,7 +597,7 @@ def import_borme_pdf(filename, create_json=True):
 
     try:
         borme = bormeparser.parse(filename, bormeparser.SECCION.A)
-        results = _import1(borme)
+        results = _from_instance(borme)
         if create_json:
             json_path = get_borme_json_path(borme.date)
             os.makedirs(json_path, exist_ok=True)
@@ -608,11 +608,11 @@ def import_borme_pdf(filename, create_json=True):
         logger.error('[X] %s: %s' % (e.__class__.__name__, e))
 
     if not all(map(lambda x: x == 0, results.values())):
-        print_results(results, borme)
+        _print_results(results, borme)
     return True, results
 
 
-def import_borme_json(filename):
+def from_json_file(filename):
     """Importa un archivo BORME-JSON en la BD.
 
     :param filename: Archivo a importar
@@ -629,17 +629,17 @@ def import_borme_json(filename):
 
     try:
         borme = bormeparser.Borme.from_json(filename)
-        results = _import1(borme)
+        results = _from_instance(borme)
     except Exception as e:
         logger.error('[X] Error grave (III) en bormeparser.Borme.from_json(): %s' % filename)
         logger.error('[X] %s: %s' % (e.__class__.__name__, e))
 
     if not all(map(lambda x: x == 0, results.values())):
-        print_results(results, borme)
+        _print_results(results, borme)
     return True, results
 
 
-def print_results(results, borme):
+def _print_results(results, borme):
     """Muestra un resumen del proceso de importación.
 
     Una vez finalizado el proceso de importación, muestra un resumen con los
