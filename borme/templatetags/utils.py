@@ -5,11 +5,10 @@ from django.utils.text import slugify
 
 from borme.utils import slug2 as borme_slug2
 from bormeparser.regex import is_acto_cargo as func_acto_cargo
-from bormeparser.regex import regex_empresa_tipo
 
 import datetime
 
-#from borme_parser import DICT_KEYWORDS
+# from borme_parser import DICT_KEYWORDS
 DICT_KEYWORDS = {}  # FIXME
 
 DICT_NAMES = {v: k for k, v in DICT_KEYWORDS.items()}
@@ -20,7 +19,7 @@ DICT_NAMES['id_acto'] = 'ID acto'
 @register.filter
 def get_item(object, attribute):
     return object.__getattribute__(attribute)
-    #return dictionary.get(key)
+    # return dictionary.get(key)
 
 
 @register.filter

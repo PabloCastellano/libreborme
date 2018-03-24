@@ -1,7 +1,6 @@
 from django.urls import reverse
 from .models import Borme
-from calendar import *
-from calendar import Calendar, January
+from calendar import Calendar, January, monthrange, month_name, day_abbr
 
 import datetime
 import sys
@@ -96,7 +95,8 @@ class HTMLCalendar(Calendar):
         a('</table>')
         return ''.join(v)
 
-    def formatyearpage(self, theyear, width=3, css='calendar.css', encoding=None):
+    def formatyearpage(self, theyear, width=3, css='calendar.css',
+                       encoding=None):
         """
         Return a formatted year as a complete HTML page.
         """
@@ -158,12 +158,16 @@ class LibreBormeCalendar(HTMLCalendar):
         self.today = datetime.date.today()
 
         _, lastday = monthrange(self.year, self.month)
-        bormes = Borme.objects.filter(date__gte=datetime.date(self.year, self.month, 1), date__lte=datetime.date(self.year, self.month, lastday)).distinct('date').order_by('date')
+        bormes = Borme.objects.filter(
+                    date__gte=datetime.date(self.year, self.month, 1),
+                    date__lte=datetime.date(self.year, self.month, lastday)
+                 ).distinct('date').order_by('date')
         self.days_bormes = {}
         for borme in bormes:
             self.days_bormes[(borme.date.month, borme.date.day)] = borme
 
-        return super(LibreBormeCalendar, self).formatmonth(self.year, self.month)
+        return super(LibreBormeCalendar, self).formatmonth(self.year,
+                                                           self.month)
 
 
 class LibreBormeAvailableCalendar(HTMLCalendar):
@@ -196,7 +200,10 @@ class LibreBormeAvailableCalendar(HTMLCalendar):
 
     def formatmonth(self, year, month, withyear=True):
         self.month = month
-        return super(LibreBormeAvailableCalendar, self).formatmonth(year, month, withyear=withyear)
+        return super(LibreBormeAvailableCalendar, self).formatmonth(
+                                                            year,
+                                                            month,
+                                                            withyear=withyear)
 
     def formatyear(self, theyear, bormes, width=3):
         self.year = theyear
@@ -206,4 +213,6 @@ class LibreBormeAvailableCalendar(HTMLCalendar):
         for borme in bormes:
             self.days_bormes[(borme.date.month, borme.date.day)] = borme
 
-        return super(LibreBormeAvailableCalendar, self).formatyear(theyear, width=width)
+        return super(LibreBormeAvailableCalendar, self).formatyear(
+                                                            theyear,
+                                                            width=width)
