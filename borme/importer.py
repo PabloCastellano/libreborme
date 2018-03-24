@@ -1,10 +1,12 @@
 from .models import Company, Borme, Anuncio, Person, BormeLog
 from .utils import slug2
 
-from django.db import connection
+from django.db import connection, transaction
 from django.conf import settings
 from django.utils.text import slugify
 from django.utils import timezone
+
+from django.contrib.postgres.search import SearchVector
 
 import bormeparser
 
@@ -622,6 +624,38 @@ def psql_update_documents():
                        "WHERE document IS NULL")
         affected_rows += cursor.rowcount
         logger.info("Updated {} borme_company records".format(cursor.rowcount))
+
+    return affected_rows
+
+
+def psql_update_documents_batch():
+    """
+    Same as psql_update_documents() but using atomic batches.
+    This way, the table is not locked for a long time when the update is big
+    """
+    affected_rows = 0
+    while Company.objects.filter(document__isnull=True).exists():
+        with connection.cursor() as cursor:
+            with transaction.atomic():
+                for row in Company.objects.filter(document__isnull=True)[:1000]:
+                    row.document = SearchVector("name")
+                    row.save()
+                    affected_rows += cursor.rowcount
+
+            logger.info("Updated {} borme_company records"
+                        .format(cursor.rowcount))
+
+    while Person.objects.filter(document__isnull=True).exists():
+        with connection.cursor() as cursor:
+            with transaction.atomic():
+                for row in Person.objects.filter(document__isnull=True)[:1000]:
+                    row.document = SearchVector("name")
+                    row.save()
+                    affected_rows += cursor.rowcount
+
+            logger.info("Updated {} borme_company records"
+                        .format(cursor.rowcount))
+
     return affected_rows
 
 
