@@ -15,7 +15,7 @@ from django.conf import settings
 
 from .models import Company, Person, Anuncio, Config, Borme
 from .calendar import LibreBormeCalendar, LibreBormeAvailableCalendar
-from .utils import estimate_count_fast
+from .utils.postgres import estimate_count_fast
 from .mixins import CacheMixin
 
 import datetime

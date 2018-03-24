@@ -1,12 +1,13 @@
 from django.core.management.base import BaseCommand
-
-from borme.importer import psql_update_documents
-from borme.models import Config
+from django.utils import timezone
 
 import time
-from django.utils import timezone
+
+from borme.models import Config
+from borme.parser.importer import import_borme_download
+from borme.parser.postgres import psql_update_documents
+
 from libreborme.utils import get_git_revision_short_hash
-from borme.importer import import_borme_download
 
 
 class Command(BaseCommand):

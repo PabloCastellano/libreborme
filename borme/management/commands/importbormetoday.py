@@ -1,13 +1,13 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from borme.importer import psql_update_documents
-from borme.models import Config
-
 import datetime
 import time
 
-from borme.importer import import_borme_download, update_previous_xml
+from borme.models import Config
+from borme.parser.importer.functions import import_borme_download
+from borme.parser.path import update_previous_xml
+from borme.parser.postgres import psql_update_documents
 
 
 class Command(BaseCommand):

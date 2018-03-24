@@ -1,13 +1,11 @@
-from .models import Company, Borme, Anuncio, Person, BormeLog
-from .utils import slug2
-
-from django.db import connection, transaction
 from django.conf import settings
 from django.utils.text import slugify
 from django.utils import timezone
 
-from django.contrib.postgres.search import SearchVector
-
+import datetime
+import logging
+import time
+import os
 import bormeparser
 
 from bormeparser.borme import BormeXML
@@ -18,10 +16,15 @@ from bormeparser.regex import (
         regex_empresa_tipo)
 from bormeparser.utils import FIRST_BORME
 
-import datetime
-import logging
-import time
-import os
+
+from borme.models import Company, Borme, Anuncio, Person, BormeLog
+from borme.utils.strings import slug2
+
+from .path import (
+        files_exist,
+        get_borme_json_path,
+        get_borme_pdf_path,
+        get_borme_xml_filepath)
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -290,56 +293,6 @@ def extinguir_sociedad(company, date):
     company.save()
 
 
-def get_borme_xml_filepath(date):
-    year = str(date.year)
-    month = '%02d' % date.month
-    day = '%02d' % date.day
-    filename = 'BORME-S-%s%s%s.xml' % (year, month, day)
-    return os.path.join(settings.BORME_XML_ROOT, year, month, filename)
-
-
-def get_borme_pdf_path(date):
-    year = '%02d' % date.year
-    month = '%02d' % date.month
-    day = '%02d' % date.day
-    return os.path.join(settings.BORME_PDF_ROOT, year, month, day)
-
-
-def get_borme_json_path(date):
-    year = '%02d' % date.year
-    month = '%02d' % date.month
-    day = '%02d' % date.day
-    return os.path.join(settings.BORME_JSON_ROOT, year, month, day)
-
-
-def update_previous_xml(date):
-    """
-    Dada una fecha, comprueba si el XML anterior es definitivo y si no lo es
-    lo descarga de nuevo
-    """
-    xml_path = get_borme_xml_filepath(date)
-    bxml = BormeXML.from_file(xml_path)
-
-    try:
-        prev_xml_path = get_borme_xml_filepath(bxml.prev_borme)
-        prev_bxml = BormeXML.from_file(prev_xml_path)
-        if prev_bxml.is_final:
-            return False
-
-        os.unlink(prev_xml_path)
-    except OSError:
-        pass
-    finally:
-        prev_bxml = BormeXML.from_date(bxml.prev_borme)
-        prev_bxml.save_to_file(prev_xml_path)
-
-    return True
-
-
-def files_exist(files):
-    return all([os.path.exists(f) for f in files])
-
-
 def import_borme_download(date_from, date_to, seccion=bormeparser.SECCION.A,
                           local_only=False, no_missing=False):
     """
@@ -602,61 +555,6 @@ def import_borme_json(filename):
     if not all(map(lambda x: x == 0, results.values())):
         print_results(results, borme)
     return True, results
-
-
-def psql_update_documents():
-    """
-    Update postgresql full text search attributes.
-    This function must be run everytime new records are added to the database
-    """
-    affected_rows = 0
-
-    with connection.cursor() as cursor:
-        cursor.execute("UPDATE borme_company "
-                       "SET document = to_tsvector(name) "
-                       "WHERE document IS NULL")
-        affected_rows += cursor.rowcount
-        logger.info("Updated {} borme_company records".format(cursor.rowcount))
-
-    with connection.cursor() as cursor:
-        cursor.execute("UPDATE borme_person "
-                       "SET document = to_tsvector(name) "
-                       "WHERE document IS NULL")
-        affected_rows += cursor.rowcount
-        logger.info("Updated {} borme_company records".format(cursor.rowcount))
-
-    return affected_rows
-
-
-def psql_update_documents_batch():
-    """
-    Same as psql_update_documents() but using atomic batches.
-    This way, the table is not locked for a long time when the update is big
-    """
-    affected_rows = 0
-    while Company.objects.filter(document__isnull=True).exists():
-        with connection.cursor() as cursor:
-            with transaction.atomic():
-                for row in Company.objects.filter(document__isnull=True)[:1000]:
-                    row.document = SearchVector("name")
-                    row.save()
-                    affected_rows += cursor.rowcount
-
-            logger.info("Updated {} borme_company records"
-                        .format(cursor.rowcount))
-
-    while Person.objects.filter(document__isnull=True).exists():
-        with connection.cursor() as cursor:
-            with transaction.atomic():
-                for row in Person.objects.filter(document__isnull=True)[:1000]:
-                    row.document = SearchVector("name")
-                    row.save()
-                    affected_rows += cursor.rowcount
-
-            logger.info("Updated {} borme_company records"
-                        .format(cursor.rowcount))
-
-    return affected_rows
 
 
 def print_results(results, borme):

@@ -1,5 +1,5 @@
 from borme.models import Anuncio, Borme, Company
-from borme.importer import import_borme_pdf, import_borme_json
+from borme.parser.importer import import_borme_pdf, import_borme_json
 
 import datetime
 import os
@@ -49,7 +49,7 @@ class TestImport2(TestCase):
 
 
 class TestImport3(TestCase):
-    
+
     def test_nombramientos_ceses(self):
         companies = Company.objects.all()
         self.assertEqual(len(companies), 0)
@@ -66,7 +66,7 @@ class TestImport3(TestCase):
 
 
 class TestImport4(TestCase):
-    
+
     def test_extincion(self):
         companies = Company.objects.all()
         self.assertEqual(len(companies), 0)

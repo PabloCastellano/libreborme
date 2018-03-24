@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from borme.importer import psql_update_documents
+from borme.parser.postgres import psql_update_documents
 
 
 class Command(BaseCommand):

@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.db import connection
 from borme.models import Anuncio, Company, Person
-from borme.utils import convertir_iniciales
+from borme.utils.strings import convertir_iniciales
 from borme.templatetags.utils import slug2
 from bormeparser.regex import is_acto_cargo
 

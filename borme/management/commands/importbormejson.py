@@ -1,15 +1,15 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from borme.importer import psql_update_documents
-from borme.models import Config
-
 import time
 import logging
 
+from borme.models import Config
+from borme.parser.importer import import_borme_json
+from borme.parser.postgres import psql_update_documents
+import borme.parser.importer
+
 from libreborme.utils import get_git_revision_short_hash
-from borme.importer import import_borme_json
-import borme.importer
 
 
 class Command(BaseCommand):
@@ -21,13 +21,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         verbosity = int(options['verbosity'])
         if verbosity == 0:
-            borme.importer.logger.setLevel(logging.ERROR)
+            borme.parser.importer.logger.setLevel(logging.ERROR)
         elif verbosity == 1:  # default
-            borme.importer.logger.setLevel(logging.INFO)
+            borme.parser.importer.logger.setLevel(logging.INFO)
         elif verbosity == 2:
-            borme.importer.logger.setLevel(logging.INFO)
+            borme.parser.importer.logger.setLevel(logging.INFO)
         elif verbosity > 2:
-            borme.importer.logger.setLevel(logging.DEBUG)
+            borme.parser.importer.logger.setLevel(logging.DEBUG)
             logging.getLogger().setLevel(logging.DEBUG)
         start_time = time.time()
 

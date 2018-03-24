@@ -3,7 +3,7 @@
 from django.template.defaulttags import register
 from django.utils.text import slugify
 
-from borme.utils import slug2 as borme_slug2
+from borme.utils.strings import slug2 as borme_slug2
 from bormeparser.regex import is_acto_cargo as func_acto_cargo
 
 import datetime
