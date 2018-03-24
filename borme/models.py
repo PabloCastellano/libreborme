@@ -327,3 +327,102 @@ class BormeLog(Model):
 
     def __str__(self):
         return 'Log(%s): %d errors' % (self.borme.cve, self.errors)
+
+
+def anuncio_get_or_create(anuncio, year, borme):
+    """Devuelve una instancia de Anuncio.
+
+    :rtype: (borme.models.Anuncio, bool anuncio created)
+    """
+
+    try:
+        nuevo_anuncio = Anuncio.objects.get(id_anuncio=anuncio.id, year=year)
+        created = False
+    except Anuncio.DoesNotExist:
+        nuevo_anuncio = Anuncio(
+                        id_anuncio=anuncio.id,
+                        year=year,
+                        borme=borme,
+                        datos_registrales=anuncio.datos_registrales)
+        created = True
+
+    return nuevo_anuncio, created
+
+
+def company_get_or_create(empresa, tipo, slug_c):
+    """Devuelve una instancia de Company.
+
+    :rtype: (borme.models.Company, bool company created)
+    """
+
+    try:
+        company = Company.objects.get(slug=slug_c)
+        created = False
+    except Company.DoesNotExist:
+        company = Company(name=empresa, type=tipo)
+        created = True
+
+    return company, created
+
+
+def person_get_or_create(nombre):
+    """Devuelve una instancia de Person.
+
+    :rtype: (borme.models.Person, bool person created)
+    """
+
+    try:
+        slug_p = slugify(nombre)
+        person = Person.objects.get(slug=slug_p)
+        created = False
+    except Person.DoesNotExist:
+        person = Person(name=nombre)
+        created = True
+
+    return person, created
+
+
+def borme_get_or_create(_borme):
+    """Devuelve una instancia de Borme.
+
+    :param _borme: Instancia BORME
+    :param filename: Nombre del archivo BORME-PDF
+    :type borme: bormeparser.Borme
+    :type filename: str
+    :rtype: (borme.models.BormeLog, bool bormelog created)
+    """
+
+    try:
+        borme = Borme.objects.get(cve=_borme.cve)
+        created = False
+    except Borme.DoesNotExist:
+        borme = Borme(cve=_borme.cve, date=_borme.date, url=_borme.url,
+                      from_reg=_borme.anuncios_rango[0],
+                      until_reg=_borme.anuncios_rango[1],
+                      province=_borme.provincia.name,
+                      section=_borme.seccion)
+        borme.save()
+        # year, type, from_page, until_page, pages, num?, filename?
+        created = True
+
+    return borme, created
+
+
+def bormelog_get_or_create(_borme, filename):
+    """Devuelve una instancia de BormeLog.
+
+    :param _borme: Instancia BORME
+    :param filename: Nombre del archivo BORME-PDF
+    :type _borme: borme.models.Borme
+    :type filename: str
+    :rtype: (borme.models.BormeLog, bool bormelog created)
+    """
+
+    try:
+        borme_log = BormeLog.objects.get(borme=_borme)
+        created = False
+    except BormeLog.DoesNotExist:
+        borme_log = BormeLog(borme=_borme, path=filename)
+        created = True
+
+    return borme_log, created

@@ -2,6 +2,15 @@ from django.utils.text import slugify
 
 from bormeparser.regex import regex_empresa_tipo
 
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler()
+logger.addHandler(ch)
+logger.setLevel(logging.INFO)
+
 
 def convertir_iniciales(name):
     iniciales = []
@@ -19,3 +28,14 @@ def slug2(val):
     """
     empresa, _ = regex_empresa_tipo(val)
     return slugify(empresa)
+
+
+def parse_empresa(cve, nombre):
+    empresa, tipo = regex_empresa_tipo(nombre)
+    slug_c = slugify(empresa)
+
+    if tipo == '':
+        logger.warn("[{}] Tipo de empresa no detectado: {}"
+                    .format(cve, empresa))
+
+    return empresa, tipo, slug_c
