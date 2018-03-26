@@ -426,3 +426,15 @@ def bormelog_get_or_create(_borme, filename):
         created = True
 
     return borme_log, created
+
+
+def get_borme_urls_from_slug(slug):
+    try:
+        entity = Person.objects.get(slug=slug)
+    except Person.DoesNotExist:
+        try:
+            entity = Company.objects.get(slug=slug)
+        except Company.DoesNotExist:
+            return []
+
+    return [b["url"] for b in entity.in_bormes]

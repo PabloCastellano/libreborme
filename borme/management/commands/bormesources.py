@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from borme.models import Company, Person
+from borme.models import get_borme_urls_from_slug
 
 
 class Command(BaseCommand):
@@ -10,14 +10,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        try:
-            entity = Person.objects.get(slug=options["slug"])
-        except Person.DoesNotExist:
-            try:
-                entity = Company.objects.get(slug=options["slug"])
-            except Company.DoesNotExist:
-                print('Not found')
-                return
+        urls = get_borme_urls_from_slug(options["slug"])
 
-        for borme in entity.in_bormes:
-            print(borme['url'])
+        if len(urls) == 0:
+            print('Not found')
+            return
+
+        for url in urls:
+            print(url)
