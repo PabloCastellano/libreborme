@@ -1,21 +1,16 @@
-branches:
-  only:
-    - master
-    - develop
-
 language: python
 
 services:
     - postgresql
-    - elasticsearch
 
 python:
-  - "3.5"
   - "3.4"
+  - "3.5"
+  - "3.6"
 
 env:
- - DJANGO_VERSION=1.9.12
- - DJANGO_VERSION=1.10.4
+ - DJANGO_VERSION=1.11.12
+ - DJANGO_VERSION=2.0.4
 
 install:
 #  - pip install coveralls
