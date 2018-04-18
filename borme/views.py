@@ -96,16 +96,21 @@ def generate_company_csv_cargos_actual(context, slug):
 @cache_page(3600)
 def generate_company_csv_cargos_historial(context, slug):
     company = Company.objects.get(slug=slug)
-    filename = 'cargos_historial_%s_%s' % (slug, datetime.date.today().isoformat())
+    filename = "cargos_historial_{}_{}" \
+               .format(slug, datetime.date.today().isoformat())
+    content_disposition = 'attachment; filename="%s.csv"' % filename
+
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
+    response['Content-Disposition'] = content_disposition
 
     writer = csv.writer(response)
     writer.writerow(['Cargo', 'Nombre', 'Desde', 'Hasta', 'Tipo'])
     for cargo in company.get_cargos_historial(limit=0)[0]:
         date_from = cargo.get('date_from', '')
         name = cargo['name'] if cargo['type'] == 'company' else cargo['name'].title()
-        writer.writerow([cargo['title'], name, date_from, cargo['date_to'], cargo['type']])
+        writer.writerow(
+            [cargo['title'], name, date_from, cargo['date_to'], cargo['type']]
+        )
 
     return response
 
@@ -114,24 +119,27 @@ class HomeView(CacheMixin, TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
+        """
+        Using .count() in PostgreSQL kills performance,
+        so we use a method to estimate the number of rows in the tables
+        """
         context = super(HomeView, self).get_context_data(**kwargs)
 
-        # Use estimate_count_fast() due to .count() being performance-killer in PostgreSQL
+        random_companies = Company.objects.all().order_by('-date_updated')[:10]
+        random_persons = Person.objects.all().order_by('-date_updated')[:10]
         last_modified = Config.objects.first().last_modified.date()
-        context['total_companies'] = estimate_count_fast('borme_company')
-        context['total_persons'] = estimate_count_fast('borme_person')
-        context['total_anuncios'] = estimate_count_fast('borme_anuncio')
-        #context['random_companies'] = Company.objects.all().order_by('?')[:10]
-        #context['random_persons'] = Person.objects.all().order_by('?')[:10]
-        #context['last_modified'] = Config.objects.first().last_modified
-        context['random_companies'] = Company.objects.all().order_by('-date_updated')[:10]
-        context['random_persons'] = Person.objects.all().order_by('-date_updated')[:10]
-        #context['random_companies'] = Company.objects.filter(date_updated=last_modified).order_by('?')[:10]
-        #context['random_persons'] = Person.objects.filter(date_updated=last_modified).order_by('?')[:10]
-        context['last_modified'] = last_modified
-
         lb_calendar = LibreBormeCalendar().formatmonth(datetime.date.today())
-        context['calendar'] = mark_safe(lb_calendar)
+
+        context.update({
+            "total_companies": estimate_count_fast('borme_company'),
+            "total_persons": estimate_count_fast('borme_person'),
+            "total_anuncios": estimate_count_fast('borme_anuncio'),
+            "random_companies": random_companies,
+            "random_persons": random_persons,
+            "last_modified": last_modified,
+            "calendar": mark_safe(lb_calendar),
+        })
+
         return context
 
 
@@ -234,7 +242,9 @@ class BormeView(CacheMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(BormeView, self).get_context_data(**kwargs)
 
-        anuncios = Anuncio.objects.filter(id_anuncio__gte=self.borme.from_reg, id_anuncio__lte=self.borme.until_reg, year=self.borme.date.year)
+        anuncios = Anuncio.objects.filter(id_anuncio__gte=self.borme.from_reg,
+                                          id_anuncio__lte=self.borme.until_reg,
+                                          year=self.borme.date.year)
         from collections import Counter
         resumen_dia = Counter()
         for anuncio in anuncios:
@@ -245,9 +255,11 @@ class BormeView(CacheMixin, DetailView):
         bormes_dia.remove(self.borme)
         bormes_dia.sort(key=lambda b: b.province)
 
-        context['bormes_dia'] = bormes_dia
-        context['total_anuncios'] = self.borme.until_reg - self.borme.from_reg + 1
-        context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
+        context.update({
+            "bormes_dia": bormes_dia,
+            "total_anuncios": self.borme.until_reg - self.borme.from_reg + 1,
+            "resumen_dia": sorted(resumen_dia.items(), key=lambda t: t[0]),
+        })
 
         return context
 
@@ -266,6 +278,7 @@ class BormeDateView(CacheMixin, TemplateView):
         except ValueError:
             redirect_today = True
 
+        # Redirect to today's date when date is not valid
         if redirect_today:
             return redirect('borme-fecha', date=datetime.date.today().isoformat())
 
@@ -274,13 +287,16 @@ class BormeDateView(CacheMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BormeDateView, self).get_context_data(**kwargs)
 
-        lb_calendar = LibreBormeCalendar().formatmonth(self.date)  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
+        # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
+        lb_calendar = LibreBormeCalendar().formatmonth(self.date)
 
         bormes = Borme.objects.filter(date=self.date).order_by('province')
         if len(bormes) > 0:
             from_reg = min([b.from_reg for b in bormes])
             until_reg = max([b.until_reg for b in bormes])
-            anuncios = Anuncio.objects.filter(id_anuncio__gte=from_reg, id_anuncio__lte=until_reg, year=self.date.year)
+            anuncios = Anuncio.objects.filter(id_anuncio__gte=from_reg,
+                                              id_anuncio__lte=until_reg,
+                                              year=self.date.year)
 
             # FIXME: performance-killer? Guardar resultados en el modelo Borme
             from collections import Counter
@@ -291,13 +307,16 @@ class BormeDateView(CacheMixin, TemplateView):
             context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
 
         # TODO: Guardar la fecha en el anuncio?
-        context['calendar'] = mark_safe(lb_calendar)
-        context['bormes'] = bormes
-        context['date'] = self.date
         next_day = self.date + datetime.timedelta(days=1)
         prev_day = self.date - datetime.timedelta(days=1)
-        context['next_day'] = next_day.isoformat()
-        context['prev_day'] = prev_day.isoformat()
+
+        context.update({
+            "calendar": mark_safe(lb_calendar),
+            "bormes": bormes,
+            "date": self.date,
+            "next_day": next_day.isoformat(),
+            "prev_day": prev_day.isoformat(),
+        })
 
         return context
 
@@ -306,8 +325,11 @@ class BormeProvinciaView(CacheMixin, TemplateView):
     template_name = 'borme/borme_provincia.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if not 'year' in self.kwargs:
-            return redirect('borme-provincia-fecha', provincia=self.kwargs['provincia'], year=datetime.date.today().year)
+        if 'year' not in self.kwargs:
+            this_year = datetime.date.today().year
+            return redirect('borme-provincia-fecha',
+                            provincia=self.kwargs['provincia'],
+                            year=this_year)
 
         return super(BormeProvinciaView, self).dispatch(request, *args, **kwargs)
 
@@ -315,17 +337,23 @@ class BormeProvinciaView(CacheMixin, TemplateView):
         context = super(BormeProvinciaView, self).get_context_data(**kwargs)
 
         year = int(self.kwargs['year'])
-        bormes = Borme.objects.filter(date__gte=datetime.date(year, 1, 1), date__lte=datetime.date(year, 12, 31), province=self.kwargs['provincia'])
-        lb_calendar = LibreBormeAvailableCalendar().formatyear(year, bormes)  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
+        bormes = Borme.objects.filter(date__gte=datetime.date(year, 1, 1),
+                                      date__lte=datetime.date(year, 12, 31),
+                                      province=self.kwargs['provincia'])
+
+        # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
+        lb_calendar = LibreBormeAvailableCalendar().formatyear(year, bormes)
 
         if len(bormes) > 0:
             # FIXME: No se puede hacer minimo y maximo. Hacer where in
-            #from_reg = min([b.from_reg for b in bormes])
-            #until_reg = max([b.until_reg for b in bormes])
+            # from_reg = min([b.from_reg for b in bormes])
+            # until_reg = max([b.until_reg for b in bormes])
             from_reg = bormes[0].from_reg
             until_reg = bormes[0].until_reg
 
-            anuncios = Anuncio.objects.filter(id_anuncio__gte=from_reg, id_anuncio__lte=until_reg, year=year)
+            anuncios = Anuncio.objects.filter(id_anuncio__gte=from_reg,
+                                              id_anuncio__lte=until_reg,
+                                              year=year)
 
             # FIXME: performance-killer. Guardar resultados en el modelo Borme
             from collections import Counter
@@ -335,8 +363,10 @@ class BormeProvinciaView(CacheMixin, TemplateView):
 
             context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
 
-        context['calendar'] = mark_safe(lb_calendar)
-        context['bormes'] = bormes
+        context.update({
+            "calendar": mark_safe(lb_calendar),
+            "bormes": bormes,
+        })
 
         return context
 
@@ -367,9 +397,12 @@ class CompanyView(CacheMixin, DetailView):
             if cargo['name'] not in context['companies']:
                 context['companies'].append(cargo['name'])
 
-        context['companies'] = sorted(list(set(context['companies'])))
-        context['persons'] = sorted(list(set(context['persons'])))
-        context['activity'] = 'Activa' if self.company.is_active else 'Inactiva'
+        context.update({
+            "companies": sorted(list(set(context['companies']))),
+            "persons": sorted(list(set(context['persons']))),
+            "activity": 'Activa' if self.company.is_active else 'Inactiva',
+        })
+
         return context
 
 
@@ -386,6 +419,6 @@ class PersonView(CacheMixin, DetailView):
 
 
 class CompanyProvinceListView(CacheMixin, ListView):
-    #model = Company
+    # model = Company
     context_object_name = 'companies'
-    #queryset = Book.objects.filter(province==X).order_by('-name')
+    # queryset = Book.objects.filter(province==X).order_by('-name')

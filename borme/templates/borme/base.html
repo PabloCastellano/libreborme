@@ -50,7 +50,7 @@
 	    closeButton.click(function(e){
 		var date = new Date();
 	        date.setTime(date.getTime() + (60 * 60 * 24 * 365 * 10 * 1000));
-	        $.cookie("cookies", "valcookiemsg", { expires: date, path: "/", domain: ".libreborme.net" });
+	        $.cookie("cookies", "accept", { expires: date, path: "/", domain: ".libreborme.net" });
 		e.preventDefault();
 		e.stopPropagation();
 		advice.slideUp("fast");

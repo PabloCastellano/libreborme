@@ -21,7 +21,7 @@ class TestImport(TestCase):
         # BORME-A-2015-27-10
         # borme = bormeparser.parse(filename, bormeparser.SECCION.A)
         # Testear:
-        # results = _import1(borme)
+        # results = _from_instance(borme)
 
 
 class TestImport2(TestCase):

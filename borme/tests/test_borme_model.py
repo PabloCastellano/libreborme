@@ -1,6 +1,6 @@
 from django.test import TestCase
 from borme.models import Borme
-from borme.parser.importer import _import1
+from borme.parser.importer import _from_instance
 
 import bormeparser
 import datetime
@@ -11,7 +11,7 @@ results = None
 
 # TODO: Mockup de:
 # borme = bormeparser.parse(filename, bormeparser.SECCION.A)
-# Testear: _import1(borme)
+# Testear: _from_instance(borme)
 class TestBormeModel(TestCase):
 
     # This method run on instance of class
@@ -23,7 +23,7 @@ class TestBormeModel(TestCase):
 
         path = os.path.expanduser('~/.bormes/pdf/2015/02/10/BORME-A-2015-27-10.pdf')
         borme = bormeparser.parse(path, bormeparser.SECCION.A)
-        results = _import1(borme)
+        results = _from_instance(borme)
 
     def test_results(self):
         global results

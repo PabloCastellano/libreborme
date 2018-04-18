@@ -6,7 +6,7 @@ import logging
 import time
 
 from borme.models import Config
-from borme.parser.importer.functions import import_borme_download
+from borme.parser.importer import import_borme_download
 from borme.parser.path import update_previous_xml
 from borme.parser.postgres import psql_update_documents
 import borme.parser.importer

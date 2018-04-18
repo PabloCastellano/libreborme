@@ -8,16 +8,9 @@ from django.contrib.postgres.search import SearchVectorField
 from django.conf import settings
 
 from django.db.models import (
-        BooleanField,
-        CharField,
-        DateField,
-        DateTimeField,
-        ForeignKey,
-        IntegerField,
-        Model,
-        OneToOneField,
-        PROTECT,
-        URLField)
+        BooleanField, CharField, DateField,
+        DateTimeField, ForeignKey, IntegerField,
+        Model, OneToOneField, PROTECT, URLField)
 from bormeparser.sociedad import SOCIEDADES as SOCIEDADES_DICT
 
 SOCIEDADES = sorted(SOCIEDADES_DICT.items())
@@ -113,7 +106,8 @@ class Person(Model):
         cargos = [dict(item, **{'type': 'company'}) for item in cargos]
         cargos = sorted(cargos, key=lambda k: k['date_from'])
 
-        if limit == 0: limit = len(cargos)
+        if limit == 0:
+            limit = len(cargos)
         show_more = offset+limit < len(cargos)
 
         return cargos[offset:offset+limit], show_more
@@ -123,7 +117,8 @@ class Person(Model):
         cargos = [dict(item, **{'type': 'company'}) for item in cargos]
         cargos = sorted(cargos, key=lambda k: k['date_to'])
 
-        if limit == 0: limit = len(cargos)
+        if limit == 0:
+            limit = len(cargos)
         show_more = offset+limit < len(cargos)
 
         return cargos[offset:offset+limit], show_more
@@ -195,7 +190,8 @@ class Company(Model):
         cargos_c = [dict(item, **{'type': 'company'}) for item in cargos_c]
         cargos = sorted(cargos_p + cargos_c, key=lambda k: k['date_from'])
 
-        if limit == 0: limit = len(cargos)
+        if limit == 0:
+            limit = len(cargos)
         show_more = offset+limit < len(cargos)
 
         return cargos[offset:offset+limit], show_more
@@ -207,7 +203,8 @@ class Company(Model):
         cargos_c = [dict(item, **{'type': 'company'}) for item in cargos_c]
         cargos = sorted(cargos_p + cargos_c, key=lambda k: k['date_to'])
 
-        if limit == 0: limit = len(cargos)
+        if limit == 0:
+            limit = len(cargos)
         show_more = offset+limit < len(cargos)
 
         return cargos[offset:offset+limit], show_more

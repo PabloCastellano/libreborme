@@ -42,12 +42,12 @@ setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
+        'Framework :: Django',
         'Intended Audience :: End Users/Desktop',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Operating System :: POSIX',
         'Programming Language :: Python :: 3',
         'Topic :: Internet :: WWW/HTTP',
-        'Framework :: Django',
     ],
     install_requires=get_install_requires(),
     scripts=['libreborme/bin/libreborme'],
