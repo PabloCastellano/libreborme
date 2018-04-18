@@ -2,8 +2,6 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.decorators.cache import cache_page
 
-from django.contrib.postgres.search import SearchQuery, SearchRank
-from django.db.models import F
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -15,7 +13,7 @@ from django.conf import settings
 
 from .models import Company, Person, Anuncio, Config, Borme
 from .calendar import LibreBormeCalendar, LibreBormeAvailableCalendar
-from .utils.postgres import estimate_count_fast
+from .utils.postgres import estimate_count_fast, search_fts
 from .mixins import CacheMixin
 
 import datetime
@@ -147,20 +145,12 @@ class BusquedaView(TemplateView):
         if 'q' in self.request.GET:
             page = self.request.GET.get('page', 1)
             raw_query = self.request.GET['q']
-            words = raw_query.split()
-            query = SearchQuery(words[0])
-            for word in words[1:]:
-                # AND
-                query &= SearchQuery(word)
-            # q_companies = Company.objects.filter(name__icontains=self.request.GET['q'])
-            # q_companies = Company.objects.annotate(rank=SearchRank(F('document'), query)).filter(rank__gt=0.01).order_by('-rank')
-            q_companies = Company.objects.filter(document=query)
+            q_companies = search_fts(raw_query, model=Company)
             q_companies = list(q_companies)  # Force
-            companies = Paginator(q_companies, 25)
-            # q_persons = Person.objects.filter(name__icontains=self.request.GET['q'])
-            # q_persons = Person.objects.annotate(rank=SearchRank(F('document'), query)).filter(rank__gt=0.01).order_by('-rank')
-            q_persons = Person.objects.filter(document=query)
+            q_persons = search_fts(raw_query, model=Person)
             q_persons = list(q_persons)  # Force
+
+            companies = Paginator(q_companies, 25)
             persons = Paginator(q_persons, 25)
 
             context['page'] = page

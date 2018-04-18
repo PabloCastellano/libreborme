@@ -1,10 +1,10 @@
 from django.conf.urls import url
 from django.core.paginator import Paginator
-#from haystack.query import SearchQuerySet
 from tastypie.resources import ModelResource
 from tastypie.throttle import CacheThrottle
 from tastypie.utils import trailing_slash
 from borme.models import Company, Person
+from borme.utils.postgres import search_fts
 from .serializers import LibreBormeJSONSerializer
 
 
@@ -17,6 +17,7 @@ class CompanyResource(ModelResource):
         queryset = Company.objects.all()
         resource_name = 'empresa'
         serializer = LibreBormeJSONSerializer(formats=['json'])
+        # 60 requests per hour ~= 1 request per minute
         throttle = CacheThrottle(throttle_at=60, timeframe=3600)
 
     def prepend_urls(self):
@@ -33,22 +34,21 @@ class CompanyResource(ModelResource):
         query = request.GET.get('q', '')
 
         if len(query) > 3:
-            # sqs = SearchQuerySet().models(Company).load_all().auto_query(query)
-            sqs = []
+            sqs = search_fts(query, model=Person)
             paginator = Paginator(sqs, 20)
 
             try:
                 page = paginator.page(int(request.GET.get('page', 1)))
 
                 for result in page.object_list:
-                    bundle = self.build_bundle(obj=result.object, request=request)
+                    bundle = self.build_bundle(obj=result, request=request)
                     bundle = self.search_dehydrate(bundle)
                     objects.append(bundle)
             except:
                 pass
 
         object_list = {
-            'objects': objects,
+            'results': objects,
         }
 
         self.log_throttled_access(request)
@@ -112,22 +112,21 @@ class PersonResource(ModelResource):
         query = request.GET.get('q', '')
 
         if len(query) > 3:
-            # sqs = SearchQuerySet().models(Person).load_all().auto_query(query)
-            sqs = []
+            sqs = search_fts(query, model=Company)
             paginator = Paginator(sqs, 20)
 
             try:
                 page = paginator.page(int(request.GET.get('page', 1)))
 
                 for result in page.object_list:
-                    bundle = self.build_bundle(obj=result.object, request=request)
+                    bundle = self.build_bundle(obj=result, request=request)
                     bundle = self.search_dehydrate(bundle)
                     objects.append(bundle)
             except:
                 pass
 
         object_list = {
-            'objects': objects,
+            'results': objects,
         }
 
         self.log_throttled_access(request)
