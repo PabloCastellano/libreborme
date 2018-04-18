@@ -1,7 +1,10 @@
 language: python
 
 services:
-    - postgresql
+  - postgresql
+
+addons:
+  postgresql: "9.4"
 
 python:
   - "3.4"
@@ -9,8 +12,7 @@ python:
   - "3.6"
 
 env:
- - DJANGO_VERSION=1.11.12
- - DJANGO_VERSION=2.0.4
+  - DJANGO_VERSION=2.0.4
 
 install:
 #  - pip install coveralls
