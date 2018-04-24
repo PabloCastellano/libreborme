@@ -60,7 +60,7 @@ class Person(Model):
     cargos_actuales = JSONField(default=list)
     cargos_historial = JSONField(default=list)
 
-    document = SearchVectorField(null=True)
+    document = SearchVectorField(null=True, db_index=True)
 
     # last access
     # number of visits
@@ -165,7 +165,7 @@ class Company(Model):
     cargos_historial_p = JSONField(default=list)
     cargos_historial_c = JSONField(default=list)
 
-    document = SearchVectorField(null=True)
+    document = SearchVectorField(null=True, db_index=True)
 
     def add_in_bormes(self, borme):
         if borme not in self.in_bormes:
