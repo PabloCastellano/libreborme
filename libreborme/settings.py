@@ -85,7 +85,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.contrib.auth.context_processors.auth',
                 'libreborme.context_processors.piwik',
                 'libreborme.context_processors.common',
             ],

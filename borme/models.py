@@ -7,10 +7,7 @@ from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import SearchVectorField
 from django.conf import settings
 
-from django.db.models import (
-        BooleanField, CharField, DateField,
-        DateTimeField, ForeignKey, IntegerField,
-        Model, OneToOneField, PROTECT, URLField)
+from django.db import models as m
 from bormeparser.sociedad import SOCIEDADES as SOCIEDADES_DICT
 
 SOCIEDADES = sorted(SOCIEDADES_DICT.items())
@@ -25,16 +22,16 @@ PROVINCES = (
 """
 
 
-class Borme(Model):
+class Borme(m.Model):
     """ Edicion de BORME """
-    cve = CharField(max_length=30, primary_key=True)
-    date = DateField()
-    url = URLField()
-    from_reg = IntegerField()
-    until_reg = IntegerField()
+    cve = m.CharField(max_length=30, primary_key=True)
+    date = m.DateField()
+    url = m.URLField()
+    from_reg = m.IntegerField()
+    until_reg = m.IntegerField()
     # province = CharField(max_length=100, choices=PROVINCES)
-    province = CharField(max_length=100)
-    section = CharField(max_length=20)
+    province = m.CharField(max_length=100)
+    section = m.CharField(max_length=20)
     # pages = IntegerField()
     anuncios = JSONField(default=list)  # FIXME: {year, id}
 
@@ -49,14 +46,14 @@ class Borme(Model):
         return self.cve
 
 
-class Person(Model):
+class Person(m.Model):
     """ Persona """
-    name = CharField(max_length=200, db_index=True)
-    slug = CharField(max_length=200, primary_key=True)
+    name = m.CharField(max_length=200, db_index=True)
+    slug = m.SlugField(max_length=200, primary_key=True)
     in_companies = JSONField(default=list)
     in_bormes = JSONField(default=list)
 
-    date_updated = DateField(db_index=True)
+    date_updated = m.DateField(db_index=True)
     cargos_actuales = JSONField(default=list)
     cargos_historial = JSONField(default=list)
 
@@ -146,17 +143,17 @@ class Person(Model):
         return self.name
 
 
-class Company(Model):
+class Company(m.Model):
     """ Sociedad """
-    name = CharField(max_length=260, db_index=True)
-    nif = CharField(max_length=10)
-    slug = CharField(max_length=260, primary_key=True)
-    date_creation = DateField(blank=True, null=True)
-    date_extinction = DateField(blank=True, null=True)
-    is_active = BooleanField(default=True)
-    type = CharField(max_length=50, choices=SOCIEDADES)
+    name = m.CharField(max_length=260, db_index=True)
+    nif = m.CharField(max_length=10)
+    slug = m.SlugField(max_length=260, primary_key=True)
+    date_creation = m.DateField(blank=True, null=True)
+    date_extinction = m.DateField(blank=True, null=True)
+    is_active = m.BooleanField(default=True)
+    type = m.CharField(max_length=50, choices=SOCIEDADES)
 
-    date_updated = DateField(db_index=True)
+    date_updated = m.DateField(db_index=True)
     in_bormes = JSONField(default=list)
     anuncios = JSONField(default=list)  # FIXME: {year, id}
 
@@ -283,12 +280,12 @@ class Company(Model):
         return self.fullname
 
 
-class Anuncio(Model):
-    id_anuncio = IntegerField()
-    year = IntegerField()
-    borme = ForeignKey('Borme', on_delete=PROTECT)
-    company = ForeignKey('Company', on_delete=PROTECT)
-    datos_registrales = CharField(max_length=70)
+class Anuncio(m.Model):
+    id_anuncio = m.IntegerField()
+    year = m.IntegerField()
+    borme = m.ForeignKey('Borme', on_delete=m.PROTECT)
+    company = m.ForeignKey('Company', on_delete=m.PROTECT)
+    datos_registrales = m.CharField(max_length=70)
     actos = JSONField(default=dict)  # TODO: Actos repetidos
 
     class Meta:
@@ -308,19 +305,19 @@ class Anuncio(Model):
                     self.id_anuncio, self.year, len(self.actos.keys()))
 
 
-class Config(Model):
-    last_modified = DateTimeField()
-    version = CharField(max_length=50)
+class Config(m.Model):
+    last_modified = m.DateTimeField()
+    version = m.CharField(max_length=50)
 
 
-class BormeLog(Model):
-    borme = OneToOneField('Borme', primary_key=True, on_delete=PROTECT)
-    date_created = DateTimeField(auto_now_add=True)
-    date_updated = DateTimeField(auto_now=True)
-    date_parsed = DateTimeField(blank=True, null=True)
-    parsed = BooleanField(default=False)
-    errors = IntegerField(default=0)
-    path = CharField(max_length=200)
+class BormeLog(m.Model):
+    borme = m.OneToOneField('Borme', primary_key=True, on_delete=m.PROTECT)
+    date_created = m.DateTimeField(auto_now_add=True)
+    date_updated = m.DateTimeField(auto_now=True)
+    date_parsed = m.DateTimeField(blank=True, null=True)
+    parsed = m.BooleanField(default=False)
+    errors = m.IntegerField(default=0)
+    path = m.CharField(max_length=200)
 
     def __str__(self):
         return 'Log(%s): %d errors' % (self.borme.cve, self.errors)
