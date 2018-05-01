@@ -6,6 +6,7 @@ import datetime
 today = datetime.date.today()
 tomorrow = today + datetime.timedelta(days=1)
 
+
 class TestCompanyModel(TestCase):
 
     # This method run on instance of class
@@ -27,16 +28,37 @@ class TestCompanyModel(TestCase):
         self.assertEqual(c.get_cargos_actuales()[0], [])
         self.assertEqual(c.get_cargos_historial()[0], [])
 
-        cargo_entrante = {'title': 't', 'name': 'n', 'date_from': today, 'type': 'company'}
+        cargo_entrante = {
+            'title': 't',
+            'name': 'n',
+            'date_from': today,
+            'type': 'company'
+        }
 
         c.update_cargos_entrantes([cargo_entrante])
-        self.assertEqual(c.cargos_actuales_c, [{'title': 't', 'name': 'n', 'date_from': today}])
+        self.assertEqual(c.cargos_actuales_c,
+                         [{'title': 't', 'name': 'n', 'date_from': today}])
         self.assertEqual(c.cargos_actuales_p, [])
         self.assertEqual(c.get_cargos_historial()[0], [])
 
-        cargo_saliente = {'title': 't', 'name': 'n', 'date_to': tomorrow, 'type': 'company'}
+        cargo_saliente = {
+            'title': 't',
+            'name': 'n',
+            'date_to': tomorrow,
+            'type': 'company'
+        }
 
         c.update_cargos_salientes([cargo_saliente])
         self.assertEqual(c.get_cargos_actuales()[0], [])
         self.assertEqual(c.cargos_historial_p, [])
-        self.assertEqual(c.cargos_historial_c, [{'title': 't', 'name': 'n', 'date_from': today, 'date_to': tomorrow}])
+
+        cargos_salientes = [{
+            'title': 't',
+            'name': 'n',
+            'date_from': today,
+            'date_to': tomorrow
+        }]
+        self.assertEqual(
+            c.cargos_historial_c,
+            cargos_salientes
+        )

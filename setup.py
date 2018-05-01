@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
 
 from setuptools import setup, find_packages
 from libreborme import get_version
@@ -20,6 +20,7 @@ def get_install_requires():
         requirements.append(line)
 
     return requirements
+
 
 if sys.version_info[0] == 3:
     long_description = open('README.md', encoding='utf-8').read()
@@ -51,4 +52,5 @@ setup(
     ],
     install_requires=get_install_requires(),
     scripts=['libreborme/bin/libreborme'],
+    test_suite='runtests.runtests',
 )

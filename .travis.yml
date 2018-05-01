@@ -8,7 +8,6 @@ addons:
 
 python:
   - "3.4"
-  - "3.5"
   - "3.6"
 
 env:
@@ -33,7 +32,8 @@ before_script:
 # command to run tests, e.g. python setup.py test
 #script:
 #  - coverage run --source=libreborme setup.py test
-script: "./runtests.sh"
+script:
+ - ./setup.py test
 
 #after_success:
 #  - coveralls
