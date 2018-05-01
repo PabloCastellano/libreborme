@@ -1,12 +1,4 @@
 {
-  "cve": "BORME-Z-2015-2-04",
-  "date": "2015-01-03",
-  "seccion": "A",
-  "provincia": "Almer\u00eda",
-  "num": 1,
-  "url": "unused_url",
-  "from_anuncio": 1,
-  "to_anuncio": 1,
   "anuncios": {
     "1": {
       "empresa": "EMPRESA UNO SL",
@@ -22,5 +14,15 @@
       "num_actos": 1
     }
   },
-  "num_anuncios": 1
+  "cve": "BORME-Z-2015-2-04",
+  "date": "2015-01-03",
+  "from_anuncio": 1,
+  "num": 27,
+  "num_anuncios": 1,
+  "provincia": "Almer\u00eda",
+  "raw_version": "1",
+  "seccion": "A",
+  "to_anuncio": 1,
+  "url": "unused_url",
+  "version": "2001"
 }

@@ -1,12 +1,4 @@
 {
-  "cve": "BORME-Z-2015-3-04",
-  "date": "2015-01-04",
-  "seccion": "A",
-  "provincia": "Almer\u00eda",
-  "num": 1,
-  "url": "unused_url",
-  "from_anuncio": 1,
-  "to_anuncio": 1,
   "anuncios": {
     "1": {
       "empresa": "EMPRESA EXTINGUIDA SL",
@@ -29,5 +21,14 @@
       "num_actos": 1
     }
   },
-  "num_anuncios": 2
+  "cve": "BORME-Z-2015-3-04",
+  "date": "2015-01-04",
+  "from_anuncio": 1,
+  "num": 1,
+  "num_anuncios": 2,
+  "provincia": "Almer\u00eda",
+  "seccion": "A",
+  "to_anuncio": 1,
+  "url": "unused_url",
+  "version": "2001"
 }
