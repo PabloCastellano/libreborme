@@ -11,6 +11,14 @@ services:
     environment:
       POSTGRES_USER: libreborme
 
+  elasticsearch:
+    # image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
+    ports:
+      - "9200:9200"
+    environment:
+      discovery.type: single-node
+
 #  django:
 #    build: docker/Dockerfile
 #    ports:

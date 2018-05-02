@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.template.loader import get_template
 from django.conf import settings
 
+from .documents import CompanyDocument, PersonDocument
 from .models import Company, Person, Anuncio, Config, Borme
 from .calendar import LibreBormeCalendar, LibreBormeAvailableCalendar
 from .utils.postgres import estimate_count_fast, search_fts
@@ -153,13 +154,11 @@ class BusquedaView(TemplateView):
         if 'q' in self.request.GET:
             page = self.request.GET.get('page', 1)
             raw_query = self.request.GET['q']
-            q_companies = search_fts(raw_query, model=Company)
-            q_companies = list(q_companies)  # Force
-            q_persons = search_fts(raw_query, model=Person)
-            q_persons = list(q_persons)  # Force
+            q_companies = CompanyDocument.search().query("match", name=raw_query)
+            q_persons = PersonDocument.search().query("match", name=raw_query)
 
-            companies = Paginator(q_companies, 25)
-            persons = Paginator(q_persons, 25)
+            companies = Paginator(q_companies.to_queryset(), 25)
+            persons = Paginator(q_persons.to_queryset(), 25)
 
             context['page'] = page
             context['query'] = raw_query

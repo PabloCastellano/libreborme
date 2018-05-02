@@ -38,7 +38,8 @@ INSTALLED_APPS = (
     'django_static_jquery',
     'fontawesome',
     'tastypie',
-    #'maintenancemode',
+    # 'maintenancemode',
+    'django_elasticsearch_dsl',
     'borme',
     'libreborme',
 )
@@ -109,6 +110,15 @@ DATABASES = {
         'PORT': '',
     }
 }
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'elastic:changeme@localhost:9200'
+    },
+}
+
+ELASTICSEARCH_DSL_AUTOSYNC = False
+ELASTICSEARCH_DSL_AUTO_REFRESH = False
 
 TASTYPIE_DEFAULT_FORMATS = ['json']
 
