@@ -25,7 +25,7 @@ PROVINCES = (
 class Borme(m.Model):
     """ Edicion de BORME """
     cve = m.CharField(max_length=30, primary_key=True)
-    date = m.DateField()
+    date = m.DateField(db_index=True)
     url = m.URLField()
     from_reg = m.IntegerField()
     until_reg = m.IntegerField()
