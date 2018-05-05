@@ -1,7 +1,5 @@
 -r base.txt
 coverage==4.5.1
-blessings==1.6.1
 bpython==0.17.1
-curtsies==0.3.0
 django-extensions==2.0.3
-Pygments==2.2.0
+django-elasticsearch-debug-toolbar==1.2.0

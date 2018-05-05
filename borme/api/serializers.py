@@ -9,7 +9,7 @@ class LibreBormeJSONSerializer(Serializer):
 
         data = self.to_simple(data, options)
 
-        # hstore
+        # TODO: check JSONB
         if 'in_companies' in data:
             data['in_companies'] = eval(data['in_companies'])
         if 'in_bormes' in data:

@@ -9,4 +9,3 @@ django-tastypie==0.14.0
 elasticsearch==5.5.2
 elasticsearch-dsl==5.4.0
 psycopg2-binary==2.7.4
-wheel==0.30.0

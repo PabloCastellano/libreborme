@@ -11,14 +11,15 @@ from django.urls import reverse
 from django.template.loader import get_template
 from django.conf import settings
 
-from .documents import CompanyDocument, PersonDocument
-from .models import Company, Person, Anuncio, Config, Borme
 from .calendar import LibreBormeCalendar, LibreBormeAvailableCalendar
-from .utils.postgres import estimate_count_fast, search_fts
+from .documents import ElasticSearchPaginatorList
 from .mixins import CacheMixin
+from .models import Company, Person, Anuncio, Config, Borme
+from .utils.postgres import estimate_count_fast
 
-import datetime
 import csv
+import datetime
+import elasticsearch
 
 
 def ajax_empresa_more(request, slug):
@@ -154,11 +155,21 @@ class BusquedaView(TemplateView):
         if 'q' in self.request.GET:
             page = self.request.GET.get('page', 1)
             raw_query = self.request.GET['q']
-            q_companies = CompanyDocument.search().query("match", name=raw_query)
-            q_persons = PersonDocument.search().query("match", name=raw_query)
 
-            companies = Paginator(q_companies.to_queryset(), 25)
-            persons = Paginator(q_persons.to_queryset(), 25)
+            es_query = {'query': {'match': {'name': raw_query}}}
+            es = elasticsearch.Elasticsearch(
+                    [settings.ELASTICSEARCH_DSL['default']['hosts']],
+                    http_auth=settings.ELASTICSEARCH_CREDENTIALS.split(':'))
+
+            q_companies = ElasticSearchPaginatorList(
+                    es, body=es_query,
+                    index='libreborme', doc_type='company_document')
+            q_persons = ElasticSearchPaginatorList(
+                    es, body=es_query,
+                    index='libreborme', doc_type='person_document')
+
+            companies = Paginator(q_companies, 25)
+            persons = Paginator(q_persons, 25)
 
             context['page'] = page
             context['query'] = raw_query
@@ -174,14 +185,15 @@ class BusquedaView(TemplateView):
                 pg_companies = companies.page(companies.num_pages)
             finally:
                 context['page_companies'] = pg_companies
-                context['paginator_companies'] = companies
+                context['results_companies'] = list(map(lambda x: x['_source'], pg_companies))
+                context['count_companies'] = q_companies.count()
                 pagerange = list(companies.page_range[:3]) + list(companies.page_range[-3:])
                 pagerange.append(pg_companies.number)
                 pagerange = list(set(pagerange))
                 pagerange.sort()
                 if len(pagerange) == 1:
                     pagerange = []
-                context['page_companies'].myrange = pagerange
+                context['range_companies'] = pagerange
 
             try:
                 pg_persons = persons.page(page)
@@ -192,14 +204,15 @@ class BusquedaView(TemplateView):
                 pg_persons = persons.page(persons.num_pages)
             finally:
                 context['page_persons'] = pg_persons
-                context['paginator_persons'] = persons
+                context['results_persons'] = list(map(lambda x: x['_source'], pg_persons))
+                context['count_persons'] = q_persons.count()
                 pagerange = list(persons.page_range[:3]) + list(persons.page_range[-3:])
                 pagerange.append(pg_persons.number)
                 pagerange = list(set(pagerange))
                 pagerange.sort()
                 if len(pagerange) == 1:
                     pagerange = []
-                context['page_persons'].myrange = pagerange
+                context['range_persons'] = pagerange
 
         else:
             context['page_companies'] = []

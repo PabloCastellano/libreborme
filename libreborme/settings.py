@@ -48,21 +48,38 @@ if DEBUG:
     INSTALLED_APPS += (
         'django_extensions',
         'debug_toolbar',
+        'elastic_panel',
     )
 
-if DEBUG:
+    DEBUG_TOOLBAR_PANELS = [
+        'debug_toolbar.panels.versions.VersionsPanel',
+        'debug_toolbar.panels.timer.TimerPanel',
+        'debug_toolbar.panels.settings.SettingsPanel',
+        'debug_toolbar.panels.headers.HeadersPanel',
+        'debug_toolbar.panels.request.RequestPanel',
+        'debug_toolbar.panels.sql.SQLPanel',
+        'elastic_panel.panel.ElasticDebugPanel',
+        'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+        'debug_toolbar.panels.templates.TemplatesPanel',
+        'debug_toolbar.panels.cache.CachePanel',
+        'debug_toolbar.panels.signals.SignalsPanel',
+        'debug_toolbar.panels.logging.LoggingPanel',
+        'debug_toolbar.panels.redirects.RedirectsPanel',
+    ]
+
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
         }
     }
 
+
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'maintenancemode.middleware.MaintenanceModeMiddleware',
+    # 'maintenancemode.middleware.MaintenanceModeMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -111,14 +128,12 @@ DATABASES = {
     }
 }
 
+ELASTICSEARCH_CREDENTIALS = "elastic:changeme"
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': 'elastic:changeme@localhost:9200'
+        'hosts': ELASTICSEARCH_CREDENTIALS + '@localhost:9200'
     },
 }
-
-ELASTICSEARCH_DSL_AUTOSYNC = False
-ELASTICSEARCH_DSL_AUTO_REFRESH = False
 
 TASTYPIE_DEFAULT_FORMATS = ['json']
 
@@ -164,3 +179,5 @@ LOPD = {'provider': 'Some real name',
         'address': 'Some real address'}
 
 HOST_BUCKET = "https://libreborme-prod.ams3.digitaloceanspaces.com"
+
+INTERNAL_IPS = ('127.0.0.1')
