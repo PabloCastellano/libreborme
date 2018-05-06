@@ -185,7 +185,12 @@ class BusquedaView(TemplateView):
                     context['page_companies'] = pg_companies
                     context['results_companies'] = list(map(lambda x: x['_source'], pg_companies))
                     context['count_companies'] = q_companies.count()
-                    pagerange = list(companies.page_range[:3]) + list(companies.page_range[-3:])
+                    pagerange = list(companies.page_range[:3])
+                    last_page = min(companies.page_range.stop - 1, 400)
+                    if last_page == 400:
+                        pagerange += [388, 389, 400]
+                    else:
+                        pagerange += list(companies.page_range[-3:])
                     pagerange.append(pg_companies.number)
                     pagerange = list(set(pagerange))
                     pagerange.sort()
@@ -203,7 +208,12 @@ class BusquedaView(TemplateView):
                     context['page_persons'] = pg_persons
                     context['results_persons'] = list(map(lambda x: x['_source'], pg_persons))
                     context['count_persons'] = q_persons.count()
-                    pagerange = list(persons.page_range[:3]) + list(persons.page_range[-3:])
+                    pagerange = list(persons.page_range[:3])
+                    last_page = min(persons.page_range.stop - 1, 400)
+                    if last_page == 400:
+                        pagerange += [388, 389, 400]
+                    else:
+                        pagerange += list(persons.page_range[-3:])
                     pagerange.append(pg_persons.number)
                     pagerange = list(set(pagerange))
                     pagerange.sort()
