@@ -128,10 +128,10 @@ DATABASES = {
     }
 }
 
-ELASTICSEARCH_CREDENTIALS = "elastic:changeme"
+ELASTICSEARCH_URI = "http://elastic:changeme@localhost:9200"
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': ELASTICSEARCH_CREDENTIALS + '@localhost:9200'
+        'hosts': ELASTICSEARCH_URI.split('http://')[1]
     },
 }
 

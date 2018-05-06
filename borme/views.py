@@ -157,9 +157,7 @@ class BusquedaView(TemplateView):
             raw_query = self.request.GET['q']
 
             es_query = {'query': {'match': {'name': raw_query}}}
-            es = elasticsearch.Elasticsearch(
-                    [settings.ELASTICSEARCH_DSL['default']['hosts']],
-                    http_auth=settings.ELASTICSEARCH_CREDENTIALS.split(':'))
+            es = elasticsearch.Elasticsearch(settings.ELASTICSEARCH_URI)
 
             q_companies = ElasticSearchPaginatorList(
                     es, body=es_query,
