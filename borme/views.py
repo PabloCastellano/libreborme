@@ -156,6 +156,7 @@ class BusquedaView(TemplateView):
         form = LBSearchForm(self.request.GET)
         context['page'] = page
         context['form'] = form
+        context['search_view'] = 1
 
         if 'q' in self.request.GET and form.is_valid():
             raw_query = self.request.GET['q']

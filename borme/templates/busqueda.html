@@ -73,10 +73,14 @@
         {% if page_companies.has_previous %}
         <li>
           <a href="?q={{ query }}&page={{ page_companies.previous_page_number }}&type=company" rel="nofollow" aria-label="Previous">
+        {% else %}
+        <li class="disabled">
+          <a href="#" rel="nofollow" aria-label="Previous">
+        {% endif %}
             <span aria-hidden="true">&laquo; Anterior</span>
           </a>
         </li>
-        {% endif %}
+
         {% for num in range_companies %}
             {% if num == page_companies.number %}
             <li class="active"><a href="?q={{ query }}&page={{ num }}&type=company" rel="nofollow">{{ num }}</a></li>
@@ -90,10 +94,13 @@
         {% if page_companies.has_next %}
         <li>
           <a href="?q={{ query }}&page={{ page_companies.next_page_number }}&type=company" rel="nofollow" aria-label="Next">
+        {% else %}
+        <li class="disabled">
+          <a href="#" rel="nofollow" aria-label="Next">
+        {% endif %}
             <span aria-hidden="true">Siguiente &raquo;</span>
           </a>
         </li>
-        {% endif %}
       </ul>
     </nav>
     {% endif %}
@@ -127,10 +134,14 @@
         {% if page_persons.has_previous %}
         <li>
           <a href="?q={{ query }}&page={{ page_persons.previous_page_number }}&type=person" rel="nofollow" aria-label="Previous">
+        {% else %}
+        <li class="disabled">
+          <a href="#" rel="nofollow" aria-label="Previous">
+        {% endif %}
             <span aria-hidden="true">&laquo; Anterior</span>
           </a>
         </li>
-        {% endif %}
+
         {% for num in range_persons %}
             {% if num == page_persons.number %}
             <li class="active"><a href="?q={{ query }}&page={{ num }}&type=person" rel="nofollow">{{ num }}</a></li>
@@ -144,10 +155,14 @@
         {% if page_persons.has_next %}
         <li>
           <a href="?q={{ query }}&page={{ page_persons.next_page_number }}&type=person" rel="nofollow" aria-label="Next">
+        {% else %}
+        <li class="disabled">
+          <a href="#" rel="nofollow" aria-label="Next">
+        {% endif %}
             <span aria-hidden="true">Siguiente &raquo;</span>
           </a>
         </li>
-        {% endif %}
+
       </ul>
     </nav>
     {% endif %}
