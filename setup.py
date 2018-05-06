@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from setuptools import setup, find_packages
-from libreborme import get_version
+import libreborme
 import sys
 
 
@@ -29,8 +29,8 @@ else:
 
 setup(
     name='libreborme',
-    version=get_version(),
-    description="Plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil",
+    version=libreborme.__version__,
+    description=libreborme.__doc__,
     long_description=long_description,
     author='Pablo Castellano',
     author_email='pablo@anche.no',
