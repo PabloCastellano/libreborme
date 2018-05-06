@@ -45,16 +45,22 @@ class ElasticSearchPaginatorList(object):
         self._count = None
 
     def count(self):
+        """Warning: result is cached using initial kwargs"""
         if self._count is None:
-            result = self.client.search(*self.args, **self.kwargs)['hits']
-        return result['total']
+            # self.client.search(*self.args, **self.kwargs)['hits']['total']
+            result = self.client.count(index=self.kwargs['index'],
+                                       doc_type=self.kwargs['doc_type'],
+                                       body=self.kwargs['body'])
+            self._count = result['count']
+        return self._count
 
     def __len__(self):
         return self.count()
 
     def __getitem__(self, key):
         if not isinstance(key, slice):
-            raise ElasticSearchPaginatorListException('key parameter in __getitem__ is not a slice instance')
+            raise ElasticSearchPaginatorListException(
+                    'key parameter in __getitem__ is not a slice instance')
         self.kwargs['from_'] = key.start
         self.kwargs['size'] = key.stop - key.start
         return self.client.search(*self.args, **self.kwargs)['hits']['hits']

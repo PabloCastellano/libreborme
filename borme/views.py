@@ -171,13 +171,11 @@ class BusquedaView(TemplateView):
                     es, body=es_query,
                     index='libreborme', doc_type='person_document')
 
-            companies = Paginator(q_companies, 25)
-            persons = Paginator(q_persons, 25)
-
             context['query'] = raw_query
 
             if doc_type in ('all', 'company'):
                 try:
+                    companies = Paginator(q_companies, 25)
                     pg_companies = companies.page(page)
                 except EmptyPage:
                     # If page is out of range (e.g. 9999), deliver last page of results.
@@ -196,6 +194,7 @@ class BusquedaView(TemplateView):
 
             if doc_type in ('all', 'person'):
                 try:
+                    persons = Paginator(q_persons, 25)
                     pg_persons = persons.page(page)
                 except EmptyPage:
                     pg_persons = persons.page(persons.num_pages)
