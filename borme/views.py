@@ -4,7 +4,7 @@ from django.views.decorators.cache import cache_page
 
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator, EmptyPage
 from django.http import Http404, HttpResponse
 from django.utils.safestring import mark_safe
 from django.urls import reverse
@@ -13,6 +13,7 @@ from django.conf import settings
 
 from .calendar import LibreBormeCalendar, LibreBormeAvailableCalendar
 from .documents import ElasticSearchPaginatorList
+from .forms import LBSearchForm
 from .mixins import CacheMixin
 from .models import Company, Person, Anuncio, Config, Borme
 from .utils.postgres import estimate_count_fast
@@ -148,13 +149,17 @@ class HomeView(CacheMixin, TemplateView):
 # TODO:  if 'q' not in request.GET
 class BusquedaView(TemplateView):
     template_name = "busqueda.html"
-    # template = "search/search.html"
 
     def get_context_data(self, **kwargs):
         context = super(BusquedaView, self).get_context_data(**kwargs)
-        if 'q' in self.request.GET:
-            page = self.request.GET.get('page', 1)
+        page = self.request.GET.get('page', 1)
+        form = LBSearchForm(self.request.GET)
+        context['page'] = page
+        context['form'] = form
+
+        if 'q' in self.request.GET and form.is_valid():
             raw_query = self.request.GET['q']
+            doc_type = self.request.GET.get('type', 'all')
 
             es_query = {'query': {'match': {'name': raw_query}}}
             es = elasticsearch.Elasticsearch(settings.ELASTICSEARCH_URI)
@@ -169,53 +174,46 @@ class BusquedaView(TemplateView):
             companies = Paginator(q_companies, 25)
             persons = Paginator(q_persons, 25)
 
-            context['page'] = page
             context['query'] = raw_query
 
-            try:
-                pg_companies = companies.page(page)
-            except PageNotAnInteger:
-                # If page is not an integer, deliver first page.
-                pg_companies = companies.page(1)
-                context['page'] = 1
-            except EmptyPage:
-                # If page is out of range (e.g. 9999), deliver last page of results.
-                pg_companies = companies.page(companies.num_pages)
-            finally:
-                context['page_companies'] = pg_companies
-                context['results_companies'] = list(map(lambda x: x['_source'], pg_companies))
-                context['count_companies'] = q_companies.count()
-                pagerange = list(companies.page_range[:3]) + list(companies.page_range[-3:])
-                pagerange.append(pg_companies.number)
-                pagerange = list(set(pagerange))
-                pagerange.sort()
-                if len(pagerange) == 1:
-                    pagerange = []
-                context['range_companies'] = pagerange
+            if doc_type in ('all', 'company'):
+                try:
+                    pg_companies = companies.page(page)
+                except EmptyPage:
+                    # If page is out of range (e.g. 9999), deliver last page of results.
+                    pg_companies = companies.page(companies.num_pages)
+                finally:
+                    context['page_companies'] = pg_companies
+                    context['results_companies'] = list(map(lambda x: x['_source'], pg_companies))
+                    context['count_companies'] = q_companies.count()
+                    pagerange = list(companies.page_range[:3]) + list(companies.page_range[-3:])
+                    pagerange.append(pg_companies.number)
+                    pagerange = list(set(pagerange))
+                    pagerange.sort()
+                    if len(pagerange) == 1:
+                        pagerange = []
+                    context['range_companies'] = pagerange
 
-            try:
-                pg_persons = persons.page(page)
-            except PageNotAnInteger:
-                pg_persons = persons.page(1)
-                context['page'] = 1
-            except EmptyPage:
-                pg_persons = persons.page(persons.num_pages)
-            finally:
-                context['page_persons'] = pg_persons
-                context['results_persons'] = list(map(lambda x: x['_source'], pg_persons))
-                context['count_persons'] = q_persons.count()
-                pagerange = list(persons.page_range[:3]) + list(persons.page_range[-3:])
-                pagerange.append(pg_persons.number)
-                pagerange = list(set(pagerange))
-                pagerange.sort()
-                if len(pagerange) == 1:
-                    pagerange = []
-                context['range_persons'] = pagerange
+            if doc_type in ('all', 'person'):
+                try:
+                    pg_persons = persons.page(page)
+                except EmptyPage:
+                    pg_persons = persons.page(persons.num_pages)
+                finally:
+                    context['page_persons'] = pg_persons
+                    context['results_persons'] = list(map(lambda x: x['_source'], pg_persons))
+                    context['count_persons'] = q_persons.count()
+                    pagerange = list(persons.page_range[:3]) + list(persons.page_range[-3:])
+                    pagerange.append(pg_persons.number)
+                    pagerange = list(set(pagerange))
+                    pagerange.sort()
+                    if len(pagerange) == 1:
+                        pagerange = []
+                    context['range_persons'] = pagerange
 
         else:
             context['page_companies'] = []
             context['page_persons'] = []
-            context['page'] = 1
 
         return context
 
