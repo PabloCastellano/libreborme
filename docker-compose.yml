@@ -18,6 +18,7 @@ services:
       - "9200:9200"
     environment:
       discovery.type: single-node
+      xpack.security.enabled: "false"
 
 #  django:
 #    build: docker/Dockerfile
