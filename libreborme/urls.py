@@ -10,7 +10,7 @@ urlpatterns = [
     path('', t(template_name="libreborme/index.html"), name='home'),
     path('borme/', include('borme.urls')),
 
-    path('robots.txt', t(template_name='robots.txt', content_type='text/plain')),
+    path('robots.txt', views.robotstxt),
     path('humans.txt', t(template_name='humans.txt', content_type='text/plain')),
 
     path('about/', views.AboutView.as_view(), name='about'),
