@@ -136,6 +136,9 @@ ELASTICSEARCH_DSL = {
     },
 }
 
+# ELASTICSEARCH_DSL_AUTOSYNC = False
+# ELASTICSEARCH_DSL_AUTO_REFRESH = False
+
 TASTYPIE_DEFAULT_FORMATS = ['json']
 
 # Internationalization
