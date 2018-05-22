@@ -11,6 +11,7 @@ from .serializers import LibreBormeJSONSerializer
 # FIXME: fullname
 class CompanyResource(ModelResource):
     class Meta:
+        excludes = ['document', 'nif']
         detail_allowed_methods = ['get']
         list_allowed_methods = []
         max_limit = 100
@@ -87,6 +88,7 @@ class CompanyResource(ModelResource):
 
 class PersonResource(ModelResource):
     class Meta:
+        excludes = ['document']
         detail_allowed_methods = ['get']
         list_allowed_methods = []
         max_limit = 100
