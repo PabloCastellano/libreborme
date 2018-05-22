@@ -48,7 +48,7 @@ class CompanyResource(ModelResource):
                 pass
 
         object_list = {
-            'results': objects,
+            'objects': objects,
         }
 
         self.log_throttled_access(request)
@@ -126,7 +126,7 @@ class PersonResource(ModelResource):
                 pass
 
         object_list = {
-            'results': objects,
+            'objects': objects,
         }
 
         self.log_throttled_access(request)
