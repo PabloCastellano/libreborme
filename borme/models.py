@@ -33,7 +33,7 @@ class Borme(m.Model):
     province = m.CharField(max_length=100)
     section = m.CharField(max_length=20)
     # pages = IntegerField()
-    anuncios = JSONField(default=list)  # FIXME: {year, id}
+    anuncios = JSONField(default=list)
 
     @property
     def total_anuncios(self):
@@ -155,7 +155,7 @@ class Company(m.Model):
 
     date_updated = m.DateField(db_index=True)
     in_bormes = JSONField(default=list)
-    anuncios = JSONField(default=list)  # FIXME: {year, id}
+    anuncios = JSONField(default=list)
 
     cargos_actuales_p = JSONField(default=list)
     cargos_actuales_c = JSONField(default=list)

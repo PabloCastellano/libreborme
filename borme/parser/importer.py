@@ -110,7 +110,8 @@ def _from_instance(borme):
                 results["errors"] += 1
 
             company.add_in_bormes(borme_embed)
-            company.anuncios.append(anuncio.id)  # TODO: year
+            company.anuncios.append({"year": borme.date.year,
+                                     "id": anuncio.id})
             company.date_updated = borme.date
 
             # Create anuncio
@@ -176,7 +177,8 @@ def _from_instance(borme):
             company.save()
             nuevo_anuncio.company = company
             nuevo_anuncio.save()
-            nuevo_borme.anuncios.append(anuncio.id)  # TODO: year
+            nuevo_borme.anuncios.append({"year": borme.date.year,
+                                         "id": anuncio.id})
 
         except Exception as e:
             logger.error("[{}] ERROR importing anuncio {}"
@@ -572,7 +574,7 @@ def _load_cargo_empresa(nombre, borme, anuncio, borme_embed,
         if c.name != empresa:
             logger_empresa_similar(slug_c, c, empresa, borme.cve)
 
-    c.anuncios.append(anuncio.id)
+    c.anuncios.append({"year": borme.date.year, "id": anuncio.id})
     c.add_in_bormes(borme_embed)
     c.date_updated = borme.date
 
