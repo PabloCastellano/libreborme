@@ -5,7 +5,7 @@ django-bootstrap-static==3.3.7.2
 django-elasticsearch-dsl==0.5.0
 django-maintenancemode==0.11.2
 django-static-jquery==2.1.4
-django-tastypie==0.14.0
+django-tastypie==0.14.1
 elasticsearch==5.5.2
 elasticsearch-dsl==5.4.0
 psycopg2-binary==2.7.4
