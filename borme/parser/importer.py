@@ -584,7 +584,7 @@ def _load_cargo_empresa(nombre, borme, anuncio, borme_embed,
 
     if is_acto_cargo_entrante(acto.name):
         cargo['date_from'] = borme.date.isoformat()
-        cargo_embed["date_from"] = borme.date.isoformat(),
+        cargo_embed["date_from"] = borme.date.isoformat()
         c.update_cargos_entrantes([cargo_embed])
     else:
         cargo['date_to'] = borme.date.isoformat()

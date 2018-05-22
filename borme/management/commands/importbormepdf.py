@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from borme.parser.importer import psql_update_documents
+from borme.parser.postgres import psql_update_documents
 from borme.models import Config
 
 import time
