@@ -23,7 +23,7 @@
     <strong>Datos registrales:</strong> <i>{{ anuncio.datos_registrales }}</i>
     <br/>
 
-    <h2>{{ anuncio.actos|length }} acto{{ anuncio.actos|length|pluralize }} mercantil{{ anuncio.actos|length|pluralize:"es" }}:</h2>
+    <h2>Este anuncio contiene {{ anuncio.actos|length }} acto{{ anuncio.actos|length|pluralize }} mercantil{{ anuncio.actos|length|pluralize:"es" }}:</h2>
     <div class="row">
     <div class="col-md-10">
     {% for nombre, valor in anuncio.actos.items %}

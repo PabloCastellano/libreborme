@@ -15,7 +15,7 @@ class Command(BaseCommand):
     help = 'Import BORME PDF file'
 
     def add_arguments(self, parser):
-        parser.add_argument('files', nargs='+', type=str)
+        parser.add_argument('files', metavar='FILE', nargs='+', type=str)
 
     def handle(self, *args, **options):
         self.set_verbosity(int(options['verbosity']))

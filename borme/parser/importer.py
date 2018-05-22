@@ -126,6 +126,12 @@ def _from_instance(borme):
             for acto in anuncio.get_borme_actos():
                 logger_acto(acto)
 
+                # Entran los siguientes actos (borme.regex.is_acto_cargo()):
+                #
+                # Revocaciones, Reelecciones, Nombramientos, Ceses/Dimisiones,
+                # Emisión de obligaciones, Modificación de poderes,
+                # Cancelaciones de oficio de nombramientos,
+                #
                 if isinstance(acto, bormeparser.borme.BormeActoCargo):
                     lista_cargos = []
                     for nombre_cargo, nombres in acto.cargos.items():
