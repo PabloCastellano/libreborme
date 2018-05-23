@@ -1,11 +1,15 @@
+from django.conf import settings
 from django.conf.urls import url
 from django.core.paginator import Paginator
 from tastypie.resources import ModelResource
 from tastypie.throttle import CacheThrottle
 from tastypie.utils import trailing_slash
+from borme.documents import ElasticSearchPaginatorList
 from borme.models import Company, Person
-from borme.utils.postgres import search_fts
+# from borme.utils.postgres import search_fts
 from .serializers import LibreBormeJSONSerializer
+
+import elasticsearch
 
 
 # FIXME: fullname
@@ -35,13 +39,26 @@ class CompanyResource(ModelResource):
         query = request.GET.get('q', '')
 
         if len(query) > 3:
-            sqs = search_fts(query, model=Person)
-            paginator = Paginator(sqs, 20)
+            # If you want to use postgres FTS, change to:
+            #
+            # sqs = search_fts(query, model=Company)
+            # paginator = Paginator(sqs, 20)
+            # ...
+            #    for result in page.object_list:
+
+            es_query = {'query': {'match': {'name': query}}}
+            es = elasticsearch.Elasticsearch(settings.ELASTICSEARCH_URI)
+            q_companies = ElasticSearchPaginatorList(
+                    es, body=es_query,
+                    index='libreborme', doc_type='company_document')
+            paginator = Paginator(q_companies, 20)
 
             try:
                 page = paginator.page(int(request.GET.get('page', 1)))
 
-                for result in page.object_list:
+                slugs = list(map(lambda x: x['_source']['slug'], page))
+                object_list = Company.objects.filter(slug__in=slugs)
+                for result in object_list:
                     bundle = self.build_bundle(obj=result, request=request)
                     bundle = self.search_dehydrate(bundle)
                     objects.append(bundle)
@@ -114,13 +131,26 @@ class PersonResource(ModelResource):
         query = request.GET.get('q', '')
 
         if len(query) > 3:
-            sqs = search_fts(query, model=Company)
-            paginator = Paginator(sqs, 20)
+            # If you want to use postgres FTS, change to:
+            #
+            # sqs = search_fts(query, model=Person)
+            # paginator = Paginator(sqs, 20)
+            # ...
+            #    for result in page.object_list:
+
+            es_query = {'query': {'match': {'name': query}}}
+            es = elasticsearch.Elasticsearch(settings.ELASTICSEARCH_URI)
+            q_persons = ElasticSearchPaginatorList(
+                    es, body=es_query,
+                    index='libreborme', doc_type='person_document')
+            paginator = Paginator(q_persons, 20)
 
             try:
                 page = paginator.page(int(request.GET.get('page', 1)))
 
-                for result in page.object_list:
+                slugs = list(map(lambda x: x['_source']['slug'], page))
+                object_list = Person.objects.filter(slug__in=slugs)
+                for result in object_list:
                     bundle = self.build_bundle(obj=result, request=request)
                     bundle = self.search_dehydrate(bundle)
                     objects.append(bundle)
