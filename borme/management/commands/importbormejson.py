@@ -5,7 +5,7 @@ import logging
 import time
 
 from borme.models import Config
-from borme.parser.postgres import psql_update_documents
+# from borme.parser.postgres import psql_update_documents
 import borme.parser.importer
 
 from libreborme.utils import get_git_revision_short_hash
@@ -34,7 +34,7 @@ class Command(BaseCommand):
         config.save()
 
         # Update Full Text Search
-        psql_update_documents()
+        # psql_update_documents()
 
         # Elapsed time
         elapsed_time = time.time() - start_time

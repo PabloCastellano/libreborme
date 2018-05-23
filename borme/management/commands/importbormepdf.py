@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from borme.parser.postgres import psql_update_documents
+# from borme.parser.postgres import psql_update_documents
 from borme.models import Config
 
 import time
@@ -34,7 +34,7 @@ class Command(BaseCommand):
         config.save()
 
         # Update Full Text Search
-        psql_update_documents()
+        # psql_update_documents()
 
         # Elapsed time
         elapsed_time = time.time() - start_time

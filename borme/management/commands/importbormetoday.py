@@ -8,7 +8,7 @@ import time
 from borme.models import Config
 from borme.parser.importer import import_borme_download
 from borme.parser.path import update_previous_xml
-from borme.parser.postgres import psql_update_documents
+# from borme.parser.postgres import psql_update_documents
 import borme.parser.importer
 
 
@@ -42,7 +42,7 @@ class Command(BaseCommand):
             config.save()
 
         # Update Full Text Search
-        psql_update_documents()
+        # psql_update_documents()
 
         # Elapsed time
         elapsed_time = time.time() - start_time
