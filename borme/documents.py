@@ -1,11 +1,43 @@
+from django.conf import settings
+from django.core.paginator import Paginator
 from django_elasticsearch_dsl import DocType, fields, Index
+from elasticsearch_dsl import analyzer, token_filter
 from .models import Company, Person
 
+import elasticsearch
+
+
+def configure_index(idx):
+    """Configure ES index settings.
+
+    NOTE: This is unused at the moment. Current issues:
+    1. The index needs to be created (index.create() or search_index --create)
+    setting update_all_types=True because of the attribute name being the same
+    in Person and Company.
+    https://elasticsearch-py.readthedocs.io/en/master/api.html#elasticsearch.client.IndicesClient.create
+
+    name = fields.TextField(attr="fullname", analyzer=lb_analyzer)
+
+    2. How to specifiy token filter for an attribute?
+
+    Therefore the index needs to be configured outside Django.
+    """
+    idx.settings(number_of_shards=1, number_of_replicas=0)
+    lb_filter = token_filter(
+        "lb_filter",
+        "stop",
+        stopwords=["i"]
+    )
+    lb_analyzer = analyzer(
+        "lb_analyzer",
+        tokenizer="standard",
+        filter=["standard", "lb_filter", "asciifolding", "lowercase"]
+    )
+    return lb_analyzer, lb_filter
+
+
 idx = Index('libreborme')
-idx.settings(
-    number_of_shards=1,
-    number_of_replicas=0
-)
+# lb_analyzer, lb_filter = configure_index(idx)
 
 
 @idx.doc_type
@@ -14,21 +46,14 @@ class CompanyDocument(DocType):
 
     class Meta:
         model = Company
-
-        fields = [
-            'slug',
-        ]
+        fields = ['slug']
 
 
 @idx.doc_type
 class PersonDocument(DocType):
     class Meta:
         model = Person
-
-        fields = [
-            'name',
-            'slug',
-        ]
+        fields = ['name', 'slug']
 
 
 class ElasticSearchPaginatorListException(Exception):
@@ -64,3 +89,34 @@ class ElasticSearchPaginatorList(object):
         self.kwargs['from_'] = key.start
         self.kwargs['size'] = key.stop - key.start
         return self.client.search(*self.args, **self.kwargs)['hits']['hits']
+
+
+def es_search_paginator(doc_type, text):
+    """Perform an ElasticSearch query and return a paginable object.
+
+    For full details of accepted parameters in ES query:
+    https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
+
+    :param doc_type: ES document name ('person_document' or 'company_document')
+    :param query: Text to search
+    :type doc_type: str
+    :type query: str
+    :rtype: (ElasticSearchPaginatorList)
+    """
+    es_query = {
+        "query": {
+            "query_string": {
+                "default_field": "name",
+                "default_operator": "AND",
+                "query": text,
+                "allow_leading_wildcard": "false",
+                "fuzziness": 0
+            }
+        }
+    }
+    es = elasticsearch.Elasticsearch(settings.ELASTICSEARCH_URI)
+    results = ElasticSearchPaginatorList(
+            es, body=es_query,
+            index='libreborme', doc_type=doc_type)
+
+    return results

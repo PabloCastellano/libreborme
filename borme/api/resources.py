@@ -4,12 +4,10 @@ from django.core.paginator import Paginator
 from tastypie.resources import ModelResource
 from tastypie.throttle import CacheThrottle
 from tastypie.utils import trailing_slash
-from borme.documents import ElasticSearchPaginatorList
+from borme.documents import es_search_paginator
 from borme.models import Company, Person
 # from borme.utils.postgres import search_fts
 from .serializers import LibreBormeJSONSerializer
-
-import elasticsearch
 
 
 # FIXME: fullname
@@ -46,12 +44,8 @@ class CompanyResource(ModelResource):
             # ...
             #    for result in page.object_list:
 
-            es_query = {'query': {'match': {'name': query}}}
-            es = elasticsearch.Elasticsearch(settings.ELASTICSEARCH_URI)
-            q_companies = ElasticSearchPaginatorList(
-                    es, body=es_query,
-                    index='libreborme', doc_type='company_document')
-            paginator = Paginator(q_companies, 20)
+            sqs = es_search_paginator('company_document', query)
+            paginator = Paginator(sqs, 20)
 
             try:
                 page = paginator.page(int(request.GET.get('page', 1)))
@@ -138,12 +132,8 @@ class PersonResource(ModelResource):
             # ...
             #    for result in page.object_list:
 
-            es_query = {'query': {'match': {'name': query}}}
-            es = elasticsearch.Elasticsearch(settings.ELASTICSEARCH_URI)
-            q_persons = ElasticSearchPaginatorList(
-                    es, body=es_query,
-                    index='libreborme', doc_type='person_document')
-            paginator = Paginator(q_persons, 20)
+            sqs = es_search_paginator('person_document', query)
+            paginator = Paginator(sqs, 20)
 
             try:
                 page = paginator.page(int(request.GET.get('page', 1)))

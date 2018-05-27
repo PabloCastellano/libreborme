@@ -12,7 +12,7 @@ from django.template.loader import get_template
 from django.conf import settings
 
 from .calendar import LibreBormeCalendar, LibreBormeAvailableCalendar
-from .documents import ElasticSearchPaginatorList
+from .documents import es_search_paginator
 from .forms import LBSearchForm
 from .mixins import CacheMixin
 from .models import Company, Person, Anuncio, Config, Borme
@@ -20,7 +20,6 @@ from .utils.postgres import estimate_count_fast
 
 import csv
 import datetime
-import elasticsearch
 
 
 def ajax_empresa_more(request, slug):
@@ -162,15 +161,8 @@ class BusquedaView(TemplateView):
             raw_query = self.request.GET['q']
             doc_type = self.request.GET.get('type', 'all')
 
-            es_query = {'query': {'match': {'name': raw_query}}}
-            es = elasticsearch.Elasticsearch(settings.ELASTICSEARCH_URI)
-
-            q_companies = ElasticSearchPaginatorList(
-                    es, body=es_query,
-                    index='libreborme', doc_type='company_document')
-            q_persons = ElasticSearchPaginatorList(
-                    es, body=es_query,
-                    index='libreborme', doc_type='person_document')
+            q_companies = es_search_paginator('company_document', raw_query)
+            q_persons = es_search_paginator('person_document', raw_query)
 
             context['query'] = raw_query
 
