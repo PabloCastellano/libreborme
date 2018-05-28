@@ -95,13 +95,21 @@ def es_search_paginator(doc_type, text):
     """Perform an ElasticSearch query and return a paginable object.
 
     For full details of accepted parameters in ES query:
-    https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
+    https://www.elastic.co/guide/en/elasticsearch/reference/5.6/query-dsl-match-query.html
+    https://www.elastic.co/guide/en/elasticsearch/reference/5.6/query-dsl-query-string-query.html
 
     :param doc_type: ES document name ('person_document' or 'company_document')
     :param query: Text to search
     :type doc_type: str
     :type query: str
     :rtype: (ElasticSearchPaginatorList)
+    """
+
+    # It is a better idea to use match query type because it doesn't go through
+    # a "query parsing" process". It does not support field name prefixes,
+    # wildcard characters, or other "advanced" features, but chances of
+    # failing are non existent.
+    # A parsed query will fail if it contains a colon or a curly brace
     """
     es_query = {
         "query": {
@@ -111,6 +119,18 @@ def es_search_paginator(doc_type, text):
                 "query": text,
                 "allow_leading_wildcard": "false",
                 "fuzziness": 0
+            }
+        }
+    }
+    """
+
+    es_query = {
+        "query": {
+            "match": {
+                "name": {
+                    "query": text,
+                    "operator": "AND"
+                }
             }
         }
     }
