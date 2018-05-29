@@ -1,22 +1,26 @@
+from django.conf import settings
 from django.conf.urls import url
 from django.core.paginator import Paginator
-from haystack.query import SearchQuerySet
 from tastypie.resources import ModelResource
 from tastypie.throttle import CacheThrottle
 from tastypie.utils import trailing_slash
+from borme.documents import es_search_paginator
 from borme.models import Company, Person
+# from borme.utils.postgres import search_fts
 from .serializers import LibreBormeJSONSerializer
 
 
 # FIXME: fullname
 class CompanyResource(ModelResource):
     class Meta:
+        excludes = ['document', 'nif']
         detail_allowed_methods = ['get']
         list_allowed_methods = []
         max_limit = 100
         queryset = Company.objects.all()
         resource_name = 'empresa'
         serializer = LibreBormeJSONSerializer(formats=['json'])
+        # 60 requests per hour ~= 1 request per minute
         throttle = CacheThrottle(throttle_at=60, timeframe=3600)
 
     def prepend_urls(self):
@@ -33,14 +37,23 @@ class CompanyResource(ModelResource):
         query = request.GET.get('q', '')
 
         if len(query) > 3:
-            sqs = SearchQuerySet().models(Company).load_all().auto_query(query)
+            # If you want to use postgres FTS, change to:
+            #
+            # sqs = search_fts(query, model=Company)
+            # paginator = Paginator(sqs, 20)
+            # ...
+            #    for result in page.object_list:
+
+            sqs = es_search_paginator('company_document', query)
             paginator = Paginator(sqs, 20)
 
             try:
                 page = paginator.page(int(request.GET.get('page', 1)))
 
-                for result in page.object_list:
-                    bundle = self.build_bundle(obj=result.object, request=request)
+                slugs = list(map(lambda x: x['_source']['slug'], page))
+                object_list = Company.objects.filter(slug__in=slugs)
+                for result in object_list:
+                    bundle = self.build_bundle(obj=result, request=request)
                     bundle = self.search_dehydrate(bundle)
                     objects.append(bundle)
             except:
@@ -86,6 +99,7 @@ class CompanyResource(ModelResource):
 
 class PersonResource(ModelResource):
     class Meta:
+        excludes = ['document']
         detail_allowed_methods = ['get']
         list_allowed_methods = []
         max_limit = 100
@@ -111,14 +125,23 @@ class PersonResource(ModelResource):
         query = request.GET.get('q', '')
 
         if len(query) > 3:
-            sqs = SearchQuerySet().models(Person).load_all().auto_query(query)
+            # If you want to use postgres FTS, change to:
+            #
+            # sqs = search_fts(query, model=Person)
+            # paginator = Paginator(sqs, 20)
+            # ...
+            #    for result in page.object_list:
+
+            sqs = es_search_paginator('person_document', query)
             paginator = Paginator(sqs, 20)
 
             try:
                 page = paginator.page(int(request.GET.get('page', 1)))
 
-                for result in page.object_list:
-                    bundle = self.build_bundle(obj=result.object, request=request)
+                slugs = list(map(lambda x: x['_source']['slug'], page))
+                object_list = Person.objects.filter(slug__in=slugs)
+                for result in object_list:
+                    bundle = self.build_bundle(obj=result, request=request)
                     bundle = self.search_dehydrate(bundle)
                     objects.append(bundle)
             except:

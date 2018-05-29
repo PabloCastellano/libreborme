@@ -9,7 +9,6 @@ class LibreBormeJSONSerializer(Serializer):
 
         data = self.to_simple(data, options)
 
-        # hstore
         if 'in_companies' in data:
             data['in_companies'] = eval(data['in_companies'])
         if 'in_bormes' in data:
@@ -22,5 +21,11 @@ class LibreBormeJSONSerializer(Serializer):
             data['cargos_historial_p'] = eval(data['cargos_historial_p'])
         if 'cargos_historial_c' in data:
             data['cargos_historial_c'] = eval(data['cargos_historial_c'])
+        if 'cargos_actuales' in data:
+            data['cargos_actuales'] = eval(data['cargos_actuales'])
+        if 'cargos_historial' in data:
+            data['cargos_historial'] = eval(data['cargos_historial'])
+        if 'anuncios' in data:
+            data['anuncios'] = eval(data['anuncios'])
 
         return json.dumps(data, cls=DjangoJSONEncoder, sort_keys=True)

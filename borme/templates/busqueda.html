@@ -2,17 +2,54 @@
 
 {% load utils %}
 
-{% block content %}
+{% block title %}{% if query %}Resultados de la búsqueda {{ query|upper }} | LibreBORME{% else %}Búsqueda avanzada | LibreBORME{% endif %}{% endblock %}
 
-{% if query %}
+{% block content %}
+    {% if query %}
     <h1>Resultados de la búsqueda «{{ query }}»</h1>
 
-    <p><strong>{{ paginator_companies.count }}</strong> empresas y <strong>{{ paginator_persons.count }}</strong> personas.</p>
+    <form class="form-horizontal" role="search" action="{% url "borme-search" %}" method="get">
+
+    <div class="form-group">
+      <div class="form-group">
+        <label for="searchtitle" class="col-sm-2 control-label">Nombre:</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="searchtitle" name="q" value="{{ query }}">
+        </div>
+      </div>
+
+      <input type="hidden" name="page" value="1">
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Tipo:</label>
+        <div class="col-sm-6">
+          <input type="radio" name="type" value="all" {% if form.cleaned_data.type == 'all' %}checked{% endif %}>Todos
+          <input type="radio" name="type" value="company" {% if form.cleaned_data.type == 'company' %}checked{% endif %}> Empresa
+          <input type="radio" name="type" value="person" {% if form.cleaned_data.type == 'person' %}checked{% endif %}> Persona
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"> Buscar</i></button>
+        </div>
+      </div>
+    </div>
+    </form>
+
+    <p>Se encontraron {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company'%} <strong>{{ count_companies }}</strong> empresa{{ count_companies|pluralize }}{% endif %}{% if form.cleaned_data.type == 'all' %} y {% endif %}{% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'person'%}<strong>{{ count_persons }}</strong> persona{{ count_persons|pluralize }}{% endif %}.</p>
+
+    {% if suggestion %}
+    <h3>Sugerencias:</h3>
+        {{ suggestion }}
+    {% endif %}
+
+    {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company' %}
     <h2>Empresas:</h2>
         <div class="search-companies">
-            {% if page_companies.object_list %}
-                {% for cs in page_companies.object_list|rows_distributed:3 %}
-                    {% if page_companies.object_list|length > 5 %}
+            {% if results_companies %}
+                {% for cs in results_companies|rows_distributed:3 %}
+                    {% if results_companies|length > 5 %}
                         <div class="col-md-4">
                     {% endif %}
                     <ul>
@@ -20,7 +57,7 @@
                         <li><a href="{% url "borme-empresa" company.slug %}">{{ company.name }}</a></li>
                     {% endfor %}
                     </ul>
-                    {% if page_companies.object_list|length > 5 %}
+                    {% if results_companies|length > 5 %}
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -30,42 +67,51 @@
         </div>
 
 
-    {% if page_companies.object_list %}
+    {% if results_companies %}
     <nav>
       <ul class="pagination">
         {% if page_companies.has_previous %}
         <li>
-          <a href="?q={{ query }}&page={{ page_companies.previous_page_number }}" aria-label="Previous">
+          <a href="?q={{ query }}&page={{ page_companies.previous_page_number }}&type=company" rel="nofollow" aria-label="Previous">
+        {% else %}
+        <li class="disabled">
+          <a href="#" rel="nofollow" aria-label="Previous">
+        {% endif %}
             <span aria-hidden="true">&laquo; Anterior</span>
           </a>
         </li>
-        {% endif %}
-        {% for num in page_companies.myrange %}
+
+        {% for num in range_companies %}
             {% if num == page_companies.number %}
-            <li class="active"><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
+            <li class="active"><a href="?q={{ query }}&page={{ num }}&type=company" rel="nofollow">{{ num }}</a></li>
             {% else %}
-            <li><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
+            <li><a href="?q={{ query }}&page={{ num }}&type=company" rel="nofollow">{{ num }}</a></li>
             {% endif %}
         {% empty %}
-            <li class="active"><a href="?q={{ query }}&page=1">1</a></li>
+            <li class="active"><a href="?q={{ query }}&page=1&type=company" rel="nofollow">1</a></li>
         {% endfor %}
 
         {% if page_companies.has_next %}
         <li>
-          <a href="?q={{ query }}&page={{ page_companies.next_page_number }}" aria-label="Next">
+          <a href="?q={{ query }}&page={{ page_companies.next_page_number }}&type=company" rel="nofollow" aria-label="Next">
+        {% else %}
+        <li class="disabled">
+          <a href="#" rel="nofollow" aria-label="Next">
+        {% endif %}
             <span aria-hidden="true">Siguiente &raquo;</span>
           </a>
         </li>
-        {% endif %}
       </ul>
     </nav>
     {% endif %}
+    {% endif %}
 
+    {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'person' %}
     <h2>Personas:</h2>
         <div class="search-persons">
-            {% if page_persons.object_list %}
-                {% for ps in page_persons.object_list|rows_distributed:3 %}
-                    {% if page_persons.object_list|length > 5 %}
+            {% if results_persons %}
+                {% for ps in results_persons|rows_distributed:3 %}
+                    {% if results_persons|length > 5 %}
                         <div class="col-md-4">
                     {% endif %}
                     <ul>
@@ -73,7 +119,7 @@
                         <li><a href="{% url "borme-persona" person.slug %}">{{ person.name|title }}</a></li>
                     {% endfor %}
                     </ul>
-                    {% if page_persons.object_list|length > 5 %}
+                    {% if results_persons|length > 5 %}
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -82,35 +128,44 @@
             {% endif %}
         </div>
 
-    {% if page_persons.object_list %}
+    {% if results_persons %}
     <nav>
       <ul class="pagination">
         {% if page_persons.has_previous %}
         <li>
-          <a href="?q={{ query }}&page={{ page_persons.previous_page_number }}" aria-label="Previous">
+          <a href="?q={{ query }}&page={{ page_persons.previous_page_number }}&type=person" rel="nofollow" aria-label="Previous">
+        {% else %}
+        <li class="disabled">
+          <a href="#" rel="nofollow" aria-label="Previous">
+        {% endif %}
             <span aria-hidden="true">&laquo; Anterior</span>
           </a>
         </li>
-        {% endif %}
-        {% for num in page_persons.myrange %}
+
+        {% for num in range_persons %}
             {% if num == page_persons.number %}
-            <li class="active"><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
+            <li class="active"><a href="?q={{ query }}&page={{ num }}&type=person" rel="nofollow">{{ num }}</a></li>
             {% else %}
-            <li><a href="?q={{ query }}&page={{ num }}">{{ num }}</a></li>
+            <li><a href="?q={{ query }}&page={{ num }}&type=person" rel="nofollow">{{ num }}</a></li>
             {% endif %}
         {% empty %}
-            <li class="active"><a href="?q={{ query }}&page=1">1</a></li>
+            <li class="active"><a href="?q={{ query }}&page=1&type=person" rel="nofollow">1</a></li>
         {% endfor %}
 
         {% if page_persons.has_next %}
         <li>
-          <a href="?q={{ query }}&page={{ page_persons.next_page_number }}" aria-label="Next">
+          <a href="?q={{ query }}&page={{ page_persons.next_page_number }}&type=person" rel="nofollow" aria-label="Next">
+        {% else %}
+        <li class="disabled">
+          <a href="#" rel="nofollow" aria-label="Next">
+        {% endif %}
             <span aria-hidden="true">Siguiente &raquo;</span>
           </a>
         </li>
-        {% endif %}
+
       </ul>
     </nav>
+    {% endif %}
     {% endif %}
 
 {% else %}
@@ -132,12 +187,13 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">Tipo:</label>
           <div class="col-sm-6">
-            <input type="radio" name="type" value="all" checked>Todos
-            <input type="radio" name="type" value="company"> Empresa
-            <input type="radio" name="type" value="person"> Persona
+            <input type="radio" name="type" value="all" {% if form.cleaned_data.type == 'all' %}checked{% endif %}>Todos
+            <input type="radio" name="type" value="company" {% if form.cleaned_data.type == 'company' %}checked{% endif %}> Empresa
+            <input type="radio" name="type" value="person" {% if form.cleaned_data.type == 'person' %}checked{% endif %}> Persona
           </div>
         </div>
 
+{% comment %}
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
             <div class="checkbox">
@@ -167,6 +223,7 @@
             </select>
           </div>
         </div>
+{% endcomment %}
 
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">

@@ -1,43 +1,35 @@
-branches:
-  only:
-    - master
-    - develop
-
 language: python
+python:
+  - "3.4"
+  - "3.6"
+
+addons:
+  postgresql: "9.4"
 
 services:
-    - postgresql
-    - elasticsearch
-
-python:
-  - "3.5"
-  - "3.4"
+  - postgresql
 
 env:
- - DJANGO_VERSION=1.9.12
- - DJANGO_VERSION=1.10.4
+  - DJANGO_VERSION=2.0.4 ES_VERSION=5.6.9 ES_DOWNLOAD_URL=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz
 
 install:
-#  - pip install coveralls
-  - pip install -r requirements/test.txt
-  - pip install django-extensions
+  - wget ${ES_DOWNLOAD_URL}
+  - tar -xzf elasticsearch-${ES_VERSION}.tar.gz
+  - ./elasticsearch-${ES_VERSION}/bin/elasticsearch &
+  - pip install coveralls
+  - pip install -r requirements/development.txt
   - pip install -q Django==$DJANGO_VERSION
   - python setup.py -q develop
-  - mkdir -p ~/.bormes/pdf/2015/02/10
-  - wget https://www.boe.es/borme/dias/2015/02/10/pdfs/BORME-A-2015-27-10.pdf -O ~/.bormes/pdf/2015/02/10/BORME-A-2015-27-10.pdf
 
 before_script:
-  - sleep 10  # Elasticsearch
-  - psql template1 -c 'CREATE EXTENSION hstore;'
   - psql -U postgres -c 'CREATE DATABASE libreborme;'
   - psql -U postgres -c "CREATE USER libreborme WITH PASSWORD 'password';"
   - psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE libreborme TO libreborme;"
   - ./manage.py migrate --noinput
 
-# command to run tests, e.g. python setup.py test
-#script:
-#  - coverage run --source=libreborme setup.py test
-script: "./runtests.sh"
+script:
+  - wget -q --waitretry=1 --retry-connrefused -T 10 -O - http://127.0.0.1:9200
+  - ./setup.py test
 
-#after_success:
-#  - coveralls
+after_success:
+  - coveralls

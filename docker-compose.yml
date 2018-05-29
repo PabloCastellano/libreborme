@@ -1,0 +1,33 @@
+---
+version: "3"
+
+services:
+  db:
+    image: postgres:9.6
+    volumes:
+      - db-data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: libreborme
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
+    ports:
+      - "9200:9200"
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+
+#  django:
+#    build: docker/Dockerfile
+#    ports:
+#     - "8000:8000"
+#    links:
+#     - db
+#    environment:
+#     - ENV_TYPE: development
+
+volumes:
+  db-data:
+  es-data:

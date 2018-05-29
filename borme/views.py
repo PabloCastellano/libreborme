@@ -2,26 +2,24 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.decorators.cache import cache_page
 
-from django.template import RequestContext
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.views.generic import TemplateView
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator, EmptyPage
 from django.http import Http404, HttpResponse
 from django.utils.safestring import mark_safe
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.template.loader import get_template
 from django.conf import settings
 
-from .forms import LBSearchForm
-from .models import Company, Person, Anuncio, Config, Borme
 from .calendar import LibreBormeCalendar, LibreBormeAvailableCalendar
-from .utils import estimate_count_fast
+from .documents import es_search_paginator
+from .forms import LBSearchForm
 from .mixins import CacheMixin
+from .models import Company, Person, Anuncio, Config, Borme
+from .utils.postgres import estimate_count_fast
 
-from haystack.views import SearchView
-
-import datetime
 import csv
+import datetime
 
 
 def ajax_empresa_more(request, slug):
@@ -100,16 +98,21 @@ def generate_company_csv_cargos_actual(context, slug):
 @cache_page(3600)
 def generate_company_csv_cargos_historial(context, slug):
     company = Company.objects.get(slug=slug)
-    filename = 'cargos_historial_%s_%s' % (slug, datetime.date.today().isoformat())
+    filename = "cargos_historial_{}_{}" \
+               .format(slug, datetime.date.today().isoformat())
+    content_disposition = 'attachment; filename="%s.csv"' % filename
+
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="%s.csv"' % filename
+    response['Content-Disposition'] = content_disposition
 
     writer = csv.writer(response)
     writer.writerow(['Cargo', 'Nombre', 'Desde', 'Hasta', 'Tipo'])
     for cargo in company.get_cargos_historial(limit=0)[0]:
         date_from = cargo.get('date_from', '')
         name = cargo['name'] if cargo['type'] == 'company' else cargo['name'].title()
-        writer.writerow([cargo['title'], name, date_from, cargo['date_to'], cargo['type']])
+        writer.writerow(
+            [cargo['title'], name, date_from, cargo['date_to'], cargo['type']]
+        )
 
     return response
 
@@ -118,151 +121,101 @@ class HomeView(CacheMixin, TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
+        """
+        Using .count() in PostgreSQL kills performance,
+        so we use a method to estimate the number of rows in the tables
+        """
         context = super(HomeView, self).get_context_data(**kwargs)
 
-        # Use estimate_count_fast() due to .count() being performance-killer in PostgreSQL
+        random_companies = Company.objects.all().order_by('-date_updated')[:10]
+        random_persons = Person.objects.all().order_by('-date_updated')[:10]
         last_modified = Config.objects.first().last_modified.date()
-        context['total_companies'] = estimate_count_fast('borme_company')
-        context['total_persons'] = estimate_count_fast('borme_person')
-        context['total_anuncios'] = estimate_count_fast('borme_anuncio')
-        #context['random_companies'] = Company.objects.all().order_by('?')[:10]
-        #context['random_persons'] = Person.objects.all().order_by('?')[:10]
-        #context['last_modified'] = Config.objects.first().last_modified
-        context['random_companies'] = Company.objects.all().order_by('-date_updated')[:10]
-        context['random_persons'] = Person.objects.all().order_by('-date_updated')[:10]
-        #context['random_companies'] = Company.objects.filter(date_updated=last_modified).order_by('?')[:10]
-        #context['random_persons'] = Person.objects.filter(date_updated=last_modified).order_by('?')[:10]
-        context['last_modified'] = last_modified
-
         lb_calendar = LibreBormeCalendar().formatmonth(datetime.date.today())
-        context['calendar'] = mark_safe(lb_calendar)
+
+        context.update({
+            "total_companies": estimate_count_fast('borme_company'),
+            "total_persons": estimate_count_fast('borme_person'),
+            "total_anuncios": estimate_count_fast('borme_anuncio'),
+            "random_companies": random_companies,
+            "random_persons": random_persons,
+            "last_modified": last_modified,
+            "calendar": mark_safe(lb_calendar),
+        })
+
         return context
 
 
 # TODO:  if 'q' not in request.GET
-class LBSearchView(CacheMixin, SearchView):
-    template = "search/search.html"
-
-    def __init__(self, template=None, load_all=True, form_class=LBSearchForm, searchqueryset=None, results_per_page=25):
-        super(LBSearchView, self).__init__(template, load_all, form_class, searchqueryset, results_per_page)
-
-    def create_response(self):
-        """
-        Generates the actual HttpResponse to send back to the user.
-        """
-        paginator_companies = Paginator(self.results['Company'], self.results_per_page)
-        paginator_persons = Paginator(self.results['Person'], self.results_per_page)
-        page_no = int(self.request.GET.get('page', 1))
-
-        context = {
-            'query': self.query,
-            'form': self.form,
-            'suggestion': None,
-        }
-
-        try:
-            page_companies = paginator_companies.page(page_no)
-        except PageNotAnInteger:
-            page_companies = paginator_companies.page(1)
-            context['page_no'] = 1
-        except EmptyPage:
-            page_companies = paginator_companies.page(paginator_companies.num_pages)
-        finally:
-            context['paginator_companies'] = paginator_companies
-            pagerange = list(paginator_companies.page_range[:3]) + list(paginator_companies.page_range[-3:])
-            pagerange.append(page_companies.number)
-            pagerange = list(set(pagerange))
-            pagerange.sort()
-            if len(pagerange) == 1:
-                pagerange = []
-            page_companies.myrange = pagerange
-            context['page_companies'] = page_companies
-
-        try:
-            page_persons = paginator_persons.page(page_no)
-        except PageNotAnInteger:
-            page_persons = paginator_persons.page(1)
-            context['page_no'] = 1
-        except EmptyPage:
-            page_persons = paginator_persons.page(paginator_persons.num_pages)
-        finally:
-            context['paginator_persons'] = paginator_persons
-            pagerange = list(paginator_persons.page_range[:3]) + list(paginator_persons.page_range[-3:])
-            pagerange.append(page_persons.number)
-            pagerange = list(set(pagerange))
-            pagerange.sort()
-            if len(pagerange) == 1:
-                pagerange = []
-            page_persons.myrange = pagerange
-            context['page_persons'] = page_persons
-
-        if self.results and hasattr(self.results, 'query') and self.results.query.backend.include_spelling:
-            context['suggestion'] = self.form.get_suggestion()
-
-        context['search_view'] = 1
-        context.update(self.extra_context())
-        return render(self.request, self.template, context)
-
-
-class BusquedaView(CacheMixin, TemplateView):
+class BusquedaView(TemplateView):
     template_name = "busqueda.html"
 
     def get_context_data(self, **kwargs):
         context = super(BusquedaView, self).get_context_data(**kwargs)
-        if 'q' in self.request.GET:
-            page = self.request.GET.get('page', 1)
-            q_companies = Company.objects.filter(name__icontains=self.request.GET['q'])
-            q_companies = list(q_companies)  # Force
-            companies = Paginator(q_companies, 25)
-            q_persons = Person.objects.filter(name__icontains=self.request.GET['q'])
-            q_persons = list(q_persons)  # Force
-            persons = Paginator(q_persons, 25)
+        page = self.request.GET.get('page', 1)
+        form = LBSearchForm(self.request.GET)
+        context['page'] = page
+        context['form'] = form
+        context['search_view'] = 1
 
-            context['page'] = page
-            context['query'] = self.request.GET['q']
+        if 'q' in self.request.GET and form.is_valid():
+            raw_query = self.request.GET['q']
+            doc_type = self.request.GET.get('type', 'all')
 
-            try:
-                pg_companies = companies.page(page)
-            except PageNotAnInteger:
-                # If page is not an integer, deliver first page.
-                pg_companies = companies.page(1)
-                context['page'] = 1
-            except EmptyPage:
-                # If page is out of range (e.g. 9999), deliver last page of results.
-                pg_companies = companies.page(companies.num_pages)
-            finally:
-                context['page_companies'] = pg_companies
-                context['paginator_companies'] = companies
-                pagerange = list(companies.page_range[:3]) + list(companies.page_range[-3:])
-                pagerange.append(pg_companies.number)
-                pagerange = list(set(pagerange))
-                pagerange.sort()
-                if len(pagerange) == 1:
-                    pagerange = []
-                context['page_companies'].myrange = pagerange
+            q_companies = es_search_paginator('company_document', raw_query)
+            q_persons = es_search_paginator('person_document', raw_query)
 
-            try:
-                pg_persons = persons.page(page)
-            except PageNotAnInteger:
-                pg_persons = persons.page(1)
-                context['page'] = 1
-            except EmptyPage:
-                pg_persons = persons.page(persons.num_pages)
-            finally:
-                context['page_persons'] = pg_persons
-                context['paginator_persons'] = persons
-                pagerange = list(persons.page_range[:3]) + list(persons.page_range[-3:])
-                pagerange.append(pg_persons.number)
-                pagerange = list(set(pagerange))
-                pagerange.sort()
-                if len(pagerange) == 1:
-                    pagerange = []
-                context['page_persons'].myrange = pagerange
+            context['query'] = raw_query
+
+            if doc_type in ('all', 'company'):
+                try:
+                    companies = Paginator(q_companies, 25)
+                    pg_companies = companies.page(page)
+                except EmptyPage:
+                    # If page is out of range (e.g. 9999), deliver last page of results.
+                    pg_companies = companies.page(companies.num_pages)
+                finally:
+                    context['page_companies'] = pg_companies
+                    context['results_companies'] = list(map(lambda x: x['_source'], pg_companies))
+                    context['count_companies'] = q_companies.count()
+                    pagerange = list(companies.page_range[:3])
+                    last_page = min(companies.page_range.stop - 1, 400)
+                    if last_page == 400:
+                        pagerange += [388, 389, 400]
+                    else:
+                        pagerange += list(companies.page_range[-3:])
+                    pagerange.append(pg_companies.number)
+                    pagerange = list(set(pagerange))
+                    pagerange.sort()
+                    if len(pagerange) == 1:
+                        pagerange = []
+                    context['range_companies'] = pagerange
+
+            if doc_type in ('all', 'person'):
+                try:
+                    persons = Paginator(q_persons, 25)
+                    pg_persons = persons.page(page)
+                except EmptyPage:
+                    pg_persons = persons.page(persons.num_pages)
+                finally:
+                    context['page_persons'] = pg_persons
+                    context['results_persons'] = list(map(lambda x: x['_source'], pg_persons))
+                    context['count_persons'] = q_persons.count()
+                    pagerange = list(persons.page_range[:3])
+                    last_page = min(persons.page_range.stop - 1, 400)
+                    if last_page == 400:
+                        pagerange += [388, 389, 400]
+                    else:
+                        pagerange += list(persons.page_range[-3:])
+                    pagerange.append(pg_persons.number)
+                    pagerange = list(set(pagerange))
+                    pagerange.sort()
+                    if len(pagerange) == 1:
+                        pagerange = []
+                    context['range_persons'] = pagerange
 
         else:
             context['page_companies'] = []
             context['page_persons'] = []
-            context['page'] = 1
 
         return context
 
@@ -299,7 +252,9 @@ class BormeView(CacheMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(BormeView, self).get_context_data(**kwargs)
 
-        anuncios = Anuncio.objects.filter(id_anuncio__gte=self.borme.from_reg, id_anuncio__lte=self.borme.until_reg, year=self.borme.date.year)
+        anuncios = Anuncio.objects.filter(id_anuncio__gte=self.borme.from_reg,
+                                          id_anuncio__lte=self.borme.until_reg,
+                                          year=self.borme.date.year)
         from collections import Counter
         resumen_dia = Counter()
         for anuncio in anuncios:
@@ -310,9 +265,11 @@ class BormeView(CacheMixin, DetailView):
         bormes_dia.remove(self.borme)
         bormes_dia.sort(key=lambda b: b.province)
 
-        context['bormes_dia'] = bormes_dia
-        context['total_anuncios'] = self.borme.until_reg - self.borme.from_reg + 1
-        context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
+        context.update({
+            "bormes_dia": bormes_dia,
+            "total_anuncios": self.borme.until_reg - self.borme.from_reg + 1,
+            "resumen_dia": sorted(resumen_dia.items(), key=lambda t: t[0]),
+        })
 
         return context
 
@@ -331,6 +288,7 @@ class BormeDateView(CacheMixin, TemplateView):
         except ValueError:
             redirect_today = True
 
+        # Redirect to today's date when date is not valid
         if redirect_today:
             return redirect('borme-fecha', date=datetime.date.today().isoformat())
 
@@ -339,13 +297,16 @@ class BormeDateView(CacheMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BormeDateView, self).get_context_data(**kwargs)
 
-        lb_calendar = LibreBormeCalendar().formatmonth(self.date)  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
+        # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
+        lb_calendar = LibreBormeCalendar().formatmonth(self.date)
 
         bormes = Borme.objects.filter(date=self.date).order_by('province')
         if len(bormes) > 0:
             from_reg = min([b.from_reg for b in bormes])
             until_reg = max([b.until_reg for b in bormes])
-            anuncios = Anuncio.objects.filter(id_anuncio__gte=from_reg, id_anuncio__lte=until_reg, year=self.date.year)
+            anuncios = Anuncio.objects.filter(id_anuncio__gte=from_reg,
+                                              id_anuncio__lte=until_reg,
+                                              year=self.date.year)
 
             # FIXME: performance-killer? Guardar resultados en el modelo Borme
             from collections import Counter
@@ -356,13 +317,16 @@ class BormeDateView(CacheMixin, TemplateView):
             context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
 
         # TODO: Guardar la fecha en el anuncio?
-        context['calendar'] = mark_safe(lb_calendar)
-        context['bormes'] = bormes
-        context['date'] = self.date
         next_day = self.date + datetime.timedelta(days=1)
         prev_day = self.date - datetime.timedelta(days=1)
-        context['next_day'] = next_day.isoformat()
-        context['prev_day'] = prev_day.isoformat()
+
+        context.update({
+            "calendar": mark_safe(lb_calendar),
+            "bormes": bormes,
+            "date": self.date,
+            "next_day": next_day.isoformat(),
+            "prev_day": prev_day.isoformat(),
+        })
 
         return context
 
@@ -371,8 +335,11 @@ class BormeProvinciaView(CacheMixin, TemplateView):
     template_name = 'borme/borme_provincia.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if not 'year' in self.kwargs:
-            return redirect('borme-provincia-fecha', provincia=self.kwargs['provincia'], year=datetime.date.today().year)
+        if 'year' not in self.kwargs:
+            this_year = datetime.date.today().year
+            return redirect('borme-provincia-fecha',
+                            provincia=self.kwargs['provincia'],
+                            year=this_year)
 
         return super(BormeProvinciaView, self).dispatch(request, *args, **kwargs)
 
@@ -380,17 +347,23 @@ class BormeProvinciaView(CacheMixin, TemplateView):
         context = super(BormeProvinciaView, self).get_context_data(**kwargs)
 
         year = int(self.kwargs['year'])
-        bormes = Borme.objects.filter(date__gte=datetime.date(year, 1, 1), date__lte=datetime.date(year, 12, 31), province=self.kwargs['provincia'])
-        lb_calendar = LibreBormeAvailableCalendar().formatyear(year, bormes)  # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
+        bormes = Borme.objects.filter(date__gte=datetime.date(year, 1, 1),
+                                      date__lte=datetime.date(year, 12, 31),
+                                      province=self.kwargs['provincia'])
+
+        # TODO: LocaleHTMLCalendar(firstweekday=0, locale=None)
+        lb_calendar = LibreBormeAvailableCalendar().formatyear(year, bormes)
 
         if len(bormes) > 0:
             # FIXME: No se puede hacer minimo y maximo. Hacer where in
-            #from_reg = min([b.from_reg for b in bormes])
-            #until_reg = max([b.until_reg for b in bormes])
+            # from_reg = min([b.from_reg for b in bormes])
+            # until_reg = max([b.until_reg for b in bormes])
             from_reg = bormes[0].from_reg
             until_reg = bormes[0].until_reg
 
-            anuncios = Anuncio.objects.filter(id_anuncio__gte=from_reg, id_anuncio__lte=until_reg, year=year)
+            anuncios = Anuncio.objects.filter(id_anuncio__gte=from_reg,
+                                              id_anuncio__lte=until_reg,
+                                              year=year)
 
             # FIXME: performance-killer. Guardar resultados en el modelo Borme
             from collections import Counter
@@ -400,8 +373,10 @@ class BormeProvinciaView(CacheMixin, TemplateView):
 
             context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
 
-        context['calendar'] = mark_safe(lb_calendar)
-        context['bormes'] = bormes
+        context.update({
+            "calendar": mark_safe(lb_calendar),
+            "bormes": bormes,
+        })
 
         return context
 
@@ -432,9 +407,12 @@ class CompanyView(CacheMixin, DetailView):
             if cargo['name'] not in context['companies']:
                 context['companies'].append(cargo['name'])
 
-        context['companies'] = sorted(list(set(context['companies'])))
-        context['persons'] = sorted(list(set(context['persons'])))
-        context['activity'] = 'Activa' if self.company.is_active else 'Inactiva'
+        context.update({
+            "companies": sorted(list(set(context['companies']))),
+            "persons": sorted(list(set(context['persons']))),
+            "activity": 'Activa' if self.company.is_active else 'Inactiva',
+        })
+
         return context
 
 
@@ -451,6 +429,6 @@ class PersonView(CacheMixin, DetailView):
 
 
 class CompanyProvinceListView(CacheMixin, ListView):
-    #model = Company
+    # model = Company
     context_object_name = 'companies'
-    #queryset = Book.objects.filter(province==X).order_by('-name')
+    # queryset = Book.objects.filter(province==X).order_by('-name')

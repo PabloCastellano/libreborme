@@ -2,8 +2,13 @@
 *~
 
 /db.sqlite3
-/.venv
+/.coverage
+/.eggs
 /.idea
 /.ropeproject
+/.venv
 
+/build
+/htmlcov
+/libreborme.egg-info/
 /site

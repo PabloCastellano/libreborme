@@ -19,7 +19,7 @@ function moreData(urlData, idPagePanel, idTable) {
     AjaxRequest(urlData, function (res) {
         removeElementId(idPagePanel);
         $("#"+idTable).append(res.responseText);
-    }, "post");
+    }, "post", null);
 }
 
 function removeElementId(elemId) {
@@ -28,7 +28,7 @@ function removeElementId(elemId) {
 }
 
 // AJAX
-function AjaxRequest(url, callback, method) {
+function AjaxRequest(url, callback, method, params) {
     var req = new XMLHttpRequest();
     req.onreadystatechange = function () {
         if (req.readyState != 4) return;
@@ -38,5 +38,5 @@ function AjaxRequest(url, callback, method) {
     req.open(method, url, true);
     var csrftoken = $.cookie('csrftoken');
     if (csrftoken) req.setRequestHeader("X-CSRFToken", csrftoken);
-    req.send(null);
+    req.send(params);
 }

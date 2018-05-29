@@ -30,7 +30,7 @@ Búsqueda
 - API (Persona): https://libreborme.net/borme/api/v1/persona/search/?q=**xxx**&page=**1**
 - Web (Empresa): https://libreborme.net/borme/search/?q=**xxx**&page=**1**&type=**company**
 - API (Empresa): https://libreborme.net/borme/api/v1/empresa/search/?q=**xxx**&page=**1**
-as respuestas se proporcionan en formato JSON y 
+as respuestas se proporcionan en formato JSON y
 
 Ejemplos
 --------
@@ -78,7 +78,7 @@ $ curl -s "https://libreborme.net/borme/api/v1/persona/search/?q=Rodrigo+Rato&pa
 ```
 
 Como vemos, aparecen tres aunque todo apunta a que es la misma persona. Esto es debido a que el Registro Mercantil Central no da un identificador único por persona y publica
-muchos datos de forma no estandarizada. 
+muchos datos de forma no estandarizada.
 
 
 Consultar los datos de la persona "Rodrigo de Rato Figaredo" ([enlace](https://libreborme.net/borme/api/v1/persona/de-rato-figaredo-rodrigo/)):
@@ -112,7 +112,7 @@ $ curl -s "https://libreborme.net/borme/api/v1/persona/de-rato-figaredo-rodrigo/
     "in_bormes": [
         {
             "cve": "BORME-A-2009-11-28",
-            "url": "http://boe.es/borme/dias/2009/01/19/pdfs/BORME-A-2009-11-28.pdf"
+            "url": "https://boe.es/borme/dias/2009/01/19/pdfs/BORME-A-2009-11-28.pdf"
         },
         [...]
     ],

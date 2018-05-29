@@ -14,10 +14,9 @@ Instalación de las dependencias:
 
 Configuración de PostgreSQL:
 
-Creamos un usuario y una base de datos para LibreBORME. Previamente tenemos que activar la extensión "hstore":
+Creamos un usuario y una base de datos para LibreBORME:
 
     sudo su postgres
-    psql template1 -c 'CREATE EXTENSION hstore;'
     psql -U postgres -c 'CREATE DATABASE libreborme;'
     psql -U postgres -c "CREATE USER libreborme WITH PASSWORD 'password';"
     psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE libreborme TO libreborme;"
@@ -102,32 +101,32 @@ con el siguiente contenido:
 
     server {
       listen 80;
-      
+
       server_name libreborme.net;
-      
+
       access_log /var/log/nginx/libreborme.net.access.log;
       error_log /var/log/nginx/libreborme.net.error.log;
-      
+
       root /var/www/libreborme/public_html;
       index index.html index.htm;
-      
+
       # set client body size #
       client_max_body_size 5M;
-      
+
       location @uwsgi {
         uwsgi_pass unix:/var/www/libreborme/libreborme.sock;
         include uwsgi_params;
         uwsgi_param HTTP_X_FORWARDED_PROTO https;
       }
-      
+
       location / {
         try_files $uri @uwsgi;
       }
-      
+
       location /static {
         alias /var/www/libreborme/mylibreborme/static/;
       }
-      
+
       location ~ /\.ht {
         deny all;
       }
@@ -148,7 +147,7 @@ siguiente contenido, al que le daremos también permisos de ejecución:
 
     #!/bin/sh
     . ~/.virtualenvs/libreborme/bin/activate
-    
+
     cd /var/www/libreborme && ./manage.py importbormetoday
 
 El archivo necesita permisos de ejecución:
@@ -159,7 +158,7 @@ Finalmente añadimos la tarea programada con la utilidad crontab y la configuram
 que se ejecute de lunes a viernes (1-5) a las 8:00 AM:
 
     crontab -e
-    
+
     # Añadir la siguiente línea al final del archivo:
     0 8 * * 1-5
 

@@ -1,34 +1,15 @@
 from django import forms
-from django.apps import apps
 from django.utils.translation import ugettext_lazy as _
-
-from haystack.forms import SearchForm
 
 CHOICES = (('all', 'Todos'), ('company', 'Empresas'), ('person', 'Personas'),)
 
 
-class LBSearchForm(SearchForm):
+class LBSearchForm(forms.Form):
+    q = forms.CharField(label=_('Nombre'), max_length=100)
+    type = forms.ChoiceField(choices=CHOICES, required=False, label=_('Tipo'),
+                             widget=forms.RadioSelect)
 
-    def __init__(self, *args, **kwargs):
-        super(LBSearchForm, self).__init__(*args, **kwargs)
-        self.fields['type'] = forms.ChoiceField(choices=CHOICES, required=False, label=_('Tipo'), widget=forms.RadioSelect)
-
-    def get_models(self):
-        """Return an alphabetical list of model classes in the index."""
-        search_models = []
-
-        if self.is_valid():
-            if 'type' not in self.cleaned_data or self.cleaned_data['type'] == 'all':
-                search_models.append(apps.get_model('borme', 'Company'))
-                search_models.append(apps.get_model('borme', 'Person'))
-            else:
-                search_models.append(apps.get_model('borme', self.cleaned_data['type'].capitalize()))
-
-        return search_models
-
-    def search(self):
-        sqs = super(LBSearchForm, self).search()
-        models = {'Person': [], 'Company': []}
-        for model in self.get_models():
-            models[model.__name__] = sqs.models(model)
-        return models
+    # 25 results per page * 400 pages = 10000 results
+    # Easy way to forbid searches that exceed default max results in
+    # ElasticSearch. See index.max_result_window property
+    page = forms.IntegerField(min_value=1, max_value=400)

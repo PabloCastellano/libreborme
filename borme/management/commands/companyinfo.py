@@ -1,22 +1,25 @@
 from django.core.management.base import BaseCommand, CommandError
 from borme.models import Company
 
+
 class Command(BaseCommand):
-    args = '<company name or slug ...>'
     help = 'Shows info about a company'
 
-    def handle(self, *args, **options):
-        for company_name in args:
-            try:
-                company = Company.objects.get(name=company_name)
-            except Company.DoesNotExist:
-                try:
-                    company = Company.objects.get(slug=company_name)
-                except Company.DoesNotExist:
-                   raise CommandError('Company "%s" does not exist' % company_name)
+    def add_arguments(self, parser):
+        parser.add_argument("company", type=str, help="company name or slug")
 
-            print 'Name:', company.name
-            print 'Slug:', company.slug
-            print 'Date:', company.date_creation
-            print 'Active:', company.is_active
-            print
+    def handle(self, *args, **options):
+        company = options["company"]
+        try:
+            result = Company.objects.get(name=company)
+        except Company.DoesNotExist:
+            try:
+                result = Company.objects.get(slug=company)
+            except Company.DoesNotExist:
+                raise CommandError('Company "%s" does not exist' % company)
+
+        print("Name: {}".format(result.name))
+        print("Slug: {}".format(result.slug))
+        print("Date: {}".format(result.date_creation))
+        print("Active: {}".format(result.is_active))
+        print()

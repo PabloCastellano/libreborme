@@ -1,48 +1,52 @@
-# -*- coding: utf-8 -*-
-
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.utils import timezone
-from borme.models import Config
 
-import time
 import logging
+import time
+
+from borme.models import Config
+# from borme.parser.postgres import psql_update_documents
+import borme.parser.importer
 
 from libreborme.utils import get_git_revision_short_hash
-from borme.importer import import_borme_json
-import borme.importer
 
 
 class Command(BaseCommand):
-    args = '<BORME files, ...>'
-    help = 'Import BORME JSON file'
+    help = 'Import BORME JSON file(s)'
+
+    def add_arguments(self, parser):
+        parser.add_argument('files', metavar='FILE', nargs='+', type=str)
 
     def handle(self, *args, **options):
-        verbosity = int(options['verbosity'])
-        if verbosity == 0:
-            borme.importer.logger.setLevel(logging.ERROR)
-        elif verbosity == 1:  # default
-            borme.importer.logger.setLevel(logging.INFO)
-        elif verbosity == 2:
-            borme.importer.logger.setLevel(logging.INFO)
-        elif verbosity > 2:
-            borme.importer.logger.setLevel(logging.DEBUG)
-        if verbosity > 2:
-            logging.getLogger().setLevel(logging.DEBUG)
+        self.set_verbosity(int(options['verbosity']))
         start_time = time.time()
 
-        if args:
-            for filename in args:
-                print(filename)
-                import_borme_json(filename)
+        for filename in options["files"]:
+            print(filename)
+            borme.parser.importer.from_json_file(filename)
 
-            config = Config.objects.first()
-            if config:
-                config.last_modified = timezone.now()
-            else:
-                config = Config(last_modified=timezone.now())
-            config.version = get_git_revision_short_hash()
-            config.save()
+        config = Config.objects.first()
+        if config:
+            config.last_modified = timezone.now()
+        else:
+            config = Config(last_modified=timezone.now())
+        config.version = get_git_revision_short_hash()
+        config.save()
+
+        # Update Full Text Search
+        # psql_update_documents()
 
         # Elapsed time
         elapsed_time = time.time() - start_time
         print('\nElapsed time: %.2f seconds' % elapsed_time)
+
+    def set_verbosity(self, verbosity):
+        if verbosity == 0:
+            borme.parser.importer.logger.setLevel(logging.ERROR)
+        elif verbosity == 1:  # default
+            borme.parser.importer.logger.setLevel(logging.INFO)
+        elif verbosity == 2:
+            borme.parser.importer.logger.setLevel(logging.INFO)
+        elif verbosity > 2:
+            borme.parser.importer.logger.setLevel(logging.DEBUG)
+            logging.getLogger().setLevel(logging.DEBUG)

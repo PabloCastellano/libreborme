@@ -50,7 +50,7 @@
 	    closeButton.click(function(e){
 		var date = new Date();
 	        date.setTime(date.getTime() + (60 * 60 * 24 * 365 * 10 * 1000));
-	        $.cookie("cookies", "valcookiemsg", { expires: date, path: "/", domain: ".libreborme.net" });
+	        $.cookie("cookies", "accept", { expires: date, path: "/", domain: ".libreborme.net" });
 		e.preventDefault();
 		e.stopPropagation();
 		advice.slideUp("fast");
@@ -103,8 +103,8 @@
                   funcionarios públicos, pagados a su vez con los impuestos de los ciudadanos y reivindicar que son datos que nos
                   pertenecen y que en pleno siglo XXI deben estar accesibles a través de Internet.</p>
 
-              <p><a href="http://boe.es/diario_boe/txt.php?id=BOE-A-2007-12352" target="_blank" rel="nofollow"><small>Ley 11/2007, de 22 de junio, de acceso electrónico de los ciudadanos a los Servicios Públicos</small></a>
-              <br/><a href="http://www.rmc.es/" target="_blank" rel="nofollow"><small>Registro Mercantil Central</small></a></p>
+              <p><a href="https://boe.es/diario_boe/txt.php?id=BOE-A-2007-12352" target="_blank" rel="nofollow"><small>Ley 11/2007, de 22 de junio, de acceso electrónico de los ciudadanos a los Servicios Públicos</small></a>
+              <br/><a href="https://www.rmc.es/" target="_blank" rel="nofollow"><small>Registro Mercantil Central</small></a></p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Entendido</button>
@@ -118,7 +118,7 @@
             <div class="row">
               <div class="col-lg-8">
                 <p class="text-muted">Esta web muestra únicamente datos públicos disponibles desde el año 2009. <a href="#" data-toggle="modal" data-target="#myModal"><small>¿Por qué?</small></a></p>
-                <p class="text-muted"><small>© LibreBORME 2014-2016 
+                <p class="text-muted"><small>© LibreBORME 2014-2018
                   | <i class="fa fa-envelope"></i> <a href="{% url 'contact' %}">Contacto</a>
                   | <i class="fa fa-twitter"></i> <a href="https://twitter.com/libreborme" target="_blank" rel="nofollow">@LibreBORME</a>
                   | <i class="fa fa-github"></i> <a href="https://github.com/PabloCastellano/libreborme/" target="_blank" rel="nofollow">Código fuente</a> <i>(<a href="https://github.com/PabloCastellano/libreborme/commit/{{ version }}" target="_blank" rel="nofollow">git-{{ version }}</a>)</i>
@@ -137,6 +137,6 @@
 
   </div> <!-- /container -->
 
-  {% include "piwik.html" %}
+  {% include "matomo.html" %}
   </body>
 </html>

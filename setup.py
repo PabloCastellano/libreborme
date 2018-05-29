@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
 
 from setuptools import setup, find_packages
-from libreborme import get_version
+import libreborme
 import sys
 
 
@@ -21,6 +21,7 @@ def get_install_requires():
 
     return requirements
 
+
 if sys.version_info[0] == 3:
     long_description = open('README.md', encoding='utf-8').read()
 else:
@@ -28,8 +29,8 @@ else:
 
 setup(
     name='libreborme',
-    version=get_version(),
-    description="Plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil",
+    version=libreborme.__version__,
+    description=libreborme.__doc__,
     long_description=long_description,
     author='Pablo Castellano',
     author_email='pablo@anche.no',
@@ -42,13 +43,14 @@ setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
+        'Framework :: Django',
         'Intended Audience :: End Users/Desktop',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Operating System :: POSIX',
         'Programming Language :: Python :: 3',
         'Topic :: Internet :: WWW/HTTP',
-        'Framework :: Django',
     ],
     install_requires=get_install_requires(),
     scripts=['libreborme/bin/libreborme'],
+    test_suite='runtests.runtests',
 )

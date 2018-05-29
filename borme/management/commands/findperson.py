@@ -3,24 +3,26 @@ from borme.models import Person
 
 
 class Command(BaseCommand):
-    args = '<person name or slug ...>'
     help = 'Find a person and show its information'
 
+    def add_arguments(self, parser):
+        parser.add_argument("keyword", type=str, help="person keyword")
+
     def handle(self, *args, **options):
-        for person_name in args:
+        keyword = options["keyword"]
 
-            persons = Person.objects.filter(name__icontains=person_name)
-            if not persons:
-                persons = Person.objects.filter(slug__icontains=person_name)
+        results = Person.objects.filter(name__icontains=keyword)
+        if not results:
+            results = Person.objects.filter(slug__icontains=keyword)
 
-            for person in persons:
-                bormes = list(map(lambda c: c['cve'], person.in_bormes))
-                print('Name:', person.name)
-                print('Slug:', person.slug)
-                print('Companies:', ', '.join(person.in_companies))
-                print('BORMEs:', ', '.join(bormes))
-                print('Last modified:', person.date_updated)
-                print()
-
-            print('Found %d ocurrences with keyword "%s"' % (len(persons), person_name))
+        for person in results:
+            bormes = list(map(lambda c: c['cve'], person.in_bormes))
+            print("Name: {}".format(person.name))
+            print("Slug: {}".format(person.slug))
+            print("Companies: {}".format(", ".join(person.in_companies)))
+            print("BORMEs: {}".format(", ".join(bormes)))
+            print("Last modified: {}".format(person.date_updated))
             print()
+
+        print('Found {} ocurrences with keyword "{}"'.format(len(results), keyword))
+        print()

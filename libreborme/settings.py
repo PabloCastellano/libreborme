@@ -21,7 +21,7 @@ SECRET_KEY = '41+h()yq5-!*=)sh+_%4wal8=+*e)dlrau*81odpu7n&9^7d5h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['libreborme.net']
+ALLOWED_HOSTS = ['127.0.0.1', 'libreborme.net']
 
 
 # Application definition
@@ -32,47 +32,64 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.postgres',
     'django.contrib.staticfiles',
-    'django_hstore',
     'bootstrap',
     'django_static_jquery',
     'fontawesome',
-    'haystack',
     'tastypie',
-    'maintenancemode',
+    # 'maintenancemode',
+    'django_elasticsearch_dsl',
     'borme',
     'libreborme',
 )
 
-if DEBUG:
-    INSTALLED_APPS += (
-        'django_extensions',
-        'debug_toolbar',
-    )
 
-if DEBUG:
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-        }
-    }
-
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'maintenancemode.middleware.MaintenanceModeMiddleware',
+    # 'maintenancemode.middleware.MaintenanceModeMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 )
 
-if DEBUG:
-    MIDDLEWARE_CLASSES += (
-        'debug_toolbar.middleware.DebugToolbarMiddleware',
-    )
+
+# if DEBUG:
+#     INSTALLED_APPS += (
+#         'django_extensions',
+#         'debug_toolbar',
+#         'elastic_panel',
+#     )
+#
+#     DEBUG_TOOLBAR_PANELS = [
+#         'debug_toolbar.panels.versions.VersionsPanel',
+#         'debug_toolbar.panels.timer.TimerPanel',
+#         'debug_toolbar.panels.settings.SettingsPanel',
+#         'debug_toolbar.panels.headers.HeadersPanel',
+#         'debug_toolbar.panels.request.RequestPanel',
+#         'debug_toolbar.panels.sql.SQLPanel',
+#         'elastic_panel.panel.ElasticDebugPanel',
+#         'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+#         'debug_toolbar.panels.templates.TemplatesPanel',
+#         'debug_toolbar.panels.cache.CachePanel',
+#         'debug_toolbar.panels.signals.SignalsPanel',
+#         'debug_toolbar.panels.logging.LoggingPanel',
+#         'debug_toolbar.panels.redirects.RedirectsPanel',
+#     ]
+#
+#     CACHES = {
+#         'default': {
+#             'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+#         }
+#     }
+#
+#     MIDDLEWARE += (
+#         'debug_toolbar.middleware.DebugToolbarMiddleware',
+#     )
+
 
 ROOT_URLCONF = 'libreborme.urls'
 
@@ -87,7 +104,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.contrib.auth.context_processors.auth',
                 'libreborme.context_processors.piwik',
                 'libreborme.context_processors.common',
             ],
@@ -98,7 +114,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'libreborme.wsgi.application'
 
 # DEBUG
-#DEBUG_TOOLBAR_CONFIG{'JQUERY_URL': '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js'}
+# DEBUG_TOOLBAR_CONFIG{'JQUERY_URL': '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js'}
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
@@ -113,20 +129,15 @@ DATABASES = {
     }
 }
 
-# haystack search using elasticsearch
-HAYSTACK_CONNECTIONS = {
+ELASTICSEARCH_URI = "http://elastic:changeme@localhost:9200"
+ELASTICSEARCH_DSL = {
     'default': {
-        'ENGINE': 'borme.search_backends.AsciifoldingElasticSearchEngine',
-        'URL': 'http://127.0.0.1:9200/',
-        'INDEX_NAME': 'libreborme',
+        'hosts': ELASTICSEARCH_URI.split('http://')[1]
     },
 }
 
-# http://django-haystack.readthedocs.org/en/latest/signal_processors.html
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
-
-# increase the default number of results (from 20)
-HAYSTACK_SEARCH_RESULTS_PER_PAGE = 25
+# ELASTICSEARCH_DSL_AUTOSYNC = False
+# ELASTICSEARCH_DSL_AUTO_REFRESH = False
 
 TASTYPIE_DEFAULT_FORMATS = ['json']
 
@@ -170,3 +181,8 @@ LOPD = {'provider': 'Some real name',
         'domain': 'The domain that hosts this website',
         'email':  EMAIL_CONTACT,
         'address': 'Some real address'}
+
+HOST_BUCKET = "https://libreborme-prod.ams3.digitaloceanspaces.com"
+
+INTERNAL_IPS = ('127.0.0.1')
+LOGIN_URL = '/admin/login/'

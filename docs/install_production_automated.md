@@ -8,7 +8,7 @@ Esta sección describe cómo realizar una instalación de LibreBORME automatizad
 
 ## Prerrequisitos
 
-LibreBORME utiliza [Ansible](http://www.ansible.com/) para ser desplegado en un servidor remoto. 
+LibreBORME utiliza [Ansible](https://www.ansible.com/) para ser desplegado en un servidor remoto.
 
 Para instalar Ansible en tu máquina:
 
@@ -17,7 +17,7 @@ Para instalar Ansible en tu máquina:
     sudo apt-get update
     sudo apt-get install ansible
 
-[Aquí](http://docs.ansible.com/intro_installation.html#latest-releases-via-apt-ubuntu) puedes consultar las instrucciones de instalación de Ansible más detalladas y para otras distribuciones.
+[Aquí](https://docs.ansible.com/intro_installation.html#latest-releases-via-apt-ubuntu) puedes consultar las instrucciones de instalación de Ansible más detalladas y para otras distribuciones.
 
 La versión actual de Ansible no soporta Python 3, por lo que tu máquina remota deberá tener instalado el intérprete de Python 2. Asegúrate de que lo está instalando python-minimal:
 
@@ -43,7 +43,7 @@ Alternativamente también puedes usar Git:
     git clone https://github.com/PabloCastellano/libreborme-ansible.git
     cd libreborme-ansible
 
-# Despliegue 
+# Despliegue
 
 A continuación necesitas tener acceso SSH al servidor con el usuario root o con un usuario en el grupo *sudo*. Cambia la IP y el usuario de tu host en el archivo *hosts*.
 

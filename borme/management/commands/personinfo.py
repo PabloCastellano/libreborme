@@ -1,21 +1,23 @@
 from django.core.management.base import BaseCommand, CommandError
 from borme.models import Person
 
+
 class Command(BaseCommand):
-    args = '<company name or slug ...>'
-    help = 'Shows info about a company'
+    help = 'Shows info about a person'
+
+    def add_arguments(self, parser):
+        parser.add_argument("person", type=str, help="person name or slug")
 
     def handle(self, *args, **options):
-        for company_name in args:
+        person = options["person"]
+        try:
+            result = Person.objects.get(name=person)
+        except Person.DoesNotExist:
             try:
-                person = Person.objects.get(name=company_name)
-            except Company.DoesNotExist:
-                try:
-                    person = Person.objects.get(slug=company_name)
-                except Company.DoesNotExist:
-                   raise CommandError('Person "%s" does not exist' % company_name)
+                result = Person.objects.get(slug=person)
+            except Person.DoesNotExist:
+                raise CommandError('Person "%s" does not exist' % person)
 
-            print 'Name:', person.name
-            print
-
-            self.stdout.write('Successful operation!')
+        print("Name: {}".format(result.name))
+        print("Slug: {}".format(result.slug))
+        print()

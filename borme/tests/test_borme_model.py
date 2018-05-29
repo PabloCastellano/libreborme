@@ -1,36 +1,35 @@
 from django.test import TestCase
 from borme.models import Borme
-from borme.importer import _import1
+from borme.parser.importer import _from_instance
 
 import bormeparser
 import datetime
 import os
 
-results = None
+THIS_PATH = os.path.dirname(os.path.abspath(__file__))
+FILES_PATH = os.path.join(THIS_PATH, 'files')
 
 
 # TODO: Mockup de:
 # borme = bormeparser.parse(filename, bormeparser.SECCION.A)
-# Testear: _import1(borme)
+# Testear: _from_instance(borme)
 class TestBormeModel(TestCase):
 
-    # This method run on instance of class
+    results = None
+
     @classmethod
     def setUpClass(cls):
         super(TestBormeModel, cls).setUpClass()
 
-        global results
-
-        path = os.path.expanduser('~/.bormes/pdf/2015/02/10/BORME-A-2015-27-10.pdf')
-        borme = bormeparser.parse(path, bormeparser.SECCION.A)
-        results = _import1(borme)
+        filepath = os.path.join(FILES_PATH, 'BORME-A-2015-27-10.pdf')
+        borme = bormeparser.parse(filepath, bormeparser.SECCION.A)
+        TestBormeModel.results = _from_instance(borme)
 
     def test_results(self):
-        global results
-        self.assertEqual(results['created_bormes'], 1)
-        self.assertEqual(results['created_anuncios'], 30)
-        self.assertEqual(results['created_companies'], 29)
-        self.assertEqual(results['created_persons'], 35)
+        self.assertEqual(self.results['created_bormes'], 1)
+        self.assertEqual(self.results['created_anuncios'], 30)
+        self.assertEqual(self.results['created_companies'], 29)
+        self.assertEqual(self.results['created_persons'], 35)
 
     def test_borme_object(self):
         b = Borme.objects.get(cve='BORME-A-2015-27-10')

@@ -1,4 +1,4 @@
-from django.conf.urls import url, include
+from django.urls import include, path
 
 from . import views
 
@@ -11,21 +11,22 @@ v1_api.register(PersonResource())
 
 
 urlpatterns = [
-    url(r'^$', views.HomeView.as_view(), name='borme-home'),
-    url(r'^anuncio/(?P<year>\d+)/(?P<id>\d+)/$', views.AnuncioView.as_view(), name='borme-anuncio'),
-    url(r'^borme/(?P<cve>[\w-]+)/$', views.BormeView.as_view(), name='borme-borme'),
-    url(r'^provincia/(?P<provincia>[\w -]+)/$', views.BormeProvinciaView.as_view(), name='borme-provincia'),
-    url(r'^provincia/(?P<provincia>[\w -]+)/fecha/(?P<year>[\d-]+)/$', views.BormeProvinciaView.as_view(), name='borme-provincia-fecha'),
-    url(r'^fecha/(?P<date>[\d-]+)/$', views.BormeDateView.as_view(), name='borme-fecha'),
-    url(r'^empresa/(?P<slug>[\w-]+)/$', views.CompanyView.as_view(), name='borme-empresa'),
-    url(r'^empresa/(?P<slug>[\w-]+)/cargos_actual.csv$', views.generate_company_csv_cargos_actual, name='borme-empresa-csv-actual'),
-    url(r'^empresa/(?P<slug>[\w-]+)/cargos_historial.csv$', views.generate_company_csv_cargos_historial, name='borme-empresa-csv-historial'),
-    url(r'^persona/(?P<slug>[\w-]+)/$', views.PersonView.as_view(), name='borme-persona'),
-    url(r'^persona/(?P<slug>[\w-]+)/cargos_actual.csv$', views.generate_person_csv_cargos_actual, name='borme-persona-csv-actual'),
-    url(r'^persona/(?P<slug>[\w-]+)/cargos_historial.csv$', views.generate_person_csv_cargos_historial, name='borme-persona-csv-historial'),
-    #url(r'^busqueda/$', BusquedaView.as_view(), name='borme-busqueda'),
-    url(r'^api/', include(v1_api.urls)),
-    url(r'^search/', views.LBSearchView(), name='borme-search'),
+    path('', views.HomeView.as_view(), name='borme-home'),
+    path('anuncio/<int:year>/<int:id>/', views.AnuncioView.as_view(), name='borme-anuncio'),
+    path('borme/<cve>/', views.BormeView.as_view(), name='borme-borme'),
+    path('provincia/<provincia>/', views.BormeProvinciaView.as_view(), name='borme-provincia'),
+    path('provincia/<provincia>/fecha/<int:year>/', views.BormeProvinciaView.as_view(), name='borme-provincia-fecha'),
+    path('fecha/<date>/', views.BormeDateView.as_view(), name='borme-fecha'),
+    path('empresa/<slug:slug>/', views.CompanyView.as_view(), name='borme-empresa'),
+    path('empresa/<slug:slug>/cargos_actual.csv', views.generate_company_csv_cargos_actual, name='borme-empresa-csv-actual'),
+    path('empresa/<slug:slug>/cargos_historial.csv', views.generate_company_csv_cargos_historial, name='borme-empresa-csv-historial'),
+    path('persona/<slug:slug>/', views.PersonView.as_view(), name='borme-persona'),
+    path('persona/<slug:slug>/cargos_actual.csv', views.generate_person_csv_cargos_actual, name='borme-persona-csv-actual'),
+    path('persona/<slug:slug>/cargos_historial.csv', views.generate_person_csv_cargos_historial, name='borme-persona-csv-historial'),
+    path('busqueda/', views.BusquedaView.as_view(), name='borme-search'),
+    # path(r'^search/', views.LBSearchView.as_view(), name='borme-search'),
 
-    url(r'^ajax/empresa/(?P<slug>[\w-]+)/more', views.ajax_empresa_more, name='borme-ajax-empresa'),
+    path('api/', include(v1_api.urls)),
+
+    path('ajax/empresa/<slug:slug>/more', views.ajax_empresa_more, name='borme-ajax-empresa'),
 ]
