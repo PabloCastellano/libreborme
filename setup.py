@@ -4,6 +4,8 @@ from setuptools import setup, find_packages
 import libreborme
 import sys
 
+version = "20180530"
+
 
 def get_install_requires():
     """
@@ -29,7 +31,7 @@ else:
 
 setup(
     name='libreborme',
-    version=libreborme.__version__,
+    version=version,
     description=libreborme.__doc__,
     long_description=long_description,
     author='Pablo Castellano',
