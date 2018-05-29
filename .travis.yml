@@ -1,26 +1,22 @@
 language: python
-
-services:
-  - postgresql
+python:
+  - "3.4"
+  - "3.6"
 
 addons:
   postgresql: "9.4"
 
-python:
-  - "3.4"
-  - "3.6"
+services:
+  - postgresql
 
 env:
   - DJANGO_VERSION=2.0.4
 
 install:
-#  - pip install coveralls
-  - pip install -r requirements/test.txt
-  - pip install django-extensions
+  - pip install coveralls
+  - pip install -r requirements/development.txt
   - pip install -q Django==$DJANGO_VERSION
   - python setup.py -q develop
-  - mkdir -p ~/.bormes/pdf/2015/02/10
-  - wget https://www.boe.es/borme/dias/2015/02/10/pdfs/BORME-A-2015-27-10.pdf -O ~/.bormes/pdf/2015/02/10/BORME-A-2015-27-10.pdf
 
 before_script:
   - sleep 10  # Elasticsearch
@@ -29,11 +25,8 @@ before_script:
   - psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE libreborme TO libreborme;"
   - ./manage.py migrate --noinput
 
-# command to run tests, e.g. python setup.py test
-#script:
-#  - coverage run --source=libreborme setup.py test
 script:
- - ./setup.py test
+  - ./setup.py test
 
-#after_success:
-#  - coveralls
+after_success:
+  - coveralls
