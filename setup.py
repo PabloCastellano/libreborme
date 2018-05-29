@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 import libreborme
 import sys
 
-version = "20180530"
+version = '20180531.dev0'
 
 
 def get_install_requires():
