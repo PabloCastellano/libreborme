@@ -507,7 +507,7 @@ def from_json_file(filename):
     """Importa un archivo BORME-JSON en la BD.
 
     :param filename: Archivo a importar
-    :type filename: str
+    :type filename: str or file
     :rtype: (bool, dict)
     """
     results = {

@@ -99,6 +99,11 @@ class Person(m.Model):
                 self.cargos_historial.append(cargo)
 
     def get_cargos_actuales(self, offset=0, limit=settings.CARGOS_LIMIT):
+        """ Devuelve el listado de cargos actuales de una sociedad y si hace
+        falta mostrar más (paginación)
+
+        :rtype: (list, bool)
+        """
         cargos = self.cargos_actuales.copy()
         cargos = [dict(item, **{'type': 'company'}) for item in cargos]
         cargos = sorted(cargos, key=lambda k: k['date_from'])
@@ -110,6 +115,11 @@ class Person(m.Model):
         return cargos[offset:offset+limit], show_more
 
     def get_cargos_historial(self, offset=0, limit=settings.CARGOS_LIMIT):
+        """ Devuelve el listado de cargos pasados de una sociedad y si hace
+        falta mostrar más (paginación)
+
+        :rtype: (list, bool)
+        """
         cargos = self.cargos_historial.copy()
         cargos = [dict(item, **{'type': 'company'}) for item in cargos]
         cargos = sorted(cargos, key=lambda k: k['date_to'])
