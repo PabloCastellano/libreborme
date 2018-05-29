@@ -7,18 +7,16 @@ import datetime
 import gzip
 import logging
 import os
-import time
 
 from django.test import TestCase
 
 THIS_PATH = os.path.dirname(os.path.abspath(__file__))
+FILES_PATH = os.path.join(THIS_PATH, 'files')
 
 # Disable loggers
 borme.utils.strings.logger.setLevel(logging.ERROR)
 borme.parser.importer.logger.setLevel(logging.ERROR)
 borme.parser.logger.logger.setLevel(logging.ERROR)
-
-FILES_PATH = os.path.join(THIS_PATH, 'files')
 
 
 def load_borme_from_gzipped_json(filename):
