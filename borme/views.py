@@ -23,7 +23,11 @@ import datetime
 
 
 def ajax_empresa_more(request, slug):
-    company = Company.objects.get(slug=slug)
+    try:
+        company = Company.objects.get(slug=slug)
+    except Company.DoesNotExist:
+        raise Http404('Company does not exist')
+
     offset = int(request.GET.get('offset', 0)) + settings.CARGOS_LIMIT
     t = request.GET.get('t', 'actuales')
 

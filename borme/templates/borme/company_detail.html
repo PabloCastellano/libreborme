@@ -56,7 +56,7 @@
             {% if company.get_cargos_actuales.1 %}
                 <tr id="vermascargos_actuales">
                     <td class="text-center" colspan=4>
-                        <a href="#" onclick="javascript:moreData('{% url 'borme-ajax-empresa' company.slug %}?t=actuales','vermascargos_actuales','tabla_cargos_actuales');return false;">Ver más</a>
+                        <a href="#" onclick="javascript:moreData('{% url 'borme-ajax-empresa' company.slug %}?t=actuales','vermascargos_actuales','tabla_cargos_actuales');return false;" rel="nofollow">Ver más</a>
                     </td>
                 </tr>
             {% endif %}
@@ -96,7 +96,7 @@
             {% if company.get_cargos_actuales.1 %}
                 <tr id="vermascargos_historial">
                     <td class="text-center" colspan=4>
-                        <a href="#" onclick="javascript:moreData('{% url 'borme-ajax-empresa' company.slug %}?t=historial','vermascargos_historial','tabla_cargos_historial');return false;">Ver más</a>
+                        <a href="#" onclick="javascript:moreData('{% url 'borme-ajax-empresa' company.slug %}?t=historial','vermascargos_historial','tabla_cargos_historial');return false;" rel="nofollow">Ver más</a>
                     </td>
                 </tr>
             {% endif %}
@@ -125,7 +125,7 @@
              {% elif value|is_bool %}
                <i class="glyphicon glyphicon-ok"></i>
              {% else %}
- 
+
                 <div class="row">
                 <div class="col-md-6 col-md-offset-3">
                  <table class="table table-condensed">
