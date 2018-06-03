@@ -42,6 +42,8 @@ INSTALLED_APPS = (
     'django_elasticsearch_dsl',
     'borme',
     'libreborme',
+    'alertas',
+    'bootstrapform',
 )
 
 
@@ -186,3 +188,7 @@ HOST_BUCKET = "https://libreborme-prod.ams3.digitaloceanspaces.com"
 
 INTERNAL_IPS = ('127.0.0.1')
 LOGIN_URL = '/admin/login/'
+
+
+LOGIN_REDIRECT_URL = '/alertas/'
+LOGOUT_REDIRECT_URL = '/borme/'

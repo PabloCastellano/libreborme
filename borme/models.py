@@ -156,7 +156,7 @@ class Person(m.Model):
 class Company(m.Model):
     """ Sociedad """
     name = m.CharField(max_length=260, db_index=True)
-    nif = m.CharField(max_length=10)
+    # nif = m.CharField(max_length=10)
     slug = m.SlugField(max_length=260, primary_key=True)
     date_creation = m.DateField(blank=True, null=True)
     date_extinction = m.DateField(blank=True, null=True)
