@@ -200,3 +200,36 @@ table.year {
     border: 2px solid #73AD21;
     padding: 20px;
 }
+
+.subscribe-btn {
+  text-decoration:none;
+  background:#2D3E4F;
+  color:white;
+  font-family:Lato, Helvetica, Arial, sans-serif;
+  font-size:16px;
+  font-weight:normal;
+  line-height:120%;
+  text-transform:none;
+  margin:0px;
+
+  border:none;
+  border-radius:6px;
+  color:white;
+  cursor:auto;
+  padding:16px 24px;
+  cursor: pointer !important;
+}
+
+.subscribe-btn:hover {
+  background-color: #1A242F;
+  text-decoration:none;
+  color:white;
+}
+
+.newsletter {
+  background-color: #EEE;
+}
+
+.newsletter-row {
+  padding: 40px 20px 20px 20px;
+}
