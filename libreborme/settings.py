@@ -192,3 +192,6 @@ LOGIN_URL = '/admin/login/'
 
 LOGIN_REDIRECT_URL = '/alertas/'
 LOGOUT_REDIRECT_URL = '/borme/'
+
+STRIPE_PUBLIC_KEY = os.getenv("STRIPE_SECRET_KEY", "pk_test_0N38FeA9mW1so4zKyCyzcxIE")
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "sk_test_eVEoxiTuoWOlSw104llgXvcs")

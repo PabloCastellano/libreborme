@@ -1,0 +1,12 @@
+<form action="/checkout" method="POST">{% csrf_token %}
+  <script
+    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+    data-key="{{ STRIPE_PUBLIC_KEY }}"
+    data-amount="999"
+    data-name="Libreborme"
+    data-description="Widget"
+    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+    data-locale="auto"
+    data-currency="eur">
+  </script>
+</form>

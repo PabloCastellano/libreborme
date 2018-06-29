@@ -22,6 +22,10 @@ urlpatterns = [
     path('services/', t(template_name="libreborme/services.html"), name='services'),
     path('support/', t(template_name="libreborme/support.html"), name='support'),
     path('supporters/', t(template_name="libreborme/supporters.html"), name='supporters'),
+
+    # Stripe
+    path('payment-form', views.payment_form),
+    path('checkout', views.checkout, name="checkout_page"),
 ]
 
 if DEBUG:

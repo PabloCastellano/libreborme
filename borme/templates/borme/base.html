@@ -77,9 +77,10 @@
   </form>
   <div>
     {% if user.is_authenticated %}
-    <a href="{% url 'dashboard-index' %}">Hola {{ user }}</a> <a href="{% url 'logout' %}">Salir</a>
+      <a href="{% url 'dashboard-index' %}">Hola {{ user }}</a> <a href="{% url 'logout' %}">Salir</a>
+      {% if user.is_staff %}<a href="/admin">Admin</a>{% endif %}
     {% else %}
-    <a href="{% url 'login' %}">Entrar</a>
+      <a href="{% url 'login' %}">Entrar</a>
     {% endif %}
   </div>
 </div>

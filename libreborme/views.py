@@ -1,11 +1,16 @@
 from django.conf import settings
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.template.loader import get_template
 from django.views.generic.base import TemplateView
 
 from borme.mixins import CacheMixin
+from alertas.models import Car
 
 from pathlib import Path
+
+import stripe
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class AvisoLegalView(CacheMixin, TemplateView):
@@ -41,3 +46,42 @@ def robotstxt(request):
         response = template.render()
 
     return HttpResponse(response, content_type='text/plain')
+
+
+def payment_form(request):
+    """Renders the payment form"""
+    context = {"STRIPE_PUBLIC_KEY": settings.STRIPE_PUBLIC_KEY}
+    return render(request, "stripe_form.html", context)
+
+
+def checkout(request):
+
+    # Lo que vamos a vender
+    # Subsription
+    new_car = Car(name="Honda Civic", year=2017)
+
+    if request.method == "POST":
+        token = request.POST.get("stripeToken")
+
+    try:
+        charge = stripe.Charge.create(
+            amount=2000,
+            currency="eur",
+            source=token,
+            description="The product charged to the user"
+        )
+
+        new_car.charge_id = charge.id
+
+    except stripe.error.CardError as ce:
+        return False, ce
+
+    else:
+        new_car.save()
+        return redirect("dashboard-index")
+        # The payment was successfully processed, the user's card was charged.
+        # You can now redirect the user to another page or whatever you want
+
+
+
+
