@@ -1,0 +1,49 @@
+{% extends "alertas/base_dashboard.html" %}
+{% load bootstrap %}
+
+{% block content %}
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Historial de Alertas</h1>
+          <p>En esta sección puede encontrar archivadas las alertas que ya ha recibido.</p>
+        </div>
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+        {% if alertas %}
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Tipo</th>
+                  <th>Entidad</th>
+                  <th>Provincia</th>
+                  <th>Periodicidad</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for alerta in alertas %}
+                <tr>
+                  <td>{{ alerta.date }}</td>
+                  <td>{{ alerta.get_type_display }}</td>
+                  <td>{{ alerta.entidad|default:"-" }}</td>
+                  <td>{{ alerta.get_provincia_display|default:"-" }}</td>
+                  <td>{{ alerta.get_periodicidad_display|default:"-" }}</td>
+                  <td>
+                    <a href="{% url 'alerta-history-download' alerta.id %}">
+                    <button type="button" class="btn btn-primary btn-xs">
+                      <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Descargar CSV
+                    </button>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+            <p>No hay alertas registradas todavía</p>
+        {% endif %}
+        </div>
+{% endblock %}

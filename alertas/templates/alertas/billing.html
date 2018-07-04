@@ -1,0 +1,73 @@
+{% extends "alertas/base_dashboard.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Listado de facturas</h1>
+
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Comienzo</th>
+                  <th>Final</th>
+                  <th>Cantidad</th>
+                  <th>Forma de pago</th>
+                  <th>Pagado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for invoice in invoices %}
+                <tr {% if not invoice.is_paid %}class="danger"{% endif %}>
+                  <td>{{ invoice.id }}</td>
+                  <td>{{ invoice.start_date }}</td>
+                  <td>{{ invoice.end_date }}</td>
+                  <td>{{ invoice.amount }}</td>
+                  <td>{{ invoice.get_payment_type_display }}</td>
+                  <td>{% if invoice.is_paid %}
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    {% else %}
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <a href="{% url 'alertas-invoice-view' invoice.id %}">
+                    <button type="button" class="btn btn-primary btn-xs">
+                      <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Ver
+                    </button>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div>
+            <h2>Stripe charges</h2>
+            <p>There are actually {{ charges | length }} charges.</p>
+            <ul>
+                {% for charge in charges %}
+                <li>{{ charge }}</li>
+                {% endfor %}
+            </ul>
+
+            <h2>Stripe invoices</h2>
+            <p>There are actually {{ invoices | length }} invoices.</p>
+            <ul>
+                {% for invoice in invoices %}
+                <li>{{ invoice }}</li>
+                {% endfor %}
+            </ul>
+
+          </div>
+        </div>
+{% endblock %}
+
+
+{% block extrastyles %}
+    <link href="{% static "css/dashboard_form.css" %}" rel="stylesheet">
+{% endblock %}

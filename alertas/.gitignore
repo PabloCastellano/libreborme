@@ -1,0 +1,8 @@
+*.pyc
+*~
+
+/.venv
+/.idea
+/.ropeproject
+
+/site

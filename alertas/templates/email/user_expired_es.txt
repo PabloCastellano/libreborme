@@ -1,0 +1,9 @@
+Hola {{ fullname }}.
+
+Te informamos de que tu cuenta en Libreborme Alertas se encontraba en período de pruebas y ha expirado después de {{ test_days }} días.
+
+Si tu experiencia ha sido satisfactoria y quieres contratar el servicio, escríbenos a contacto@libreborme.net.
+
+Atentamente,
+
+{% include "email/footer.txt" %}
