@@ -21,4 +21,8 @@ recreate_db:
 		./manage.py loaddata ./alertas/fixtures/alertasconfig.json
 
 run:
+		docker-compose up -d
 		./manage.py runserver
+
+shell:
+		./manage.py shell_plus
