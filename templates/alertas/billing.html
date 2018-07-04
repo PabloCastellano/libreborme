@@ -45,6 +45,25 @@
               </tbody>
             </table>
           </div>
+
+          <div>
+            <h2>Stripe charges</h2>
+            <p>There are actually {{ charges | length }} charges.</p>
+            <ul>
+                {% for charge in charges %}
+                <li>{{ charge }}</li>
+                {% endfor %}
+            </ul>
+
+            <h2>Stripe invoices</h2>
+            <p>There are actually {{ invoices | length }} invoices.</p>
+            <ul>
+                {% for invoice in invoices %}
+                <li>{{ invoice }}</li>
+                {% endfor %}
+            </ul>
+
+          </div>
         </div>
 {% endblock %}
 

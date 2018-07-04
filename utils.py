@@ -14,11 +14,17 @@ def get_alertas_config(key=None):
         return alertas
 
 
-def create_alertas_user(username, email, password, first_name, last_name, type):
+def create_alertas_user(username, email, password,
+                        first_name, last_name, account_type):
     Profile = apps.get_model("alertas", "Profile")
 
-    new_user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
-    profile = Profile(user=new_user, account_type=type, notification_email=email)
+    new_user = User.objects.create_user(username=username,
+                                        email=email,
+                                        password=password,
+                                        first_name=first_name,
+                                        last_name=last_name)
+    profile = Profile(user=new_user, account_type=account_type,
+                      notification_email=email)
     profile.save()
     return new_user
 
@@ -30,10 +36,11 @@ def insert_libreborme_log(component, log, user=None):
     log.save()
 
 
-def insert_alertas_history(user, type, date, entidad=None, provincia=None, periodicidad=None):
+def insert_alertas_history(user, type, date, entidad=None, provincia=None,
+                           periodicidad=None):
     """
         Insert new row in the AlertaHistory table
-        
+
         user: User model object
         type: str
         date: datetime.date

@@ -27,7 +27,4 @@ urlpatterns = [
     # AJAX
     url(r'^alertas/suggest_company/$', views.suggest_company, name='suggest_company'),
     url(r'^alertas/suggest_person/$', views.suggest_person, name='suggest_person'),
-
-    # Add Django site authentication urls (for login, logout, password management)
-    url('^accounts/', include('django.contrib.auth.urls')),
 ]

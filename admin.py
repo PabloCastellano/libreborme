@@ -21,12 +21,6 @@ class AlertaActoAdmin(admin.ModelAdmin):
     # TODO: get_provincia_display
 
 
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'account_type', 'notification_method', 'notification_email', 'notification_url')
-    list_filter = ('notification_method', 'account_type')
-    search_fields = ['user__username', 'user__email', 'notification_email', 'notification_url']
-
-
 class LBInvoiceAdmin(admin.ModelAdmin):
     list_display = ('user', 'start_date', 'end_date', 'amount', 'payment_type', 'is_paid')
     list_filter = ('is_paid', 'payment_type')
@@ -51,7 +45,6 @@ class LibrebormeLogsAdmin(admin.ModelAdmin):
 admin.site.register(models.AlertaCompany, AlertaCompanyAdmin)
 admin.site.register(models.AlertaPerson, AlertaPersonAdmin)
 admin.site.register(models.AlertaActo, AlertaActoAdmin)
-admin.site.register(models.Profile, ProfileAdmin)
 admin.site.register(models.LBInvoice, LBInvoiceAdmin)
 admin.site.register(models.AlertasConfig, AlertasConfigAdmin)
 admin.site.register(models.AlertaHistory, AlertaHistoryAdmin)

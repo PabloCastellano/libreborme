@@ -1,11 +1,9 @@
-from django.db import models
+from django.db import models as m
 from django.contrib.auth.models import User
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from borme.models import Company, Person
-from .email import send_expiration_email
-from .utils import insert_libreborme_log
 
 import os.path
 
@@ -73,22 +71,10 @@ PERIODICIDAD_CHOICES = (
 )
 PERIODICIDAD_DICT = dict(PERIODICIDAD_CHOICES)
 
-ACCOUNT_CHOICES = (
-    ('free', "Gratuita"),
-    ('paid', "Premium"),
-    ('test', "Período de prueba"),
-)
-
 PAYMENT_CHOICES = (
     ('paypal', "Paypal"),
     ('bank', "Transferencia bancaria"),
-    #('bitcoin', "Bitcoin")
-)
-
-NOTIFICATION_CHOICES = (
-    ('email', "E-mail"),
-    ('url', "URL"),
-    #('telegram', "Telegram"),
+    # ('bitcoin', "Bitcoin")
 )
 
 EVENTOS_CHOICES = (
@@ -105,95 +91,58 @@ ALERTAS_CHOICES += (
     ('person', "Persona"),
 )
 
-LANGUAGE_CHOICES = (
-    ('es', 'Español'),
-)
-
 User._meta.get_field('email').blank = False
 
 
 # TODO: agrupar todas las alertas en una misma tabla?
 
-class AlertaCompany(models.Model):
-    user = models.ForeignKey(User)
-    company = models.ForeignKey(Company)
-    is_enabled = models.BooleanField(default=True)
-    send_html = models.BooleanField(default=True)
+class AlertaCompany(m.Model):
+    user = m.ForeignKey(User, on_delete=m.PROTECT)
+    company = m.ForeignKey(Company, on_delete=m.PROTECT)
+    is_enabled = m.BooleanField(default=True)
+    send_html = m.BooleanField(default=True)
 
     def __str__(self):
         enabled = "activada" if self.is_enabled else "desactivada"
         return "Alerta {} para la empresa {}".format(enabled, self.company)
 
 
-class AlertaPerson(models.Model):
-    user = models.ForeignKey(User)
-    person = models.ForeignKey(Person)
-    is_enabled = models.BooleanField(default=True)
-    send_html = models.BooleanField(default=True)
+class AlertaPerson(m.Model):
+    user = m.ForeignKey(User, on_delete=m.PROTECT)
+    person = m.ForeignKey(Person, on_delete=m.PROTECT)
+    is_enabled = m.BooleanField(default=True)
+    send_html = m.BooleanField(default=True)
 
     def __str__(self):
         enabled = "activada" if self.is_enabled else "desactivada"
         return "Alerta {} para la persona {}".format(enabled, self.person)
 
 
-class AlertaActo(models.Model):
-    user = models.ForeignKey(User)
-    evento = models.CharField(max_length=3, choices=EVENTOS_CHOICES)
-    provincia = models.CharField(max_length=100, choices=PROVINCIAS_CHOICES)
-    is_enabled = models.BooleanField(default=True)
-    send_html = models.BooleanField(default=True)
-    periodicidad = models.CharField(max_length=10, choices=PERIODICIDAD_CHOICES)
+class AlertaActo(m.Model):
+    user = m.ForeignKey(User, on_delete=m.PROTECT)
+    evento = m.CharField(max_length=3, choices=EVENTOS_CHOICES)
+    provincia = m.CharField(max_length=100, choices=PROVINCIAS_CHOICES)
+    is_enabled = m.BooleanField(default=True)
+    send_html = m.BooleanField(default=True)
+    periodicidad = m.CharField(max_length=10, choices=PERIODICIDAD_CHOICES)
 
     def __str__(self):
         enabled = "activada" if self.is_enabled else "desactivada"
         return "Alerta {} para evento {}".format(enabled, EVENTOS_DICT[self.evento])
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    account_type = models.CharField(max_length=4, choices=ACCOUNT_CHOICES)
-    notification_method = models.CharField(max_length=10, choices=NOTIFICATION_CHOICES, default='email')
-    notification_email = models.EmailField(blank=True)
-    notification_url = models.URLField(blank=True)
-    language = models.CharField(max_length=3, choices=LANGUAGE_CHOICES, default='es')
-    send_html = models.BooleanField(default=True)
-
-    def save(self, force_insert=False, force_update=False):
-        if not self.notification_email:
-            self.notification_email = self.user.email
-        super(Profile, self).save(force_insert, force_update)
-
-    def is_premium(self):
-        pass
-        #return all(for invoice in self.invoices:
-        #    invoice
-
-    def expire_subscription(self, send_email):
-        if self.user.is_active:
-            self.user.is_active = False
-            self.user.save()
-            insert_libreborme_log("subscription", "User subscription has expired.", self.user.username)
-            if send_email:
-                send_expiration_email(self.user)
-            return True
-        return False
-
-    def __str__(self):
-        return "Profile {} ({})".format(self.user, self.account_type)
-
-
-class LBInvoice(models.Model):
-    user = models.ForeignKey(User)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    amount = models.FloatField()
-    type = models.CharField(max_length=10, blank=True)  # reservado
-    payment_type = models.CharField(max_length=10, choices=PAYMENT_CHOICES)
-    name = models.CharField(max_length=100)
-    address = models.CharField(max_length=200)
-    is_paid = models.BooleanField()
-    description = models.CharField(max_length=2000, blank=True)
-    nif = models.CharField(max_length=20)
+class LBInvoice(m.Model):
+    user = m.ForeignKey(User, on_delete=m.PROTECT)
+    start_date = m.DateTimeField()
+    end_date = m.DateTimeField()
+    amount = m.FloatField()
+    type = m.CharField(max_length=10, blank=True)  # reservado
+    payment_type = m.CharField(max_length=10, choices=PAYMENT_CHOICES)
+    name = m.CharField(max_length=100)
+    address = m.CharField(max_length=200)
+    is_paid = m.BooleanField()
+    description = m.CharField(max_length=2000, blank=True)
+    nif = m.CharField(max_length=20)
 
     def get_absolute_url(self):
         return reverse('alertas-invoice-view', args=[str(self.id)])
@@ -202,21 +151,21 @@ class LBInvoice(models.Model):
         return "LBInvoice ({}): {}. Pagada: {}".format(self.user, self.amount, self.is_paid)
 
 
-class AlertasConfig(models.Model):
-    key = models.CharField(max_length=30, primary_key=True)
-    value = models.CharField(max_length=100)
+class AlertasConfig(m.Model):
+    key = m.CharField(max_length=30, primary_key=True)
+    value = m.CharField(max_length=100)
 
     def __str__(self):
         return "{}: {}".format(self.key, self.value)
 
 
-class AlertaHistory(models.Model):
-    user = models.ForeignKey(User)
-    type = models.CharField(max_length=10, choices=ALERTAS_CHOICES)
-    date = models.DateField()
-    provincia = models.CharField(max_length=100, choices=PROVINCIAS_CHOICES, blank=True, null=True)
-    entidad = models.CharField(max_length=260, blank=True, null=True)
-    periodicidad = models.CharField(max_length=10, choices=PERIODICIDAD_CHOICES, blank=True, null=True)
+class AlertaHistory(m.Model):
+    user = m.ForeignKey(User, on_delete=m.PROTECT)
+    type = m.CharField(max_length=10, choices=ALERTAS_CHOICES)
+    date = m.DateField()
+    provincia = m.CharField(max_length=100, choices=PROVINCIAS_CHOICES, blank=True, null=True)
+    entidad = m.CharField(max_length=260, blank=True, null=True)
+    periodicidad = m.CharField(max_length=10, choices=PERIODICIDAD_CHOICES, blank=True, null=True)
 
     def get_csv_path(self):
         # TODO: provincia and periodicidad can be blank
@@ -232,11 +181,11 @@ class AlertaHistory(models.Model):
         return "{0}, {1}, {2}".format(self.type, self.date, self.user.username)
 
 
-class LibrebormeLogs(models.Model):
-    date = models.DateField(auto_now_add=True)
-    component = models.CharField(max_length=100)
-    log = models.CharField(max_length=1000)
-    user = models.CharField(max_length=50, blank=True, null=True)
+class LibrebormeLogs(m.Model):
+    date = m.DateField(auto_now_add=True)
+    component = m.CharField(max_length=100)
+    log = m.CharField(max_length=1000)
+    user = m.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return "{0} ({1}): {2}".format(self.component, self.date, self.log)

@@ -1,24 +1,28 @@
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.shortcuts import redirect
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic import TemplateView
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.models import User
 
-from .models import AlertaActo, AlertaCompany, AlertaHistory, AlertaPerson, LBInvoice, Profile
-from borme.models import Company, Person
+from .models import (
+        AlertaActo, AlertaCompany, AlertaHistory,
+        AlertaPerson, LBInvoice)
+from borme.models import Person
 from borme.templatetags.utils import slug, slug2
 from . import forms
+
+from djstripe.models import Charge, Customer, Invoice, Subscription
+from libreborme.models import Profile
 
 import datetime
 import json
 
 from .utils import get_alertas_config
-
-from haystack.query import SearchQuerySet
 
 
 MAX_RESULTS_AJAX = 15
@@ -33,13 +37,17 @@ class DashboardIndexView(TemplateView):
 
         context['active'] = 'dashboard'
 
-        context['count_c'] = AlertaCompany.objects.filter(user=self.request.user).count()
-        context['count_p'] = AlertaPerson.objects.filter(user=self.request.user).count()
-        context['count_a'] = AlertaActo.objects.filter(user=self.request.user).count()
+        context['count_c'] = AlertaCompany.objects.filter(
+                                    user=self.request.user).count()
+        context['count_p'] = AlertaPerson.objects.filter(
+                                    user=self.request.user).count()
+        context['count_a'] = AlertaActo.objects.filter(
+                                    user=self.request.user).count()
         context['n_alertas'] = context['count_c'] + context['count_p'] + context['count_a']
 
         today = datetime.date.today()
-        context['subscriptions'] = LBInvoice.objects.filter(user=self.request.user, end_date__gt=today)
+        context['subscriptions'] = LBInvoice.objects.filter(
+                                    user=self.request.user, end_date__gt=today)
 
         alertas_config = get_alertas_config()
         account_type = self.request.user.profile.account_type
@@ -47,6 +55,10 @@ class DashboardIndexView(TemplateView):
         context['limite_c'] = alertas_config['max_alertas_company_' + account_type]
         context['limite_p'] = alertas_config['max_alertas_person_' + account_type]
         context['limite_a'] = alertas_config['max_alertas_actos_' + account_type]
+
+        customer = Customer.objects.get(subscriber=self.request.user)
+        context["customer"] = customer
+        context['stripe_subscriptions'] = customer.subscriptions.all()
         return context
 
 
@@ -102,6 +114,12 @@ class BillingView(TemplateView):
         context = super(BillingView, self).get_context_data(**kwargs)
         context['active'] = 'billing'
         context['invoices'] = LBInvoice.objects.filter(user=self.request.user)
+
+        # TODO: get or 500
+        customer = Customer.objects.get(subscriber=self.request.user)
+        context['customer'] = customer
+        context['charges'] = customer.charges.all()
+        context['invoices'] = customer.invoices.all()
 
         return context
 
@@ -159,6 +177,8 @@ class AlertaListView(TemplateView):
         context['restantes_a'] = int(context['limite_a']) - context['count_a']
 
         context['active'] = 'alertas'
+
+        context['STRIPE_PUBLIC_KEY'] = settings.STRIPE_PUBLIC_KEY
         return context
 
 
@@ -252,7 +272,9 @@ def suggest_company(request):
     if request.method == "GET" and request.is_ajax():
         term = request.GET.get("term").strip()
         if len(term) > 2:
-            search_results = SearchQuerySet().filter(content=term).models(Company)[:MAX_RESULTS_AJAX]
+            # FIXME: elasticsearch
+            # search_results = SearchQuerySet().filter(content=term).models(Company)[:MAX_RESULTS_AJAX]
+            search_results = []
 
             for result in search_results:
                 results.append({"id": slug2(result.text), "value": result.text})
