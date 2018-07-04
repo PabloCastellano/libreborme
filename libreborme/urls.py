@@ -26,6 +26,11 @@ urlpatterns = [
     # Stripe
     path('payment-form', views.payment_form),
     path('checkout', views.checkout, name="checkout_page"),
+
+
+    # Django site authentication urls (login, logout, password management...)
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/register', views.register, name='register'),
 ]
 
 if DEBUG:
