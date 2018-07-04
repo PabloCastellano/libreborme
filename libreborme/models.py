@@ -6,6 +6,8 @@ from django.db.models.signals import post_save
 from alertas.email import send_expiration_email
 from alertas.utils import insert_libreborme_log
 
+from djstripe.models import Customer
+
 ACCOUNT_CHOICES = (
     ('free', "Gratuita"),
     ('paid', "Premium"),
@@ -66,4 +68,5 @@ class Profile(m.Model):
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance, account_type='free')
+        Customer.create(subscriber=instance)
     instance.profile.save()

@@ -19,10 +19,12 @@ recreate_db:
 		./manage.py migrate
 		./manage.py loaddata ./libreborme/fixtures/config.json
 		./manage.py loaddata ./alertas/fixtures/alertasconfig.json
+		./manage.py createsuperuser --username admin --email pablo@anche.no
 
 run:
 		docker-compose up -d
 		./manage.py runserver
+		# --settings=...
 
 shell:
 		./manage.py shell_plus

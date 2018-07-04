@@ -8,6 +8,7 @@ from django.views.generic.base import TemplateView
 
 from borme.mixins import CacheMixin
 from alertas.models import Car
+from djstripe.models import Customer, Plan
 
 from pathlib import Path
 
@@ -50,30 +51,28 @@ def robotstxt(request):
     return HttpResponse(response, content_type='text/plain')
 
 
-def payment_form(request):
-    """Renders the payment form"""
-    context = {"STRIPE_PUBLIC_KEY": settings.STRIPE_PUBLIC_KEY}
-    return render(request, "stripe_form.html", context)
-
-
 def checkout(request):
+    plan = Plan.objects.get(nickname="nuevacreacion_300")
+    customer = Customer.objects.get(subscriber=request.user)
+    # customer.subscribe(plan)
 
     # Lo que vamos a vender
-    # Subsription
+
     new_car = Car(name="Honda Civic", year=2017)
 
     if request.method == "POST":
         token = request.POST.get("stripeToken")
 
     try:
-        charge = stripe.Charge.create(
-            amount=2000,
-            currency="eur",
-            source=token,
-            description="The product charged to the user"
+        subscription = stripe.Subscription.create(
+            customer=customer.stripe_id,
+            items=[
+                {"plan": plan.stripe_id, "quantity": 1}
+            ],
+            source=token
+            # prorate=
         )
-
-        new_car.charge_id = charge.id
+        new_car.charge_id = subscription.id
 
     except stripe.error.CardError as ce:
         return False, ce
@@ -97,5 +96,3 @@ def register(request):
         form = UserCreationForm()
 
     return render(request, 'registration/register.html', {'form': form})
-
-

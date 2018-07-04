@@ -21,7 +21,7 @@ SECRET_KEY = '41+h()yq5-!*=)sh+_%4wal8=+*e)dlrau*81odpu7n&9^7d5h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'libreborme.net']
+ALLOWED_HOSTS = ['127.0.0.1', 'libreborme.net', '.ngrok.io']
 
 
 # Application definition
@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'libreborme',
     'alertas',
     'bootstrapform',
+    'djstripe',
 )
 
 
@@ -193,5 +194,13 @@ LOGIN_URL = '/admin/login/'
 LOGIN_REDIRECT_URL = '/alertas/'
 LOGOUT_REDIRECT_URL = '/borme/'
 
+# stripe
 STRIPE_PUBLIC_KEY = os.getenv("STRIPE_SECRET_KEY", "pk_test_0N38FeA9mW1so4zKyCyzcxIE")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "sk_test_eVEoxiTuoWOlSw104llgXvcs")
+
+# dj-stripe
+STRIPE_LIVE_PUBLIC_KEY = os.environ.get("STRIPE_LIVE_PUBLIC_KEY", "xxxx")
+STRIPE_LIVE_SECRET_KEY = os.environ.get("STRIPE_LIVE_SECRET_KEY", "xxxx")
+STRIPE_TEST_PUBLIC_KEY = STRIPE_PUBLIC_KEY
+STRIPE_TEST_SECRET_KEY = STRIPE_SECRET_KEY
+STRIPE_LIVE_MODE = False  # Change to True in production
