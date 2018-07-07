@@ -7,10 +7,12 @@ from django.template.loader import get_template
 from django.views.generic.base import TemplateView
 
 from borme.mixins import CacheMixin
-from alertas.models import Car
 from djstripe.models import Customer, Plan
 
 from pathlib import Path
+from datetime import datetime
+
+from alertas.models import LBInvoice
 
 import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -56,9 +58,7 @@ def checkout(request):
     customer = Customer.objects.get(subscriber=request.user)
     # customer.subscribe(plan)
 
-    # Lo que vamos a vender
-
-    new_car = Car(name="Honda Civic", year=2017)
+    new_invoice = LBInvoice(user=request.user)
 
     if request.method == "POST":
         token = request.POST.get("stripeToken")
@@ -72,13 +72,21 @@ def checkout(request):
             source=token
             # prorate=
         )
-        new_car.charge_id = subscription.id
+        new_invoice.start_date = datetime.fromtimestamp(subscription.current_period_start)
+        new_invoice.end_date = datetime.fromtimestamp(subscription.current_period_end)
+        new_invoice.amount = plan.amount
+        new_invoice.payment_type = 'stripe'
+        new_invoice.name = request.user.get_full_name()
+        new_invoice.address = "TODO"
+        new_invoice.nif = "TODO"
+        new_invoice.is_paid = True
+        new_invoice.charge_id = subscription.id
 
     except stripe.error.CardError as ce:
         return False, ce
 
     else:
-        new_car.save()
+        new_invoice.save()
         return redirect("dashboard-index")
         # The payment was successfully processed, the user's card was charged.
         # You can now redirect the user to another page or whatever you want

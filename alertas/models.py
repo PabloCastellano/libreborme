@@ -72,7 +72,7 @@ PERIODICIDAD_CHOICES = (
 PERIODICIDAD_DICT = dict(PERIODICIDAD_CHOICES)
 
 PAYMENT_CHOICES = (
-    ('paypal', "Paypal"),
+    ('stripe', "Stripe"),
     ('bank', "Transferencia bancaria"),
     # ('bitcoin', "Bitcoin")
 )
@@ -142,7 +142,8 @@ class LBInvoice(m.Model):
     address = m.CharField(max_length=200)
     is_paid = m.BooleanField()
     description = m.CharField(max_length=2000, blank=True)
-    nif = m.CharField(max_length=20)
+    nif = m.CharField(max_length=20, blank=True)
+    charge_id = m.CharField(max_length=200)
 
     def get_absolute_url(self):
         return reverse('alertas-invoice-view', args=[str(self.id)])
