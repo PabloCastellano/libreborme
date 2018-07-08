@@ -20,6 +20,9 @@ recreate_db:
 		./manage.py loaddata ./libreborme/fixtures/config.json
 		./manage.py loaddata ./alertas/fixtures/alertasconfig.json
 		./manage.py createsuperuser --username admin --email pablo@anche.no
+		./manage.py djstripe_sync_customers
+		./manage.py djstripe_sync_plans_from_stripe
+
 
 run:
 		docker-compose up -d
