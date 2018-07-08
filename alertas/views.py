@@ -1,4 +1,6 @@
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
@@ -7,7 +9,6 @@ from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic import TemplateView
 from django.urls import reverse
-from django.contrib.auth.models import User
 
 from .models import (
         AlertaActo, AlertaCompany, AlertaHistory,
@@ -148,6 +149,26 @@ class AlertaDetailView(DetailView):
         return self.alerta
 
 
+@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
+class AlertaEventsView(TemplateView):
+    template_name = "alertas/events_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(AlertaEventsView, self).get_context_data(**kwargs)
+        context['active'] = 'events'
+
+        events_by_date = {}
+        for e in Event.objects.all().order_by('-created'):
+            e.data_json = json.dumps(e.data)
+            e.metadata_json = json.dumps(e.metadata)
+            date = e.created.date()
+            events_by_date.setdefault(date, [])
+            events_by_date[date].append(e)
+        context['events_by_date'] = events_by_date
+        return context
+
+
 @method_decorator(login_required, name='dispatch')
 class AlertaListView(TemplateView):
     template_name = "alertas/alerta_list.html"
@@ -235,6 +256,19 @@ def settings_update_personal(request):
         form = forms.PersonalSettingsForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
+    return redirect(reverse('alertas-settings'))
+
+
+@login_required
+def settings_update_stripe(request):
+
+    if request.method == 'POST':
+        token = request.POST.get("stripeToken")
+
+        customer = Customer.objects.get(subscriber=request.user)
+        customer.add_card(source=token)
+        customer.save()
+
     return redirect(reverse('alertas-settings'))
 
 

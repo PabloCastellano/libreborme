@@ -53,6 +53,11 @@
             <li {% if active == 'alertas' %}class="active"{% endif %}><a href="{% url 'alertas-list' %}">Alertas</a></li>
             <li {% if active == 'billing' %}class="active"{% endif %}><a href="{% url 'alertas-billing' %}">Facturas</a></li>
           </ul>
+          {% if user.is_staff %}
+          <ul class="nav nav-sidebar-admin">
+            <li {% if active == 'events' %}class="active"{% endif %}><a href="{% url 'alertas-events' %}">Eventos</a></li>
+          </ul>
+          {% endif %}
            <ul class="nav nav-sidebar">
             <li {% if active == 'history' %}class="active"{% endif %}><a href="{% url 'dashboard-history' %}">Historial</a></li>
           </ul>

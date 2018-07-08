@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'alertas',
     'bootstrapform',
     'djstripe',
+    'prettyjson',
 )
 
 
