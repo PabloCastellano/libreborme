@@ -96,6 +96,11 @@ class DashboardSettingsView(TemplateView):
         initial['notification_url'] = self.request.user.profile.notification_url
 
         context['form_notification'] = forms.NotificationSettingsForm(initial=initial)
+
+        customer = Customer.objects.get(subscriber=self.request.user)
+        context["customer"] = customer
+        context["cards"] = customer.sources.order_by('-exp_year', '-exp_month')
+        context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
         return context
 
 

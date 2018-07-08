@@ -5,34 +5,92 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Configuración</h1>
 
-        <div class="col-sm-4">
-            <form action="{% url "alertas-settings-personal" %}" role="form" method="post">
+          <div class="row">
+            <div class="col-sm-4">
+              <form action="{% url "alertas-settings-personal" %}" role="form" method="post">
                 <legend>Datos personales</legend>
                 {% csrf_token %}
                 <div class="form-group">
-                    <p>Nombre: {{ user.get_full_name }}</p>
-                    <p>Tipo de cuenta: {{ user.profile.get_account_type_display }}</p>
+                  <p>Nombre: {{ user.get_full_name }}</p>
+                  <p>Tipo de cuenta: {{ user.profile.get_account_type_display }}</p>
                 </div>
                 {{ form_personal|bootstrap }}
                 <p><a href="{% url 'password_change' %}">Cambiar contraseña</a></p>
                 <div class="form-group">
-                    <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
+                  <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
                 </div>
-            </form>
+              </form>
+            </div>
+
+            <div class="col-sm-4 col-sm-offset-1">
+              <form action="{% url "alertas-settings-notifications" %}" role="form" method="post">
+               <legend>Notificaciones</legend>
+               {% csrf_token %}
+               {{ form_notification|bootstrap }}
+               <div class="form-group">
+                 <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
+               </div>
+              </form>
+            </div>
           </div>
 
-        <div class="col-sm-4 col-sm-offset-1">
-            <form action="{% url "alertas-settings-notifications" %}" role="form" method="post">
-                <legend>Notificaciones</legend>
+          <div class="row">
+            <div class="col-sm-4 col-sm-offset-5">
+                <form action="{% url 'alertas-settings-stripe' %}" method="POST">
+                <legend>Métodos de pago</legend>
                 {% csrf_token %}
-                {{ form_notification|bootstrap }}
                 <div class="form-group">
-                    <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
-                </div>
-            </form>
-        </div>
 
-        
+                  <table class="table table-striped table-hover table-condensed">
+                    <tbody>
+                    {% for card in cards %}
+                      <tr>
+                        <td>
+                          <p>
+                          <strong>{{ card.name }}</strong> xxxx-<strong>{{ card.last4 }}</strong>
+                          ({{ card.brand }})
+                          </p>
+                          <p>
+                           Caduca en <strong>{{ card.exp_month }}/{{ card.exp_year }}</strong>
+                          </p>
+                        </td>
+                        <td>
+                          {% if card.stripe_id == customer.default_source_id %}
+                            <span title="Predeterminada" class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                          {% endif %}
+                        </td>
+                        <td>
+                          <span title="Eliminar" style="color: #c62a2a" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </td>
+                      </tr>
+                    {% empty %}
+                    <p>No tienes ningún método de pago</p>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+                <script
+                  src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                  data-key="{{ STRIPE_PUBLIC_KEY }}"
+                  data-email="{{ customer.email }}"
+                  data-zip-code="true"
+                  data-billing-address="true"
+                  data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                  data-name="Libreborme"
+                  data-panel-label="Añadir tarjeta de crédito"
+                  data-label="Añadir nuevo"
+                  data-allow-remember-me=false
+                  data-currency="eur"
+                  data-locale="auto">
+                </script>
+              </form>
+              <p class="help-block">
+              Usamos <a href="https://stripe.com/es" target="_blank">Stripe</a>
+              como pasarela de pago. No almacenamos los datos de su tarjeta.</p>
+            </div>
+          </div>
+
         </div>
 
 {% endblock %}
