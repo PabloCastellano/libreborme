@@ -17,7 +17,7 @@ from borme.models import Person
 from borme.templatetags.utils import slug, slug2
 from . import forms
 
-from djstripe.models import Charge, Customer, Invoice, Subscription
+from djstripe.models import Customer, Event
 from libreborme.models import Profile
 
 import datetime
@@ -60,6 +60,10 @@ class DashboardIndexView(TemplateView):
         customer = Customer.objects.get(subscriber=self.request.user)
         context["customer"] = customer
         context['stripe_subscriptions'] = customer.subscriptions.all()
+        try:
+            context['ip'] = self.request.META['HTTP_X_FORWARDED_FOR']
+        except KeyError:
+            context['ip'] = self.request.META['REMOTE_ADDR']
         return context
 
 
@@ -200,6 +204,7 @@ class AlertaListView(TemplateView):
         context['active'] = 'alertas'
 
         context['STRIPE_PUBLIC_KEY'] = settings.STRIPE_PUBLIC_KEY
+        context['email'] = self.request.user.email
         return context
 
 

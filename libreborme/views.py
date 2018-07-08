@@ -55,33 +55,58 @@ def robotstxt(request):
 
 
 def checkout(request):
-    plan = Plan.objects.get(nickname="nuevacreacion_300")
+    # TODO: make params
+    qty = 1
+    nickname = "Subscription Yearly"
+    tax_percent = 21.0  # TODO: tax per country (?)
+
+    plan = Plan.objects.get(nickname=nickname)
     customer = Customer.objects.get(subscriber=request.user)
-    # customer.subscribe(plan)
 
     new_invoice = LBInvoice(user=request.user)
+    user_input = {}
 
     if request.method == "POST":
-        token = request.POST.get("stripeToken")
+        user_input["token"] = request.POST.get("stripeToken")
+        user_input["email"] = request.POST.get("stripeEmail")
+        # Billing
+        user_input["name"] = request.POST.get("stripeBillingName")
+        user_input["address"] = request.POST.get("stripeBillingAddressLine1")
+        user_input["zipcode"] = request.POST.get("stripeBillingAddressZip")
+        user_input["state"] = request.POST.get("stripeBillingAddressState")
+        user_input["city"] = request.POST.get("stripeBillingAddressCity")
+        user_input["country"] = request.POST.get("stripeBillingAddressCountry")
 
     try:
-        subscription = stripe.Subscription.create(
-            customer=customer.stripe_id,
-            items=[
-                {"plan": plan.stripe_id, "quantity": 1}
-            ],
-            source=token
-            # prorate=
-        )
+        # TODO: if not saved/save card, use the token once, otherwise
+        # attach to customer
+        # If the customer has already a source, use it
+        if customer.default_source:
+            subscription = customer.subscribe(plan, quantity=qty,
+                                              tax_percent=tax_percent)
+        else:
+            subscription = stripe.Subscription.create(
+                customer=customer.stripe_id,
+                items=[
+                    {"plan": plan.stripe_id, "quantity": qty}
+                ],
+                source=user_input["token"],
+                tax_percent=tax_percent,  # TODO: tax per country (?)
+                # prorate=
+            )
         new_invoice.start_date = datetime.fromtimestamp(subscription.current_period_start)
         new_invoice.end_date = datetime.fromtimestamp(subscription.current_period_end)
         new_invoice.amount = plan.amount
         new_invoice.payment_type = 'stripe'
-        new_invoice.name = request.user.get_full_name()
-        new_invoice.address = "TODO"
+        new_invoice.name = user_input["name"]
+        new_invoice.email = user_input["email"]
+        new_invoice.address = ", ".join(user_input["address"], user_input["zipcode"], user_input["state"], user_input["city"], user_input["country"])
         new_invoice.nif = "TODO"
-        new_invoice.is_paid = True
-        new_invoice.charge_id = subscription.id
+        try:
+            new_invoice.ip = request.META['HTTP_X_FORWARDED_FOR']
+        except KeyError:
+            new_invoice.ip = request.META['REMOTE_ADDR']
+        new_invoice.subscription_id = subscription.id
 
     except stripe.error.CardError as ce:
         return False, ce

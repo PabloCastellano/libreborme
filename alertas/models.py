@@ -4,6 +4,9 @@ from django.conf import settings
 from django.urls import reverse
 
 from borme.models import Company, Person
+from djstripe.models import Subscription
+
+from datetime import datetime
 
 import os.path
 
@@ -136,20 +139,25 @@ class LBInvoice(m.Model):
     start_date = m.DateTimeField()
     end_date = m.DateTimeField()
     amount = m.FloatField()
-    type = m.CharField(max_length=10, blank=True)  # reservado
     payment_type = m.CharField(max_length=10, choices=PAYMENT_CHOICES)
     name = m.CharField(max_length=100)
+    email = m.EmailField(max_length=100)
     address = m.CharField(max_length=200)
-    is_paid = m.BooleanField()
-    description = m.CharField(max_length=2000, blank=True)
     nif = m.CharField(max_length=20, blank=True)
-    charge_id = m.CharField(max_length=200)
+    ip = m.GenericIPAddressField(unpack_ipv4=True)
+    description = m.CharField(max_length=2000, blank=True)
+    subscription_id = m.CharField(max_length=200)
+
+    # TODO: unused, remove
+    @property
+    def is_paid(self):
+        return True
 
     def get_absolute_url(self):
         return reverse('alertas-invoice-view', args=[str(self.id)])
 
     def __str__(self):
-        return "LBInvoice ({}): {}. Pagada: {}".format(self.user, self.amount, self.is_paid)
+        return "LBInvoice ({}): {}".format(self.user, self.amount)
 
 
 class AlertasConfig(m.Model):

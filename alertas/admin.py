@@ -1,6 +1,9 @@
 from django.contrib import admin
 from . import models
 
+# TODO: SubscriptionInline in LBInvoiceAdmin
+# from djstripe.models import Subscription
+
 
 class AlertaCompanyAdmin(admin.ModelAdmin):
     list_display = ('user', 'company', 'send_html', 'is_enabled')
@@ -21,10 +24,23 @@ class AlertaActoAdmin(admin.ModelAdmin):
     # TODO: get_provincia_display
 
 
+# class SubscriptionInline(admin.StackedInline):
+#     model = Subscription
+#     can_delete = False
+#     verbose_name_plural = 'Subscription'
+#     fk_name = 'id'
+
+
 class LBInvoiceAdmin(admin.ModelAdmin):
-    list_display = ('user', 'start_date', 'end_date', 'amount', 'payment_type', 'is_paid')
-    list_filter = ('is_paid', 'payment_type')
+    # inlines = (SubscriptionInline, )
+    list_display = ('user', 'start_date', 'end_date', 'amount', 'payment_type', 'ip', 'subscription_id')
+    list_filter = ('user', 'payment_type')
     search_fields = ['user__username', 'user__email']
+
+    # def get_inline_instances(self, request, obj=None):
+    #     if not obj:
+    #         return list()
+    #     return super(LBInvoiceAdmin, self).get_inline_instances(request, obj)
 
 
 class AlertasConfigAdmin(admin.ModelAdmin):

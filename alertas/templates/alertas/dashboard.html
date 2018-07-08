@@ -19,15 +19,6 @@
             <p>Ninguna</p>
           {% endif %}
 
-
-          <p>Stripe</p>
-            <p>There are actually {{ stripe_subscriptions | length }} subscriptions.</p>
-            <ul>
-                {% for subscription in stripe_subscriptions %}
-                <li>{{ subscription }}</li>
-                {% endfor %}
-            </ul>
-
           <h2 class="sub-header">Alertas definidas</h2>
           <p>Tienes <span>{{ n_alertas }}</span> alerta{{ n_alertas|pluralize }} definida{{ n_alertas|pluralize }} en total.
 
@@ -60,6 +51,18 @@
 
           <h2 class="sub-header">Stripe</h2>
           <p>Customer ID: {{ customer.stripe_id }}</p>
+
+            {% if customer.has_any_active_subscription %}
+              <p>You have active subscriptions</p>
+              <p>There are actually {{ stripe_subscriptions | length }} subscriptions.</p>
+              <ul>
+                  {% for subscription in stripe_subscriptions %}
+                  <li>{{ subscription }}</li>
+                  {% endfor %}
+              </ul>
+            {% else %}
+              <p>You don't have any active subscription</p>
+            {% endif %}
 
         </div>
 
