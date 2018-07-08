@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template.loader import get_template
@@ -13,6 +12,8 @@ from pathlib import Path
 from datetime import datetime
 
 from alertas.models import LBInvoice
+
+from .forms import LBUserCreationForm
 
 import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -94,13 +95,13 @@ def checkout(request):
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = LBUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Account created successfully')
             return redirect('login')
 
     else:
-        form = UserCreationForm()
+        form = LBUserCreationForm()
 
     return render(request, 'registration/register.html', {'form': form})
