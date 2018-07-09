@@ -1,22 +1,25 @@
 from django.contrib import admin
-from . import models
+from . import models as m
 
 # TODO: SubscriptionInline in LBInvoiceAdmin
 # from djstripe.models import Subscription
 
 
+@admin.register(m.AlertaCompany)
 class AlertaCompanyAdmin(admin.ModelAdmin):
     list_display = ('user', 'company', 'send_html', 'is_enabled')
     list_filter = ('user', 'is_enabled')
     search_fields = ['user__username', 'user__email', 'company__name']
 
 
+@admin.register(m.AlertaPerson)
 class AlertaPersonAdmin(admin.ModelAdmin):
     list_display = ('user', 'person', 'send_html', 'is_enabled')
     list_filter = ('user', 'is_enabled')
     search_fields = ['user__username', 'user__email', 'person__name']
 
 
+@admin.register(m.AlertaActo)
 class AlertaActoAdmin(admin.ModelAdmin):
     list_display = ('user', 'evento', 'periodicidad', 'provincia', 'send_html', 'is_enabled')
     list_filter = ('evento', 'periodicidad', 'send_html', 'is_enabled')
@@ -31,6 +34,7 @@ class AlertaActoAdmin(admin.ModelAdmin):
 #     fk_name = 'id'
 
 
+@admin.register(m.LBInvoice)
 class LBInvoiceAdmin(admin.ModelAdmin):
     # inlines = (SubscriptionInline, )
     list_display = ('user', 'start_date', 'end_date', 'amount', 'payment_type', 'ip', 'subscription_id')
@@ -43,25 +47,19 @@ class LBInvoiceAdmin(admin.ModelAdmin):
     #     return super(LBInvoiceAdmin, self).get_inline_instances(request, obj)
 
 
+@admin.register(m.AlertasConfig)
 class AlertasConfigAdmin(admin.ModelAdmin):
     list_display = ('key', 'value')
     search_fields = ['key']
 
 
+@admin.register(m.AlertaHistory)
 class AlertaHistoryAdmin(admin.ModelAdmin):
     list_display = ('user', 'type', 'date', 'provincia', 'entidad', 'periodicidad')
     search_fields = ['user', 'date']
 
 
+@admin.register(m.LibrebormeLogs)
 class LibrebormeLogsAdmin(admin.ModelAdmin):
     list_display = ('date', 'component', 'log', 'user')
     search_fields = ['date', 'component', 'log', 'user']
-
-
-admin.site.register(models.AlertaCompany, AlertaCompanyAdmin)
-admin.site.register(models.AlertaPerson, AlertaPersonAdmin)
-admin.site.register(models.AlertaActo, AlertaActoAdmin)
-admin.site.register(models.LBInvoice, LBInvoiceAdmin)
-admin.site.register(models.AlertasConfig, AlertasConfigAdmin)
-admin.site.register(models.AlertaHistory, AlertaHistoryAdmin)
-admin.site.register(models.LibrebormeLogs, LibrebormeLogsAdmin)

@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from . import models as m
 
 
+@admin.register(m.Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'account_type', 'notification_method',
                     'notification_email', 'notification_url')
@@ -31,6 +32,5 @@ class CustomUserAdmin(UserAdmin):
         return super(CustomUserAdmin, self).get_inline_instances(request, obj)
 
 
-admin.site.register(m.Profile, ProfileAdmin)
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
