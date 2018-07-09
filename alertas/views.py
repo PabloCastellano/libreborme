@@ -47,7 +47,7 @@ class DashboardIndexView(TemplateView):
         context['n_alertas'] = context['count_c'] + context['count_p'] + context['count_a']
 
         today = datetime.date.today()
-        context['subscriptions'] = LBInvoice.objects.filter(
+        context['lbinvoices'] = LBInvoice.objects.filter(
                                     user=self.request.user, end_date__gt=today)
 
         alertas_config = get_alertas_config()
@@ -60,6 +60,12 @@ class DashboardIndexView(TemplateView):
         customer = Customer.objects.get(subscriber=self.request.user)
         context["customer"] = customer
         context['stripe_subscriptions'] = customer.subscriptions.all()
+
+        try:
+            context["upcoming_invoice"] = customer.upcoming_invoice()
+        except stripe.error.InvalidRequestError:
+            context["upcoming_invoice"] = "Ninguno"
+
         try:
             context['ip'] = self.request.META['HTTP_X_FORWARDED_FOR']
         except KeyError:
@@ -124,7 +130,7 @@ class BillingView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BillingView, self).get_context_data(**kwargs)
         context['active'] = 'billing'
-        context['invoices'] = LBInvoice.objects.filter(user=self.request.user)
+        context['lbinvoices'] = LBInvoice.objects.filter(user=self.request.user)
 
         # TODO: get or 500
         customer = Customer.objects.get(subscriber=self.request.user)

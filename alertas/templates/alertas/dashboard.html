@@ -7,11 +7,11 @@
           <p>Tipo de cuenta: <strong>{{ user.profile.get_account_type_display }}</strong></p>
           <p>Fecha de alta: <strong>{{ user.date_joined.date }}</strong></p>
 
-          <h2 class="sub-header">Subscripciones activas</h2>
+          <h2 class="sub-header">Subscripciones (LBInvoices) activas</h2>
 
-          {% if subscriptions %}
+          {% if lbinvoices %}
             <ul>
-            {% for subscription in subscriptions %}
+            {% for subscription in lbinvoices %}
               <li><a href="{{ subscription.get_absolute_url }}">{{ subscription.description }}</a>, hasta: {{ subscription.end_date | date }}</li>
             {% endfor %}
             </ul>
@@ -57,12 +57,30 @@
               <p>There are actually {{ stripe_subscriptions | length }} subscriptions.</p>
               <ul>
                   {% for subscription in stripe_subscriptions %}
-                  <li>{{ subscription }}</li>
+                  <li>{{ subscription }} (is_period_current: {{ subscription.is_period_current }}, is_status_current: {{ subscription.is_status_current }}, is_status_temporarily_current: {{ subscription.is_status_temporarily_current }})</li>
                   {% endfor %}
               </ul>
             {% else %}
               <p>You don't have any active subscription</p>
             {% endif %}
+          <p>Suscripciones activas (status=active, end in future):</p>
+          <ul>
+            {% for subscription in customer.active_subscriptions %}
+            <li>{{ subscription }}</li>
+            {% empty %}
+            <li>Ninguna</li>
+            {% endfor %}
+          </ul>
+          <p>Suscripciones válidas (status!=canceled):</p>
+          <ul>
+            {% for subscription in customer.valid_subscriptions %}
+            <li>{{ subscription }}</li>
+            {% empty %}
+            <li>Ninguna</li>
+            {% endfor %}
+          </ul>
+          <p>Puede ser cobrado: {{ customer.can_charge}}</p>
+          <p>Upcoming invoice: {{ upcoming_invoice }}</p>
 
         </div>
 

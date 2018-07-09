@@ -20,7 +20,7 @@
                 </tr>
               </thead>
               <tbody>
-                {% for invoice in invoices %}
+                {% for invoice in lbinvoices %}
                 <tr {% if not invoice.is_paid %}class="danger"{% endif %}>
                   <td>{{ invoice.id }}</td>
                   <td>{{ invoice.start_date }}</td>
@@ -57,11 +57,47 @@
 
             <h2>Stripe invoices</h2>
             <p>There are actually {{ invoices | length }} invoices.</p>
-            <ul>
-                {% for invoice in invoices %}
-                <li>{{ invoice }}</li>
-                {% endfor %}
-            </ul>
+            <p>TODO: Upcoming invoice</p>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Cantidad</th>
+                    <th>Pagado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for invoice in invoices %}
+                  <tr {% if not invoice.paid %}class="danger"{% endif %}>
+                    <td>{{ invoice.number }}</td>
+                    <td>{{ invoice.date.date }}</td>
+                    <td>{{ invoice.amount_due }}</td>
+                    <td>{% if invoice.paid %}
+                      <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                      {% else %}
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <a href="{{ invoice.hosted_invoice_url }}" target="_blank">
+                      <button type="button" class="btn btn-primary btn-xs">
+                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Ver
+                      </button>
+                      </a>
+                      <a href="{{ invoice.invoice_pdf }}" target="_blank">
+                      <button type="button" class="btn btn-danger btn-xs">
+                        <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> PDF
+                      </button>
+                      </a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
 
           </div>
         </div>
