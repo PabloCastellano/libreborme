@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^alertas/ayuda/$', views.DashboardSupportView.as_view(), name='alertas-ayuda'),
     url(r'^alertas/settings/$', views.DashboardSettingsView.as_view(), name='alertas-settings'),
     url(r'^alertas/settings/update/personal/$', views.settings_update_personal, name='alertas-settings-personal'),
+    url(r'^alertas/settings/update/billing/$', views.settings_update_billing, name='alertas-settings-billing'),
     url(r'^alertas/settings/update/notifications/$', views.settings_update_notifications, name='alertas-settings-notifications'),
     url(r'^alertas/settings/update/stripe/$', views.settings_update_stripe, name='alertas-settings-stripe'),
     url(r'^alertas/history/$', views.DashboardHistoryView.as_view(), name='dashboard-history'),

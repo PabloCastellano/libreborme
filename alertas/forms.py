@@ -1,5 +1,6 @@
 from django import forms
 from . import models
+from djstripe.models import Customer
 
 from libreborme.models import NOTIFICATION_CHOICES
 
@@ -37,6 +38,12 @@ class PersonalSettingsForm(forms.ModelForm):
     class Meta:
         model = models.User
         fields = ['email']
+
+
+class BillingSettingsForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = ['business_vat_id']
 
 
 class NotificationSettingsForm(forms.Form):

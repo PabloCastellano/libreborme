@@ -101,6 +101,7 @@ class DashboardSettingsView(TemplateView):
         context["customer"] = customer
         context["cards"] = customer.sources.order_by('-exp_year', '-exp_month')
         context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
+        context["form_billing"] = forms.BillingSettingsForm(initial={'business_vat_id': customer.business_vat_id})
         return context
 
 
@@ -264,6 +265,16 @@ def settings_update_personal(request):
     if request.method == 'POST':
         instance = User.objects.get(pk=request.user.id)
         form = forms.PersonalSettingsForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+    return redirect(reverse('alertas-settings'))
+
+
+@login_required
+def settings_update_billing(request):
+    if request.method == 'POST':
+        instance = Customer.objects.get(subscriber=request.user)
+        form = forms.BillingSettingsForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
     return redirect(reverse('alertas-settings'))
