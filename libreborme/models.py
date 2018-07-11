@@ -27,7 +27,6 @@ LANGUAGE_CHOICES = (
 
 class Profile(m.Model):
     user = m.OneToOneField(User, on_delete=m.CASCADE, related_name='profile')
-    account_type = m.CharField(max_length=4, choices=ACCOUNT_CHOICES)
     notification_method = m.CharField(max_length=10,
                                       choices=NOTIFICATION_CHOICES,
                                       default='email')
@@ -47,6 +46,18 @@ class Profile(m.Model):
         pass
         # return all(for invoice in self.invoices:
         #    invoice
+
+    @property
+    def account_type(self):
+        customer = Customer.objects.get(subscriber=self.user)
+        subscription = customer.subscription
+        if not subscription:
+            return "basic"
+        else:
+            return subscription.status
+
+    def get_account_type_display(self):
+        return ACCOUNT_CHOICES[self.account_type]
 
     def expire_subscription(self, send_email):
         if self.user.is_active:
