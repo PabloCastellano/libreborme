@@ -2,14 +2,16 @@
   <script
     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
     data-key="{{ STRIPE_PUBLIC_KEY }}"
-    data-amount="999"
-    data-name="Libreborme"
-    data-description="Subscripción a Libreborme"
-    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-    data-locale="auto"
-    data-zip-code="true"
     data-email="{{ email }}"
-    data-label="Suscribirme"
-    data-currency="eur">
+    data-zip-code="true"
+    data-billing-address="true"
+    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+    data-name="Libreborme"
+    data-label="{{ plan.label }}"
+    data-amount="{{ plan.amount }}"
+    data-description="Subscripción a Libreborme"
+    data-allow-remember-me=false
+    data-currency="eur"
+    data-locale="auto">
   </script>
 </form>

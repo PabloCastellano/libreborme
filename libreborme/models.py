@@ -8,11 +8,11 @@ from alertas.utils import insert_libreborme_log
 
 from djstripe.models import Customer
 
-ACCOUNT_CHOICES = (
-    ('free', "Gratuita"),
-    ('paid', "Premium"),
-    ('test', "Período de prueba"),
-)
+ACCOUNT_CHOICES = {
+    'basic': "Básica",
+    'paid': "Premium",
+    'test': "Período de prueba",
+}
 
 NOTIFICATION_CHOICES = (
     ('email', "E-mail"),

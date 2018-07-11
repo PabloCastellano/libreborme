@@ -1,0 +1,33 @@
+{% extends "alertas/base_dashboard.html" %}
+{% load staticfiles %}
+{% load bootstrap %}
+
+{% block content %}
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Listado de Suscripciones</h1>
+
+          <p>Aquí puede ver sus suscripciones de LibreBORME</p>
+
+          <h2 class="sub-header">Suscripción</h2>
+
+          {% if customer.has_any_active_subscription %}
+            <p>¡Ya estás suscrito!</p>
+          {% else %}
+            <p>No tiene ninguna suscripción activa</p>
+
+            <p>
+            <a href="#">Suscribirme con el source que tengo</a>
+            </p>
+
+            <p>Suscribir pidiendo source:</br>
+            <p>Plan mensual: {% include 'stripe_form.html' with plan=plan_month %}</p>
+            <p>Plan anual: {% include 'stripe_form.html' with plan=plan_year %}</p>
+            </p>
+          {% endif %}
+
+
+        </div>
+
+
+{% endblock %}

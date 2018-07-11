@@ -34,9 +34,8 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li {% if active == 'settings' %}class="active"{% endif %}><a href="{% url 'alertas-settings' %}">Configuración</a></li>
+            <li {% if active == 'settings' %}class="active"{% endif %}><a href="{% url 'alertas-settings' %}"><span class="glyphicon glyphicon-settings" aria-hidden="true"></span> Configuración</a></li>
             <li {% if active == 'ayuda' %}class="active"{% endif %}><a href="{% url 'alertas-ayuda' %}">Ayuda</a></li>
-            <li><a href="{% url 'logout' %}">Salir</a></li>
           </ul>
         </div>
       </div>
@@ -49,17 +48,22 @@
 
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li {% if active == 'dashboard' %}class="active"{% endif %}><a href="{% url 'dashboard-index' %}">Información<span class="sr-only">(current)</span></a></li>
-            <li {% if active == 'alertas' %}class="active"{% endif %}><a href="{% url 'alertas-list' %}">Alertas</a></li>
-            <li {% if active == 'billing' %}class="active"{% endif %}><a href="{% url 'alertas-billing' %}">Facturas</a></li>
+            <li {% if active == 'dashboard' %}class="active"{% endif %}><a href="{% url 'dashboard-index' %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Mi cuenta</a></li>
+            <li {% if active == 'subscriptions' %}class="active"{% endif %}><a href="{% url 'subscriptions-list' %}"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> Suscripciones</a></li>
+            <li {% if active == 'alertas' %}class="active"{% endif %}><a href="{% url 'alertas-list' %}"><span class="glyphicon glyphicon-flash" aria-hidden="true"></span> Alertas</a></li>
+            <li {% if active == 'history' %}class="active"{% endif %}><a href="{% url 'alertas-history' %}"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Historial de alertas</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li {% if active == 'billing' %}class="active"{% endif %}><a href="{% url 'alertas-billing' %}"><span class="glyphicon glyphicon-invoice" aria-hidden="true"></span> Facturas</a></li>
+            <li {% if active == 'payment' %}class="active"{% endif %}><a href="{% url 'alertas-payment' %}"><span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Métodos de pago</a></li>
           </ul>
           {% if user.is_staff %}
           <ul class="nav nav-sidebar-admin">
             <li {% if active == 'events' %}class="active"{% endif %}><a href="{% url 'alertas-events' %}">Eventos</a></li>
           </ul>
           {% endif %}
-           <ul class="nav nav-sidebar">
-            <li {% if active == 'history' %}class="active"{% endif %}><a href="{% url 'dashboard-history' %}">Historial</a></li>
+          <ul class="nav nav-sidebar">
+            <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Cerrar sesión</a>
           </ul>
         </div>
 

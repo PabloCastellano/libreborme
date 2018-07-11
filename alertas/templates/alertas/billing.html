@@ -6,90 +6,38 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Listado de facturas</h1>
 
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Comienzo</th>
-                  <th>Final</th>
-                  <th>Cantidad</th>
-                  <th>Forma de pago</th>
-                  <th>Pagado</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for invoice in lbinvoices %}
-                <tr {% if not invoice.is_paid %}class="danger"{% endif %}>
-                  <td>{{ invoice.id }}</td>
-                  <td>{{ invoice.start_date }}</td>
-                  <td>{{ invoice.end_date }}</td>
-                  <td>{{ invoice.amount }}</td>
-                  <td>{{ invoice.get_payment_type_display }}</td>
-                  <td>{% if invoice.is_paid %}
-                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                    {% else %}
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    {% endif %}
-                  </td>
-                  <td>
-                    <a href="{% url 'alertas-invoice-view' invoice.id %}">
-                    <button type="button" class="btn btn-primary btn-xs">
-                      <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Ver
-                    </button>
-                    </a>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-
-          <div>
-            <h2>Stripe charges</h2>
-            <p>There are actually {{ charges | length }} charges.</p>
-            <ul>
-                {% for charge in charges %}
-                <li>{{ charge }}</li>
-                {% endfor %}
-            </ul>
-
-            <h2>Stripe invoices</h2>
-            <p>There are actually {{ invoices | length }} invoices.</p>
-            <p>TODO: Upcoming invoice</p>
+          {% if lbinvoices %}
             <div class="table-responsive">
               <table class="table table-striped">
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Fecha</th>
+                    <th>Comienzo</th>
+                    <th>Final</th>
                     <th>Cantidad</th>
+                    <th>Forma de pago</th>
                     <th>Pagado</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {% for invoice in invoices %}
-                  <tr {% if not invoice.paid %}class="danger"{% endif %}>
-                    <td>{{ invoice.number }}</td>
-                    <td>{{ invoice.date.date }}</td>
-                    <td>{{ invoice.amount_due }}</td>
-                    <td>{% if invoice.paid %}
+                  {% for invoice in lbinvoices %}
+                  <tr {% if not invoice.is_paid %}class="danger"{% endif %}>
+                    <td>{{ invoice.id }}</td>
+                    <td>{{ invoice.start_date }}</td>
+                    <td>{{ invoice.end_date }}</td>
+                    <td>{{ invoice.amount }}</td>
+                    <td>{{ invoice.get_payment_type_display }}</td>
+                    <td>{% if invoice.is_paid %}
                       <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                       {% else %}
                       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                       {% endif %}
                     </td>
                     <td>
-                      <a href="{{ invoice.hosted_invoice_url }}" target="_blank">
+                      <a href="{% url 'alertas-invoice-view' invoice.id %}">
                       <button type="button" class="btn btn-primary btn-xs">
                         <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Ver
-                      </button>
-                      </a>
-                      <a href="{{ invoice.invoice_pdf }}" target="_blank">
-                      <button type="button" class="btn btn-danger btn-xs">
-                        <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> PDF
                       </button>
                       </a>
                     </td>
@@ -98,6 +46,74 @@
                 </tbody>
               </table>
             </div>
+          {% else %}
+            <p>Aún no se ha generado ninguna factura</p>
+          {% endif %}
+
+          <div>
+            <h2>Stripe charges</h2>
+            {% if charges %}
+              <p>There are actually {{ charges | length }} charges.</p>
+              <ul>
+                  {% for charge in charges %}
+                  <li>{{ charge }}</li>
+                  {% endfor %}
+              </ul>
+            {% else %}
+              <p>Aún no se ha generado ningún cargo</p>
+            {% endif %}
+
+            <h2>Stripe invoices</h2>
+            {% if upcoming_invoice %}
+              <p>Upcoming invoice: {{ upcoming_invoice }} ({{ upcoming_invoice.date }})</p>
+            {% else %}
+              <p>There are no upcoming invoices</p>
+            {% endif %}
+            {% if invoices %}
+              <p>There are actually {{ invoices | length }} invoices.</p>
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Fecha</th>
+                      <th>Cantidad</th>
+                      <th>Pagado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for invoice in invoices %}
+                    <tr {% if not invoice.paid %}class="danger"{% endif %}>
+                      <td>{{ invoice.number }}</td>
+                      <td>{{ invoice.date.date }}</td>
+                      <td>{{ invoice.amount_due }}</td>
+                      <td>{% if invoice.paid %}
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        {% else %}
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        {% endif %}
+                      </td>
+                      <td>
+                        <a href="{{ invoice.hosted_invoice_url }}" target="_blank">
+                        <button type="button" class="btn btn-primary btn-xs">
+                          <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Ver
+                        </button>
+                        </a>
+                        <a href="{{ invoice.invoice_pdf }}" target="_blank">
+                        <button type="button" class="btn btn-danger btn-xs">
+                          <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> PDF
+                        </button>
+                        </a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% else %}
+              <p>Aún no se ha generado ninguna factura en Stripe</p>
+            {% endif %}
 
           </div>
         </div>

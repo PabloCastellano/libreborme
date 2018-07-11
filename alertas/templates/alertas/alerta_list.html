@@ -40,7 +40,14 @@
           <h2 class="sub-header">Alertas de empresas (restantes: {{ restantes_c }})</h2>
           <div class="table-responsive">
             {% if restantes_c > 0 %}
-            <a href="#" data-toggle="modal" data-target="#alerta-company-modal">Añadir nueva alerta</a>
+              <a href="#" data-toggle="modal" data-target="#alerta-company-modal">Añadir nueva alerta</a>
+            {% else %}
+              <p>Has agotado todas tus alertas</p>
+              <a href="#">
+              <button type="button" class="btn btn-primary btn-xs">
+                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Cambiar de plan
+              </button>
+              </a>
             {% endif %}
 
             {% if alertas_c %}
@@ -83,7 +90,14 @@
           <h2 class="sub-header">Alertas de personas (restantes: {{ restantes_p }})</h2>
           <div class="table-responsive">
             {% if restantes_p > 0 %}
-            <a href="#" data-toggle="modal" data-target="#alerta-person-modal">Añadir nueva alerta</a>
+              <a href="#" data-toggle="modal" data-target="#alerta-person-modal">Añadir nueva alerta</a>
+            {% else %}
+              <p>Has agotado todas tus alertas</p>
+              <a href="#">
+              <button type="button" class="btn btn-primary btn-xs">
+                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Cambiar de plan
+              </button>
+              </a>
             {% endif %}
             {% if alertas_p %}
             <table class="table table-striped">
@@ -125,7 +139,14 @@
           <h2 class="sub-header">Alertas de actos mercantiles (restantes: {{ restantes_a }})</h2>
           <div class="table-responsive">
             {% if restantes_a > 0 %}
-            <a href="#" data-toggle="modal" data-target="#alerta-acto-modal">Añadir nueva alerta</a>
+              <a href="#" data-toggle="modal" data-target="#alerta-acto-modal">Añadir nueva alerta</a>
+            {% else %}
+              <p>Has agotado todas tus alertas</p>
+              <a href="#">
+              <button type="button" class="btn btn-primary btn-xs">
+                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Cambiar de plan
+              </button>
+              </a>
             {% endif %}
             {% if alertas_a %}
             <table class="table table-striped">
@@ -172,8 +193,6 @@
             {% endif %}
           </div>
 
-          <h2 class="sub-header">Suscripción TEST</h2>
-          {% include 'stripe_form.html' %}
 
         </div>
 

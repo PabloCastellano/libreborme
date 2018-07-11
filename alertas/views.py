@@ -17,11 +17,12 @@ from borme.models import Person
 from borme.templatetags.utils import slug, slug2
 from . import forms
 
-from djstripe.models import Customer, Event
+from djstripe.models import Customer, Event, Plan
 from libreborme.models import Profile
 
 import datetime
 import json
+import stripe
 
 from .utils import get_alertas_config
 
@@ -30,11 +31,11 @@ MAX_RESULTS_AJAX = 15
 
 
 @method_decorator(login_required, name='dispatch')
-class DashboardIndexView(TemplateView):
-    template_name = 'alertas/dashboard.html'
+class MyAccountView(TemplateView):
+    template_name = 'alertas/myaccount.html'
 
     def get_context_data(self, **kwargs):
-        context = super(DashboardIndexView, self).get_context_data(**kwargs)
+        context = super(MyAccountView, self).get_context_data(**kwargs)
 
         context['active'] = 'dashboard'
 
@@ -59,12 +60,6 @@ class DashboardIndexView(TemplateView):
 
         customer = Customer.objects.get(subscriber=self.request.user)
         context["customer"] = customer
-        context['stripe_subscriptions'] = customer.subscriptions.all()
-
-        try:
-            context["upcoming_invoice"] = customer.upcoming_invoice()
-        except stripe.error.InvalidRequestError:
-            context["upcoming_invoice"] = "Ninguno"
 
         try:
             context['ip'] = self.request.META['HTTP_X_FORWARDED_FOR']
@@ -105,8 +100,6 @@ class DashboardSettingsView(TemplateView):
 
         customer = Customer.objects.get(subscriber=self.request.user)
         context["customer"] = customer
-        context["cards"] = customer.sources.order_by('-exp_year', '-exp_month')
-        context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
         context["form_billing"] = forms.BillingSettingsForm(initial={'business_vat_id': customer.business_vat_id})
         return context
 
@@ -124,6 +117,24 @@ class DashboardHistoryView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
+class PaymentView(TemplateView):
+    template_name = 'alertas/payment.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PaymentView, self).get_context_data(**kwargs)
+        context['active'] = 'payment'
+
+        # TODO: get or 500
+        customer = Customer.objects.get(subscriber=self.request.user)
+        context['customer'] = customer
+
+        context["cards"] = customer.sources.order_by('-exp_year', '-exp_month')
+        context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
+
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
 class BillingView(TemplateView):
     template_name = 'alertas/billing.html'
 
@@ -137,6 +148,11 @@ class BillingView(TemplateView):
         context['customer'] = customer
         context['charges'] = customer.charges.all()
         context['invoices'] = customer.invoices.all()
+
+        try:
+            context["upcoming_invoice"] = customer.upcoming_invoice()
+        except stripe.error.InvalidRequestError:
+            context["upcoming_invoice"] = None
 
         return context
 
@@ -186,6 +202,20 @@ class AlertaEventsView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
+class SubscriptionListView(TemplateView):
+    template_name = "alertas/subscription_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(SubscriptionListView, self).get_context_data(**kwargs)
+
+        customer = Customer.objects.get(subscriber=self.request.user)
+        context["customer"] = customer
+        context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
+
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
 class AlertaListView(TemplateView):
     template_name = "alertas/alerta_list.html"
 
@@ -215,8 +245,23 @@ class AlertaListView(TemplateView):
 
         context['active'] = 'alertas'
 
-        context['STRIPE_PUBLIC_KEY'] = settings.STRIPE_PUBLIC_KEY
         context['email'] = self.request.user.email
+
+        customer = Customer.objects.get(subscriber=self.request.user)
+        context["customer"] = customer
+
+        plan_year = Plan.objects.get(nickname=settings.DEFAULT_PLAN_YEAR)
+        context["plan_year"] = {
+            "label": "Suscripción anual",
+            "amount": plan_year.amount * 100
+        }
+        plan_month = Plan.objects.get(nickname=settings.DEFAULT_PLAN_MONTH)
+        context["plan_month"] = {
+            "label": "Suscripción mensual",
+            "amount": plan_month.amount * 100
+        }
+
+        context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
         return context
 
 

@@ -6,6 +6,9 @@ import stripe
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY",
                            "sk_test_eVEoxiTuoWOlSw104llgXvcs")
 
+DEFAULT_PLAN_MONTH = "Subscription Monthly 20180701"
+DEFAULT_PLAN_YEAR = "Subscription Yearly 20180701"
+
 
 def create_product():
     product = stripe.Product.create(
@@ -21,7 +24,7 @@ def create_product():
 
 def create_plans(product):
     plan = stripe.Plan.create(
-        nickname='Subscription Monthly',
+        nickname=DEFAULT_PLAN_MONTH,
         product=product.id,
         amount=2000,
         currency='eur',
@@ -47,7 +50,7 @@ def create_plans(product):
     # DETAIL:  Failing row contains (3, plan_DC6jokyevf8XEK, f, 2018-07-08 19:26:10+00, {}, null, 2018-07-08 19:29:18.916316+00, 2018-07-08 19:29:18.916385+00, null, null, tiered, eur, month, 1, Subscription Monthly Tiered, [{"amount":2000,"up_to":5},{"amount":1500,"up_to":25},{"amount":..., graduated, null, 7, metered, null, null, null).
     print("Created plan " + plan.id)
     plan = stripe.Plan.create(
-        nickname='Subscription Yearly',
+        nickname=DEFAULT_PLAN_YEAR,
         product={"name": "Subscripción Libreborme"},
         amount=30000,
         currency='eur',
@@ -64,7 +67,6 @@ def create_plans(product):
         currency='eur',
         interval='month',
     )
-
 
 
 def rest(plan):

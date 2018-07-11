@@ -1,0 +1,96 @@
+{% extends "alertas/base_dashboard.html" %}
+
+{% block content %}
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Información de la cuenta</h1>
+
+          <p>Tipo de cuenta: <strong>{{ user.profile.get_account_type_display }}</strong>
+            {% if user.profile.account_type == 'basic' %}
+              <a href="#">
+              <button type="button" class="btn btn-primary btn-xs">
+                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Cambiar de plan
+              </button>
+              </a>
+            {% endif %}
+          </p>
+          <p>Fecha de alta: <strong>{{ user.date_joined.date }}</strong></p>
+
+          <p>Customer ID: {{ customer.stripe_id }}</p>
+
+          {% if not customer.can_charge %}
+          <p>No tiene ningún método de pago configurado. <a href="{% url 'alertas-payment' %}">Añada uno</a></p>
+          {% endif %}
+
+          <a href="#">
+          <button type="button" class="btn btn-danger btn-xs">
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cerrar mi cuenta
+          </button>
+          </a>
+          <h2 class="sub-header">Subcripciones (LBInvoices) activas</h2>
+
+          {% if lbinvoices %}
+            <ul>
+            {% for subscription in lbinvoices %}
+              <li><a href="{{ subscription.get_absolute_url }}">{{ subscription.description }}</a>, hasta: {{ subscription.end_date | date }}</li>
+            {% endfor %}
+            </ul>
+          {% else %}
+            <p>Ninguna</p>
+          {% endif %}
+
+          {% if customer.has_any_active_subscription %}
+            <p>You have active subscriptions</p>
+            <ul>
+                {% for subscription in customer.active_subscriptions %}
+                <li>{{ subscription }} (status: {{ subscription.status }}, is_period_current: {{ subscription.is_period_current }}, is_status_current: {{ subscription.is_status_current }}, is_status_temporarily_current: {{ subscription.is_status_temporarily_current }})</li>
+                {% endfor %}
+            </ul>
+             <a href="#">
+            <button type="button" class="btn btn-primary btn-xs">
+              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cancelar
+            </button>
+            </a>
+          {% else %}
+            <p>You don't have any active subscription</p>
+          {% endif %}
+          <p>Suscripciones válidas (status!=canceled): {{ customer.valid_subscriptions | length }}</br>
+             Suscripciones activas (status=active, end in future): {{ customer.active_subscriptions | length }}</p>
+
+          <h2 class="sub-header">Alertas definidas</h2>
+          <p>Tienes
+            <a href="{% url 'alertas-list' %}">
+              <span>{{ n_alertas }}</span> alerta{{ n_alertas|pluralize }}
+            </a>
+            definida{{ n_alertas|pluralize }} en total
+          </p>
+
+          <div class="row">
+          <div class="col-sm-3">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Tipo de alerta</th>
+                  <th>Alertas definidas</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Personas</td>
+                  <td>{{ count_p }} / {{ limite_p }}</td>
+                </tr>
+                <tr>
+                  <td>Empresas</td>
+                  <td>{{ count_c }} / {{ limite_c }}</td>
+                </tr>
+                <tr>
+                  <td>Acto</td>
+                  <td>{{ count_a }} / {{ limite_a }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          </div>
+
+        </div>
+
+{% endblock %}

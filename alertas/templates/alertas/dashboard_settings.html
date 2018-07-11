@@ -46,60 +46,6 @@
               </form>
             </div>
 
-            <div class="col-sm-4 col-sm-offset-1">
-                <form action="{% url 'alertas-settings-stripe' %}" method="POST">
-                <legend>Métodos de pago</legend>
-                {% csrf_token %}
-                <div class="form-group">
-
-                  <table class="table table-striped table-hover table-condensed">
-                    <tbody>
-                    {% for card in cards %}
-                      <tr>
-                        <td>
-                          <p>
-                          <strong>{{ card.name }}</strong> xxxx-<strong>{{ card.last4 }}</strong>
-                          ({{ card.brand }})
-                          </p>
-                          <p>
-                           Caduca en <strong>{{ card.exp_month }}/{{ card.exp_year }}</strong>
-                          </p>
-                        </td>
-                        <td>
-                          {% if card.stripe_id == customer.default_source_id %}
-                            <span title="Predeterminada" class="glyphicon glyphicon-check" aria-hidden="true"></span>
-                          {% endif %}
-                        </td>
-                        <td>
-                          <span title="Eliminar" style="color: #c62a2a" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        </td>
-                      </tr>
-                    {% empty %}
-                    <p>No tienes ningún método de pago</p>
-                    {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-
-                <script
-                  src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                  data-key="{{ STRIPE_PUBLIC_KEY }}"
-                  data-email="{{ customer.email }}"
-                  data-zip-code="true"
-                  data-billing-address="true"
-                  data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-                  data-name="Libreborme"
-                  data-panel-label="Añadir tarjeta de crédito"
-                  data-label="Añadir nuevo"
-                  data-allow-remember-me=false
-                  data-currency="eur"
-                  data-locale="auto">
-                </script>
-              </form>
-              <p class="help-block">
-              Usamos <a href="https://stripe.com/es" target="_blank">Stripe</a>
-              como pasarela de pago. No almacenamos los datos de su tarjeta.</p>
-            </div>
           </div>
 
         </div>
