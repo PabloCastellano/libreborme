@@ -7,9 +7,71 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Listado de Suscripciones</h1>
 
-          <p>Aquí puede ver sus suscripciones de LibreBORME</p>
+          {% if customer.has_any_active_subscription %}
+            <p>Tiene las siguientes suscripciones activas</p>
+
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Comienzo</th>
+                    <th>Final del período</th>
+                    <th>Cantidad</th>
+                    <th>Estado</th>
+                    <th>Período de prueba</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for subscription in customer.subscriptions.all %}
+                  <tr {% if subscription.status != 'trialing' %}class="success"{% else %}class="warning"{% endif %}>
+                    <td>{{ subscription.stripe_id }}</td>
+                    <td>{{ subscription.start.date }}</td>
+                    <td>{{ subscription.current_period_end.date }}</td>
+                    <td>{{ subscription.quantity }}</td>
+                    <td>
+                      {% if subscription.status == 'trialing' %}
+                      <span class="label label-warning">{{ subscription.status }}</span>
+                      {% elif subscription.status == 'active' %}
+                      <span class="label label-success">{{ subscription.status }}</span>
+                      {% else %}
+                      <span class="label label-danger">{{ subscription.status }}</span>
+                      {% endif %}
+                    </td>
+                    <td>{% if subscription.trial_end %}
+                            Hasta el {{ subscription.trial_end.date }}
+                        {% else %}
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        {% endif %}</td>
+                    <td>
+                      {% if subscription.status == 'trialing' %}
+                        {% if subscription.cancel_at_period_end %}
+                        Cancelada el {{ subscription.canceled_at.date }}
+                        {% else %}
+                          <a href="#">
+                          <button type="button" class="btn btn-primary btn-xs">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cancelar
+                          </button>
+                          </a>
+                        {% endif %}
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+          {% else %}
+            <p>You don't have any active subscription</p>
+          {% endif %}
 
           <h2 class="sub-header">Suscripción</h2>
+
+          {% if not customer.can_charge %}
+          <p>No tiene ningún método de pago configurado. <a href="{% url 'alertas-payment' %}">Añada uno</a></p>
+          {% endif %}
 
           {% if customer.has_any_active_subscription %}
             <p>¡Ya estás suscrito!</p>
@@ -17,17 +79,18 @@
             <p>No tiene ninguna suscripción activa</p>
 
             <p>
-            <a href="#">Suscribirme con el source que tengo</a>
+              <a href="#">Suscribirme con el source que tengo</a>
             </p>
 
             <p>Suscribir pidiendo source:</br>
-            <p>Plan mensual: {% include 'stripe_form.html' with plan=plan_month %}</p>
-            <p>Plan anual: {% include 'stripe_form.html' with plan=plan_year %}</p>
-            </p>
           {% endif %}
 
+        {% include 'pricing_table.html' %}
 
+        <h2>Condiciones</h2>
+        <p>Las suscripciones incluyen un período de prueba de 7 días</p>
+        <p>Usted puede cancelar la suscripción en cualquier momento antes de los 7 días</p>
+        <p>El ciclo de facturación de la suscripción mensual comienza siempre el día 1 de cada mes. El primer mes será prorrateado</p>
         </div>
-
 
 {% endblock %}

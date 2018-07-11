@@ -47,11 +47,19 @@ class Profile(m.Model):
         # return all(for invoice in self.invoices:
         #    invoice
 
+    # TODO:
+    # different types, basic, active...
+    # different for subscriptions and just alerts
     @property
     def account_type(self):
         customer = Customer.objects.get(subscriber=self.user)
-        subscription = customer.subscription
+        try:
+            subscription = customer.subscription
+        except:
+            return "basic"
         if not subscription:
+            return "basic"
+        elif subscription.status == "active":
             return "basic"
         else:
             return subscription.status

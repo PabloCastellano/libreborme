@@ -47,12 +47,15 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li {% if active == 'dashboard' %}class="active"{% endif %}><a href="{% url 'dashboard-index' %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Mi cuenta</a></li>
+          </ul>
+
+          <ul class="nav nav-sidebar">
             <li {% if active == 'subscriptions' %}class="active"{% endif %}><a href="{% url 'subscriptions-list' %}"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> Suscripciones</a></li>
             <li {% if active == 'alertas' %}class="active"{% endif %}><a href="{% url 'alertas-list' %}"><span class="glyphicon glyphicon-flash" aria-hidden="true"></span> Alertas</a></li>
             <li {% if active == 'history' %}class="active"{% endif %}><a href="{% url 'alertas-history' %}"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Historial de alertas</a></li>
           </ul>
           <ul class="nav nav-sidebar">
-            <li {% if active == 'billing' %}class="active"{% endif %}><a href="{% url 'alertas-billing' %}"><span class="glyphicon glyphicon-invoice" aria-hidden="true"></span> Facturas</a></li>
+                  <li {% if active == 'billing' %}class="active"{% endif %}><a href="{% url 'alertas-billing' %}"><span class="glyphicon glyphicon-invoice" aria-hidden="true"></span> Facturas <span class="badge badge-info">1</span></a></li>
             <li {% if active == 'payment' %}class="active"{% endif %}><a href="{% url 'alertas-payment' %}"><span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Métodos de pago</a></li>
           </ul>
           {% if user.is_staff %}

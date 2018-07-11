@@ -15,8 +15,6 @@
           </p>
           <p>Fecha de alta: <strong>{{ user.date_joined.date }}</strong></p>
 
-          <p>Customer ID: {{ customer.stripe_id }}</p>
-
           {% if not customer.can_charge %}
           <p>No tiene ningún método de pago configurado. <a href="{% url 'alertas-payment' %}">Añada uno</a></p>
           {% endif %}
@@ -26,7 +24,9 @@
             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cerrar mi cuenta
           </button>
           </a>
-          <h2 class="sub-header">Subcripciones (LBInvoices) activas</h2>
+          <h2 class="sub-header">Datos de envío/facturación?</h2>
+            {{ customer.shipping }}
+          <h2 class="sub-header">Suscripciones (LBInvoices) activas</h2>
 
           {% if lbinvoices %}
             <ul>
@@ -51,10 +51,8 @@
             </button>
             </a>
           {% else %}
-            <p>You don't have any active subscription</p>
+            <p>No tiene ninguna suscripción activa</p>
           {% endif %}
-          <p>Suscripciones válidas (status!=canceled): {{ customer.valid_subscriptions | length }}</br>
-             Suscripciones activas (status=active, end in future): {{ customer.active_subscriptions | length }}</p>
 
           <h2 class="sub-header">Alertas definidas</h2>
           <p>Tienes

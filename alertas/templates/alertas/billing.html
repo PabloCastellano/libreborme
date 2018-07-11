@@ -4,7 +4,11 @@
 {% block content %}
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="alert alert-info" role="alert">
+              Su próxima factura será emitida el <strong>{{ upcoming_invoice.date }}</strong>
+            </div>
           <h1 class="page-header">Listado de facturas</h1>
+
 
           {% if lbinvoices %}
             <div class="table-responsive">
@@ -12,8 +16,7 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Comienzo</th>
-                    <th>Final</th>
+                    <th>Período</th>
                     <th>Cantidad</th>
                     <th>Forma de pago</th>
                     <th>Pagado</th>
@@ -24,8 +27,7 @@
                   {% for invoice in lbinvoices %}
                   <tr {% if not invoice.is_paid %}class="danger"{% endif %}>
                     <td>{{ invoice.id }}</td>
-                    <td>{{ invoice.start_date }}</td>
-                    <td>{{ invoice.end_date }}</td>
+                    <td>Del {{ invoice.start_date|date:"d/M/y"}} al {{ invoice.end_date|date:"d/M/y" }}</td>
                     <td>{{ invoice.amount }}</td>
                     <td>{{ invoice.get_payment_type_display }}</td>
                     <td>{% if invoice.is_paid %}
@@ -51,31 +53,15 @@
           {% endif %}
 
           <div>
-            <h2>Stripe charges</h2>
-            {% if charges %}
-              <p>There are actually {{ charges | length }} charges.</p>
-              <ul>
-                  {% for charge in charges %}
-                  <li>{{ charge }}</li>
-                  {% endfor %}
-              </ul>
-            {% else %}
-              <p>Aún no se ha generado ningún cargo</p>
-            {% endif %}
-
             <h2>Stripe invoices</h2>
-            {% if upcoming_invoice %}
-              <p>Upcoming invoice: {{ upcoming_invoice }} ({{ upcoming_invoice.date }})</p>
-            {% else %}
-              <p>There are no upcoming invoices</p>
-            {% endif %}
+
             {% if invoices %}
               <p>There are actually {{ invoices | length }} invoices.</p>
               <div class="table-responsive">
                 <table class="table table-striped">
                   <thead>
                     <tr>
-                      <th>#</th>
+                      <th>Número</th>
                       <th>Fecha</th>
                       <th>Cantidad</th>
                       <th>Pagado</th>

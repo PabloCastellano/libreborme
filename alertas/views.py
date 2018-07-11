@@ -147,7 +147,6 @@ class BillingView(TemplateView):
         # TODO: get or 500
         customer = Customer.objects.get(subscriber=self.request.user)
         context['customer'] = customer
-        context['charges'] = customer.charges.all()
         context['invoices'] = customer.invoices.all()
 
         try:
@@ -213,6 +212,17 @@ class SubscriptionListView(TemplateView):
         context["customer"] = customer
         context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
 
+        plan_year = Plan.objects.get(nickname=settings.DEFAULT_PLAN_YEAR)
+        context["plan_year"] = {
+            "label": "Suscripción anual",
+            "amount": plan_year.amount * 100
+        }
+        plan_month = Plan.objects.get(nickname=settings.DEFAULT_PLAN_MONTH)
+        context["plan_month"] = {
+            "label": "Suscripción mensual",
+            "amount": plan_month.amount * 100
+        }
+
         return context
 
 
@@ -246,21 +256,8 @@ class AlertaListView(TemplateView):
 
         context['active'] = 'alertas'
 
-        context['email'] = self.request.user.email
-
         customer = Customer.objects.get(subscriber=self.request.user)
         context["customer"] = customer
-
-        plan_year = Plan.objects.get(nickname=settings.DEFAULT_PLAN_YEAR)
-        context["plan_year"] = {
-            "label": "Suscripción anual",
-            "amount": plan_year.amount * 100
-        }
-        plan_month = Plan.objects.get(nickname=settings.DEFAULT_PLAN_MONTH)
-        context["plan_month"] = {
-            "label": "Suscripción mensual",
-            "amount": plan_month.amount * 100
-        }
 
         context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
         return context
