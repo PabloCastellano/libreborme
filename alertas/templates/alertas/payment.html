@@ -4,37 +4,61 @@
 {% block content %}
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+
           <h1 class="page-header">Métodos de pago</h1>
 
-            {% if not customer.can_charge %}
-
             <div class="col-sm-6">
-                <p>No tienes ningún método de pago válido.</p>
-
-                <form action="{% url 'alertas-settings-stripe' %}" method="POST">
-                {% csrf_token %}
+            {% if not customer.can_charge %}
+              <p>No tienes ningún método de pago válido.</p>
+            {% else %}
+            <p><strong>Tarjetas de crédito disponibles</strong></p>
                 <div class="form-group">
 
-                  <table class="table table-striped table-hover table-condensed">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </thead>
                     <tbody>
                     {% for card in cards %}
                       <tr>
                         <td>
                           <p>
+                          <img src="/static/card_{{ card.brand }}.png" width=42 height=26>
                           <strong>{{ card.name }}</strong> xxxx-<strong>{{ card.last4 }}</strong>
-                          ({{ card.brand }})
                           </p>
                           <p>
-                           Caduca en <strong>{{ card.exp_month }}/{{ card.exp_year }}</strong>
+                           Caduca en <strong>{{ card.exp_month | stringformat:"02d" }}/{{ card.exp_year }}</strong>  •
+                           Añadida el <strong>{{ card.djstripe_created|date:"d/m/y" }}</strong>
                           </p>
                         </td>
                         <td>
                           {% if card.stripe_id == customer.default_source_id %}
-                            <span title="Predeterminada" class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                            <span title="Predeterminada" class="glyphicon glyphicon-check" aria-hidden="true"></span> Predeterminada
                           {% endif %}
                         </td>
                         <td>
-                          <span title="Eliminar" style="color: #c62a2a" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                          <a class="remove_card" id="{{ card.stripe_id }}">
+                            <button type="button" class="btn btn-danger btn-xs">
+                              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar
+                            </button>
+                          </a>
+                          {% if card.stripe_id != customer.default_source_id %}
+                            <a class="set_default_card" id="{{ card.stripe_id }}">
+                              <button type="button" class="btn btn-primary btn-xs">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Predeterminada
+                              </button>
+                            </a>
+                          {% endif %}
                         </td>
                       </tr>
                     {% endfor %}
@@ -42,6 +66,10 @@
                   </table>
                 </div>
 
+            {% endif %}
+
+              <form action="{% url 'alertas-settings-stripe' %}" method="POST">
+                {% csrf_token %}
                 <script
                   src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                   data-key="{{ STRIPE_PUBLIC_KEY }}"
@@ -61,7 +89,6 @@
               Usamos <a href="https://stripe.com/es" target="_blank">Stripe</a>
               como pasarela de pago. LibreBORME no almacena los datos de su tarjeta.</p>
             </div>
-            {% endif %}
 
         </div>
 {% endblock %}
@@ -69,4 +96,34 @@
 
 {% block extrastyles %}
     <link href="{% static "css/dashboard_form.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block extrajs %}
+  <script src="{% static "jquery-ui-1.12.1.custom/jquery-ui.js" %}"></script>
+  <script src="{% static "js/libreborme.js" %}"></script>
+  <script src="{% static "jquery.cookie.js" %}"></script>
+
+  <script>
+    function remove_card(cardId) {
+      AjaxRequest("{% url 'remove_card' %}?cardId=" + cardId, function (res) {
+        setTimeout(location.reload(), 3000);
+      }, "post", null);
+    }
+
+    function set_default_card(cardId) {
+      AjaxRequest("{% url 'set_default_card' %}?cardId=" + cardId, function (res) {
+        setTimeout(location.reload(), 3000);
+      }, "post", null);
+    }
+
+    $("a.remove_card").click(function(ev) {
+      var cardid = $(ev.currentTarget).attr("id");
+      remove_card(cardid);
+    });
+    $("a.set_default_card").click(function(ev) {
+      var cardid = $(ev.currentTarget).attr("id");
+      set_default_card(cardid);
+    });
+
+  </script>
 {% endblock %}

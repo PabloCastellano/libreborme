@@ -1,6 +1,7 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.conf import settings
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
@@ -334,14 +335,75 @@ def settings_update_billing(request):
 @login_required
 def settings_update_stripe(request):
 
+    user_input = {}
+
     if request.method == 'POST':
-        token = request.POST.get("stripeToken")
+        customer = Customer.objects.get(subscriber=request.user)
+
+        user_input["token"] = request.POST.get("stripeToken")
+        user_input["email"] = request.POST.get("stripeEmail")
+        # Billing
+        user_input["name"] = request.POST.get("stripeBillingName")
+        user_input["address"] = request.POST.get("stripeBillingAddressLine1")
+        user_input["zipcode"] = request.POST.get("stripeBillingAddressZip")
+        user_input["state"] = request.POST.get("stripeBillingAddressState", "")
+        user_input["city"] = request.POST.get("stripeBillingAddressCity")
+        user_input["country"] = request.POST.get("stripeBillingAddressCountry")
+        user_input["countrycode"] = request.POST.get("stripeBillingAddressCountryCode")
+
+        if user_input["country"] != "Spain":
+            logger.warning("Customer {} has entered a billing address whose "
+                           "country ir not Spain: {}".format(
+                                customer.stripe_id, user_input["country"]))
+
+        customer.add_card(source=user_input["token"])
+        customer.save()
+        messages.add_message(request, messages.INFO,
+                             'Tarjeta añadida correctamente')
+
+    return redirect(reverse('alertas-payment'))
+
+
+@login_required
+def set_default_card(request):
+
+    # FIXME: weird, mixed POST + GET
+    if request.method == 'POST':
+        card_id = request.GET.get("cardId")
 
         customer = Customer.objects.get(subscriber=request.user)
-        customer.add_card(source=token)
-        customer.save()
+        customer.default_source_id = card_id
+        try:
+            customer.save()
+            messages.add_message(request, messages.INFO,
+                                 'Tarjeta modificada correctamente')
+            return HttpResponse("Success", status=200)
+        except Exception:
+            print("Could not set default card " + card_id + " for customer " + customer.stripe_id)
+            return HttpResponse("Fail", status=400)
 
-    return redirect(reverse('alertas-settings'))
+    return HttpResponse("Fail", status=400)
+
+
+@login_required
+def remove_card(request):
+
+    # FIXME: weird, mixed POST + GET
+    if request.method == 'POST':
+        card_id = request.GET.get("cardId")
+
+        customer = Customer.objects.get(subscriber=request.user)
+        cards = customer.sources.all()
+        for card in cards:
+            if card.stripe_id == card_id:
+                card.remove()
+                messages.add_message(request, messages.INFO,
+                                     'Tarjeta eliminada correctamente')
+                return HttpResponse("Success", status=200)
+
+        print("Could not delete card " + card_id + " for customer " + customer.stripe_id)
+
+    return HttpResponse("Fail", status=400)
 
 
 @login_required
