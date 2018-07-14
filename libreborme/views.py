@@ -55,10 +55,35 @@ def robotstxt(request):
     return HttpResponse(response, content_type='text/plain')
 
 
+def create_new_invoice(request, customer, subscription, plan, user_input):
+    """Creates new invoice (LBInvoice)
+
+    Set the following fields: start_date, end_date, amount, payment_type
+    name, email, address, ip, subscription_id and nif (TODO)
+    """
+    new_invoice = LBInvoice(user=request.user)
+    new_invoice.start_date = subscription.current_period_start
+    new_invoice.end_date = subscription.current_period_end
+    new_invoice.amount = plan.amount
+    new_invoice.payment_type = 'stripe'
+    new_invoice.name = user_input["name"]
+    new_invoice.email = user_input["email"]
+    new_invoice.address = ", ".join([user_input["address"],
+                                     user_input["zipcode"],
+                                     user_input["state"],
+                                     user_input["city"],
+                                     user_input["country"]])
+    new_invoice.ip = request.META.get('HTTP_X_FORWARDED_FOR',
+                                      request.META['REMOTE_ADDR'])
+    new_invoice.subscription_id = subscription.stripe_id
+    new_invoice.nif = customer.business_vat_id or "TODO"
+    return new_invoice
+
+
 def checkout(request):
     # TODO: make params
     qty = 1
-    nickname = "Subscription Yearly"
+    nickname = settings.DEFAULT_PLAN_MONTH
     tax_percent = 21.0  # TODO: tax per country (?)
 
     plan = Plan.objects.get(nickname=nickname)
@@ -68,19 +93,34 @@ def checkout(request):
     if request.method == "POST":
         user_input = utils.stripe_parse_input(request)
         try:
-            new_invoice.ip = request.META['HTTP_X_FORWARDED_FOR']
-        except KeyError:
-            new_invoice.ip = request.META['REMOTE_ADDR']
-        new_invoice.subscription_id = subscription.id
+            # TODO: if not saved/save card, use the token once, otherwise
+            # attach to customer
+            # If the customer has already a source, use it
+            if customer.has_valid_source():
+                subscription = customer.subscribe(plan, quantity=qty,
+                                                  tax_percent=tax_percent)
+            else:
+                # TODO: Use djstripe.Subscription
+                subscription = stripe.Subscription.create(
+                    customer=customer.stripe_id,
+                    items=[
+                        {"plan": plan.stripe_id, "quantity": qty}
+                    ],
+                    source=user_input["token"],
+                    tax_percent=tax_percent,
+                    billing_cycle_anchor=next_first_timestamp,
+                )
+            new_invoice = create_new_invoice(request, customer, subscription, plan, user_input)
 
-    except stripe.error.CardError as ce:
-        return False, ce
+        except stripe.error.CardError as ce:
+            # :?
+            return False, ce
 
-    else:
-        new_invoice.save()
-        return redirect("dashboard-index")
-        # The payment was successfully processed, the user's card was charged.
-        # You can now redirect the user to another page or whatever you want
+        else:
+            new_invoice.save()
+            return redirect("dashboard-index")
+
+    return HttpResponse("", status=400)
 
 
 def register(request):
