@@ -20,6 +20,7 @@ from . import forms
 
 from djstripe.models import Customer, Event, Plan
 from libreborme.models import Profile
+from libreborme import utils
 
 import datetime
 import json
@@ -332,27 +333,9 @@ def settings_update_billing(request):
 @login_required
 def settings_update_stripe(request):
 
-    user_input = {}
-
     if request.method == 'POST':
         customer = Customer.objects.get(subscriber=request.user)
-
-        user_input["token"] = request.POST.get("stripeToken")
-        user_input["email"] = request.POST.get("stripeEmail")
-        # Billing
-        user_input["name"] = request.POST.get("stripeBillingName")
-        user_input["address"] = request.POST.get("stripeBillingAddressLine1")
-        user_input["zipcode"] = request.POST.get("stripeBillingAddressZip")
-        user_input["state"] = request.POST.get("stripeBillingAddressState", "")
-        user_input["city"] = request.POST.get("stripeBillingAddressCity")
-        user_input["country"] = request.POST.get("stripeBillingAddressCountry")
-        user_input["countrycode"] = request.POST.get("stripeBillingAddressCountryCode")
-
-        if user_input["country"] != "Spain":
-            logger.warning("Customer {} has entered a billing address whose "
-                           "country ir not Spain: {}".format(
-                                customer.stripe_id, user_input["country"]))
-
+        user_input = utils.stripe_parse_input(request)
         customer.add_card(source=user_input["token"])
         customer.save()
         messages.add_message(request, messages.INFO,

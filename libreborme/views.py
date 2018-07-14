@@ -14,6 +14,7 @@ import datetime
 from alertas.models import LBInvoice
 
 from .forms import LBUserCreationForm
+from . import utils
 
 import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -62,46 +63,10 @@ def checkout(request):
 
     plan = Plan.objects.get(nickname=nickname)
     customer = Customer.objects.get(subscriber=request.user)
-
-    new_invoice = LBInvoice(user=request.user)
-    user_input = {}
+    next_first_timestamp = utils.date_next_first(timestamp=True)
 
     if request.method == "POST":
-        user_input["token"] = request.POST.get("stripeToken")
-        user_input["email"] = request.POST.get("stripeEmail")
-        # Billing
-        user_input["name"] = request.POST.get("stripeBillingName")
-        user_input["address"] = request.POST.get("stripeBillingAddressLine1")
-        user_input["zipcode"] = request.POST.get("stripeBillingAddressZip")
-        user_input["state"] = request.POST.get("stripeBillingAddressState")
-        user_input["city"] = request.POST.get("stripeBillingAddressCity")
-        user_input["country"] = request.POST.get("stripeBillingAddressCountry")
-
-    try:
-        # TODO: if not saved/save card, use the token once, otherwise
-        # attach to customer
-        # If the customer has already a source, use it
-        if customer.default_source:
-            subscription = customer.subscribe(plan, quantity=qty,
-                                              tax_percent=tax_percent)
-        else:
-            subscription = stripe.Subscription.create(
-                customer=customer.stripe_id,
-                items=[
-                    {"plan": plan.stripe_id, "quantity": qty}
-                ],
-                source=user_input["token"],
-                tax_percent=tax_percent,  # TODO: tax per country (?)
-                # prorate=
-            )
-        new_invoice.start_date = datetime.fromtimestamp(subscription.current_period_start)
-        new_invoice.end_date = datetime.fromtimestamp(subscription.current_period_end)
-        new_invoice.amount = plan.amount
-        new_invoice.payment_type = 'stripe'
-        new_invoice.name = user_input["name"]
-        new_invoice.email = user_input["email"]
-        new_invoice.address = ", ".join(user_input["address"], user_input["zipcode"], user_input["state"], user_input["city"], user_input["country"])
-        new_invoice.nif = "TODO"
+        user_input = utils.stripe_parse_input(request)
         try:
             new_invoice.ip = request.META['HTTP_X_FORWARDED_FOR']
         except KeyError:
