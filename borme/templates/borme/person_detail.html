@@ -10,7 +10,7 @@
     <meta name="description" content="{{ person.name|title }}. Información pública sobre el directivo {{ person.name|title }}. Cargos directivos, nombramientos, ceses y dimisiones de {{ person.name|title }}. Vinculación con empresas de {{ person.name|title }}."/>
 {% endblock %}
 
-{% block javascript %}
+{% block extrajs %}
     <script src="{% static "js/libreborme.js" %}"></script>
 {% endblock %}
 
@@ -173,5 +173,5 @@
     </div>
     </div>
 </div>
-    
+
 {% endblock %}

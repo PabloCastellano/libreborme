@@ -6,26 +6,96 @@
 {% block title %}{{ company.fullname }} | LibreBORME{% endblock %}
 
 {% block meta %}
-    <meta name="keywords" content="{{ company.fullname|upper }}, Empresas, Informe, CNAE, Registro, Mercantil, Actos, BOE, BORME, Open Data, Cargos, Directivos"/>
-    <meta name="description" content="{{ company.fullname|upper }}. Información mercantil de la empresa {{ company.fullname|upper }}. Cargos directivos de {{ company.fullname|upper }}. Actos publicados en el BORME de {{ company.fullname|upper }}."/>
+  <meta name="keywords" content="{{ company.fullname|upper }}, Empresas, Informe, CNAE, Registro, Mercantil, Actos, BOE, BORME, Open Data, Cargos, Directivos"/>
+  <meta name="description" content="{{ company.fullname|upper }}. Información mercantil de la empresa {{ company.fullname|upper }}. Cargos directivos de {{ company.fullname|upper }}. Actos publicados en el BORME de {{ company.fullname|upper }}."/>
 {% endblock %}
 
-{% block javascript %}
-    <script src="{% static "js/libreborme.js" %}"></script>
+{% block extrajs %}
+  <script src="{% static "js/libreborme.js" %}"></script>
+  <script src="{% static "static_jquery/js/jquery.min.js" %}"></script>
+  <script>
+    $("#follow-company").click(function(ev) {
+
+      var slug = $(ev.currentTarget).attr("data");
+
+      $("#follow_spinner").toggle();
+
+      $.ajax({
+        url: "{% url 'borme-ajax-empresa-follow' %}",
+        data: {slug: slug}
+      })
+      .done(function() {
+      })
+      .fail(function(xhr) {
+      })
+      .always(function(xhr, textStatus) {
+        // console.log(xhr);
+        // console.log(xhr.textStatus);
+        // console.log(xhr.responseText);
+
+        var resp = $.parseJSON(xhr);
+        $("#alert-follow").html(resp.html);
+        $("#alert-follow").attr("class", "col-md-2 alert alert-follow alert-" + resp.tag);
+        $("#alert-follow").show();
+        $("#follow_spinner").toggle();
+
+        if (typeof resp.following !== 'undefined') {
+          if (resp.following) {
+            var span = $("#follow-company")
+                         .find("span")
+                         .attr("class", "glyphicon glyphicon-eye-close");
+            $("#follow-company")
+              .text(" Dejar de seguir")
+              .prepend(span);
+          } else {
+            var span = $("#follow-company")
+                         .find("span")
+                         .attr("class", "glyphicon glyphicon-eye-open");
+            $("#follow-company")
+              .text(" Seguir")
+              .prepend(span);
+          }
+         }
+      });
+
+    });
+  </script>
 {% endblock %}
 
 {% block content %}
 <div class="col-md-10 col-md-offset-1">
-    <h1>Sociedad «{{ company.fullname }}»</h1>
+    <div class="row">
+      <h1>Sociedad «{{ company.fullname }}»</h1>
 
-    <p>Última actualización: {{ company.date_updated }}.<br/>
-    Fuente de los datos: Agencia Estatal Boletín Oficial del Estado.</p>
+      <p>Última actualización: {{ company.date_updated }}.<br/>
+      Fuente de los datos: Agencia Estatal Boletín Oficial del Estado.</p>
+    </div>
 
+    <div class="row">
+	  <div>
+      <p>
+      <button id="follow-company" type="button" class="btn btn-primary btn-xs" data="{{ company.slug }}">
+        {% if is_following %}
+          <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span> Dejar de seguir
+        {% else %}
+          <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Seguir
+        {% endif %}
+      </button>
+      </p>
+      <p>
+      <div id="alert-follow" style="display: none;" class="col-md-2 alert alert-follow" role="alert"></div>
+      </p>
+      </div>
+      <img id="follow_spinner" style="display: none" src="{% static 'reload2.gif' %}" width=22>
+    </div>
+
+    <div class="row">
     <p>
-    <strong>Empresas relacionadas:</strong> {{ companies|length }}<br/>
-    <strong>Personas relacionadas:</strong> {{ persons|length }}<br/>
-    <strong>Situación mercantil:</strong> {{ activity }}
+      <strong>Empresas relacionadas:</strong> {{ companies|length }}<br/>
+      <strong>Personas relacionadas:</strong> {{ persons|length }}<br/>
+      <strong>Situación mercantil:</strong> {{ activity }}
     </p>
+    <div>
 
 {% comment %}
     <strong>NIF:</strong> {{ company.nif|default:"Desconocido" }}

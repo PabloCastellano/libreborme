@@ -199,6 +199,28 @@ class LibrebormeLogs(m.Model):
     def __str__(self):
         return "{0} ({1}): {2}".format(self.component, self.date, self.log)
 
+
+class Follower(m.Model):
+    user = m.ForeignKey(User, on_delete=m.PROTECT)
+    slug = m.SlugField(max_length=200)
+    type = m.CharField(max_length=10, choices=ALERTAS_CHOICES)
+
+    class Meta:
+        unique_together = ['user', 'slug', 'type']
+
+    @classmethod
+    def toggle_follow(cls, user, slug, type):
+        instance = cls.objects.filter(user=user, slug=slug, type=type)
+        if instance.exists():
+            instance.delete()
+            return False
+        else:
+            cls.objects.create(user=user, slug=slug, type=type)
+            return True
+
+    def __str__(self):
+        return "{0} is following {1}".format(self.user, self.slug)
+
 # max_alertas_free_company
 
 # Tipos de alerta:

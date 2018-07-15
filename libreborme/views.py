@@ -9,7 +9,6 @@ from borme.mixins import CacheMixin
 from djstripe.models import Customer, Plan
 
 from pathlib import Path
-import datetime
 
 from alertas.models import LBInvoice
 

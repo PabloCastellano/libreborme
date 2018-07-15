@@ -37,6 +37,37 @@
 
           </div>
 
+          <h2 class="sub-header">Following</h2>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Tipo</th>
+                  <th>Nombre</th>
+                  <th>Última actualización</th>
+                  <th>Fecha</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+            {% for follower in followers %}
+                <tr>
+                  <td>{{ follower.type }}</td>
+                  <td><a target="_blank" href="{% url 'borme-empresa' follower.slug %}">{{ follower.slug }}</a></td>
+                  <td>TODO</td>
+                  <td>TODO</td>
+                  <td>
+                    <button type="button" class="btn btn-danger btn-xs unfollow-company" data="{{ follower.slug }}">
+                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar
+                    </button>
+                  </td>
+                </tr>
+            {% endfor %}
+              </tbody>
+            </table>
+
+          </div>
+
           <h2 class="sub-header">Alertas de empresas (restantes: {{ restantes_c }})</h2>
           <div class="table-responsive">
             {% if restantes_c > 0 %}
@@ -251,6 +282,35 @@
 {% endblock %}
 
 {% block extrajs %}
-    <script src="{% static "jquery-ui-1.12.1.custom/jquery-ui.js" %}"></script>
-    <script src="{% static "alertas.js" %}"></script>
+  <script src="{% static "jquery-ui-1.12.1.custom/jquery-ui.js" %}"></script>
+  <script src="{% static "alertas.js" %}"></script>
+
+  <script>
+    $(".unfollow-company").click(function(ev) {
+      var slug = $(ev.currentTarget).attr("data");
+
+      $.ajax({
+        method: "POST",
+        url: "{% url 'borme-ajax-empresa-follow' %}",
+        data: {slug: slug}
+      })
+      .done(function() {
+      })
+      .fail(function(xhr) {
+      })
+      .always(function(xhr, textStatus) {
+        var resp = $.parseJSON(xhr);
+
+        if ((typeof resp.following !== 'undefined') && (!resp.following)) {
+          console.log("borrado");
+          var link = $('a:contains("' + resp.slug + '")').filter(function(index)
+          {
+              return $(this).text() === resp.slug;
+          });
+          link.parent().parent().remove();
+        }
+      });
+
+    });
+  </script>
 {% endblock %}
