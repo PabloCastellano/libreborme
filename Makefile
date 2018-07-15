@@ -31,3 +31,6 @@ run:
 
 shell:
 		./manage.py shell_plus
+
+import:
+		./manage.py importborme -f 2018-03-13 -t 2018-03-13 --local-only

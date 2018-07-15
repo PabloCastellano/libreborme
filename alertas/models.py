@@ -4,9 +4,6 @@ from django.conf import settings
 from django.urls import reverse
 
 from borme.models import Company, Person
-from djstripe.models import Subscription
-
-from datetime import datetime
 
 import os.path
 
@@ -204,6 +201,7 @@ class Follower(m.Model):
     user = m.ForeignKey(User, on_delete=m.PROTECT)
     slug = m.SlugField(max_length=200)
     type = m.CharField(max_length=10, choices=ALERTAS_CHOICES)
+    date_created = m.DateField(auto_now_add=True)
 
     class Meta:
         unique_together = ['user', 'slug', 'type']
