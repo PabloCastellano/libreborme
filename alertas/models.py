@@ -216,6 +216,17 @@ class Follower(m.Model):
             cls.objects.create(user=user, slug=slug, type=type)
             return True
 
+    @property
+    def last_update(self):
+        if not hasattr(self, '_last_update'):
+            if self.type == 'person':
+                obj = Person.objects.get(slug=self.slug)
+                self._last_update = obj.date_updated
+            elif self.type == 'company':
+                obj = Company.objects.get(slug=self.slug)
+                self._last_update = obj.date_updated
+        return self._last_update
+
     def __str__(self):
         return "{0} is following {1}".format(self.user, self.slug)
 

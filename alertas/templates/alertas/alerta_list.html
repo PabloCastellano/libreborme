@@ -5,6 +5,7 @@
 {% block content %}
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <div id="messages"></div>
           <h1 class="page-header">Listado de Alertas</h1>
 
           <p>Aquí puede definir sus alertas de LibreBORME. A continuación se detallan los límites asociados a su tipo de cuenta:</p>
@@ -38,35 +39,39 @@
           </div>
 
           <h2 class="sub-header">Following</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Tipo</th>
-                  <th>Nombre</th>
-                  <th>Última actualización</th>
-                  <th>Fecha</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-            {% for follower in followers %}
-                <tr>
-                  <td>{{ follower.type }}</td>
-                  <td><a target="_blank" href="{% url 'borme-empresa' follower.slug %}">{{ follower.slug }}</a></td>
-                  <td>TODO</td>
-                  <td>TODO</td>
-                  <td>
-                    <button type="button" class="btn btn-danger btn-xs unfollow-company" data="{{ follower.slug }}">
-                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar
-                    </button>
-                  </td>
-                </tr>
-            {% endfor %}
-              </tbody>
-            </table>
+          {% if followers %}
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Tipo</th>
+                    <th>Nombre</th>
+                    <th>Última actualización</th>
+                    <th>Fecha</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+              {% for follower in followers %}
+                  <tr>
+                    <td class="follow-type">{{ follower.type }}</td>
+                    <td><a target="_blank" href="{% url 'borme-empresa' follower.slug %}">{{ follower.slug }}</a></td>
+                    <td>{{ follower.last_update }}</td>
+                    <td>{{ follower.date_created }}</td>
+                    <td>
+                      <button type="button" class="btn btn-danger btn-xs unfollow-company" data="{{ follower.slug }}">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar
+                      </button>
+                    </td>
+                  </tr>
+              {% endfor %}
+                </tbody>
+              </table>
 
-          </div>
+            </div>
+          {% else %}
+            <p>Aún no sigues a ninguna empresa ni persona</p>
+          {% endif %}
 
           <h2 class="sub-header">Alertas de empresas (restantes: {{ restantes_c }})</h2>
           <div class="table-responsive">
@@ -273,6 +278,14 @@
   </div>
 </div>
 
+<div style="display: none" id="sample-alert">
+  <div class="alert fade in" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+
 
 {% endblock %}
 
@@ -284,31 +297,38 @@
 {% block extrajs %}
   <script src="{% static "jquery-ui-1.12.1.custom/jquery-ui.js" %}"></script>
   <script src="{% static "alertas.js" %}"></script>
+  <script src="{% static "follow.js" %}"></script>
 
   <script>
     $(".unfollow-company").click(function(ev) {
-      var slug = $(ev.currentTarget).attr("data");
+      var button = $(ev.currentTarget);
+      var slug = $(button).attr("data");
+      var type = $(button).parent().parent().children('td.follow-type').text();
+      var csrftoken = getCookie('csrftoken');
+      configCsrf(csrftoken);
 
       $.ajax({
         method: "POST",
         url: "{% url 'borme-ajax-empresa-follow' %}",
-        data: {slug: slug}
+        data: {slug: slug, type: type}
       })
-      .done(function() {
-      })
-      .fail(function(xhr) {
-      })
-      .always(function(xhr, textStatus) {
+      .done(function(xhr, textStatus) {
         var resp = $.parseJSON(xhr);
-
         if ((typeof resp.following !== 'undefined') && (!resp.following)) {
-          console.log("borrado");
-          var link = $('a:contains("' + resp.slug + '")').filter(function(index)
-          {
+          var link = $('a:contains("' + resp.slug + '")').filter(function(index) {
               return $(this).text() === resp.slug;
           });
           link.parent().parent().remove();
         }
+
+        var message = $("#sample-alert").children('div').clone();
+        message.addClass("alert-success");
+        message.prepend('Se ha borrado la alerta para <a href="#" class="alert-link">' + resp.slug + '</a>');
+        $("#messages").append(message);
+      })
+      .fail(function(xhr) {
+      })
+      .always(function(xhr, textStatus) {
       });
 
     });

@@ -86,7 +86,7 @@ class Profile(m.Model):
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance, account_type='free')
-        # TODO: set currency="eur"
+        Profile.objects.create(user=instance)
+        # TODO: set currency="eur", account_type='free'
         Customer.create(subscriber=instance)
     instance.profile.save()

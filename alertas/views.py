@@ -469,28 +469,34 @@ def download_alerta_history_csv(request, id):
     return response
 
 
-# TODO: move to alertas
-# TODO: unfollow
 def ajax_empresa_follow(request):
-    # TODO: csrf
     # FIX: type
-    print(request.POST)
-    slug = request.GET["slug"]
+    slug = request.POST["slug"]
+    type = request.POST["type"]
+
     if not request.user.is_authenticated:
-        html_message = 'Necesitas <a href="#">registrarte</a> primero'
-        jsonr = json.dumps({"tag": "danger", "html": html_message, "slug": slug})
+        html_message = ('Necesitas <a href="{0}" class="alert-link">'
+                        'registrarte</a> primero').format(reverse('login'))
+        jsonr = json.dumps({"tag": "danger",
+                            "html": html_message,
+                            "slug": slug})
         return HttpResponse(jsonr, status=200)
 
-    if not Company.objects.filter(slug=slug).exists():
-        return HttpResponse("Not found", status=400)
+    if not Company.objects.filter(slug=slug).exists() or \
+            type not in ('person', 'company'):
+        return HttpResponse("Invalid", status=400)
 
     following = Follower.toggle_follow(request.user, slug, 'company')
 
     # TODO:
     # request.user.follow(company)
 
-    html_message = '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>'
-    jsonr = json.dumps({"tag": "success", "html": html_message, "slug": slug, "following": following})
+    html_message = ('<span class="glyphicon glyphicon-check" '
+                    'aria-hidden="true"></span>')
+    jsonr = json.dumps({"tag": "success",
+                        "html": html_message,
+                        "slug": slug,
+                        "following": following})
     return HttpResponse(jsonr, status=200)
 
 

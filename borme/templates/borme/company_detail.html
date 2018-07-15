@@ -13,26 +13,22 @@
 {% block extrajs %}
   <script src="{% static "js/libreborme.js" %}"></script>
   <script src="{% static "static_jquery/js/jquery.min.js" %}"></script>
+  <script src="{% static "follow.js" %}"></script>
   <script>
-    $("#follow-company").click(function(ev) {
+      $("#follow-company").click(function(ev) {
 
       var slug = $(ev.currentTarget).attr("data");
+      var csrftoken = getCookie('csrftoken');
+      configCsrf(csrftoken);
 
       $("#follow_spinner").toggle();
 
       $.ajax({
+        method: "POST",
         url: "{% url 'borme-ajax-empresa-follow' %}",
-        data: {slug: slug}
-      })
-      .done(function() {
-      })
-      .fail(function(xhr) {
+        data: {slug: slug, type: 'company'}
       })
       .always(function(xhr, textStatus) {
-        // console.log(xhr);
-        // console.log(xhr.textStatus);
-        // console.log(xhr.responseText);
-
         var resp = $.parseJSON(xhr);
         $("#alert-follow").html(resp.html);
         $("#alert-follow").attr("class", "col-md-2 alert alert-follow alert-" + resp.tag);
@@ -55,7 +51,8 @@
               .text(" Seguir")
               .prepend(span);
           }
-         }
+        }
+        $("#alert-follow").fadeOut(5000);
       });
 
     });
