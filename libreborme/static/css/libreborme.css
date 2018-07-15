@@ -227,7 +227,8 @@ table.year {
 }
 
 .newsletter {
-  background-color: #EEE;
+  background-color: #CFCFCF;
+  padding-bottom: 20px;
 }
 
 .newsletter-row {
