@@ -6,16 +6,62 @@
 {% block title %}{{ person.name|title }} | LibreBORME{% endblock %}
 
 {% block meta %}
-    <meta name="keywords" content="{{ person.name|title }}, Empresas, Informe, Registro, Mercantil, Actos, Nombramiento, Cese, BOE, BORME, Open Data, Cargos, Directivos"/>
-    <meta name="description" content="{{ person.name|title }}. Información pública sobre el directivo {{ person.name|title }}. Cargos directivos, nombramientos, ceses y dimisiones de {{ person.name|title }}. Vinculación con empresas de {{ person.name|title }}."/>
+  <meta name="keywords" content="{{ person.name|title }}, Empresas, Informe, Registro, Mercantil, Actos, Nombramiento, Cese, BOE, BORME, Open Data, Cargos, Directivos"/>
+  <meta name="description" content="{{ person.name|title }}. Información pública sobre el directivo {{ person.name|title }}. Cargos directivos, nombramientos, ceses y dimisiones de {{ person.name|title }}. Vinculación con empresas de {{ person.name|title }}."/>
 {% endblock %}
 
 {% block extrajs %}
-    <script src="{% static "js/libreborme.js" %}"></script>
+  <script src="{% static "js/libreborme.js" %}"></script>
+  <script src="{% static "static_jquery/js/jquery.min.js" %}"></script>
+  <script src="{% static "follow.js" %}"></script>
+  <script>
+      $("#follow-button").click(function(ev) {
+
+      var slug = $(ev.currentTarget).attr("data");
+      var csrftoken = getCookie('csrftoken');
+      configCsrf(csrftoken);
+
+      $("#follow_spinner").toggle();
+
+      $.ajax({
+        method: "POST",
+        url: "{% url 'borme-ajax-empresa-follow' %}",
+        data: {slug: slug, type: 'person'}
+      })
+      .always(function(xhr, textStatus) {
+        var resp = $.parseJSON(xhr);
+        $("#alert-follow").html(resp.html);
+        $("#alert-follow").attr("class", "col-md-2 alert alert-follow alert-" + resp.tag);
+        $("#alert-follow").show();
+        $("#follow_spinner").toggle();
+
+        if (typeof resp.following !== 'undefined') {
+          if (resp.following) {
+            var span = $("#follow-button")
+                         .find("span")
+                         .attr("class", "glyphicon glyphicon-eye-close");
+            $("#follow-button")
+              .text(" Dejar de seguir")
+              .prepend(span);
+          } else {
+            var span = $("#follow-button")
+                         .find("span")
+                         .attr("class", "glyphicon glyphicon-eye-open");
+            $("#follow-button")
+              .text(" Seguir")
+              .prepend(span);
+          }
+        }
+        $("#alert-follow").fadeOut(5000);
+      });
+
+    });
+  </script>
 {% endblock %}
 
 {% block content %}
 <div class="col-md-10 col-md-offset-1">
+  <div class="row">
     <h1>Persona «{{ person.name|title }}»</h1>
 
     <p>Última actualización: {{ person.date_updated }}.<br/>
@@ -23,6 +69,25 @@
 
     <strong>Empresas relacionadas:</strong> {{ person.in_companies|length }}
     <br/>
+  </div>
+
+    <div class="row">
+	  <div>
+        <p>
+          <button id="follow-button" type="button" class="btn btn-primary btn-xs" data="{{ company.slug }}">
+            {% if is_following %}
+              <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span> Dejar de seguir
+            {% else %}
+              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Seguir
+            {% endif %}
+          </button>
+        </p>
+        <p>
+          <div id="alert-follow" style="display: none;" class="col-md-2 alert alert-follow" role="alert"></div>
+        </p>
+      </div>
+      <img id="follow_spinner" style="display: none" src="{% static 'reload2.gif' %}" width=22>
+    </div>
 
     <h2>Cargos directivos en empresas:</h2>
     <div id="positions">

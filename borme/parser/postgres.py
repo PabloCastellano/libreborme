@@ -1,3 +1,7 @@
+# Functions defined in this file are not used anymore. They were written
+# in order to test PostgreSQL FTS functionalities
+#
+
 from django.contrib.postgres.search import SearchVector
 from django.db import connection, transaction
 
@@ -15,6 +19,8 @@ logger.setLevel(logging.INFO)
 
 def psql_update_documents():
     """
+    Note: Postgres full text search is not used
+
     Update postgresql full text search attributes.
     This function must be run everytime new records are added to the database
     """
@@ -39,6 +45,8 @@ def psql_update_documents():
 
 def psql_update_documents_batch():
     """
+    Note: Postgres full text search is not used
+
     Same as psql_update_documents() but using atomic batches.
     This way, the table is not locked for a long time when the update is big
     """

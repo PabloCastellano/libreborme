@@ -482,8 +482,11 @@ def ajax_empresa_follow(request):
                             "slug": slug})
         return HttpResponse(jsonr, status=200)
 
-    if not Company.objects.filter(slug=slug).exists() or \
-            type not in ('person', 'company'):
+    if type not in ('person', 'company'):
+        return HttpResponse("Invalid", status=400)
+    if type == 'company' and not Company.objects.filter(slug=slug).exists():
+        return HttpResponse("Invalid", status=400)
+    if type == 'person' and not Person.objects.filter(slug=slug).exists():
         return HttpResponse("Invalid", status=400)
 
     following = Follower.toggle_follow(request.user, slug, 'company')

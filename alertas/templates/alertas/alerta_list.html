@@ -55,7 +55,7 @@
               {% for follower in followers %}
                   <tr>
                     <td class="follow-type">{{ follower.type }}</td>
-                    <td><a target="_blank" href="{% url 'borme-empresa' follower.slug %}">{{ follower.slug }}</a></td>
+                    <td><a target="_blank" href="{% url 'borme-persona' follower.slug %}">{{ follower.slug }}</a></td>
                     <td>{{ follower.last_update }}</td>
                     <td>{{ follower.date_created }}</td>
                     <td>

@@ -91,6 +91,7 @@ ALERTAS_CHOICES += (
     ('person', "Persona"),
 )
 
+# TODO: WHAT?
 User._meta.get_field('email').blank = False
 
 

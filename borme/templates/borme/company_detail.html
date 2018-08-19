@@ -15,7 +15,7 @@
   <script src="{% static "static_jquery/js/jquery.min.js" %}"></script>
   <script src="{% static "follow.js" %}"></script>
   <script>
-      $("#follow-company").click(function(ev) {
+      $("#follow-button").click(function(ev) {
 
       var slug = $(ev.currentTarget).attr("data");
       var csrftoken = getCookie('csrftoken');
@@ -37,17 +37,17 @@
 
         if (typeof resp.following !== 'undefined') {
           if (resp.following) {
-            var span = $("#follow-company")
+            var span = $("#follow-button")
                          .find("span")
                          .attr("class", "glyphicon glyphicon-eye-close");
-            $("#follow-company")
+            $("#follow-button")
               .text(" Dejar de seguir")
               .prepend(span);
           } else {
-            var span = $("#follow-company")
+            var span = $("#follow-button")
                          .find("span")
                          .attr("class", "glyphicon glyphicon-eye-open");
-            $("#follow-company")
+            $("#follow-button")
               .text(" Seguir")
               .prepend(span);
           }
@@ -71,7 +71,7 @@
     <div class="row">
 	  <div>
       <p>
-      <button id="follow-company" type="button" class="btn btn-primary btn-xs" data="{{ company.slug }}">
+      <button id="follow-button" type="button" class="btn btn-primary btn-xs" data="{{ company.slug }}">
         {% if is_following %}
           <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span> Dejar de seguir
         {% else %}
