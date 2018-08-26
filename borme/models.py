@@ -11,6 +11,11 @@ from django.db import models as m
 from bormeparser.sociedad import SOCIEDADES as SOCIEDADES_DICT
 
 SOCIEDADES = sorted(SOCIEDADES_DICT.items())
+COMPANY_STATUS_CHOICES = (
+    ('active', 'Activa'),
+    ('suspended', 'Cierre de hoja registral'),
+    ('inactive', 'Extinguida'),
+)
 
 """
 # TODO: i18n 2o valor
@@ -160,8 +165,9 @@ class Company(m.Model):
     slug = m.SlugField(max_length=260, primary_key=True)
     date_creation = m.DateField(blank=True, null=True)
     date_extinction = m.DateField(blank=True, null=True)
-    is_active = m.BooleanField(default=True)
     type = m.CharField(max_length=50, choices=SOCIEDADES)
+    status = m.CharField(max_length=50, choices=COMPANY_STATUS_CHOICES,
+                         default='active')
 
     date_updated = m.DateField(db_index=True)
     in_bormes = JSONField(default=list)
@@ -177,6 +183,10 @@ class Company(m.Model):
     def add_in_bormes(self, borme):
         if borme not in self.in_bormes:
             self.in_bormes.append(borme)
+
+    @property
+    def is_active(self):
+        return self.status == 'active'
 
     @property
     def total_anuncios(self):

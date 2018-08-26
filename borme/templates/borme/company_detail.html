@@ -90,7 +90,7 @@
     <p>
       <strong>Empresas relacionadas:</strong> {{ companies|length }}<br/>
       <strong>Personas relacionadas:</strong> {{ persons|length }}<br/>
-      <strong>Situación mercantil:</strong> {{ activity }}
+      <strong>Situación mercantil:</strong> {{ company.get_status_display }}
     </p>
     <div>
 

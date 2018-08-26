@@ -416,7 +416,6 @@ class CompanyView(CacheMixin, DetailView):
         context.update({
             "companies": sorted(list(set(context['companies']))),
             "persons": sorted(list(set(context['persons']))),
-            "activity": 'Activa' if self.company.is_active else 'Inactiva',
             "is_following": self.request.user.is_authenticated and
                             Follower.objects.filter(
                                 user=self.request.user,
