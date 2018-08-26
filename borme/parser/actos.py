@@ -13,9 +13,9 @@ def extinguir_sociedad(company, date):
     :param date: Fecha de la extinción
     :type date: datetime.date
     """
-    company.is_active = False
     company.date_extinction = date
     company.date_updated = date
+    company.status = 'inactive'
 
     for cargo in company.cargos_actuales_c:
         cargo['date_to'] = date.isoformat()

@@ -15,6 +15,7 @@ COMPANY_STATUS_CHOICES = (
     ('active', 'Activa'),
     ('suspended', 'Cierre de hoja registral'),
     ('inactive', 'Extinguida'),
+    ('dissolved', 'Disuelta'),
 )
 
 """

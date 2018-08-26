@@ -17,6 +17,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='company',
             name='status',
-            field=models.CharField(choices=[('active', 'Activa'), ('suspended', 'Cierre de hoja registral'), ('inactive', 'Extinguida')], default='active', max_length=50),
+            field=models.CharField(choices=[('active', 'Activa'), ('suspended', 'Cierre de hoja registral'), ('inactive', 'Extinguida'), ('dissolved', 'Disuelta')], default='active', max_length=50),
         ),
     ]
