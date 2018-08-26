@@ -26,7 +26,8 @@ recreate_db:
 
 run:
 		docker-compose up -d
-		./manage.py runserver
+		./manage.py runserver --settings libreborme.dev_settings
+		# ./manage.py runserver_plus
 		# --settings=...
 
 shell:
