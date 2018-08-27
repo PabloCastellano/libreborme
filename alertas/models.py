@@ -91,32 +91,13 @@ ALERTAS_CHOICES += (
     ('person', "Persona"),
 )
 
+FOLLOW_CHOICES = (
+    ('company', "Empresa"),
+    ('person', "Persona"),
+)
+
 # TODO: WHAT?
 User._meta.get_field('email').blank = False
-
-
-# TODO: agrupar todas las alertas en una misma tabla?
-
-class AlertaCompany(m.Model):
-    user = m.ForeignKey(User, on_delete=m.PROTECT)
-    company = m.ForeignKey(Company, on_delete=m.PROTECT)
-    is_enabled = m.BooleanField(default=True)
-    send_html = m.BooleanField(default=True)
-
-    def __str__(self):
-        enabled = "activada" if self.is_enabled else "desactivada"
-        return "Alerta {} para la empresa {}".format(enabled, self.company)
-
-
-class AlertaPerson(m.Model):
-    user = m.ForeignKey(User, on_delete=m.PROTECT)
-    person = m.ForeignKey(Person, on_delete=m.PROTECT)
-    is_enabled = m.BooleanField(default=True)
-    send_html = m.BooleanField(default=True)
-
-    def __str__(self):
-        enabled = "activada" if self.is_enabled else "desactivada"
-        return "Alerta {} para la persona {}".format(enabled, self.person)
 
 
 class AlertaActo(m.Model):
@@ -201,35 +182,51 @@ class LibrebormeLogs(m.Model):
 class Follower(m.Model):
     user = m.ForeignKey(User, on_delete=m.PROTECT)
     slug = m.SlugField(max_length=200)
-    type = m.CharField(max_length=10, choices=ALERTAS_CHOICES)
+    type = m.CharField(max_length=10, choices=FOLLOW_CHOICES)
     date_created = m.DateField(auto_now_add=True)
+    is_enabled = m.BooleanField(default=True)
 
     class Meta:
         unique_together = ['user', 'slug', 'type']
 
+    # FIXME: Now the slug existence is checked in the ajax call in the view
+    """
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Follower, self).save(*args, **kwargs)
+    """
+
     @classmethod
-    def toggle_follow(cls, user, slug, type):
-        instance = cls.objects.filter(user=user, slug=slug, type=type)
+    def toggle_follow(cls, user, slug, type_):
+        instance = cls.objects.filter(user=user, slug=slug, type=type_)
         if instance.exists():
             instance.delete()
             return False
         else:
-            cls.objects.create(user=user, slug=slug, type=type)
+            cls.objects.create(user=user, slug=slug, type=type_)
             return True
+
+    @property
+    def name(self):
+        if self.type == "person":
+            cls = Person
+        elif self.type == "company":
+            cls = Company
+        return cls.objects.get(slug=self.slug).name
 
     @property
     def last_update(self):
         if not hasattr(self, '_last_update'):
             if self.type == 'person':
                 obj = Person.objects.get(slug=self.slug)
-                self._last_update = obj.date_updated
             elif self.type == 'company':
                 obj = Company.objects.get(slug=self.slug)
-                self._last_update = obj.date_updated
+            self._last_update = obj.date_updated
         return self._last_update
 
     def __str__(self):
         return "{0} is following {1}".format(self.user, self.slug)
+
 
 # max_alertas_free_company
 

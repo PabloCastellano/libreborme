@@ -5,26 +5,14 @@ from djstripe.models import Customer
 from libreborme.models import NOTIFICATION_CHOICES
 
 
-class AlertaCompanyModelForm(forms.ModelForm):
+class FollowerModelForm(forms.ModelForm):
     class Meta:
-        model = models.AlertaCompany
+        model = models.Follower
         exclude = ('user', 'is_enabled')
 
 
-class AlertaPersonModelForm(forms.ModelForm):
-    class Meta:
-        model = models.AlertaPerson
-        exclude = ('user', 'is_enabled')
-
-
-class AlertaCompanyForm(forms.Form):
-    company = forms.CharField()
-    send_html = forms.BooleanField()
-
-
-class AlertaPersonForm(forms.Form):
-    person = forms.CharField()
-    send_html = forms.BooleanField()
+class FollowerForm(forms.Form):
+    slug = forms.CharField()
 
 
 class AlertaActoModelForm(forms.ModelForm):

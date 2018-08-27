@@ -83,6 +83,13 @@ class Profile(m.Model):
         return "Profile {} ({})".format(self.user, self.account_type)
 
 
+class MailTemplate(m.Model):
+    name = m.CharField(max_length=20)
+    description = m.CharField(max_length=200, blank=True)
+    plain_text = m.TextField()
+    html_text = m.TextField()
+
+
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:

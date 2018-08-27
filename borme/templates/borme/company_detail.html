@@ -25,7 +25,7 @@
 
       $.ajax({
         method: "POST",
-        url: "{% url 'borme-ajax-empresa-follow' %}",
+        url: "{% url 'borme-ajax-follow' %}",
         data: {slug: slug, type: 'company'}
       })
       .always(function(xhr, textStatus) {

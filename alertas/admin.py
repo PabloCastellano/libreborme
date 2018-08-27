@@ -5,20 +5,6 @@ from . import models as m
 # from djstripe.models import Subscription
 
 
-@admin.register(m.AlertaCompany)
-class AlertaCompanyAdmin(admin.ModelAdmin):
-    list_display = ('user', 'company', 'send_html', 'is_enabled')
-    list_filter = ('user', 'is_enabled')
-    search_fields = ['user__username', 'user__email', 'company__name']
-
-
-@admin.register(m.AlertaPerson)
-class AlertaPersonAdmin(admin.ModelAdmin):
-    list_display = ('user', 'person', 'send_html', 'is_enabled')
-    list_filter = ('user', 'is_enabled')
-    search_fields = ['user__username', 'user__email', 'person__name']
-
-
 @admin.register(m.AlertaActo)
 class AlertaActoAdmin(admin.ModelAdmin):
     list_display = ('user', 'evento', 'periodicidad', 'provincia', 'send_html', 'is_enabled')
@@ -63,3 +49,10 @@ class AlertaHistoryAdmin(admin.ModelAdmin):
 class LibrebormeLogsAdmin(admin.ModelAdmin):
     list_display = ('date', 'component', 'log', 'user')
     search_fields = ['date', 'component', 'log', 'user']
+
+
+@admin.register(m.Follower)
+class FollowerAdmin(admin.ModelAdmin):
+    list_display = ('user', 'slug', 'type', 'date_created')
+    search_fields = ['user', 'slug', 'type']
+    # search_fields = ['user__username', 'user__email', 'person__name']

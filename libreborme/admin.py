@@ -5,6 +5,12 @@ from django.contrib.auth.models import User
 from . import models as m
 
 
+@admin.register(m.MailTemplate)
+class MailTemplateAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description', 'plain_text', 'html_text')
+    search_fields = ['name', 'description', 'plain_text', 'html_text']
+
+
 @admin.register(m.Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'account_type', 'notification_method',

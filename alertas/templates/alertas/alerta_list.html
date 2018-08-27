@@ -20,12 +20,8 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>Personas</td>
+                  <td>Followers (TODO)</td>
                   <td>{{ limite_p }}</td>
-                </tr>
-                <tr>
-                  <td>Empresas</td>
-                  <td>{{ limite_c }}</td>
                 </tr>
                 <tr>
                   <td>Acto</td>
@@ -38,7 +34,17 @@
 
           </div>
 
-          <h2 class="sub-header">Following</h2>
+          <h2 class="sub-header">Following (restantes: {{ restantes_f }})</h2>
+          {% if restantes_f > 0 %}
+              <a href="#" data-toggle="modal" data-target="#alerta-person-modal">Añadir nueva alerta</a>
+          {% else %}
+              <p>Has agotado todas tus alertas</p>
+              <a href="#">
+              <button type="button" class="btn btn-primary btn-xs">
+                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Cambiar de plan
+              </button>
+              </a>
+          {% endif %}
           {% if followers %}
             <div class="table-responsive">
               <table class="table table-striped">
@@ -47,7 +53,6 @@
                     <th>Tipo</th>
                     <th>Nombre</th>
                     <th>Última actualización</th>
-                    <th>Fecha</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -57,7 +62,6 @@
                     <td class="follow-type">{{ follower.type }}</td>
                     <td><a target="_blank" href="{% url 'borme-persona' follower.slug %}">{{ follower.slug }}</a></td>
                     <td>{{ follower.last_update }}</td>
-                    <td>{{ follower.date_created }}</td>
                     <td>
                       <button type="button" class="btn btn-danger btn-xs unfollow-company" data="{{ follower.slug }}">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar
@@ -70,107 +74,8 @@
 
             </div>
           {% else %}
-            <p>Aún no sigues a ninguna empresa ni persona</p>
+              <p>Aún no sigues a ninguna empresa ni persona</p>
           {% endif %}
-
-          <h2 class="sub-header">Alertas de empresas (restantes: {{ restantes_c }})</h2>
-          <div class="table-responsive">
-            {% if restantes_c > 0 %}
-              <a href="#" data-toggle="modal" data-target="#alerta-company-modal">Añadir nueva alerta</a>
-            {% else %}
-              <p>Has agotado todas tus alertas</p>
-              <a href="#">
-              <button type="button" class="btn btn-primary btn-xs">
-                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Cambiar de plan
-              </button>
-              </a>
-            {% endif %}
-
-            {% if alertas_c %}
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Empresa</th>
-                  <th>Enviar HTML</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-            {% for alerta in alertas_c %}
-                <tr>
-                  <td>{{ forloop.counter }}</td>
-                  <td><a target="_blank" href="{% url 'borme-empresa' alerta.company.name|slug2 %}">{{ alerta.company }}</a></td>
-                  <td>{% if alerta.send_html %}
-                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                    {% else %}
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    {% endif %}
-                  </td>
-                  <td>
-                    <a href="{% url 'alerta-remove-company' alerta.id %}">
-                    <button type="button" class="btn btn-primary btn-xs">
-                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar
-                    </button>
-                    </a>
-                  </td>
-                </tr>
-            {% endfor %}
-              </tbody>
-            </table>
-            {% endif %}
-
-          </div>
-
-
-          <h2 class="sub-header">Alertas de personas (restantes: {{ restantes_p }})</h2>
-          <div class="table-responsive">
-            {% if restantes_p > 0 %}
-              <a href="#" data-toggle="modal" data-target="#alerta-person-modal">Añadir nueva alerta</a>
-            {% else %}
-              <p>Has agotado todas tus alertas</p>
-              <a href="#">
-              <button type="button" class="btn btn-primary btn-xs">
-                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Cambiar de plan
-              </button>
-              </a>
-            {% endif %}
-            {% if alertas_p %}
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Persona</th>
-                  <th>Enviar HTML</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-            {% for alerta in alertas_p %}
-                <tr>
-                  <td>{{ forloop.counter }}</td>
-                  <td><a target="_blank" href="{% url 'borme-persona' alerta.person.name|slug %}">{{ alerta.person }}</a></td>
-                  <td>{% if alerta.send_html %}
-                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                    {% else %}
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    {% endif %}
-                  </td>
-                  <td>
-                    <a href="{% url 'alerta-remove-person' alerta.id %}">
-                    <button type="button" class="btn btn-primary btn-xs">
-                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar
-                    </button>
-                    </a>
-                  </td>
-                </tr>
-            {% endfor %}
-              </tbody>
-            </table>
-            {% endif %}
-
-          </div>
-
 
           <h2 class="sub-header">Alertas de actos mercantiles (restantes: {{ restantes_a }})</h2>
           <div class="table-responsive">
@@ -232,29 +137,13 @@
 
         </div>
 
-
 <div class="modal fade" id="alerta-person-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="loginmodal-container">
-      <form action="{% url "alertas-new-person" %}" role="form" method="post">
+      <form action="#" role="form" method="post">
         <legend>Añadir una nueva Alerta</legend>
           {% csrf_token %}
-          {{ form_p|bootstrap }}
-          <div class="form-group">
-            <input type="submit" name="create" class="login loginmodal-submit" value="Crear">
-          </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="alerta-company-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="loginmodal-container">
-      <form action="{% url "alertas-new-company" %}" role="form" method="post">
-        <legend>Añadir una nueva Alerta</legend>
-          {% csrf_token %}
-          {{ form_c|bootstrap }}
+          {{ form_f|bootstrap }}
           <div class="form-group">
             <input type="submit" name="create" class="login loginmodal-submit" value="Crear">
           </div>
@@ -309,7 +198,7 @@
 
       $.ajax({
         method: "POST",
-        url: "{% url 'borme-ajax-empresa-follow' %}",
+        url: "{% url 'borme-ajax-follow' %}",
         data: {slug: slug, type: type}
       })
       .done(function(xhr, textStatus) {

@@ -12,8 +12,8 @@ from django.views.generic import TemplateView
 from django.urls import reverse
 
 from .models import (
-        AlertaActo, AlertaCompany, AlertaHistory,
-        AlertaPerson, Follower, LBInvoice
+        AlertaActo, AlertaHistory,
+        Follower, LBInvoice
 )
 from borme.models import Company, Person
 from borme.templatetags.utils import slug, slug2
@@ -42,10 +42,6 @@ class MyAccountView(TemplateView):
 
         context['active'] = 'dashboard'
 
-        context['count_c'] = AlertaCompany.objects.filter(
-                                    user=self.request.user).count()
-        context['count_p'] = AlertaPerson.objects.filter(
-                                    user=self.request.user).count()
         context['count_a'] = AlertaActo.objects.filter(
                                     user=self.request.user).count()
         context['n_alertas'] = context['count_c'] + context['count_p'] + context['count_a']
@@ -78,8 +74,7 @@ class DashboardSupportView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(DashboardSupportView, self).get_context_data(**kwargs)
         n_alertas = AlertaActo.objects.filter(user=self.request.user).count()
-        n_alertas += AlertaCompany.objects.filter(user=self.request.user).count()
-        n_alertas += AlertaPerson.objects.filter(user=self.request.user).count()
+        n_alertas += Follower.objects.filter(user=self.request.user).count()
         context['n_alertas'] = n_alertas
         context['active'] = 'ayuda'
         return context
@@ -234,15 +229,9 @@ class AlertaListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AlertaListView, self).get_context_data(**kwargs)
-        context['alertas_c'] = AlertaCompany.objects.filter(user=self.request.user)
-        context['alertas_p'] = AlertaPerson.objects.filter(user=self.request.user)
         context['alertas_a'] = AlertaActo.objects.filter(user=self.request.user)
-        context['form_c'] = forms.AlertaCompanyForm()
-        context['form_p'] = forms.AlertaPersonForm()
         context['form_a'] = forms.AlertaActoModelForm()
 
-        context['count_c'] = context['alertas_c'].count()
-        context['count_p'] = context['alertas_p'].count()
         context['count_a'] = context['alertas_a'].count()
 
         alertas_config = get_alertas_config()
@@ -252,12 +241,11 @@ class AlertaListView(TemplateView):
         context['limite_p'] = alertas_config['max_alertas_person_' + account_type]
         context['limite_a'] = alertas_config['max_alertas_actos_' + account_type]
 
-        context['restantes_c'] = int(context['limite_c']) - context['count_c']
-        context['restantes_p'] = int(context['limite_p']) - context['count_p']
         context['restantes_a'] = int(context['limite_a']) - context['count_a']
 
         context['active'] = 'alertas'
         context["followers"] = Follower.objects.filter(user=self.request.user)
+        context['form_f'] = forms.FollowerForm()
 
         customer = Customer.objects.get(subscriber=self.request.user)
         context["customer"] = customer
@@ -270,17 +258,6 @@ class AlertaListView(TemplateView):
 def alerta_person_create(request):
     if request.method == 'POST':
         form = forms.AlertaPersonModelForm(request.POST)
-        if form.is_valid():
-            alerta = form.save(commit=False)
-            alerta.user = request.user
-            alerta.save()
-    return redirect(reverse('alertas-list'))
-
-
-@login_required
-def alerta_company_create(request):
-    if request.method == 'POST':
-        form = forms.AlertaCompanyModelForm(request.POST)
         if form.is_valid():
             alerta = form.save(commit=False)
             alerta.user = request.user
@@ -402,16 +379,9 @@ def alerta_remove_person(request, id):
     return redirect(reverse('alertas-list'))
 
 
-@login_required
-def alerta_remove_company(request, id):
-    alerta = AlertaCompany.objects.get(user=request.user, pk=id)
-    alerta.delete()
-    return redirect(reverse('alertas-list'))
-
-
 @method_decorator(login_required, name='dispatch')
 class AlertaActoCreateView(CreateView):
-    model = AlertaCompany
+    model = AlertaActo
     fields = ("company", "send_html")
 
 
@@ -470,9 +440,8 @@ def download_alerta_history_csv(request, id):
 
 
 def ajax_empresa_follow(request):
-    # FIX: type
     slug = request.POST["slug"]
-    type = request.POST["type"]
+    type_ = request.POST["type"]
 
     if not request.user.is_authenticated:
         html_message = ('Necesitas <a href="{0}" class="alert-link">'
@@ -482,14 +451,14 @@ def ajax_empresa_follow(request):
                             "slug": slug})
         return HttpResponse(jsonr, status=200)
 
-    if type not in ('person', 'company'):
+    if type_ not in ('person', 'company'):
         return HttpResponse("Invalid", status=400)
-    if type == 'company' and not Company.objects.filter(slug=slug).exists():
+    if type_ == 'company' and not Company.objects.filter(slug=slug).exists():
         return HttpResponse("Invalid", status=400)
-    if type == 'person' and not Person.objects.filter(slug=slug).exists():
+    if type_ == 'person' and not Person.objects.filter(slug=slug).exists():
         return HttpResponse("Invalid", status=400)
 
-    following = Follower.toggle_follow(request.user, slug, 'company')
+    following = Follower.toggle_follow(request.user, slug, type_)
 
     # TODO:
     # request.user.follow(company)
