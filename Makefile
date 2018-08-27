@@ -35,3 +35,11 @@ shell:
 
 import:
 		./manage.py importborme -f 2018-03-13 -t 2018-03-13 --local-only
+
+graph_model:
+		# ./manage.py graph_models -a -g -o graph_model.png
+		./manage.py graph_models borme libreborme alertas -g -o graph_model.png
+		@echo "Generated graph_model.png"
+
+test:
+		./setup.py test
