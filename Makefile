@@ -19,7 +19,8 @@ recreate_db:
 		./manage.py migrate
 		./manage.py loaddata ./libreborme/fixtures/config.json
 		./manage.py loaddata ./alertas/fixtures/alertasconfig.json
-		./manage.py createsuperuser --username admin --email pablo@anche.no
+		# ./manage.py createsuperuser --username admin --email pablo@anche.no
+		./manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'pablo@anche.no', '000000')"
 		./manage.py djstripe_sync_customers
 		./manage.py djstripe_sync_plans_from_stripe
 
