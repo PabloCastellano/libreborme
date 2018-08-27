@@ -5,12 +5,8 @@
           <h1 class="page-header">Información de la cuenta</h1>
 
           <p>Tipo de cuenta: <strong>{{ user.profile.get_account_type_display }}</strong>
-            {% if user.profile.account_type == 'basic' %}
-              <a href="#">
-              <button type="button" class="btn btn-primary btn-xs">
-                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Cambiar de plan
-              </button>
-              </a>
+            {% if user.profile.account_type == 'free' %}
+              {% include 'upgrade_button.html' %}
             {% endif %}
           </p>
           <p>Fecha de alta: <strong>{{ user.date_joined.date }}</strong></p>
@@ -73,16 +69,14 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>Personas</td>
-                  <td>{{ count_p }} / {{ limite_p }}</td>
-                </tr>
-                <tr>
-                  <td>Empresas</td>
-                  <td>{{ count_c }} / {{ limite_c }}</td>
+                  <td>Personas y empresas</td>
+                  <td>{{ count_f }} / {{ limite_f }}</td>
                 </tr>
                 <tr>
                   <td>Acto</td>
-                  <td>{{ count_a }} / {{ limite_a }}</td>
+                  <td>
+                    {{ count_a }} / {{ limite_a }} {% include 'upgrade_button.html' %}
+                  </td>
                 </tr>
               </tbody>
             </table>

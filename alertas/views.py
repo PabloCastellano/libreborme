@@ -44,26 +44,29 @@ class MyAccountView(TemplateView):
 
         context['count_a'] = AlertaActo.objects.filter(
                                     user=self.request.user).count()
-        context['n_alertas'] = context['count_c'] + context['count_p'] + context['count_a']
+        context['count_f'] = Follower.objects.filter(
+                                    user=self.request.user).count()
+        context['n_alertas'] = context['count_a'] + context['count_f']
 
         today = datetime.date.today()
         context['lbinvoices'] = LBInvoice.objects.filter(
                                     user=self.request.user, end_date__gt=today)
 
-        alertas_config = get_alertas_config()
+        aconfig = get_alertas_config()
         account_type = self.request.user.profile.account_type
 
-        context['limite_c'] = alertas_config['max_alertas_company_' + account_type]
-        context['limite_p'] = alertas_config['max_alertas_person_' + account_type]
-        context['limite_a'] = alertas_config['max_alertas_actos_' + account_type]
+        context['limite_f'] = aconfig['max_alertas_follower_' + account_type]
+        context['limite_a'] = aconfig['max_alertas_actos_' + account_type]
 
         customer = Customer.objects.get(subscriber=self.request.user)
         context["customer"] = customer
 
+        """
         try:
             context['ip'] = self.request.META['HTTP_X_FORWARDED_FOR']
         except KeyError:
             context['ip'] = self.request.META['REMOTE_ADDR']
+        """
         return context
 
 
@@ -230,17 +233,19 @@ class AlertaListView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(AlertaListView, self).get_context_data(**kwargs)
         context['alertas_a'] = AlertaActo.objects.filter(user=self.request.user)
+        context['alertas_f'] = Follower.objects.filter(user=self.request.user)
         context['form_a'] = forms.AlertaActoModelForm()
 
+        context['count_f'] = context['alertas_f'].count()
         context['count_a'] = context['alertas_a'].count()
 
         alertas_config = get_alertas_config()
         account_type = self.request.user.profile.account_type
 
-        context['limite_c'] = alertas_config['max_alertas_company_' + account_type]
-        context['limite_p'] = alertas_config['max_alertas_person_' + account_type]
+        context['limite_f'] = alertas_config['max_alertas_follower_' + account_type]
         context['limite_a'] = alertas_config['max_alertas_actos_' + account_type]
 
+        context['restantes_f'] = int(context['limite_f']) - context['count_f']
         context['restantes_a'] = int(context['limite_a']) - context['count_a']
 
         context['active'] = 'alertas'
@@ -251,6 +256,22 @@ class AlertaListView(TemplateView):
         context["customer"] = customer
 
         context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class UpgradeFollowersView(TemplateView):
+    template_name = "alertas/upgrade_followers.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(UpgradeFollowersView, self).get_context_data(**kwargs)
+        plan_follow50 = Plan.objects.get(nickname="Follow50")
+        context["amount"] = plan_follow50.amount
+        context["plan_follow50"] = {
+            "amount": plan_follow50.amount * 100,
+            "description": "Suscripción a Libreborme Followers",
+            "label": "Actualizar mi plan",
+        }
         return context
 
 

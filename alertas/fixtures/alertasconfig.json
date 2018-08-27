@@ -8,16 +8,9 @@
 },
 {
     "model": "alertas.alertasconfig",
-    "pk": "max_alertas_actos_basic",
+    "pk": "max_alertas_actos_free",
     "fields": {
         "value": "0"
-    }
-},
-{
-    "model": "alertas.alertasconfig",
-    "pk": "max_alertas_actos_test",
-    "fields": {
-        "value": "6"
     }
 },
 {
@@ -29,44 +22,16 @@
 },
 {
     "model": "alertas.alertasconfig",
-    "pk": "max_alertas_company_basic",
+    "pk": "max_alertas_follower_free",
     "fields": {
-        "value": "2"
+        "value": "5"
     }
 },
 {
     "model": "alertas.alertasconfig",
-    "pk": "max_alertas_company_test",
+    "pk": "max_alertas_follower_paid",
     "fields": {
-        "value": "2"
-    }
-},
-{
-    "model": "alertas.alertasconfig",
-    "pk": "max_alertas_company_paid",
-    "fields": {
-        "value": "20"
-    }
-},
-{
-    "model": "alertas.alertasconfig",
-    "pk": "max_alertas_person_basic",
-    "fields": {
-        "value": "2"
-    }
-},
-{
-    "model": "alertas.alertasconfig",
-    "pk": "max_alertas_person_test",
-    "fields": {
-        "value": "2"
-    }
-},
-{
-    "model": "alertas.alertasconfig",
-    "pk": "max_alertas_person_paid",
-    "fields": {
-        "value": "20"
+        "value": "50"
     }
 }
 ]

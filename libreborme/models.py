@@ -9,9 +9,8 @@ from alertas.utils import insert_libreborme_log
 from djstripe.models import Customer
 
 ACCOUNT_CHOICES = {
-    'basic': "Básica",
+    'free': "Básica",
     'paid': "Premium",
-    'test': "Período de prueba",
 }
 
 NOTIFICATION_CHOICES = (
@@ -56,11 +55,11 @@ class Profile(m.Model):
         try:
             subscription = customer.subscription
         except:
-            return "basic"
+            return "free"
         if not subscription:
-            return "basic"
+            return "free"
         elif subscription.status == "active":
-            return "basic"
+            return "free"
         else:
             return subscription.status
 

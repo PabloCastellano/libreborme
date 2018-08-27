@@ -11,7 +11,7 @@ urlpatterns = [
     path('alertas/billing/<id>/', views.BillingDetailView.as_view(), name='alertas-invoice-view'),
     path('alertas/payment/', views.PaymentView.as_view(), name='alertas-payment'),
     path('alertas/new/acto/', views.alerta_acto_create, name='alertas-new-acto'),
-    path('alertas/<id>/', views.AlertaDetailView.as_view(), name='alertas-detail'),
+    path('alertas/history/', views.DashboardHistoryView.as_view(), name='alertas-history'),
     path('alertas/remove/acto/<id>/', views.alerta_remove_acto, name='alerta-remove-acto'),
     path('alertas/ayuda/', views.DashboardSupportView.as_view(), name='alertas-ayuda'),
     path('alertas/settings/', views.DashboardSettingsView.as_view(), name='alertas-settings'),
@@ -19,9 +19,9 @@ urlpatterns = [
     path('alertas/settings/update/billing/', views.settings_update_billing, name='alertas-settings-billing'),
     path('alertas/settings/update/notifications/', views.settings_update_notifications, name='alertas-settings-notifications'),
     path('alertas/settings/update/stripe/', views.settings_update_stripe, name='alertas-settings-stripe'),
-    path('alertas/history/', views.DashboardHistoryView.as_view(), name='alertas-history'),
-
     path('alertas/history/download/<id>/', views.download_alerta_history_csv, name='alerta-history-download'),
+    path('alertas/<id>/', views.AlertaDetailView.as_view(), name='alertas-detail'),
+    path('alertas/upgrade_plan/followers/', views.UpgradeFollowersView.as_view(), name='alertas-upgrade-followers'),
 
 #    url(r'^(?P<id>\d+)/$', views.alertas_view, name='alertas-detail'),
 

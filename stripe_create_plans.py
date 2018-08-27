@@ -8,6 +8,26 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY",
 
 DEFAULT_PLAN_MONTH = "Subscription Monthly 20180701"
 DEFAULT_PLAN_YEAR = "Subscription Yearly 20180701"
+TRIAL_PERIOD_DAYS = 7
+
+
+def create_follow50():
+    """Plan anual para 50 followers (30 EUR)"""
+    product = stripe.Product.create(
+        name='Suscripción Libreborme 50 Followers',
+        type='service',
+    )
+    product.save()
+    print("Created product '{}' ({})".format(product.name, product.id))
+
+    plan = stripe.Plan.create(
+        nickname="Follow50",
+        product=product.id,
+        amount=3000,
+        currency='eur',
+        interval='year'
+    )
+    print("Created plan '{}' ({})".format(plan.nickname, plan.id))
 
 
 def create_product():
@@ -18,7 +38,7 @@ def create_product():
     )
     product.active = True
     product.save()
-    print("Created product " + product.id)
+    print("Created product '{}' ({})".format(product.name, product.id))
     return product
 
 
@@ -29,15 +49,15 @@ def create_plans(product):
         amount=2000,
         currency='eur',
         interval='month',
-        trial_period_days=7,
+        trial_period_days=TRIAL_PERIOD_DAYS,
     )
-    print("Created plan " + plan.id)
+    print("Created plan '{}' ({})".format(plan.nickname, plan.id))
     # plan = stripe.Plan.create(
     #     nickname='Subscription Monthly Tiered',
     #     product=product.id,
     #     currency='eur',
     #     interval='month',
-    #     trial_period_days=7,
+    #     trial_period_days=TRIAL_PERIOD_DAYS,
     #     usage_type='metered',
     #     billing_scheme='tiered',
     #     tiers_mode='graduated',
@@ -48,7 +68,7 @@ def create_plans(product):
     #     ]
     # )
     # DETAIL:  Failing row contains (3, plan_DC6jokyevf8XEK, f, 2018-07-08 19:26:10+00, {}, null, 2018-07-08 19:29:18.916316+00, 2018-07-08 19:29:18.916385+00, null, null, tiered, eur, month, 1, Subscription Monthly Tiered, [{"amount":2000,"up_to":5},{"amount":1500,"up_to":25},{"amount":..., graduated, null, 7, metered, null, null, null).
-    print("Created plan " + plan.id)
+    print("Created plan '{}' ({})".format(plan.nickname, plan.id))
     plan = stripe.Plan.create(
         nickname=DEFAULT_PLAN_YEAR,
         product={"name": "Subscripción Libreborme"},
@@ -56,7 +76,7 @@ def create_plans(product):
         currency='eur',
         interval='year',
     )
-    print("Created plan " + plan.id)
+    print("Created plan '{}' ({})".format(plan.nickname, plan.id))
 
     # Flat fee
     # <https://stripe.com/docs/billing/subscriptions/examples#flat-fee>
@@ -74,7 +94,7 @@ def rest(plan):
         email='pablo@anche.no',
         source='src_18eYalAHEMiOZZp1l9ZTjSU0',
     )
-    print("Created customer " + customer.id)
+    print("Created customer '{}' ({})".format(customer.email, customer.id))
 
     subscription = stripe.Subscription.create(
         customer=customer.id,
@@ -102,4 +122,5 @@ def rest(plan):
 if __name__ == "__main__":
     product = create_product()
     create_plans(product)
+    create_follow50()
     # rest(plan)
