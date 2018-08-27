@@ -18,15 +18,6 @@ COMPANY_STATUS_CHOICES = (
     ('dissolved', 'Disuelta'),
 )
 
-"""
-# TODO: i18n 2o valor
-PROVINCES = (
-    ('Malaga', 'Málaga'),
-    ('Sevilla', 'Sevilla'),
-    ('Granada', 'Granada'),
-)
-"""
-
 
 class Borme(m.Model):
     """ Edicion de BORME """
@@ -35,7 +26,6 @@ class Borme(m.Model):
     url = m.URLField()
     from_reg = m.IntegerField()
     until_reg = m.IntegerField()
-    # province = CharField(max_length=100, choices=PROVINCES)
     province = m.CharField(max_length=100)
     section = m.CharField(max_length=20)
     # pages = IntegerField()

@@ -1,3 +1,7 @@
+"""
+The Follower table stores subscriptions to companies and people.
+The AlertActo table stored subscriptions to events.
+"""
 from django.db import models as m
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -101,6 +105,8 @@ User._meta.get_field('email').blank = False
 
 
 class AlertaActo(m.Model):
+    """ This table stores event subscriptions by users
+    """
     user = m.ForeignKey(User, on_delete=m.PROTECT)
     evento = m.CharField(max_length=3, choices=EVENTOS_CHOICES)
     provincia = m.CharField(max_length=100, choices=PROVINCIAS_CHOICES)
@@ -114,6 +120,8 @@ class AlertaActo(m.Model):
 
 
 class LBInvoice(m.Model):
+    """ This table stores event subscriptions by users
+    """
     user = m.ForeignKey(User, on_delete=m.PROTECT)
     start_date = m.DateTimeField()
     end_date = m.DateTimeField()
@@ -140,6 +148,8 @@ class LBInvoice(m.Model):
 
 
 class AlertasConfig(m.Model):
+    """ This table stores the configuration of this Django app
+    """
     key = m.CharField(max_length=30, primary_key=True)
     value = m.CharField(max_length=100)
 
@@ -148,6 +158,8 @@ class AlertasConfig(m.Model):
 
 
 class AlertaHistory(m.Model):
+    """ This table stores the history of alerts sent to users
+    """
     user = m.ForeignKey(User, on_delete=m.PROTECT)
     type = m.CharField(max_length=10, choices=ALERTAS_CHOICES)
     date = m.DateField()
@@ -170,6 +182,8 @@ class AlertaHistory(m.Model):
 
 
 class LibrebormeLogs(m.Model):
+    """ This table stores the history of events in Libreborme
+    """
     date = m.DateField(auto_now_add=True)
     component = m.CharField(max_length=100)
     log = m.CharField(max_length=1000)
@@ -180,6 +194,10 @@ class LibrebormeLogs(m.Model):
 
 
 class Follower(m.Model):
+    """ This table stores the Followers
+
+    Users follow companies and people to receive alerts when they are updated
+    """
     user = m.ForeignKey(User, on_delete=m.PROTECT)
     slug = m.SlugField(max_length=200)
     type = m.CharField(max_length=10, choices=FOLLOW_CHOICES)
