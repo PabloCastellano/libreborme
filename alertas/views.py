@@ -106,6 +106,7 @@ class DashboardSettingsView(TemplateView):
 
 
 # TODO: Pagination
+@method_decorator(staff_member_required, name='dispatch')
 @method_decorator(login_required, name='dispatch')
 class DashboardHistoryView(TemplateView):
     template_name = 'alertas/dashboard_history.html'
@@ -214,13 +215,15 @@ class SubscriptionListView(TemplateView):
 
         plan_year = Plan.objects.get(nickname=settings.DEFAULT_PLAN_YEAR)
         context["plan_year"] = {
+            "amount": plan_year.amount * 100,
+            "description": "Suscripción a Libreborme",
             "label": "Suscripción anual",
-            "amount": plan_year.amount * 100
         }
         plan_month = Plan.objects.get(nickname=settings.DEFAULT_PLAN_MONTH)
         context["plan_month"] = {
+            "amount": plan_month.amount * 100,
+            "description": "Suscripción a Libreborme",
             "label": "Suscripción mensual",
-            "amount": plan_month.amount * 100
         }
 
         return context
@@ -437,6 +440,7 @@ def suggest_person(request):
     return HttpResponse(json.dumps(results), content_type="application/json")
 
 
+@staff_member_required
 @login_required
 def download_alerta_history_csv(request, id):
 
@@ -460,7 +464,10 @@ def download_alerta_history_csv(request, id):
     return response
 
 
-def ajax_empresa_follow(request):
+# login_required
+def ajax_follow(request):
+    """Follow/Unfollow a company or a person
+    """
     slug = request.POST["slug"]
     type_ = request.POST["type"]
 
@@ -491,7 +498,6 @@ def ajax_empresa_follow(request):
                         "slug": slug,
                         "following": following})
     return HttpResponse(jsonr, status=200)
-
 
 # No vale CreateView porque la lista para elegir empresa/persona sería inmensa
 

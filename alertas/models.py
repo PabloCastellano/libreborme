@@ -242,15 +242,11 @@ class Follower(m.Model):
             self._last_update = obj.date_updated
         return self._last_update
 
+    def get_absolute_url(self):
+        if self.type == "person":
+            return reverse('borme-persona', args=[str(self.slug)])
+        elif self.type == "company":
+            return reverse('borme-empresa', args=[str(self.slug)])
+
     def __str__(self):
         return "{0} is following {1}".format(self.user, self.slug)
-
-
-# max_alertas_free_company
-
-# Tipos de alerta:
-#    - Sale una empresa a la que está suscrita (suscripción por empresa)
-#    - Sale una persona a la que está suscrito (suscripción por persona)
-#    - Sale algún acto mercantil al que se está suscrito (suscripción por acto)
-#        - En liquidación
-#        - Concurso de acreedores

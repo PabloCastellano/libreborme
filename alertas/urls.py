@@ -31,5 +31,5 @@ urlpatterns = [
     path('alertas/remove_card/', views.remove_card, name='remove_card'),
     path('alertas/set_default_card/', views.set_default_card, name='set_default_card'),
 
-    path('ajax/follow/', views.ajax_empresa_follow, name='borme-ajax-follow'),
+    path('ajax/follow/', views.ajax_follow, name='borme-ajax-follow'),
 ]

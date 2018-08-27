@@ -417,10 +417,10 @@ class CompanyView(CacheMixin, DetailView):
             "companies": sorted(list(set(context['companies']))),
             "persons": sorted(list(set(context['persons']))),
             "is_following": self.request.user.is_authenticated and
-                            Follower.objects.filter(
-                                user=self.request.user,
-                                slug='molusco-producciones',
-                                type='company').exists(),
+                                Follower.objects.filter(
+                                    user=self.request.user,
+                                    slug=self.company.slug,
+                                    type='company').exists(),
         })
 
         return context
@@ -436,6 +436,17 @@ class PersonView(CacheMixin, DetailView):
             return self.person
         except Person.DoesNotExist:
             raise Http404('Person does not exist')
+
+    def get_context_data(self, **kwargs):
+        context = super(PersonView, self).get_context_data(**kwargs)
+        context.update({
+            "is_following": self.request.user.is_authenticated and
+                                Follower.objects.filter(
+                                    user=self.request.user,
+                                    slug=self.person.slug,
+                                    type='person').exists(),
+        })
+        return context
 
 
 class CompanyProvinceListView(CacheMixin, ListView):

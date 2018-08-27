@@ -8,8 +8,8 @@
           <div id="messages"></div>
           <h1 class="page-header">Listado de Alertas</h1>
 
-          <p>Aquí puede definir sus alertas de LibreBORME. A continuación se detallan los límites asociados a su tipo de cuenta:</p>
-
+          <p>Aquí puedes definir tus alertas de LibreBORME.</p>
+          <p>A continuación se detallan los límites asociados a tu tipo de cuenta <strong>{{ user.profile.get_account_type_display }}</strong>:</p>
           <div class="col-sm-3">
             <table class="table">
               <thead>
@@ -20,11 +20,11 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>Followers (TODO)</td>
-                  <td>{{ limite_p }}</td>
+                  <td>Personas y empresas</td>
+                  <td>{{ limite_f }}</td>
                 </tr>
                 <tr>
-                  <td>Acto</td>
+                  <td>Actos mercantiles</td>
                   <td>{{ limite_a }}</td>
                 </tr>
               </tbody>
@@ -34,16 +34,13 @@
 
           </div>
 
-          <h2 class="sub-header">Following (restantes: {{ restantes_f }})</h2>
+          <h2 class="sub-header">Alertas de personas y empresas</h2>
           {% if restantes_f > 0 %}
-              <a href="#" data-toggle="modal" data-target="#alerta-person-modal">Añadir nueva alerta</a>
+              <p>Dispones aún de {{ restantes_f }} alertas. <a href="#" data-toggle="modal" data-target="#alerta-follow-modal">Añade una alerta nueva</a>.</p>
           {% else %}
-              <p>Has agotado todas tus alertas</p>
-              <a href="#">
-              <button type="button" class="btn btn-primary btn-xs">
-                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Cambiar de plan
-              </button>
-              </a>
+              <p>Has agotado todas tus alertas
+              {% include 'upgrade_button.html' %}
+              </p>
           {% endif %}
           {% if followers %}
             <div class="table-responsive">
@@ -57,10 +54,10 @@
                   </tr>
                 </thead>
                 <tbody>
-              {% for follower in followers %}
+                {% for follower in followers %}
                   <tr>
                     <td class="follow-type">{{ follower.type }}</td>
-                    <td><a target="_blank" href="{% url 'borme-persona' follower.slug %}">{{ follower.slug }}</a></td>
+                    <td><a target="_blank" href="{{ follower.get_absolute_url }}">{{ follower.slug }}</a></td>
                     <td>{{ follower.last_update }}</td>
                     <td>
                       <button type="button" class="btn btn-danger btn-xs unfollow-company" data="{{ follower.slug }}">
@@ -68,28 +65,25 @@
                       </button>
                     </td>
                   </tr>
-              {% endfor %}
+                {% endfor %}
                 </tbody>
               </table>
 
             </div>
           {% else %}
-              <p>Aún no sigues a ninguna empresa ni persona</p>
+              <p>Aún no sigues a ninguna persona ni empresa. <a href="#" data-toggle="modal" data-target="#alerta-follow-modal">Añade una alerta nueva</a>.</p>
           {% endif %}
 
-          <h2 class="sub-header">Alertas de actos mercantiles (restantes: {{ restantes_a }})</h2>
+          <h2 class="sub-header">Alertas de actos mercantiles</h2>
+          {% if restantes_a > 0 %}
+            <p>Dispones aún de {{ restantes_a }} alertas. <a href="#" data-toggle="modal" data-target="#alerta-acto-modal">Añade una alerta nueva</a>.</p>
+          {% else %}
+            <p>Has agotado todas tus alertas
+            {% include 'upgrade_button.html' %}
+            </p>
+          {% endif %}
+          {% if alertas_a %}
           <div class="table-responsive">
-            {% if restantes_a > 0 %}
-              <a href="#" data-toggle="modal" data-target="#alerta-acto-modal">Añadir nueva alerta</a>
-            {% else %}
-              <p>Has agotado todas tus alertas</p>
-              <a href="#">
-              <button type="button" class="btn btn-primary btn-xs">
-                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Cambiar de plan
-              </button>
-              </a>
-            {% endif %}
-            {% if alertas_a %}
             <table class="table table-striped">
               <thead>
                 <tr>
@@ -102,7 +96,7 @@
                 </tr>
               </thead>
               <tbody>
-            {% for alerta in alertas_a %}
+              {% for alerta in alertas_a %}
                 <tr>
                   <td>{{ forloop.counter }}</td>
                   <td>{{ alerta.get_evento_display }}</td>
@@ -127,17 +121,19 @@
                     </a>
                   </td>
                 </tr>
-            {% endfor %}
-
+              {% endfor %}
               </tbody>
             </table>
-            {% endif %}
           </div>
-
+          {% else %}
+            {% if restantes_a > 0 %}
+              <p>Aún no tienes configurada ninguna alerta. <a href="#" data-toggle="modal" data-target="#alerta-acto-modal">Añade una alerta nueva</a>.</p>
+            {% endif %}
+          {% endif %}
 
         </div>
 
-<div class="modal fade" id="alerta-person-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="alerta-follow-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="loginmodal-container">
       <form action="#" role="form" method="post">

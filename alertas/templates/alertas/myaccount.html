@@ -20,19 +20,12 @@
             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cerrar mi cuenta
           </button>
           </a>
-          <h2 class="sub-header">Datos de envío/facturación?</h2>
-            {{ customer.shipping }}
-          <h2 class="sub-header">Suscripciones (LBInvoices) activas</h2>
 
-          {% if lbinvoices %}
-            <ul>
-            {% for subscription in lbinvoices %}
-              <li><a href="{{ subscription.get_absolute_url }}">{{ subscription.description }}</a>, hasta: {{ subscription.end_date | date }}</li>
-            {% endfor %}
-            </ul>
-          {% else %}
-            <p>Ninguna</p>
-          {% endif %}
+          <h2 class="sub-header">Datos de envío/facturación?</h2>
+            <p>(TEST if customer has configured shipping)</p>
+            <p>{{ customer.shipping }}</p>
+
+          <h2 class="sub-header">Suscripciones activas</h2>
 
           {% if customer.has_any_active_subscription %}
             <p>You have active subscriptions</p>
