@@ -67,7 +67,7 @@ class TestImport2(TestCase):
         self.assertEqual(len(company2.get_cargos_historial()[0]), 3)
 
 
-class TestImportAnuncios(TestCase):
+class TestImportAnuncios_BORME_A_2012_246_28(TestCase):
 
     def setUp(self):
         load_borme_from_gzipped_json("BORME-A-2012-246-28.json.gz")
@@ -86,6 +86,8 @@ class TestImportAnuncios(TestCase):
         self.assertEqual(len(company.get_cargos_historial()[0]), 2)
 
     def test_extincion(self):
+        # Acto: "Extinción"
         company = Company.objects.get(slug='pulso-2000')
         self.assertEqual(company.is_active, False)
+        self.assertEqual(company.status, 'inactive')
         self.assertEqual(company.date_extinction, datetime.date(2012, 12, 26))

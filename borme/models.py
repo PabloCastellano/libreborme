@@ -156,6 +156,7 @@ class Company(m.Model):
     slug = m.SlugField(max_length=260, primary_key=True)
     date_creation = m.DateField(blank=True, null=True)
     date_extinction = m.DateField(blank=True, null=True)
+    date_dissolution = m.DateField(blank=True, null=True)
     type = m.CharField(max_length=50, choices=SOCIEDADES)
     status = m.CharField(max_length=50, choices=COMPANY_STATUS_CHOICES,
                          default='active')

@@ -171,7 +171,11 @@ def _from_instance(borme):
                     # not bormeparser.borme.BormeActoCargo
                     nuevo_anuncio.actos[acto.name] = acto.value
 
-                    if acto.name == 'Extinción':
+                    if actos.is_acto_cierre_hoja_registral(acto.name):
+                        actos.suspender_sociedad(company, borme.date)
+                    elif actos.is_acto_reapertura_hoja_registral(acto.name):
+                        actos.activar_sociedad(company, borme.date)
+                    elif acto.name == 'Extinción':
                         actos.extinguir_sociedad(company, borme.date)
 
             company.save()
