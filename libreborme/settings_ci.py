@@ -125,11 +125,11 @@ WSGI_APPLICATION = 'libreborme.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'libreborme',
-        'USER': 'libreborme',
-        'PASSWORD': 'password',
+        'NAME': os.getenv('DB_NAME', 'libreborme'),
+        'USER': os.getenv('DB_USER', 'libreborme'),
+        'PASSWORD': os.getenv('DB_PASS', 'password'),
         'HOST': os.getenv('DB_HOST', 'postgresql'),
-        'PORT': '5432',
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
 
