@@ -21,4 +21,4 @@ class TestProfile(TestCase):
         self.assertFalse(self.user.is_active)
         logs = LibrebormeLogs.objects.all()
         self.assertEqual(len(logs), 1)
-        self.assertEqual(logs[0].component, "email")
+        self.assertEqual(logs[0].component, "subscription")

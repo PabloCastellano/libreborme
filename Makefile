@@ -27,7 +27,7 @@ recreate_db:
 
 run:
 		docker-compose up -d
-		./manage.py runserver --settings libreborme.dev_settings
+		./manage.py runserver --settings libreborme.settings_dev
 		# ./manage.py runserver_plus
 		# --settings=...
 
@@ -43,4 +43,10 @@ graph_model:
 		@echo "Generated graph_model.png"
 
 test:
+		DJANGO_SETTINGS_MODULE=libreborme.settings_ci DB_HOST=localhost ./manage.py test
+
+test2:
 		./setup.py test
+
+test3:
+		./runtests.py

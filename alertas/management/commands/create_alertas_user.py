@@ -53,7 +53,7 @@ class Command(BaseCommand):
             first_name = input("Please enter first name: ")
         else:
             first_name = options["first_name"]
-        
+
         if not options["last_name"]:
             last_name = input("Please enter last name: ")
         else:

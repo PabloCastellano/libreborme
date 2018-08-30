@@ -1,0 +1,28 @@
+stages:
+  - build
+  - test
+
+variables:
+  CONTAINER_IMAGE: registry.gitlab.com/libreborme/libreborme
+  CONTAINER_TEST_IMAGE: $CONTAINER_IMAGE:$CI_BUILD_REF_NAME
+  DOCKER_DRIVER: overlay2
+
+build:
+  stage: build
+  tags:
+    - shell
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    - docker build -t $CONTAINER_TEST_IMAGE .
+    - docker push $CONTAINER_TEST_IMAGE
+
+test:
+  stage: test
+  tags:
+    - shell
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
+  coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'
+

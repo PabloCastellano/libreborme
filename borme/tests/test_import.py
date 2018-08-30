@@ -84,6 +84,7 @@ class TestImportAnuncios_BORME_A_2012_246_28(TestCase):
         self.assertEqual(company.name, 'FERRETERIA VIENA')
         self.assertEqual(len(company.get_cargos_actuales()[0]), 2)
         self.assertEqual(len(company.get_cargos_historial()[0]), 2)
+        self.assertEqual(company.date_updated, datetime.date(2012, 12, 26))
 
     def test_extincion(self):
         # Acto: "Extinción"

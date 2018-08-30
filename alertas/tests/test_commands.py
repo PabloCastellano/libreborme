@@ -35,7 +35,6 @@ class TestCommandCreateAlertasUser(TestCase):
         self.assertEqual(user.email, "fred@localhost")
         self.assertEqual(user.first_name, "Fred")
         self.assertEqual(user.last_name, "Foo")
-        self.assertEqual(user.profile.account_type, "test")
         self.assertEqual(user.profile.notification_method, "email")
         self.assertEqual(user.profile.notification_email, "fred@localhost")
 

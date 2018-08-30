@@ -16,16 +16,11 @@ def get_alertas_config(key=None):
 
 def create_alertas_user(username, email, password,
                         first_name, last_name, account_type):
-    Profile = apps.get_model("alertas", "Profile")
-
     new_user = User.objects.create_user(username=username,
                                         email=email,
                                         password=password,
                                         first_name=first_name,
                                         last_name=last_name)
-    profile = Profile(user=new_user, account_type=account_type,
-                      notification_email=email)
-    profile.save()
     return new_user
 
 

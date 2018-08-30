@@ -1,0 +1,45 @@
+---
+version: "3"
+
+services:
+
+  app:
+    image: registry.gitlab.com/libreborme/libreborme:prod
+    depends_on:
+      - postgresql
+      - elasticsearch
+    ports:
+      - "8000:8000"
+    volumes:
+      - /var/data/libreborme/prod/settings.py:/site/libreborme/settings.py:ro
+    networks:
+      - default
+      - public
+    environment:
+      DJANGO_SETTINGS_MODULE: libreborme.settings
+      ENV_TYPE: prod
+
+  postgresql:
+    restart: always
+    image: postgres:9.5
+    ports:
+      - "5432:5432"
+    volumes:
+      - /var/data/realtime/myapp/prod/db:/var/lib/postgresql/data:rw
+    environment:
+      POSTGRES_DB: libreborme
+      POSTGRES_USER: libreborme
+      POSTGRES_PASSWORD: password
+
+  elasticsearch:
+    restart: always
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
+    ports:
+      - "9200:9200"
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+
+networks:
+  public:
+    external: true

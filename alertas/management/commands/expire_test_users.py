@@ -56,8 +56,7 @@ class Command(BaseCommand):
             # and more
             days = int(get_alertas_config("days_test_subscription_expire"))
             date = timezone.now() - timezone.timedelta(days=days)
-            users = User.objects.filter(profile__account_type='test',
-                                        date_joined__lte=date, is_active=True)
+            users = User.objects.filter(date_joined__lte=date, is_active=True)
             if len(users) > 0:
                 for user in users:
                     self.expire_user(user)

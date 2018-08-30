@@ -1,4 +1,5 @@
 from django.core.management import call_command
+from django.conf import settings
 from django.urls import reverse
 
 from django.test.client import Client
@@ -26,7 +27,7 @@ class TestAlertasHttp(TestCase):
 class TestAlertasLoginRequired(TestCase):
 
     def setUp(self):
-        self.login_url = reverse('login')
+        self.login_url = settings.LOGIN_URL
         # self.client = Client()
 
     def test_alertas(self):
@@ -69,28 +70,8 @@ class TestAlertasLoginRequired(TestCase):
         response = self.client.get(url)
         self.assertTrue(response.url.startswith(self.login_url))
 
-    def test_alertas_new_company(self):
-        url = reverse('alertas-new-company')
-        response = self.client.get(url)
-        self.assertTrue(response.url.startswith(self.login_url))
-
-    def test_alertas_new_person(self):
-        url = reverse('alertas-new-person')
-        response = self.client.get(url)
-        self.assertTrue(response.url.startswith(self.login_url))
-
     def test_alertas_remove_acto(self):
         url = reverse('alerta-remove-acto', args=['1'])
-        response = self.client.get(url)
-        self.assertTrue(response.url.startswith(self.login_url))
-
-    def test_alertas_remove_company(self):
-        url = reverse('alerta-remove-company', args=['1'])
-        response = self.client.get(url)
-        self.assertTrue(response.url.startswith(self.login_url))
-
-    def test_alertas_remove_person(self):
-        url = reverse('alerta-remove-person', args=['1'])
         response = self.client.get(url)
         self.assertTrue(response.url.startswith(self.login_url))
 
