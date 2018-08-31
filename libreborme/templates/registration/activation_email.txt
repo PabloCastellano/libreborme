@@ -1,0 +1,5 @@
+Hello {{ user }}.
+
+You must enable your account before {{ expiration_days }} days.
+
+Follow the link: http://{{ site }}/accounts/activate/{{ activation_key }}

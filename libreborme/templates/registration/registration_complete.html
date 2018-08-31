@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="loginmodal-container">
+  <div class="loginmodal-logo">
+    <img src="{% static 'libreborme_logo.png' %}"><br>
+  </div><br>
+
+  <h3>Registration complete!</h3>
+
+  <p>
+  This template should inform the user that an email containing account-activation information has been sent.
+  </p>
+
+</div>
+
+{% endblock %}

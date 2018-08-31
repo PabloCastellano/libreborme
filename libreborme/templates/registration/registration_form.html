@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="loginmodal-container">
+  <div class="loginmodal-logo">
+    <img src="{% static 'libreborme_logo.png' %}"><br>
+  </div><br>
+
+  <div class="form-group">
+    <form method="post" action=".">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input class='btn btn-primary' type="submit" value="{% trans 'Register' %}" />
+    </form>
+  </div>
+
+</div>
+
+{% endblock %}

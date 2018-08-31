@@ -29,9 +29,11 @@ urlpatterns = [
     # dj-stripe
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
 
+    # django-registration
+    path('accounts/', include('registration.backends.hmac.urls')),
+
     # Django site authentication urls (login, logout, password management...)
     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/register', views.register, name='register'),
 ]
 
 if DEBUG:
@@ -40,5 +42,6 @@ if DEBUG:
 
     urlpatterns += path('admin/', admin.site.urls),
 
+    # django-debug-toolbar
     import debug_toolbar
     urlpatterns += path('__debug__/', include(debug_toolbar.urls)),

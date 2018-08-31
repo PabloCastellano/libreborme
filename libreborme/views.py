@@ -122,6 +122,7 @@ def checkout(request):
     return HttpResponse("", status=400)
 
 
+# XXX: UNUSED
 def register(request):
     if request.method == 'POST':
         form = LBUserCreationForm(request.POST)

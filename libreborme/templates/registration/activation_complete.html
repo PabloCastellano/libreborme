@@ -2,21 +2,16 @@
 {% load staticfiles %}
 {% block content %}
 
-{% for key, value in form.errors.items %}
-<p>{{ value }}</p>
-{% endfor %}
-
-{% if next %}
-    {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
-    {% endif %}
-{% endif %}
-
 <div class="loginmodal-container">
   <div class="loginmodal-logo">
     <img src="{% static 'libreborme_logo.png' %}"><br>
   </div><br>
+
+  <h3>Activation complete!</h3>
+
+  <p>
+  Used after successful account activation. This template has no context variables of its own, and should inform the user that their account is now active.
+  </p>
 
   <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
@@ -27,10 +22,8 @@
   </form>
 
   <div class="login-help">
-    <a href="{% url 'register' %}">Register</a> - <a href="{% url 'password_reset' %}">Forgot password</a>
+    <a href="{% url 'registration_register' %}">Register</a> - <a href="{% url 'password_reset' %}">Forgot password</a>
   </div>
 </div>
-
-
 
 {% endblock %}

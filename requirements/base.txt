@@ -5,6 +5,8 @@ django-bootstrap-static==3.3.7.2
 django-elasticsearch-dsl==0.5.0
 django-maintenancemode==0.11.2
 django-prettyjson==0.4.0
+# Branch with Django 2 support until this PR is merged: https://github.com/ubernostrum/django-registration/pull/158
+git+git://github.com/Akasch/django-registration.git@3fea930a1a0457a246a178e292df2a07c628efed
 django-static-jquery==2.1.4
 django-tastypie==0.14.1
 dj-stripe==1.2.0

@@ -8,15 +8,18 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="http://getbootstrap.com/favicon.ico">
+    <link rel="icon" href="/favicon.ico">
 
     <title>Libreborme - Alertas</title>
 
     <link href="{% static "css/dashboard_login.css" %}" rel="stylesheet">
+    <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
 
   </head>
 
   {% block content %}{% endblock %}
 
+  <script src="{% static 'static_jquery/js/jquery.min.js' %}"></script>
+  <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
 </body>
 </html>

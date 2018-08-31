@@ -1,0 +1,34 @@
+{% extends "base_generic.html" %}
+{% load staticfiles %}
+{% block content %}
+
+{% for key, value in form.errors.items %}
+<p>{{ value }}</p>
+{% endfor %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+    {% endif %}
+{% endif %}
+
+<div class="loginmodal-container">
+  <div class="loginmodal-logo">
+    <img src="{% static 'libreborme_logo.png' %}"><br>
+  </div><br>
+
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <input id="id_username" maxlength="254" name="username" placeholder="Username" type="text" />
+    <input id="id_password" name="password" type="password" placeholder="Password"/>
+    <input type="hidden" name="next" value="" />
+    <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+  </form>
+
+  <div class="login-help">
+    <a href="{% url 'registration_register' %}">Register</a> - <a href="{% url 'password_reset' %}">Forgot password</a>
+  </div>
+</div>
+
+{% endblock %}

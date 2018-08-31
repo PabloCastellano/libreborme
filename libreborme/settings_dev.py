@@ -18,6 +18,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '41+h()yq5-!*=)sh+_%4wal8=+*e)dlrau*81odpu7n&9^7d5h'
 
+from .settings_common import *
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -179,6 +181,8 @@ BORME_JSON_ROOT = os.path.join(BORME_ROOT, 'json')
 BORME_LOG_ROOT = os.path.join(BASE_DIR, '..', 'log')
 
 EMAIL_CONTACT = 'contact@domain'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
 
 LOPD = {'provider': 'Some real name',
         'id': 'Some real state issued ID number',
