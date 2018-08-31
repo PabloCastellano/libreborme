@@ -24,9 +24,9 @@ recreate_db:
 		./manage.py djstripe_sync_customers
 		./manage.py djstripe_sync_plans_from_stripe
 
-
 run:
 		docker-compose up -d
+		./manage.py migrate
 		./manage.py runserver --settings libreborme.settings_dev
 		# ./manage.py runserver_plus
 		# --settings=...
@@ -36,6 +36,9 @@ shell:
 
 import:
 		./manage.py importborme -f 2018-03-13 -t 2018-03-13 --local-only
+
+emailserver:
+		./manage.py mail_debug
 
 graph_model:
 		# ./manage.py graph_models -a -g -o graph_model.png
