@@ -133,7 +133,8 @@ DATABASES = {
     }
 }
 
-ELASTICSEARCH_URI = "http://elastic:changeme@localhost:9200"
+ELASTICSEARCH_URI = os.getenv('ELASTICSEARCH_URI',
+                              "http://elastic:changeme@localhost:9200")
 ELASTICSEARCH_DSL = {
     'default': {
         'hosts': ELASTICSEARCH_URI.split('http://')[1]

@@ -15,6 +15,7 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: libreborme.settings_ci
       ENV_TYPE: development
+      ELASTICSEARCH_URI: http://elasticsearch:9200
 
   postgresql:
     restart: always
