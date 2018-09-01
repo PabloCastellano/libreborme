@@ -158,6 +158,7 @@ class Company(m.Model):
     date_extinction = m.DateField(blank=True, null=True)
     date_dissolution = m.DateField(blank=True, null=True)
     type = m.CharField(max_length=50, choices=SOCIEDADES)
+    auditors = JSONField(default=list)
     status = m.CharField(max_length=50, choices=COMPANY_STATUS_CHOICES,
                          default='active')
 
@@ -171,6 +172,15 @@ class Company(m.Model):
     cargos_historial_c = JSONField(default=list)
 
     document = SearchVectorField(null=True, db_index=True)
+
+    def add_auditor(self, auditor_name, type_, date):
+        auditor = {'name': auditor_name, 'type': type_, 'date_from': date}
+        self.auditors = [auditor] + self.auditors
+
+    def last_auditor(self):
+        if self.auditors:
+            return self.auditors[0]
+        return False
 
     def add_in_bormes(self, borme):
         if borme not in self.in_bormes:
@@ -190,7 +200,7 @@ class Company(m.Model):
 
     @property
     def fullname(self):
-        return '%s %s' % (self.name.title(), self.type)
+        return "{} {}".format(self.name.title(), self.type)
 
     def get_cargos_actuales(self, offset=0, limit=settings.CARGOS_LIMIT):
         cargos_p = self.cargos_actuales_p.copy()

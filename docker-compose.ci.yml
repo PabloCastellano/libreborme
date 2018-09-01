@@ -5,7 +5,7 @@ services:
 
   app:
     image: registry.gitlab.com/libreborme/libreborme:${CI_BUILD_REF_NAME}
-    command: bash -c "sleep 8 && coverage run --source='.' manage.py test && coverage report"
+    command: bash -c "sleep 8 && coverage run --source='.' manage.py test -v 3 && coverage report"
     depends_on:
       - postgresql
       - elasticsearch

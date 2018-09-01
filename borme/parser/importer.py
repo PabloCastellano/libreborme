@@ -48,8 +48,11 @@ logger.addHandler(ch)
 logger.setLevel(logging.INFO)
 
 
-def _importar_cargos(nombres, borme, anuncio, borme_embed, nombre_cargo, acto,
+def _importar_cargos(nombres, nombre_cargo, borme, borme_embed, anuncio, acto,
                      company, lista_cargos, results):
+
+    if nombre_cargo == 'Auditor' and len(nombres) != 1:
+        logger.warn("Lista de auditores > 1")
 
     for nombre in nombres:
         logger.debug('  %s' % nombre)
@@ -70,6 +73,7 @@ def _importar_cargos(nombres, borme, anuncio, borme_embed, nombre_cargo, acto,
                 results["created_companies"] += 1
             else:
                 results["created_persons"] += 1
+
         lista_cargos.append(cargo)
 
 
@@ -162,13 +166,17 @@ def _from_instance(borme):
                     lista_cargos = []
                     for nombre_cargo, nombres in acto.cargos.items():
                         logger_cargo(nombre_cargo, nombres)
-
                         _importar_cargos(
-                                nombres, borme, anuncio,
-                                borme_embed, nombre_cargo, acto,
-                                company, lista_cargos, results)
+                                nombres, nombre_cargo, borme, borme_embed,
+                                anuncio, acto, company,
+                                lista_cargos, results)
 
                     nuevo_anuncio.actos[acto.name] = lista_cargos
+
+                    # No incluir en la tabla de cargos los Auditores, ya
+                    # que no suelen ser cesados. Mostrar solo el acto.
+                    lista_cargos = filter(lambda c: c['title'] != 'Auditor',
+                                          lista_cargos)
 
                     if is_acto_cargo_entrante(acto.name):
                         company.update_cargos_entrantes(lista_cargos)
@@ -603,23 +611,30 @@ def _load_cargo(nombre, nombre_cargo, borme, borme_embed, company,
     entity.add_in_bormes(borme_embed)
     entity.date_updated = borme.date
 
-    cargo_embed = {'title': nombre_cargo, 'name': company.fullname}
     cargo = {'title': nombre_cargo, 'type': type_}
-
     if type_ == 'person':
         cargo['name'] = entity.name
     else:
-        cargo['name'] = entity.fullname,
-        cargo_embed['type'] = 'company'
-
+        cargo['name'] = entity.fullname
     if is_acto_cargo_entrante(acto.name):
         cargo['date_from'] = borme.date.isoformat()
-        cargo_embed["date_from"] = borme.date.isoformat()
-        entity.update_cargos_entrantes([cargo_embed])
     else:
         cargo['date_to'] = borme.date.isoformat()
-        cargo_embed["date_to"] = borme.date.isoformat()
-        entity.update_cargos_salientes([cargo_embed])
+
+    if nombre_cargo == 'Auditor':
+        company.add_auditor(nombre, type_, borme.date.isoformat())
+    else:
+        cargo_embed = {'title': nombre_cargo, 'name': company.fullname}
+
+        if type_ == 'company':
+            cargo_embed['type'] = 'company'
+
+        if is_acto_cargo_entrante(acto.name):
+            cargo_embed["date_from"] = borme.date.isoformat()
+            entity.update_cargos_entrantes([cargo_embed])
+        else:
+            cargo_embed["date_to"] = borme.date.isoformat()
+            entity.update_cargos_salientes([cargo_embed])
 
     entity.save()
 

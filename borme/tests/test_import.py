@@ -56,15 +56,17 @@ class TestImport2(TestCase):
         self.assertTrue(ret)
         self.assertEqual(Company.objects.count(), 289)
         company1 = Company.objects.get(slug='labiernag-2000')
-        self.assertEqual(len(company1.get_cargos_actuales()[0]), 7)
+        self.assertEqual(len(company1.get_cargos_actuales()[0]), 6)
         self.assertEqual(len(company1.get_cargos_historial()[0]), 0)
+        self.assertEqual(len(company1.auditors), 1)
 
         ret = load_borme_from_gzipped_json("BORME-A-2012-246-28.json.gz")
         self.assertTrue(ret)
         self.assertEqual(Company.objects.count(), 842)
         company2 = Company.objects.get(slug='labiernag-2000')
-        self.assertEqual(len(company2.get_cargos_actuales()[0]), 9)
+        self.assertEqual(len(company2.get_cargos_actuales()[0]), 8)
         self.assertEqual(len(company2.get_cargos_historial()[0]), 3)
+        self.assertEqual(len(company2.auditors), 1)
 
 
 class TestImportAnuncios_BORME_A_2012_246_28(TestCase):

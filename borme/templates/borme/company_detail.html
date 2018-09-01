@@ -90,7 +90,10 @@
     <p>
       <strong>Empresas relacionadas:</strong> {{ companies|length }}<br/>
       <strong>Personas relacionadas:</strong> {{ persons|length }}<br/>
-      <strong>Situación mercantil:</strong> {{ company.get_status_display }}
+      <strong>Situación mercantil:</strong> {{ company.get_status_display }}<br>
+      {% if company.last_auditor %}
+      <strong>Auditor:</strong> {{ company.last_auditor.name | title}}
+      {% endif %}
     </p>
     <div>
 
