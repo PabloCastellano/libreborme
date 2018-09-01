@@ -275,9 +275,11 @@ class Company(m.Model):
                 raise ValueError('type: invalid value')
 
     def _cesar_cargo(self, company, date):
-        """
-            company: str
-            date: str iso format
+        """ Se llama a este método cuando una sociedad se extingue.
+        Todos los cargos vigentes que ocupe en la sociedad extinguida pasan a
+        estar en la lista de cargos cesados.
+        company: str
+        date: str iso format
         """
         for cargo in self.cargos_actuales_c:
             if cargo['name'] == company:

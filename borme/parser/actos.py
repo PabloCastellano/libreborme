@@ -68,6 +68,8 @@ def suspender_sociedad(company, date):
 
 
 def _resign_positions(company, date):
+    """ Marca todos los cargos de una empresa como finalizados
+    """
     for cargo in company.cargos_actuales_c:
         cargo['date_to'] = date.isoformat()
         company.cargos_historial_c.append(cargo)

@@ -48,6 +48,31 @@ logger.addHandler(ch)
 logger.setLevel(logging.INFO)
 
 
+def _importar_cargos(nombres, borme, anuncio, borme_embed, nombre_cargo, acto,
+                     company, lista_cargos, results):
+
+    for nombre in nombres:
+        logger.debug('  %s' % nombre)
+        if is_company(nombre):
+            type_ = 'company'
+            results['total_companies'] += 1
+        else:
+            type_ = 'person'
+            results['total_persons'] += 1
+
+        cargo, created = _load_cargo(nombre, nombre_cargo, borme, borme_embed,
+                                     company, anuncio, acto, type_)
+
+        if not created:
+            results["errors"] += 1
+        else:
+            if type_ == 'company':
+                results["created_companies"] += 1
+            else:
+                results["created_persons"] += 1
+        lista_cargos.append(cargo)
+
+
 def _from_instance(borme):
     """Importa en la BD una instancia bormeparser.Borme
 
@@ -137,29 +162,11 @@ def _from_instance(borme):
                     lista_cargos = []
                     for nombre_cargo, nombres in acto.cargos.items():
                         logger_cargo(nombre_cargo, nombres)
-                        for nombre in nombres:
-                            logger.debug('  %s' % nombre)
-                            if is_company(nombre):
-                                results['total_companies'] += 1
-                                cargo, created = _load_cargo_empresa(
-                                                    nombre, borme, anuncio,
-                                                    borme_embed, nombre_cargo,
-                                                    acto, company)
-                                if created:
-                                    results["created_companies"] += 1
-                                else:
-                                    results["errors"] += 1
-                            else:
-                                results['total_persons'] += 1
-                                cargo, created = _load_cargo_person(
-                                                    nombre, borme, company,
-                                                    borme_embed, nombre_cargo,
-                                                    acto)
-                                if created:
-                                    results["created_persons"] += 1
-                                else:
-                                    results["errors"] += 1
-                            lista_cargos.append(cargo)
+
+                        _importar_cargos(
+                                nombres, borme, anuncio,
+                                borme_embed, nombre_cargo, acto,
+                                company, lista_cargos, results)
 
                     nuevo_anuncio.actos[acto.name] = lista_cargos
 
@@ -559,96 +566,61 @@ def _print_results(results, borme):
     logger.info(log_message)
 
 
-def _load_cargo_empresa(nombre, borme, anuncio, borme_embed,
-                        nombre_cargo, acto, company):
-    """Importa en la BD la empresa que aparece en un cargo.
+def _load_cargo(nombre, nombre_cargo, borme, borme_embed, company,
+                anuncio, acto, type_):
+    """Importa en la BD la persona o empresa que aparece en un cargo.
 
-    Inserta la empresa si no existe e inserta los cargos.
+    Inserta la persona/empresa si no existe e inserta los cargos.
     Actualiza las fechas de entrada/salida del cargo.
 
     :rtype: (dict, bool cargo created)
     """
 
-    empresa, tipo, slug_c = parse_empresa(borme.cve, nombre)
-    c, created = company_get_or_create(empresa, tipo, slug_c)
+    if type_ == 'person':
+        entity, created = person_get_or_create(nombre)
+    else:
+        empresa, tipo, slug_c = parse_empresa(borme.cve, nombre)
+        entity, created = company_get_or_create(empresa, tipo, slug_c)
 
     if created:
-        logger_empresa_create(empresa, tipo)
+        if type_ == 'person':
+            logger_persona_create(nombre)
+        else:
+            logger_empresa_create(empresa, tipo)
     else:
-        if c.name != empresa:
-            logger_empresa_similar(slug_c, c, empresa, borme.cve)
+        if type_ == 'person':
+            if entity.name != nombre:
+                logger_persona_similar(entity.slug, entity.name,
+                                       nombre, borme.cve)
+        else:
+            if entity.name != empresa:
+                logger_empresa_similar(slug_c, entity, empresa, borme.cve)
 
-    c.anuncios.append({"year": borme.date.year, "id": anuncio.id})
-    c.add_in_bormes(borme_embed)
-    c.date_updated = borme.date
+    if type_ == 'person':
+        entity.add_in_companies(company.fullname)
+    else:
+        entity.anuncios.append({"year": borme.date.year, "id": anuncio.id})
+    entity.add_in_bormes(borme_embed)
+    entity.date_updated = borme.date
 
-    cargo = {
-        'title': nombre_cargo,
-        'name': c.fullname,
-        'type': 'company'
-    }
+    cargo_embed = {'title': nombre_cargo, 'name': company.fullname}
+    cargo = {'title': nombre_cargo, 'type': type_}
 
-    cargo_embed = {
-        'title': nombre_cargo,
-        'name': company.fullname,
-        'type': 'company'
-    }
+    if type_ == 'person':
+        cargo['name'] = entity.name
+    else:
+        cargo['name'] = entity.fullname,
+        cargo_embed['type'] = 'company'
 
     if is_acto_cargo_entrante(acto.name):
         cargo['date_from'] = borme.date.isoformat()
         cargo_embed["date_from"] = borme.date.isoformat()
-        c.update_cargos_entrantes([cargo_embed])
+        entity.update_cargos_entrantes([cargo_embed])
     else:
         cargo['date_to'] = borme.date.isoformat()
         cargo_embed["date_to"] = borme.date.isoformat()
-        c.update_cargos_salientes([cargo_embed])
+        entity.update_cargos_salientes([cargo_embed])
 
-    c.save()
-
-    return cargo, created
-
-
-def _load_cargo_person(nombre, borme, company, borme_embed,
-                       nombre_cargo, acto):
-    """Importa en la BD la persona que aparece en un cargo.
-
-    Inserta la persona si no existe e inserta los cargos.
-    Actualiza las fechas de entrada/salida del cargo.
-
-    :rtype: (dict, bool cargo created)
-    """
-    p, created = person_get_or_create(nombre)
-
-    if created:
-        logger_persona_create(nombre)
-    else:
-        if p.name != nombre:
-            logger_persona_similar(p.slug, p.name, nombre, borme.cve)
-
-    p.add_in_companies(company.fullname)
-    p.add_in_bormes(borme_embed)
-    p.date_updated = borme.date
-
-    cargo = {
-        'title': nombre_cargo,
-        'name': p.name,
-        'type': 'person'
-    }
-
-    cargo_embed = {
-        'title': nombre_cargo,
-        'name': company.fullname,
-    }
-
-    if is_acto_cargo_entrante(acto.name):
-        cargo['date_from'] = borme.date.isoformat()
-        cargo_embed["date_from"] = borme.date.isoformat()
-        p.update_cargos_entrantes([cargo_embed])
-    else:
-        cargo['date_to'] = borme.date.isoformat()
-        cargo_embed["date_to"] = borme.date.isoformat()
-        p.update_cargos_salientes([cargo_embed])
-
-    p.save()
+    entity.save()
 
     return cargo, created
