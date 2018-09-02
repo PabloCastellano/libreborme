@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.template.defaulttags import register
+from django.urls import reverse as reverse_url
 from django.utils.text import slugify
 
 from borme.utils.strings import slug2 as borme_slug2
@@ -121,6 +122,24 @@ def slug(val):
 @register.filter
 def slug2(val):
     return borme_slug2(val)
+
+
+@register.filter
+def link_to_entity(cargo):
+    """
+    cargo must be a dictionary having type and name as keys
+    """
+    a_tag = '<a href="{}">{}</a>'
+
+    if cargo['type'] == 'person':
+        slug = slugify(cargo['name'])
+        url = reverse_url('borme-persona', args=[slug])
+        text = cargo['name'].title()
+    else:
+        slug = borme_slug2(cargo['name'])
+        url = reverse_url('borme-empresa', args=[slug])
+        text = cargo['name']
+    return a_tag.format(url, text)
 
 
 @register.filter

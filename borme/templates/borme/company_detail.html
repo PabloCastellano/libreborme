@@ -209,11 +209,7 @@
                     {% for cargo in value %}
                         <tr>
                             <td>{{ cargo.title }}</td>
-                            {% if cargo.type == 'person' %}
-                                <td><a href="{% url 'borme-persona' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
-                            {% else %}
-                                <td><a href="{% url 'borme-empresa' cargo.name|slug2 %}">{{ cargo.name }}</a></td>
-                            {% endif %}
+                            <td>{{ cargo | link_to_entity | safe }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -244,7 +240,7 @@
             {% endif %}
             <ul>
             {% for person in ps %}
-                <li><a href="{% url 'borme-persona' person|slug %}">{{ person|title }}</a></li>
+                <li>{{ person | link_to_entity | safe }}</li>
             {% endfor %}
             </ul>
             {% if persons|length > 5 %}
@@ -268,7 +264,7 @@
             {% endif %}
             <ul>
             {% for c in cs %}
-                <li><a href="{% url 'borme-empresa' c|slug2 %}">{{ c }}</a></li>
+                <li>{{ c | link_to_entity | safe }}</li>
             {% endfor %}
             </ul>
             {% if companies|length > 5 %}

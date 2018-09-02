@@ -387,6 +387,16 @@ class BormeProvinciaView(CacheMixin, TemplateView):
         return context
 
 
+def prepare_embed(list_of_dict):
+    """ Remove duplicates from list and return them sorted
+
+    :param list_of_dict: List of embed cargos
+    :type list_of_dict: [{'name': 'xxx', 'type': 'xxx'}]
+    """
+    nodupes = [dict(tupleized) for tupleized in set(tuple(item.items()) for item in list_of_dict)]
+    return sorted(nodupes, key=lambda d: d['name'])
+
+
 class CompanyView(CacheMixin, DetailView):
     model = Company
     context_object_name = 'company'
@@ -405,23 +415,21 @@ class CompanyView(CacheMixin, DetailView):
 
         context['persons'] = []
         for cargo in self.company.todos_cargos_p:
-            if cargo['name'] not in context['persons']:
-                context['persons'].append(cargo['name'])
+            cargo_embed = {'name': cargo['name'], 'type': 'person'}
+            context['persons'].append(cargo_embed)
+        context['persons'] = prepare_embed(context['persons'])
 
         context['companies'] = []
         for cargo in self.company.todos_cargos_c:
-            if cargo['name'] not in context['companies']:
-                context['companies'].append(cargo['name'])
+            cargo_embed = {'name': cargo['name'], 'type': 'company'}
+            context['companies'].append(cargo_embed)
+        context['companies'] = prepare_embed(context['companies'])
 
-        context.update({
-            "companies": sorted(list(set(context['companies']))),
-            "persons": sorted(list(set(context['persons']))),
-            "is_following": self.request.user.is_authenticated and
-                                Follower.objects.filter(
-                                    user=self.request.user,
-                                    slug=self.company.slug,
-                                    type='company').exists(),
-        })
+        context["is_following"] = self.request.user.is_authenticated and \
+                                    Follower.objects.filter(
+                                        user=self.request.user,
+                                        slug=self.company.slug,
+                                        type='company').exists()
 
         return context
 
