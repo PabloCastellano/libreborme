@@ -37,6 +37,9 @@ shell:
 import:
 		./manage.py importborme -f 2018-03-13 -t 2018-03-13 --local-only
 
+import1:
+		./manage.py importbormejson /home/pablo2/.bormes/json/2018/03/13/BORME-A-2018-51-03.json
+
 emailserver:
 		./manage.py mail_debug
 
@@ -46,7 +49,7 @@ graph_model:
 		@echo "Generated graph_model.png"
 
 test:
-		DJANGO_SETTINGS_MODULE=libreborme.settings_ci DB_HOST=localhost ./manage.py test
+		DJANGO_SETTINGS_MODULE=libreborme.settings_ci DB_HOST=localhost ./manage.py test -v 3
 
 test2:
 		./setup.py test
