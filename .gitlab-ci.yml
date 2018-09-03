@@ -1,11 +1,13 @@
 stages:
   - build
   - test
+  - release
+  - deploy
 
 variables:
   CONTAINER_IMAGE: registry.gitlab.com/libreborme/libreborme
   CONTAINER_TEST_IMAGE: $CONTAINER_IMAGE:$CI_BUILD_REF_NAME
-  DOCKER_DRIVER: overlay2
+  DEPLOY_PATH: /opt/libreborme
 
 build:
   stage: build
@@ -26,3 +28,34 @@ test:
     - docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
   coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'
 
+
+release_stg:
+  stage: release
+  tags:
+    - shell
+  only:
+    - staging
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_IMAGE:staging
+    - docker push $CONTAINER_IMAGE:staging
+
+
+deploy_stg:
+  stage: deploy
+  tags:
+    - docker
+  only:
+    - staging
+  environment:
+    name: staging
+    url: https://staging.libreborme.net
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$DEPLOY_KEY" | ssh-add -
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  script:
+    - scp docker-compose.staging.yml deploy@$DEPLOY_SERVER_URL:$DEPLOY_PATH/staging/docker-compose.yml
+    - ssh deploy@$DEPLOY_SERVER_URL "cd $DEPLOY_PATH/staging && docker stack deploy -c docker-compose.yml --with-registry-auth libreborme_staging"
