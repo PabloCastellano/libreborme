@@ -192,6 +192,8 @@ def _from_instance(borme):
                         actos.activar_sociedad(company, borme.date)
                     elif acto.name == 'Extinción':
                         actos.extinguir_sociedad(company, borme.date)
+                    elif acto.name == 'Disolución':
+                        actos.disolver_sociedad(company, borme.date)
 
             company.save()
             nuevo_anuncio.company = company

@@ -60,6 +60,11 @@ class TestImport2(TestCase):
         self.assertEqual(len(company1.get_cargos_historial()[0]), 0)
         self.assertEqual(len(company1.auditors), 1)
 
+        # Acto: "Disolución"
+        company = Company.objects.get(slug='modas-venus')
+        self.assertEqual(company.status, "dissolved")
+        # self.assertEqual(company.dissolution_reason, "Voluntaria.")
+
         ret = load_borme_from_gzipped_json("BORME-A-2012-246-28.json.gz")
         self.assertTrue(ret)
         self.assertEqual(Company.objects.count(), 842)
