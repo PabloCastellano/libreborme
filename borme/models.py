@@ -159,6 +159,8 @@ class Company(m.Model):
     date_dissolution = m.DateField(blank=True, null=True)
     type = m.CharField(max_length=50, choices=SOCIEDADES)
     auditors = JSONField(default=list)
+    liquidators = JSONField(default=list)
+    reason_dissolution = m.CharField(max_length=50, blank=True, null=True)
     status = m.CharField(max_length=50, choices=COMPANY_STATUS_CHOICES,
                          default='active')
 
@@ -181,6 +183,10 @@ class Company(m.Model):
         if self.auditors:
             return self.auditors[0]
         return False
+
+    def add_liquidator(self, liquid_name, type_, date):
+        liquidator = {'name': liquid_name, 'type': type_, 'date_from': date}
+        self.liquidators = [liquidator] + self.liquidators
 
     def add_in_bormes(self, borme):
         if borme not in self.in_bormes:

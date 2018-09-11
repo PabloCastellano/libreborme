@@ -193,7 +193,7 @@ def _from_instance(borme):
                     elif acto.name == 'Extinción':
                         actos.extinguir_sociedad(company, borme.date)
                     elif acto.name == 'Disolución':
-                        actos.disolver_sociedad(company, borme.date)
+                        actos.disolver_sociedad(company, borme.date, acto.value)
 
             company.save()
             nuevo_anuncio.company = company
@@ -625,6 +625,8 @@ def _load_cargo(nombre, nombre_cargo, borme, borme_embed, company,
 
     if nombre_cargo == 'Auditor':
         company.add_auditor(nombre, type_, borme.date.isoformat())
+    if nombre_cargo in ('Liquidador', 'LiquiSoli'):
+        company.add_liquidator(nombre, type_, borme.date.isoformat())
     else:
         cargo_embed = {'title': nombre_cargo, 'name': company.fullname}
 

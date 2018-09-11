@@ -88,7 +88,7 @@ def _resign_positions(company, date):
     company.cargos_actuales_p = []
 
 
-def disolver_sociedad(company, date):
+def disolver_sociedad(company, date, reason):
     """Marca en la BD una sociedad como disuelta.
 
     Se llama a esta función cuando una sociedad se disuelve.
@@ -103,7 +103,12 @@ def disolver_sociedad(company, date):
     """
     company.date_updated = date
     company.date_dissolution = date
+    company.reason_dissolution = reason
     company.status = 'dissolved'
+
+    # No debería ser necesario pero así nos aseguramos de que no queda
+    # ningún cargo activo
+    # TODO: Solo dejar los liquidadores
     _resign_positions(company, date)
     company.save()
 

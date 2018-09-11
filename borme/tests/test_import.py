@@ -61,9 +61,15 @@ class TestImport2(TestCase):
         self.assertEqual(len(company1.auditors), 1)
 
         # Acto: "Disolución"
-        company = Company.objects.get(slug='modas-venus')
+        company = Company.objects.get(slug='latinif-iberica-servicios-comerciales-itfrespor')
         self.assertEqual(company.status, "dissolved")
-        # self.assertEqual(company.dissolution_reason, "Voluntaria.")
+        self.assertEqual(len(company.liquidators), 2)
+        self.assertEqual(company.reason_dissolution, "Voluntaria.")
+
+        # Acto: "Disolución" y "Extinción"
+        company = Company.objects.get(slug='modas-venus')
+        self.assertEqual(company.status, "inactive")
+        self.assertEqual(len(company.liquidators), 2)
 
         ret = load_borme_from_gzipped_json("BORME-A-2012-246-28.json.gz")
         self.assertTrue(ret)

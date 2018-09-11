@@ -92,7 +92,14 @@
       <strong>Personas relacionadas:</strong> {{ persons|length }}<br/>
       <strong>Situación mercantil:</strong> {{ company.get_status_display }}<br>
       {% if company.last_auditor %}
-      <strong>Auditor:</strong> {{ company.last_auditor.name | title}}
+      <strong>Auditor:</strong> {{ company.last_auditor.name | title}}<br>
+      {% endif %}
+      {% if company.reason_dissolution %}
+      <strong>Motivo de la disolución:</strong> {{ company.reason_dissolution }}<br>
+      {% endif %}
+      {% if company.liquidators %}
+      <strong>Liquidador{{ company.liquidators|length|pluralize:"es" }}:</strong>
+      {% for liquidator in company.liquidators %} {{ liquidator.name | title }}{% if not forloop.last %}, {% endif %} {% endfor %}<br>
       {% endif %}
     </p>
     <div>
