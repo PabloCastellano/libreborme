@@ -4,8 +4,8 @@ from django.template.defaulttags import register
 from django.urls import reverse as reverse_url
 from django.utils.text import slugify
 
+import bormeparser.regex
 from borme.utils.strings import slug2 as borme_slug2
-from bormeparser.regex import is_acto_cargo as func_acto_cargo
 
 import datetime
 
@@ -38,7 +38,12 @@ def nombre(object):
 
 @register.filter
 def is_acto_cargo(val):
-    return func_acto_cargo(val)
+    return bormeparser.regex.is_acto_cargo(val)
+
+
+@register.filter
+def is_acto_cargo_entrante(val):
+    return bormeparser.regex.is_acto_cargo_entrante(val)
 
 
 @register.filter

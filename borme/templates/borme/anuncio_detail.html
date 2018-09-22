@@ -25,7 +25,7 @@
 
     <h2>Este anuncio contiene {{ anuncio.actos|length }} acto{{ anuncio.actos|length|pluralize }} mercantil{{ anuncio.actos|length|pluralize:"es" }}:</h2>
     <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-8">
     {% for nombre, valor in anuncio.actos.items %}
     <h3>{{ forloop.counter }}. {{ nombre }}</h3>
         {% if nombre|is_acto_cargo %}
@@ -34,8 +34,11 @@
                     <tr>
                         <th>Cargo</th>
                         <th>Persona física/jurídica</th>
+                        {% if nombre|is_acto_cargo_entrante %}
                         <th>Desde</th>
+                        {% else %}
                         <th>Hasta</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -49,15 +52,10 @@
                         {% else %}
                             <td><a href="{% url 'borme-empresa' cargo.name|slug2 %}">{{ cargo.name }}</a></td>
                         {% endif %}
-                        {% if url_from %}
+                        {% if nombre|is_acto_cargo_entrante %}
                             <td><a href="{{ url_from }}">{{ cargo.date_from }}</a></td>
                         {% else %}
-                            <td>Desconocido</td>
-                        {% endif %}
-                        {% if url_to %}
                             <td><a href="{{ url_to }}">{{ cargo.date_to }}</a></td>
-                        {% else %}
-                            <td>Actualidad</td>
                         {% endif %}
                     </tr>
                 {% endfor %}
