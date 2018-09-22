@@ -51,6 +51,9 @@ graph_model:
 test:
 		DJANGO_SETTINGS_MODULE=libreborme.settings_ci DB_HOST=localhost ./manage.py test -v 3
 
+test1:
+		DJANGO_SETTINGS_MODULE=libreborme.settings_ci DB_HOST=localhost ./manage.py test -v 3 borme.tests.test_import.TestImport2.test_nombramientos_ceses
+
 test2:
 		./setup.py test
 
