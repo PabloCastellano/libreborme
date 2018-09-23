@@ -23,7 +23,7 @@ class Borme(m.Model):
     """ Edicion de BORME """
     cve = m.CharField(max_length=30, primary_key=True)
     date = m.DateField(db_index=True)
-    url = m.URLField()
+    url = m.URLField(blank=True, null=True)
     from_reg = m.IntegerField()
     until_reg = m.IntegerField()
     province = m.CharField(max_length=100)
@@ -411,7 +411,7 @@ def borme_get_or_create(_borme):
 
     :param _borme: Instancia BORME
     :param filename: Nombre del archivo BORME-PDF
-    :type borme: bormeparser.Borme
+    :type borme: bormeparser.parser.backend.BormeBase
     :type filename: str
     :rtype: (borme.models.BormeLog, bool bormelog created)
     """
@@ -423,16 +423,16 @@ def borme_get_or_create(_borme):
         borme = Borme(cve=_borme.cve, date=_borme.date, url=_borme.url,
                       from_reg=_borme.anuncios_rango[0],
                       until_reg=_borme.anuncios_rango[1],
-                      province=_borme.provincia.name,
+                      province=_borme.provincia,
                       section=_borme.seccion)
         borme.save()
-        # year, type, from_page, until_page, pages, num?, filename?
+        # type, num?, filename?
         created = True
 
     return borme, created
 
 
-def bormelog_get_or_create(_borme, filename):
+def bormelog_get_or_create(_borme):
     """Devuelve una instancia de BormeLog.
 
     :param _borme: Instancia BORME
@@ -446,7 +446,7 @@ def bormelog_get_or_create(_borme, filename):
         borme_log = BormeLog.objects.get(borme=_borme)
         created = False
     except BormeLog.DoesNotExist:
-        borme_log = BormeLog(borme=_borme, path=filename)
+        borme_log = BormeLog(borme=_borme, path='TODO_REMOVE')
         created = True
 
     return borme_log, created

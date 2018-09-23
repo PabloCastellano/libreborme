@@ -12,6 +12,8 @@ from bormeparser.exceptions import BormeDoesntExistException
 from bormeparser.regex import is_company, is_acto_cargo_entrante
 from bormeparser.utils import FIRST_BORME
 
+from importlib import import_module
+
 from borme.models import (
         anuncio_get_or_create,
         borme_get_or_create,
@@ -78,14 +80,14 @@ def _importar_cargos(nombres, nombre_cargo, borme, borme_embed, anuncio, acto,
 
 
 def _from_instance(borme):
-    """Importa en la BD una instancia bormeparser.Borme
+    """Importa en la BD una instancia borme.parser.backend.BormeBase
 
     Importa en la BD todos los datos de la instancia BORME (personas, empresas,
     anuncios, bormes) y por último crea una entrada BormeLog para marcarlo
     como parseado.
 
     :param borme: Instancia BORME que se va a importar en la BD
-    :type borme: bormeparser.Borme
+    :type borme: bormeparser.parser.backend.BormeBase
     """
     logger.info("\nBORME CVE: {} ({}, {}, [{}-{}])"
                 .format(borme.cve, borme.date, borme.provincia,
@@ -112,7 +114,7 @@ def _from_instance(borme):
 
     # Create bormelog
 
-    borme_log, _ = bormelog_get_or_create(nuevo_borme, borme.filename)
+    borme_log, _ = bormelog_get_or_create(nuevo_borme)
     if borme_log.parsed:
         logger.warn('%s ya ha sido analizado.' % borme.cve)
         return results
@@ -158,13 +160,15 @@ def _from_instance(borme):
 
                 # Entran los siguientes actos (borme.regex.is_acto_cargo()):
                 #
-                # Revocaciones, Reelecciones, Nombramientos, Ceses/Dimisiones,
-                # Emisión de obligaciones, Modificación de poderes,
-                # Cancelaciones de oficio de nombramientos,
+                # Nombramientos, Reelecciones
+                # Modificación de poderes, Revocaciones, Ceses/Dimisiones,
+                # Cancelaciones de oficio de nombramientos
                 #
-                if isinstance(acto, bormeparser.borme.BormeActoCargo):
+                # TODO: yabormeparser returns role_name uppercase. is it a problem?
+                # ADM.UNICO vs Adm.Unico
+                if acto.is_acto_cargo():
                     lista_cargos = []
-                    for nombre_cargo, nombres in acto.cargos.items():
+                    for nombre_cargo, nombres in acto.roles.items():
                         logger_cargo(nombre_cargo, nombres)
                         _importar_cargos(
                                 nombres, nombre_cargo, borme, borme_embed,
@@ -183,7 +187,8 @@ def _from_instance(borme):
                     else:
                         company.update_cargos_salientes(lista_cargos)
                 else:
-                    # not bormeparser.borme.BormeActoCargo
+                    # TODO: ya no tiene sentido value porque pueden ser varios
+                    # atributos
                     nuevo_anuncio.actos[acto.name] = acto.value
 
                     if actos.is_acto_cierre_hoja_registral(acto.name):
@@ -272,9 +277,12 @@ def _load_and_append(files_list, strict, seccion=bormeparser.SECCION.A):
     """
     bormes = []
 
+    # TODO: remove PDF support, just parse JSON
+    # TODO: yabormeparser and pdf not supported at the moment
     if files_list[0].endswith("json"):
         file_format = "json"
-        parse_func = bormeparser.Borme.from_json
+        module = import_module('borme.parser.backend.' + settings.PARSER)
+        parse_func = module.Borme.from_json
     else:
         file_format = "pdf"
         parse_func = bormeparser.parse
@@ -539,8 +547,11 @@ def from_json_file(filename):
         'errors': 0
     }
 
+    module = import_module('borme.parser.backend.' + settings.PARSER)
+    parse_func = module.Borme.from_json
+
     try:
-        borme = bormeparser.Borme.from_json(filename)
+        borme = parse_func(filename)
         results = _from_instance(borme)
     except Exception as e:
         logger.error('[X] Error grave (III) en bormeparser.Borme.from_json(): %s' % filename)

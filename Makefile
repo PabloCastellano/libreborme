@@ -32,13 +32,16 @@ run:
 		# --settings=...
 
 shell:
-		./manage.py shell_plus
+		./manage.py shell_plus --settings libreborme.settings_dev
 
 import:
 		./manage.py importborme -f 2018-03-13 -t 2018-03-13 --local-only
 
 import1:
 		./manage.py importbormejson /home/pablo2/.bormes/json/2018/03/13/BORME-A-2018-51-03.json
+
+import2:
+		./manage.py importbormejson /tmp/bpdf3/BORME-A-2018-51-03.json
 
 emailserver:
 		./manage.py mail_debug

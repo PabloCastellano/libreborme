@@ -2,6 +2,14 @@ from borme.models import Company, Person
 from borme.utils.strings import slug2
 
 
+ACTOS_ENTRANTES = ["Nombramientos", "Reelecciones"]
+ACTOS_SALIENTES = ["Revocaciones", "Cancelaciones de oficio de nombramientos",
+                   "Ceses/Dimisiones", "Modificación de poderes"]
+ACTOS_CARGOS = ACTOS_ENTRANTES + ACTOS_SALIENTES
+ACTOS_CREACION = ["Constitución"]
+ACTOS_EXTINCION = ["Extinción"]
+
+
 def is_acto_reapertura_hoja_registral(acto):
     """Comprueba si es un acto de reapertura de hoja registral
 

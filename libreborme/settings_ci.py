@@ -211,3 +211,5 @@ DEFAULT_PLAN_MONTH = "Subscription Monthly 20180701"
 DEFAULT_PLAN_YEAR = "Subscription Yearly 20180701"
 
 SITE_URL = 'http://localhost/'
+
+PARSER = 'bormeparser'

@@ -215,3 +215,5 @@ DEFAULT_PLAN_YEAR = "Subscription Yearly 20180701"
 
 
 EMAIL_PORT = 1025
+
+PARSER = 'bormeparser'
