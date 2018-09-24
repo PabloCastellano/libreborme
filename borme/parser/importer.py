@@ -175,7 +175,7 @@ def _from_instance(borme):
                                 anuncio, acto, company,
                                 lista_cargos, results)
 
-                    nuevo_anuncio.actos[acto.name] = lista_cargos
+                    nuevo_anuncio.actos.append([acto.name, lista_cargos])
 
                     # No incluir en la tabla de cargos los Auditores, ya
                     # que no suelen ser cesados. Mostrar solo el acto.
@@ -189,7 +189,7 @@ def _from_instance(borme):
                 else:
                     # TODO: ya no tiene sentido value porque pueden ser varios
                     # atributos
-                    nuevo_anuncio.actos[acto.name] = acto.value
+                    nuevo_anuncio.actos.append([acto.name, acto._acto])
 
                     if actos.is_acto_cierre_hoja_registral(acto.name):
                         actos.suspender_sociedad(company, borme.date)

@@ -316,7 +316,7 @@ class Anuncio(m.Model):
     borme = m.ForeignKey('Borme', on_delete=m.PROTECT)
     company = m.ForeignKey('Company', on_delete=m.PROTECT)
     datos_registrales = m.CharField(max_length=70)
-    actos = JSONField(default=dict)  # TODO: Actos repetidos
+    actos = JSONField(default=list)
 
     class Meta:
         index_together = ['id_anuncio', 'year']
@@ -332,7 +332,7 @@ class Anuncio(m.Model):
 
     def __str__(self):
         return '%d - %d (%d actos)' % (
-                    self.id_anuncio, self.year, len(self.actos.keys()))
+                    self.id_anuncio, self.year, len(self.actos))
 
 
 class Config(m.Model):

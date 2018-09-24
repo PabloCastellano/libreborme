@@ -264,7 +264,7 @@ class BormeView(CacheMixin, DetailView):
         from collections import Counter
         resumen_dia = Counter()
         for anuncio in anuncios:
-            resumen_dia += Counter(anuncio.actos.keys())
+            resumen_dia += Counter(dict(anuncio.actos).keys())
 
         bormes_dia = Borme.objects.filter(date=self.borme.date).order_by('province')
         bormes_dia = list(bormes_dia)
@@ -318,7 +318,7 @@ class BormeDateView(CacheMixin, TemplateView):
             from collections import Counter
             resumen_dia = Counter()
             for anuncio in anuncios:
-                resumen_dia += Counter(anuncio.actos.keys())
+                resumen_dia += Counter(dict(anuncio.actos).keys())
 
             context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
 
@@ -375,7 +375,7 @@ class BormeProvinciaView(CacheMixin, TemplateView):
             from collections import Counter
             resumen_dia = Counter()
             for anuncio in anuncios:
-                resumen_dia += Counter(anuncio.actos.keys())
+                resumen_dia += Counter(dict(anuncio.actos).keys())
 
             context['resumen_dia'] = sorted(resumen_dia.items(), key=lambda t: t[0])
 
