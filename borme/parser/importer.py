@@ -108,6 +108,11 @@ def _from_instance(borme):
 
     nuevo_borme, created = borme_get_or_create(borme)
 
+    if nuevo_borme.url is None:
+        xml_path = get_borme_xml_filepath(borme.date)
+        bxml = BormeXML.from_file(xml_path)
+        nuevo_borme.url = bxml.get_url_cve(borme.cve)
+
     if created:
         logger_borme_create(borme.cve)
         results['created_bormes'] += 1
@@ -192,8 +197,9 @@ def _from_instance(borme):
                     nuevo_anuncio.actos.append([acto.name, acto._acto])
 
                     if acto.name == 'Constitución':
+                        if acto.begin != '0000-00-00':
+                            company.inicio_actividad = acto.begin
                         company.capital = acto.capital
-                        company.inicio_actividad = acto.begin
                         company.domicilio = acto.address
                         company.objeto = acto.purpose
                         company.date_creation = nuevo_anuncio.date
