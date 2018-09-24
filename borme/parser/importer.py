@@ -198,13 +198,13 @@ def _from_instance(borme):
                         company.objeto = acto.purpose
                         company.date_creation = nuevo_anuncio.date
                     elif actos.is_acto_cierre_hoja_registral(acto.name):
-                        actos.suspender_sociedad(company, borme.date)
+                        actos.suspender_sociedad(company, nuevo_anuncio.date)
                     elif actos.is_acto_reapertura_hoja_registral(acto.name):
-                        actos.activar_sociedad(company, borme.date)
+                        actos.activar_sociedad(company, nuevo_anuncio.date)
                     elif acto.name == 'Extinción':
-                        actos.extinguir_sociedad(company, borme.date)
+                        actos.extinguir_sociedad(company, nuevo_anuncio.date)
                     elif acto.name == 'Disolución':
-                        actos.disolver_sociedad(company, borme.date, acto.value)
+                        actos.disolver_sociedad(company, nuevo_anuncio.date, acto.value)
 
             company.save()
             nuevo_anuncio.company = company
