@@ -52,13 +52,18 @@ graph_model:
 		@echo "Generated graph_model.png"
 
 test:
-		DJANGO_SETTINGS_MODULE=libreborme.settings_ci DB_HOST=localhost ./manage.py test -v 3
+		DJANGO_SETTINGS_MODULE=libreborme.settings_ci DB_HOST=localhost ./manage.py test --noinput -v 3
 
 test1:
-		DJANGO_SETTINGS_MODULE=libreborme.settings_ci DB_HOST=localhost ./manage.py test -v 3 borme.tests.test_import.TestImport2.test_nombramientos_ceses
+		DJANGO_SETTINGS_MODULE=libreborme.settings_ci DB_HOST=localhost ./manage.py test --noinput -v 3 borme.tests.test_import.TestImport2.test_nombramientos_ceses
 
 test2:
 		./setup.py test
 
 test3:
 		./runtests.py
+
+test_docker:
+		echo `git rev-parse HEAD`
+		docker build -t libreborme:ci .
+		CONTAINER_IMAGE=libreborme CI_BUILD_REF_NAME=ci docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit

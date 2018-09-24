@@ -510,40 +510,6 @@ def _import_borme_download_range(begin, end, seccion, local_only,
     return True, total_results
 
 
-def from_pdf_file(filename, create_json=True):
-    """Importa un archivo BORME-PDF en la BD.
-
-    :param filename: Archivo a importar
-    :param create_json: Crear BORME-JSON como paso intermedio
-    :type filename: str
-    :type create_json: bool
-    :rtype: (bool, dict)
-    """
-    results = {
-        'created_anuncios': 0,
-        'created_bormes': 0,
-        'created_companies': 0,
-        'created_persons': 0,
-        'errors': 0
-    }
-
-    try:
-        borme = bormeparser.parse(filename, bormeparser.SECCION.A)
-        results = _from_instance(borme)
-        if create_json:
-            json_path = get_borme_json_path(borme.date)
-            os.makedirs(json_path, exist_ok=True)
-            json_filepath = os.path.join(json_path, '%s.json' % borme.cve)
-            borme.to_json(json_filepath)
-    except Exception as e:
-        logger.error('[X] Error grave (III) en bormeparser.parse(): %s' % filename)
-        logger.error('[X] %s: %s' % (e.__class__.__name__, e))
-
-    if not all(map(lambda x: x == 0, results.values())):
-        _print_results(results, borme)
-    return True, results
-
-
 def from_json_file(filename):
     """Importa un archivo BORME-JSON en la BD.
 
@@ -566,7 +532,7 @@ def from_json_file(filename):
         borme = parse_func(filename)
         results = _from_instance(borme)
     except Exception as e:
-        logger.error('[X] Error grave (III) en bormeparser.Borme.from_json(): %s' % filename)
+        logger.error('[X] Error grave (III) en Borme.from_json(): %s' % filename)
         logger.error('[X] %s: %s' % (e.__class__.__name__, e))
 
     if not all(map(lambda x: x == 0, results.values())):

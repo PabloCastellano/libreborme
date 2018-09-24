@@ -1,3 +1,4 @@
+import io
 import json
 import logging
 import re
@@ -91,8 +92,13 @@ class Borme(BormeBase):
 
     @classmethod
     def from_json(cls, filename):
-        with open(filename) as fp:
-            document = json.load(fp)
+
+        if isinstance(filename, io.IOBase):
+            content = filename.read().decode('utf-8')
+            document = json.loads(content)
+        else:
+            with open(filename) as fp:
+                document = json.load(fp)
 
         version = document["version"]
         min_version = cls.VERSION_REQUIRED

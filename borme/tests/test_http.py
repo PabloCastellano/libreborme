@@ -46,6 +46,7 @@ class TestBasicHttp(TestCase):
         url = reverse('borme-empresa', args=['doesnt-exist'])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
+    """
 
     def test_persona(self):
         person = Person.objects.get(name='PERSONA RANDOM')
