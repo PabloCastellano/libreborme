@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 from django.template.defaulttags import register
 from django.urls import reverse as reverse_url
 from django.utils.text import slugify
 
-import bormeparser.regex
 from borme.utils.strings import slug2 as borme_slug2
 
 import datetime
@@ -34,16 +31,6 @@ def nombre(object):
         return DICT_NAMES[object]
     except:
         return object
-
-
-@register.filter
-def is_acto_cargo(val):
-    return bormeparser.regex.is_acto_cargo(val)
-
-
-@register.filter
-def is_acto_cargo_entrante(val):
-    return bormeparser.regex.is_acto_cargo_entrante(val)
 
 
 @register.filter

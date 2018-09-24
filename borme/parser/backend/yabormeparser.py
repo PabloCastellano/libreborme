@@ -15,14 +15,6 @@ logger.addHandler(ch)
 logger.setLevel(logging.INFO)
 
 
-constitucion_text = \
-    ("Se constituye la empresa con fecha {fecha_anuncio} mediante "
-     "escritura pública. La empresa se crea con un capital social inicial de "
-     "{capital} Euros e inicia su actividad el {begin}. El domicilio social "
-     "en el momento de su constitución se establece en {address}. "
-     "La empresa indica que su actividad es {purpose}")
-
-
 class BormeActo(BormeActoBase):
 
     def __init__(self, acto, fecha):
@@ -33,8 +25,9 @@ class BormeActo(BormeActoBase):
         :type fecha: `datetime.date`
         """
         super().__init__()
-        self._acto = acto
         self.name = acto['label']
+        del acto['label']
+        self._acto = acto
         self.fecha = fecha
 
     @property
@@ -51,26 +44,6 @@ class BormeActo(BormeActoBase):
             roles.setdefault(role, [])
             roles[role].append(name)
         return roles
-
-
-    @property
-    def value(self):
-        if self.is_acto_cargo():
-            text = ""
-            for role, name in sorted(self._acto['roles']):
-                text += "{}: {}\n".format(role, name)
-
-        elif self.name == 'Constitución':
-            text = constitucion_text.format(fecha_anuncio=self.fecha,
-                                            **self._acto)
-        else:
-            acto = self._acto.copy()
-            text = ""
-            del acto['label']
-            for key, value in sorted(acto.items()):
-                text += "{}: {}. ".format(key, value)
-
-        return text
 
     def __getattr__(self, key):
         if key in self._acto:
@@ -130,7 +103,7 @@ class Borme(BormeBase):
         publish_date = datetime.strptime(document['publish_date'], '%Y-%m-%d')
         publish_date = publish_date.date()
         seccion = document['seccion']
-        provincia = document['provincia'].upper()
+        provincia = document['provincia']
         num = document['num']
         url = None  # TODO: Url is not supported in yabormeparser
 

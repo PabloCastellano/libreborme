@@ -4,8 +4,6 @@ import re
 
 from datetime import datetime
 
-from bormeparser.provincia import Provincia, PROVINCIA
-
 from borme.parser.backend.base import (
         BormeAnuncioBase, BormeActoBase, BormeBase
 )
@@ -22,8 +20,10 @@ class BormeActo(BormeActoBase):
 
     def __init__(self, name, value, fecha):
         """
-        :param acto:
-        :type acto: tuple
+        :param name: Nombre del acto
+        :type name: str
+        :param value: Texto del acto
+        :type value: str
         :param fecha: Fecha que aparece en Datos Registrales
         :type fecha: `datetime.date`
         """
@@ -32,6 +32,12 @@ class BormeActo(BormeActoBase):
         self.name = name
         self._value = value
         self.fecha = fecha
+
+    @property
+    def value(self):
+        if self.name == 'Disolución':
+            return self._value
+        raise ValueError('Cannot return value for acto: ' + name)
 
     @property
     def roles(self):
@@ -44,16 +50,8 @@ class BormeActo(BormeActoBase):
 
         return self._value
 
-    @property
-    def value(self):
-        if self.is_acto_cargo():
-            text = ""
-            for role, names in sorted(self._value.items()):
-                for name in names:
-                    text += "{}: {}\n".format(role, name)
-        else:
-            text = self._value
-        return text
+    def __getattr__(self, key):
+        return self._acto.get(key)
 
 
 class BormeAnuncio(BormeAnuncioBase):
@@ -107,7 +105,7 @@ class Borme(BormeBase):
         publish_date = datetime.strptime(document['date'], '%Y-%m-%d')
         publish_date = publish_date.date()
         seccion = document['seccion']
-        provincia = PROVINCIA.from_title(document['provincia'].upper())
+        provincia = document['provincia']
         num = document['num']
         url = document.get('url')  # May be present or not
 

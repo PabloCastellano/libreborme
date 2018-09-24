@@ -1,6 +1,7 @@
 {% extends "borme/base.html" %}
 
 {% load staticfiles %}
+{% load actos %}
 {% load utils %}
 
 {% block title %}{{ company.fullname }} | LibreBORME{% endblock %}
@@ -87,29 +88,33 @@
     </div>
 
     <div class="row">
-    <p>
-      <strong>Empresas relacionadas:</strong> {{ companies|length }}<br/>
-      <strong>Personas relacionadas:</strong> {{ persons|length }}<br/>
-      <strong>Situación mercantil:</strong> {{ company.get_status_display }}<br>
-      {% if company.last_auditor %}
-      <strong>Auditor:</strong> {{ company.last_auditor.name | title}}<br>
-      {% endif %}
-      {% if company.reason_dissolution %}
-      <strong>Motivo de la disolución:</strong> {{ company.reason_dissolution }}<br>
-      {% endif %}
-      {% if company.liquidators %}
-      <strong>Liquidador{{ company.liquidators|length|pluralize:"es" }}:</strong>
-      {% for liquidator in company.liquidators %} {{ liquidator.name | title }}{% if not forloop.last %}, {% endif %} {% endfor %}<br>
-      {% endif %}
-    </p>
-    <div>
-
-{% comment %}
-    <strong>NIF:</strong> {{ company.nif|default:"Desconocido" }}
-    <br/>
-    <strong>Fecha de constitución:</strong> {{ company.date_creation|date|default:"Desconocido" }}
-    <br/>
-{% endcomment %}
+        <div class="col-md-5">
+            <p>
+              <strong>Empresas relacionadas:</strong> {{ companies|length }}<br/>
+              <strong>Personas relacionadas:</strong> {{ persons|length }}<br/>
+              <strong>Situación mercantil:</strong> {{ company.get_status_display }}<br>
+              {% if company.last_auditor %}
+              <strong>Auditor:</strong> {{ company.last_auditor.name | title}}<br>
+              {% endif %}
+              {% if company.reason_dissolution %}
+              <strong>Motivo de la disolución:</strong> {{ company.reason_dissolution }}<br>
+              {% endif %}
+              {% if company.liquidators %}
+              <strong>Liquidador{{ company.liquidators|length|pluralize:"es" }}:</strong>
+              {% for liquidator in company.liquidators %} {{ liquidator.name | title }}{% if not forloop.last %}, {% endif %} {% endfor %}<br>
+              {% endif %}
+              <strong>NIF:</strong> {{ company.nif|default:"Desconocido" }}<br/>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <p>
+            <strong>Fecha de constitución:</strong> {{ company.date_creation|date|default:"Desconocido" }}<br>
+              <strong>Domicilio:</strong> {{ company.domicilio|default:"Desconocido" }}<br/>
+              <strong>Objeto social:</strong> {{ company.objeto|default:"Desconocido" }}<br>
+              <strong>Capital:</strong> {% if company.capital %}{{ company.capital }} Euros{% else %}Desconocido{% endif %}<br>
+            </p>
+        </div>
+    </div>
 
     <h2>Cargos directivos:</h2>
     <div id="positions">
@@ -190,18 +195,14 @@
     <div class="col-md-10">
         <p>Actos mercantiles publicados en la edición digital del BORME relacionados o inscritos por {{ company.fullname }}.</p>
         {% for anuncio in anuncios %}
-            <h3>{{ anuncio.borme.date|date:"d b Y" }}</h3>
+            <h3>{{ anuncio.date|date:"d b Y" }}</h3>
             Detalles del anuncio <a href="{{ anuncio.get_absolute_url }}">{{ anuncio.id_anuncio }}</a>.
         <div class="row">
         <div class="col-md-10 col-md-offset-1">
         <ul>
-           {% for acto_name, value in anuncio.actos.items %}
+           {% for acto_name, value in anuncio.actos %}
               <li><strong>{{ acto_name }}</strong>:
-             {% if value|is_string %}
-               {{ value }}
-             {% elif value is None or value|is_bool %}
-               <i class="glyphicon glyphicon-ok"></i>
-             {% else %}
+             {% if acto_name|is_acto_cargo %}
 
                 <div class="row">
                 <div class="col-md-6 col-md-offset-3">
@@ -215,7 +216,7 @@
                     <tbody>
                     {% for cargo in value %}
                         <tr>
-                            <td>{{ cargo.title }}</td>
+                            <td>{{ cargo.title.title }}</td>
                             <td>{{ cargo | link_to_entity | safe }}</td>
                         </tr>
                     {% endfor %}
@@ -223,7 +224,13 @@
                  </table>
                 </div>
                 </div>
-
+             {% elif value|is_string %}
+               <i class="glyphicon glyphicon-ok"></i>
+               {{ value }}
+             {% else %}
+               <div class="row">
+               {% acto_as_text acto_name value anuncio.date %}
+               </div>
              {% endif %}
               </li>
            {% endfor %}

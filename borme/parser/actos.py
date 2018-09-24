@@ -10,6 +10,18 @@ ACTOS_CREACION = ["Constitución"]
 ACTOS_EXTINCION = ["Extinción"]
 
 
+def is_acto_cargo(name):
+    return name in ACTOS_CARGOS
+
+
+def is_acto_cargo_entrante(name):
+    return name in ACTOS_ENTRANTES
+
+
+def is_acto_cargo_saliente(name):
+    return name in ACTOS_SALIENTES
+
+
 def is_acto_reapertura_hoja_registral(acto):
     """Comprueba si es un acto de reapertura de hoja registral
 

@@ -82,13 +82,13 @@ class BormeBase(object):
             :param cve: CVE del BORME
             :type cve: int
             :param anuncios: Anuncios
-            :type anuncios: ??? FIXME
+            :type anuncios: May vary (dict or list)
             :param url: URL de descarga del BORME
             :type url: str
         """
         self.date = date
-        self.seccion = seccion
-        self.provincia = provincia
+        self.seccion = seccion.upper()
+        self.provincia = provincia.title()
         self.num = num
         self.cve = cve
         self.anuncios = {}

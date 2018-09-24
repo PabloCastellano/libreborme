@@ -191,7 +191,13 @@ def _from_instance(borme):
                     # atributos
                     nuevo_anuncio.actos.append([acto.name, acto._acto])
 
-                    if actos.is_acto_cierre_hoja_registral(acto.name):
+                    if acto.name == 'Constitución':
+                        company.capital = acto.capital
+                        company.inicio_actividad = acto.begin
+                        company.domicilio = acto.address
+                        company.objeto = acto.purpose
+                        company.date_creation = nuevo_anuncio.date
+                    elif actos.is_acto_cierre_hoja_registral(acto.name):
                         actos.suspender_sociedad(company, borme.date)
                     elif actos.is_acto_reapertura_hoja_registral(acto.name):
                         actos.activar_sociedad(company, borme.date)

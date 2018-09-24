@@ -7,6 +7,9 @@ from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import SearchVectorField
 from django.conf import settings
 
+import re
+from datetime import datetime
+
 from django.db import models as m
 from bormeparser.sociedad import SOCIEDADES as SOCIEDADES_DICT
 
@@ -152,7 +155,11 @@ class Person(m.Model):
 class Company(m.Model):
     """ Sociedad """
     name = m.CharField(max_length=260, db_index=True)
-    # nif = m.CharField(max_length=10)
+    nif = m.CharField(max_length=10, blank=True, null=True)
+    capital = m.IntegerField(blank=True, null=True)
+    inicio_actividad = m.DateField(blank=True, null=True)
+    domicilio = m.CharField(max_length=260, blank=True, null=True)
+    objeto = m.CharField(max_length=1000, blank=True, null=True)
     slug = m.SlugField(max_length=260, primary_key=True)
     date_creation = m.DateField(blank=True, null=True)
     date_extinction = m.DateField(blank=True, null=True)
@@ -319,11 +326,18 @@ class Anuncio(m.Model):
     actos = JSONField(default=list)
 
     class Meta:
+        unique_together = ('id_anuncio', 'year')
         index_together = ['id_anuncio', 'year']
 
     @property
     def total_actos(self):
         return len(self.actos)
+
+    @property
+    def date(self):
+        regexp = r'\(\s*\d{1,2}\.\d{2}\.\d{2}\)\.'
+        fecha = re.findall(regexp, self.datos_registrales)[0]
+        return datetime.strptime(fecha, '(%d.%m.%y).').date()
 
     def get_absolute_url(self):
         year = str(self.year)

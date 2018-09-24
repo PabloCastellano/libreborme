@@ -11,7 +11,7 @@ logger.setLevel(logging.INFO)
 
 def logger_acto(acto):
     logger.debug(acto.name)
-    logger.debug(acto.value)
+    # logger.debug(acto.value)
 
 
 def logger_anuncio_create(anuncio_id, empresa, tipo):
