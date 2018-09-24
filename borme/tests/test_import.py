@@ -99,4 +99,4 @@ class TestImportAnuncios_BORME_A_2012_246_28(TestCase):
         company = Company.objects.get(slug='pulso-2000')
         self.assertEqual(company.is_active, False)
         self.assertEqual(company.status, 'inactive')
-        self.assertEqual(company.date_extinction, datetime.date(2012, 12, 26))
+        self.assertEqual(company.date_extinction, datetime.date(2012, 12, 14))

@@ -24,15 +24,15 @@ class BormeActoBase(object):
 
     def is_acto_cargo(self):
         """Comprueba si el acto mercantil contiene nombres de cargos"""
-        return self.name in actos.ACTOS_CARGOS
+        return actos.is_acto_cargo(self.name)
 
     def is_acto_cargo_entrante(self):
         """Comprueba si el acto nombra nuevos cargos """
-        return self.name in actos.ACTOS_ENTRANTES
+        return actos.is_acto_cargo_entrante(self.name)
 
     def is_acto_cargo_saliente(self):
         """Comprueba si el acto cesa cargos anteriores """
-        return self.name in actos.ACTOS_SALIENTES
+        return actos.is_acto_cargo_saliente(self.name)
 
     def __repr__(self):
         return "BormeActo({})".format(self.name)

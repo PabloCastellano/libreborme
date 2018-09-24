@@ -9,7 +9,7 @@ import bormeparser
 
 from bormeparser.borme import BormeXML
 from bormeparser.exceptions import BormeDoesntExistException
-from bormeparser.regex import is_company, is_acto_cargo_entrante
+from bormeparser.regex import is_company
 from bormeparser.utils import FIRST_BORME
 
 from importlib import import_module
@@ -163,14 +163,9 @@ def _from_instance(borme):
             for acto in anuncio.get_borme_actos():
                 logger_acto(acto)
 
-                # Entran los siguientes actos (borme.regex.is_acto_cargo()):
-                #
                 # Nombramientos, Reelecciones
                 # Modificación de poderes, Revocaciones, Ceses/Dimisiones,
                 # Cancelaciones de oficio de nombramientos
-                #
-                # TODO: yabormeparser returns role_name uppercase. is it a problem?
-                # ADM.UNICO vs Adm.Unico
                 if acto.is_acto_cargo():
                     lista_cargos = []
                     for nombre_cargo, nombres in acto.roles.items():
@@ -187,13 +182,11 @@ def _from_instance(borme):
                     lista_cargos = filter(lambda c: c['title'] != 'Auditor',
                                           lista_cargos)
 
-                    if is_acto_cargo_entrante(acto.name):
+                    if actos.is_acto_cargo_entrante(acto.name):
                         company.update_cargos_entrantes(lista_cargos)
                     else:
                         company.update_cargos_salientes(lista_cargos)
                 else:
-                    # TODO: ya no tiene sentido value porque pueden ser varios
-                    # atributos
                     nuevo_anuncio.actos.append([acto.name, acto._acto])
 
                     if acto.name == 'Constitución':
@@ -215,6 +208,7 @@ def _from_instance(borme):
             company.save()
             nuevo_anuncio.company = company
             nuevo_anuncio.save()
+            # FIXME: year is not needed as we have a borme date already
             nuevo_borme.anuncios.append({"year": borme.date.year,
                                          "id": anuncio.id})
 
@@ -607,7 +601,7 @@ def _load_cargo(nombre, nombre_cargo, borme, borme_embed, company,
         cargo['name'] = entity.name
     else:
         cargo['name'] = entity.fullname
-    if is_acto_cargo_entrante(acto.name):
+    if actos.is_acto_cargo_entrante(acto.name):
         cargo['date_from'] = borme.date.isoformat()
     else:
         cargo['date_to'] = borme.date.isoformat()
@@ -622,7 +616,7 @@ def _load_cargo(nombre, nombre_cargo, borme, borme_embed, company,
         if type_ == 'company':
             cargo_embed['type'] = 'company'
 
-        if is_acto_cargo_entrante(acto.name):
+        if actos.is_acto_cargo_entrante(acto.name):
             cargo_embed["date_from"] = borme.date.isoformat()
             entity.update_cargos_entrantes([cargo_embed])
         else:
