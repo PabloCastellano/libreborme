@@ -1,4 +1,5 @@
 ---
+# TO REWRITE: NEVER TESTED
 version: "3"
 
 services:
@@ -6,20 +7,20 @@ services:
   app:
     image: registry.gitlab.com/libreborme/libreborme:prod
     depends_on:
-      - postgresql
+      - postgres
       - elasticsearch
     ports:
-      - "8000:8000"
+      - "80:80"
     volumes:
-      - ./libreborme/settings_ci.py:/site/libreborme/settings.py:ro
+      - /static:/static
     networks:
       - default
       - public
     environment:
-      DJANGO_SETTINGS_MODULE: libreborme.settings
+      DJANGO_SETTINGS_MODULE: libreborme.settings_prod
       ENV_TYPE: prod
 
-  postgresql:
+  postgres:
     # restart: always
     image: postgres:9.5
     ports:

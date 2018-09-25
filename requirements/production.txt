@@ -1,3 +1,5 @@
 -r base.txt
 contextlib2==0.5.5
-raven==6.9.0
+coverage==4.5.1
+django-extensions==2.0.3
+sentry-sdk==0.3.6

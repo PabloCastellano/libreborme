@@ -1,31 +1,57 @@
 ---
-version: "3"
+version: "3.2"
 
 services:
 
+  nginx:
+    image: registry.gitlab.com/libreborme/libreborme/nginx:staging
+    # build: ./docker/nginx
+    depends_on:
+      - app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    ports:
+      - "80:80"
+    volumes:
+      - /opt/libreborme/static:/static
+    networks:
+      - public
+    deploy:
+      replicas: 1
+
   app:
     image: registry.gitlab.com/libreborme/libreborme:staging
+    # build: .
+    command: make staging
     depends_on:
-      - postgresql
+      - postgres
       - elasticsearch
     ports:
       - "8000:8000"
     volumes:
-      - ./libreborme/settings_ci.py:/site/libreborme/settings.py:ro
+      - /opt/libreborme/static:/static
     networks:
-      - default
       - public
+      - internal
+    deploy:
+      replicas: 1
     environment:
-      DJANGO_SETTINGS_MODULE: libreborme.settings
+      DJANGO_SETTINGS_MODULE: libreborme.settings_staging
       ENV_TYPE: staging
+      ELASTICSEARCH_URI: http://elastic:changeme@elasticsearch:9200
+      RAVEN_DSN: https://d0c18e5df3ac420a89014b9e0dafdd55@sentry.io/1290035
 
-  postgresql:
+  postgres:
     # restart: always
     image: postgres:9.5
-    ports:
-      - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql
+    networks:
+      - internal
     environment:
       POSTGRES_DB: libreborme
       POSTGRES_USER: libreborme
@@ -34,10 +60,10 @@ services:
   elasticsearch:
     # restart: always
     image: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
-    ports:
-      - "9200:9200"
     volumes:
       - es-data:/usr/share/elasticsearch/data
+    networks:
+      - internal
     environment:
       discovery.type: single-node
       xpack.security.enabled: "false"
@@ -48,4 +74,4 @@ volumes:
 
 networks:
   public:
-    external: true
+  internal:

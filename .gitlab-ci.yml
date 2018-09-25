@@ -17,6 +17,8 @@ build:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker build -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
+    - cd docker/nginx && docker build -t registry.gitlab.com/libreborme/libreborme/nginx:staging .
+    - docker push registry.gitlab.com/libreborme/libreborme/nginx:staging
 
 test:
   stage: test
@@ -43,19 +45,23 @@ release_stg:
 
 deploy_stg:
   stage: deploy
+  variables:
+    DOCKER_CERT_PATH: ~/.docker
+    # DOCKER_CERT_PATH: ~/.docker/machine/certs/
+    DOCKER_HOST: tcp://167.99.112.134:2376
+    DOCKER_TLS_VERIFY: 1
+    SERVICE_NAME: libreborme
   tags:
-    - docker
+    - shell
   only:
     - staging
   environment:
     name: staging
-    url: https://staging.libreborme.net
-  before_script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    - eval $(ssh-agent -s)
-    - echo "$DEPLOY_KEY" | ssh-add -
-    - mkdir -p ~/.ssh
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    url: http://beta.libreborme.net
   script:
-    - scp docker-compose.staging.yml deploy@$DEPLOY_SERVER_URL:$DEPLOY_PATH/staging/docker-compose.yml
-    - ssh deploy@$DEPLOY_SERVER_URL "cd $DEPLOY_PATH/staging && docker stack deploy -c docker-compose.yml --with-registry-auth libreborme_staging"
+    - mkdir -p $DOCKER_CERT_PATH
+    - echo "$TLSCACERT" > $DOCKER_CERT_PATH/ca.pem
+    - echo "$TLSCERT" > $DOCKER_CERT_PATH/cert.pem
+    - echo "$TLSKEY" > $DOCKER_CERT_PATH/key.pem
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    - docker stack deploy --with-registry-auth --compose-file=docker-compose.staging.yml ${SERVICE_NAME}

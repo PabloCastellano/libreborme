@@ -1,7 +1,6 @@
 -r base.txt
-coverage==4.5.1
+-r documentation.txt
 bpython==0.17.1
 django-debug-toolbar==1.9.1
-django-extensions==2.0.3
 django-elasticsearch-debug-toolbar==1.2.0
 zest.releaser==6.15.0

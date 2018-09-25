@@ -26,13 +26,13 @@ recreate_db:
 
 run:
 		docker-compose up -d
-		./manage.py migrate
-		./manage.py runserver --settings libreborme.settings_dev
+		./manage.py migrate --settings ${DJANGO_SETTINGS_MODULE-libreborme.settings_dev}
+		./manage.py runserver --settings ${DJANGO_SETTINGS_MODULE-libreborme.settings_dev}
 		# ./manage.py runserver_plus
 		# --settings=...
 
 shell:
-		./manage.py shell_plus --settings libreborme.settings_dev
+		./manage.py shell_plus --settings ${DJANGO_SETTINGS_MODULE-libreborme.settings_dev}
 
 import:
 		./manage.py importborme -f 2018-03-13 -t 2018-03-13 --local-only
@@ -67,3 +67,19 @@ test_docker:
 		echo `git rev-parse HEAD`
 		docker build -t libreborme:ci .
 		CONTAINER_IMAGE=libreborme CI_BUILD_REF_NAME=ci docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
+
+staging:
+		./manage.py check
+		./manage.py check --deploy
+		./manage.py collectstatic --noinput
+		./manage.py migrate
+		./manage.py loaddata ./libreborme/fixtures/config.json
+		./manage.py loaddata ./alertas/fixtures/alertasconfig.json
+		uwsgi --ini=/site/uwsgi.ini
+
+update_staging_images:
+		# docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+		docker build -t registry.gitlab.com/libreborme/libreborme:staging .
+		docker push registry.gitlab.com/libreborme/libreborme:staging
+		cd docker/nginx && docker build -t registry.gitlab.com/libreborme/libreborme/nginx:staging .
+		docker push registry.gitlab.com/libreborme/libreborme/nginx:staging

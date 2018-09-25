@@ -1,15 +1,9 @@
-"""
-Django settings for libreborme project.
+import os
 
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
-"""
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
@@ -21,7 +15,7 @@ SECRET_KEY = '41+h()yq5-!*=)sh+_%4wal8=+*e)dlrau*81odpu7n&9^7d5h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['beta.libreborme.net']
 
 
 # Application definition
@@ -46,6 +40,7 @@ INSTALLED_APPS = (
     'bootstrapform',
     'djstripe',
     'prettyjson',
+    'raven.contrib.django.raven_compat',
 )
 
 
@@ -146,6 +141,11 @@ ELASTICSEARCH_DSL = {
 
 TASTYPIE_DEFAULT_FORMATS = ['json']
 
+sentry_sdk.init(
+    dsn=os.getenv('RAVEN_DSN'),
+    integrations=[DjangoIntegration()]
+)
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
@@ -163,6 +163,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+STATIC_ROOT = '/static'
 STATIC_URL = '/static/'
 
 PIWIK_URL = ''
@@ -210,6 +211,6 @@ STRIPE_LIVE_MODE = False  # Change to True in production
 DEFAULT_PLAN_MONTH = "Subscription Monthly 20180701"
 DEFAULT_PLAN_YEAR = "Subscription Yearly 20180701"
 
-SITE_URL = 'http://localhost/'
+SITE_URL = 'http://beta.libreborme.net/'
 
-PARSER = 'bormeparser'
+PARSER = 'yabormeparser'
