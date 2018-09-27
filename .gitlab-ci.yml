@@ -48,7 +48,7 @@ deploy_stg:
   variables:
     DOCKER_CERT_PATH: ~/.docker
     # DOCKER_CERT_PATH: ~/.docker/machine/certs/
-    DOCKER_HOST: tcp://167.99.112.134:2376
+    DOCKER_HOST: tcp://142.93.228.30:2376
     DOCKER_TLS_VERIFY: 1
     SERVICE_NAME: libreborme
   tags:

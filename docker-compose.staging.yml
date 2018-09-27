@@ -1,5 +1,5 @@
 ---
-version: "3.2"
+version: "3.4"
 
 services:
 
@@ -8,12 +8,12 @@ services:
     # build: ./docker/nginx
     depends_on:
       - app
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost"]
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+    #    healthcheck:
+    #      test: ["CMD", "curl", "-f", "http://localhost"]
+    #      interval: 1m30s
+    #      timeout: 10s
+    #      retries: 3
+    #      start_period: 40s
     ports:
       - "80:80"
     volumes:

@@ -1,11 +1,11 @@
 ---
-version: "3"
+version: "3.4"
 
 services:
 
   app:
     image: ${CONTAINER_IMAGE}:${CI_BUILD_REF_NAME}
-    command: bash -c "sleep 8 && coverage run --source='.' manage.py test -v 3 && coverage report"
+    command: bash -c "make test_ci"
     # coverage vs coveralls?
     depends_on:
       - postgres

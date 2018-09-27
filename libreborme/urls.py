@@ -30,7 +30,7 @@ urlpatterns = [
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
 
     # django-registration
-    path('accounts/', include('registration.backends.hmac.urls')),
+    path('accounts/', include('django_registration.backends.activation.urls')),
 
     # Django site authentication urls (login, logout, password management...)
     path('accounts/', include('django.contrib.auth.urls')),

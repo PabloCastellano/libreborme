@@ -63,6 +63,11 @@ test2:
 test3:
 		./runtests.py
 
+test_ci:
+		./scripts/wait-for-it.sh elasticsearch:9200 --timeout=30
+		coverage run --source='.' manage.py test --noinput -v 3
+		coverage report
+
 test_docker:
 		echo `git rev-parse HEAD`
 		docker build -t libreborme:ci .

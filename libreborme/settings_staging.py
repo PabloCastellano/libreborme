@@ -40,7 +40,6 @@ INSTALLED_APPS = (
     'bootstrapform',
     'djstripe',
     'prettyjson',
-    'raven.contrib.django.raven_compat',
 )
 
 
