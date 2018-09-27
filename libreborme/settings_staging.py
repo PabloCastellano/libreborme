@@ -15,7 +15,10 @@ SECRET_KEY = '41+h()yq5-!*=)sh+_%4wal8=+*e)dlrau*81odpu7n&9^7d5h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['beta.libreborme.net']
+DOMAIN = 'beta.libreborme.net'
+ALLOWED_HOSTS = [DOMAIN]
+
+SITE_URL = 'http://beta.libreborme.net/'
 
 
 # Application definition
@@ -209,7 +212,5 @@ STRIPE_LIVE_MODE = False  # Change to True in production
 
 DEFAULT_PLAN_MONTH = "Subscription Monthly 20180701"
 DEFAULT_PLAN_YEAR = "Subscription Yearly 20180701"
-
-SITE_URL = 'http://beta.libreborme.net/'
 
 PARSER = 'yabormeparser'

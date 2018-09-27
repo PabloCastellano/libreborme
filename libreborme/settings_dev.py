@@ -23,8 +23,10 @@ from .settings_common import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+DOMAIN = 'localhost'
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.ngrok.io']
 
+SITE_URL = 'http://localhost:8000/'
 
 # Application definition
 
@@ -212,7 +214,6 @@ STRIPE_LIVE_MODE = False  # Change to True in production
 
 DEFAULT_PLAN_MONTH = "Subscription Monthly 20180701"
 DEFAULT_PLAN_YEAR = "Subscription Yearly 20180701"
-
 
 EMAIL_PORT = 1025
 
