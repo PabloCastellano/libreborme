@@ -32,7 +32,7 @@ services:
 
   app:
     image: registry.gitlab.com/libreborme/libreborme:staging
-    # build: .
+    # build: ./docker/libreborme
     command: make staging
     depends_on:
       - postgres

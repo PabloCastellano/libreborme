@@ -11,8 +11,12 @@ RUN apk add --no-cache linux-headers bash gcc \
 ADD requirements /requirements
 RUN pip install -U -r /requirements/production.txt
 
+COPY docker/libreborme/entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+
+RUN echo '0 8 * * 1-5 ./manage.py importbormetoday' > /etc/crontabs/root
+
 WORKDIR /site
 COPY ./ /site
-CMD sleep 10 && \
-    ./manage.py migrate && \
-    uwsgi --ini=/site/uwsgi.ini
+
+CMD ["/entrypoint.sh"]
