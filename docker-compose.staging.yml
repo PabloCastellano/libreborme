@@ -15,13 +15,20 @@ services:
     #      retries: 3
     #      start_period: 40s
     ports:
-      - "80:80"
+      # Workaround to get real IP in NGINX logs - Not good for LB nor HA
+      # https://stackoverflow.com/questions/39854682/log-clients-real-ip-address-in-docker-swarm-1-12-when-accessing-a-service
+      - protocol: tcp
+        mode: host
+        target: 80
+        published: 80
     volumes:
       - /opt/libreborme/static:/static
     networks:
       - public
     deploy:
       replicas: 1
+      placement:
+        constraints: [node.hostname == staging-node-1]
 
   app:
     image: registry.gitlab.com/libreborme/libreborme:staging
@@ -37,13 +44,15 @@ services:
     networks:
       - public
       - internal
-    deploy:
-      replicas: 1
     environment:
       DJANGO_SETTINGS_MODULE: libreborme.settings_staging
       ENV_TYPE: staging
       ELASTICSEARCH_URI: http://elastic:changeme@elasticsearch:9200
       RAVEN_DSN: https://d0c18e5df3ac420a89014b9e0dafdd55@sentry.io/1290035
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.hostname == staging-node-1]
 
   postgres:
     # restart: always
@@ -56,6 +65,9 @@ services:
       POSTGRES_DB: libreborme
       POSTGRES_USER: libreborme
       POSTGRES_PASSWORD: password
+    deploy:
+      placement:
+        constraints: [node.hostname == staging-node-2]
 
   elasticsearch:
     # restart: always
@@ -67,6 +79,9 @@ services:
     environment:
       discovery.type: single-node
       xpack.security.enabled: "false"
+    deploy:
+      placement:
+        constraints: [node.hostname == staging-node-2]
 
 volumes:
   db-data:
