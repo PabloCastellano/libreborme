@@ -17,8 +17,8 @@ build:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker build -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
-    - cd docker/nginx && docker build -t registry.gitlab.com/libreborme/libreborme/nginx:staging .
-    - docker push registry.gitlab.com/libreborme/libreborme/nginx:staging
+    - cd docker/nginx && docker build -t registry.gitlab.com/libreborme/libreborme/nginx:$CI_BUILD_REF_NAME .
+    - docker push registry.gitlab.com/libreborme/libreborme/nginx:$CI_BUILD_REF_NAME
 
 test:
   stage: test
@@ -41,6 +41,8 @@ release_stg:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_IMAGE:staging
     - docker push $CONTAINER_IMAGE:staging
+    - docker tag registry.gitlab.com/libreborme/libreborme/nginx:$CI_BUILD_REF_NAME registry.gitlab.com/libreborme/libreborme/nginx:staging
+    - docker push registry.gitlab.com/libreborme/libreborme/nginx:staging
 
 
 deploy_stg:
