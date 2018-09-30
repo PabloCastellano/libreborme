@@ -15,7 +15,7 @@ RUN pip install -U -r /requirements/production.txt
 # RUN pip install git+https://USER:PASS@gitlab.com/libreborme/yabormeparser.git@develop2
 # RUN pip install git+https://USER:PASS@gitlab.com/libreborme/bormescraper.git
 
-RUN mkdir -p /run/libreborme
+RUN mkdir -p /opt/libreborme/{bormes,run}
 
 COPY docker/libreborme/entrypoint.sh /
 RUN chmod +x /entrypoint.sh

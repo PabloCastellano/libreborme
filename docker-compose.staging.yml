@@ -23,7 +23,8 @@ services:
         published: 80
     volumes:
       - /opt/libreborme/static:/static
-      - /opt/libreborme/log/nginx:/var/log/nginx/
+      # Logs don't show up in docker if the volume is mounted
+      # - /opt/libreborme/log/nginx:/var/log/nginx/
       - /opt/libreborme/run:/run
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
@@ -45,7 +46,8 @@ services:
       - "8000:8000"
     volumes:
       - /opt/libreborme/static:/static
-      - /opt/libreborme/run:/run
+      - /opt/libreborme/run:/opt/libreborme/run
+      - /opt/libreborme/bormes:/opt/libreborme/bormes
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     networks:
@@ -66,8 +68,9 @@ services:
     image: postgres:9.5
     volumes:
       - db-data:/var/lib/postgresql
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
+      # Django wants postgres database to be UTC
+      # - /etc/localtime:/etc/localtime:ro
+      # - /etc/timezone:/etc/timezone:ro
     networks:
       - internal
     environment:
