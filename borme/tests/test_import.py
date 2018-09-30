@@ -100,3 +100,32 @@ class TestImportAnuncios_BORME_A_2012_246_28(TestCase):
         self.assertEqual(company.is_active, False)
         self.assertEqual(company.status, 'inactive')
         self.assertEqual(company.date_extinction, datetime.date(2012, 12, 14))
+
+# TODO: Buscar un BORME que tenga los siguientes actos:
+# "Reapertura hoja registral"
+# "Articulo 378.5 del Reglamento del Registro Mercantil"
+# Cierre de hoja registral...
+"""
+class TestImportAnuncios_BORME_A_2018_51_41(TestCase):
+    def setUp(self):
+        load_borme_from_gzipped_json("BORME-A-2018-51-41.json.gz")
+
+    def test_total_companies(self):
+        self.assertEqual(Company.objects.count(), 102)
+
+    def test_reactive_company(self):
+        # Acto: "Reapertura hoja registral"
+        company = Company.objects.get(slug='hermanos-caro-monclova')
+        self.assertEqual(company.is_active, True)
+        self.assertEqual(company.status, 'active')
+        self.assertEqual(company.date_extinction, None)
+
+        # Acto: "Articulo 378.5 del Reglamento del Registro Mercantil"
+        company = Company.objects.get(slug='agroecija')
+        self.assertEqual(company.is_active, True)
+        self.assertEqual(company.status, 'active')
+        self.assertEqual(company.date_extinction, datetime.date(2018, 3, 13))
+
+    # Cierre hoja de hoja registral
+    # self.assertEqual(company.status, 'suspended')
+"""

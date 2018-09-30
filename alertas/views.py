@@ -465,6 +465,7 @@ def download_alerta_history_csv(request, id):
 
 
 # login_required
+# TODO: limit to max_alerts
 def ajax_follow(request):
     """Follow/Unfollow a company or a person
     """
