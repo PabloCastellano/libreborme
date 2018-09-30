@@ -133,32 +133,32 @@ def _from_instance(borme):
             results['total_companies'] += 1
 
             # Create empresa
+            company, created = company_get_or_create(anuncio.empresa)
 
-            empresa, tipo, slug_c = parse_empresa(borme.cve, anuncio.empresa)
-            company, created = company_get_or_create(empresa, tipo, slug_c)
+            if company.type == '':
+                logger.warn("[{}] Tipo de empresa no detectado: {}"
+                            .format(borme.cve, anuncio.empresa))
 
             if created:
-                logger_empresa_create(empresa, tipo)
+                logger_empresa_create(company.fullname)
                 results["created_companies"] += 1
             else:
-                if company.name != empresa:
-                    logger_empresa_similar(slug_c, company, empresa, borme.cve)
+                if company.name != anuncio.empresa:
+                    logger_empresa_similar(company, anuncio.empresa, borme.cve)
                 results["errors"] += 1
+
+            # Create anuncio
+            nuevo_anuncio, created = anuncio_get_or_create(anuncio,
+                                                           borme.date.year,
+                                                           nuevo_borme)
+            if created:
+                logger_anuncio_create(anuncio.id, company)
+                results['created_anuncios'] += 1
 
             company.add_in_bormes(borme_embed)
             company.anuncios.append({"year": borme.date.year,
                                      "id": anuncio.id})
-            company.date_updated = borme.date
-
-            # Create anuncio
-
-            nuevo_anuncio, created = anuncio_get_or_create(anuncio,
-                                                           borme.date.year,
-                                                           nuevo_borme)
-
-            if created:
-                logger_anuncio_create(anuncio.id, empresa, tipo)
-                results['created_anuncios'] += 1
+            company.date_updated = nuevo_anuncio.date
 
             for acto in anuncio.get_borme_actos():
                 logger_acto(acto)
@@ -190,20 +190,43 @@ def _from_instance(borme):
                     nuevo_anuncio.actos.append([acto.name, acto._acto])
 
                     if acto.name == 'Constitución':
-                        if acto.begin != '0000-00-00':
-                            company.inicio_actividad = acto.begin
-                        company.capital = acto.capital
-                        company.domicilio = acto.address
-                        company.objeto = acto.purpose
-                        company.date_creation = nuevo_anuncio.date
+                        actos.constitucion_sociedad(company, acto, nuevo_anuncio.date)
+                    elif acto.name == 'Ampliación de capital':
+                        company.capital = acto.resultante_suscrito
+                    elif acto.name == 'Reducción de capital':
+                        # company.capital = acto.resultante
+                        pass
+                    elif acto.name == 'Sociedad unipersonal':
+                        pass
+                    elif acto.name == 'Declaración de unipersonalidad':
+                        pass
+                    elif acto.name == 'Página web de la sociedad':
+                        # company.url
+                        pass
+                    elif acto.name == 'Cambio de domicilio social':
+                        company.domicilio = acto.value
+                    elif acto.name == 'Cambio de objeto social':
+                        company.objeto = acto.value
+                    elif acto.name == 'Articulo 378.5 del Reglamento del Registro Mercantil':
+                        # company.status
+                        pass
+                    elif acto.name == 'Reactivación de la sociedad (Art. 242 del Reglamento del Registro Mercantil)':
+                        # company.status
+                        pass
                     elif actos.is_acto_cierre_hoja_registral(acto.name):
-                        actos.suspender_sociedad(company, nuevo_anuncio.date)
+                        actos.suspender_sociedad(company)
                     elif actos.is_acto_reapertura_hoja_registral(acto.name):
-                        actos.activar_sociedad(company, nuevo_anuncio.date)
+                        actos.activar_sociedad(company)
                     elif acto.name == 'Extinción':
                         actos.extinguir_sociedad(company, nuevo_anuncio.date)
                     elif acto.name == 'Disolución':
                         actos.disolver_sociedad(company, nuevo_anuncio.date, acto.value)
+                    elif acto.name == 'Cambio de denominación social':
+                        # company_new_name = acto.denominacion
+                        pass
+                    elif acto.name == 'Transformación de sociedad':
+                        # actos.transformacion_sociedad(company, acto.denominacion)
+                        pass
 
             company.save()
             nuevo_anuncio.company = company
@@ -572,22 +595,21 @@ def _load_cargo(nombre, nombre_cargo, borme, borme_embed, company,
     if type_ == 'person':
         entity, created = person_get_or_create(nombre)
     else:
-        empresa, tipo, slug_c = parse_empresa(borme.cve, nombre)
-        entity, created = company_get_or_create(empresa, tipo, slug_c)
+        entity, created = company_get_or_create(nombre)
 
     if created:
         if type_ == 'person':
             logger_persona_create(nombre)
         else:
-            logger_empresa_create(empresa, tipo)
+            logger_empresa_create(entity.fullname)
     else:
         if type_ == 'person':
             if entity.name != nombre:
                 logger_persona_similar(entity.slug, entity.name,
                                        nombre, borme.cve)
         else:
-            if entity.name != empresa:
-                logger_empresa_similar(slug_c, entity, empresa, borme.cve)
+            if entity.name != nombre:
+                logger_empresa_similar(entity, nombre, borme.cve)
 
     if type_ == 'person':
         entity.add_in_companies(company.fullname)

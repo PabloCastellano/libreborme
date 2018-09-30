@@ -20,12 +20,11 @@ ampliacion_capital_text = \
 
 cambio_denominacion_text = \
     ("Con fecha {fecha_anuncio}, la sociedad cambia su denominación social "
-     "{anterior} a la denominación {nueva}")
+     "a {denominacion}")
 
 
 transformacion_text = \
-    ("Con fecha {fecha_anuncio}, la sociedad cambia su denominación social "
-     "{anterior} a la denominación {nueva}")
+    ("Con fecha {fecha_anuncio}, la sociedad se transforma en {denominacion}")
 
 
 unipersonal_text = \
@@ -68,8 +67,13 @@ def acto_as_text(name, value, date):
         else:
             text = value[name]
     elif name == 'Cambio de denominación social':
-        if 'anterior' in value:
+        if 'denominacion' in value:
             text = cambio_denominacion_text.format(fecha_anuncio=date, **value)
+        else:
+            text = value[name]
+    elif name == 'Transformación de sociedad':
+        if 'denominacion' in value:
+            text = transformacion_text.format(fecha_anuncio=date, **value)
         else:
             text = value[name]
     elif name == 'Declaración de unipersonalidad':
@@ -80,11 +84,6 @@ def acto_as_text(name, value, date):
     elif name == 'Sociedad unipersonal':
         if 'socio_unico' in value:
             text = unipersonal_text.format(fecha_anuncio=date, **value)
-        else:
-            text = value[name]
-    elif name == 'Transformación de sociedad':
-        if 'anterior' in value:
-            text = transformacion_text.format(fecha_anuncio=date, **value)
         else:
             text = value[name]
     else:

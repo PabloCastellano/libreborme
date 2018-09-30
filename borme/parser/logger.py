@@ -14,8 +14,8 @@ def logger_acto(acto):
     # logger.debug(acto.value)
 
 
-def logger_anuncio_create(anuncio_id, empresa, tipo):
-    logger.debug("Creando anuncio {}: {} {}".format(anuncio_id, empresa, tipo))
+def logger_anuncio_create(anuncio_id, company):
+    logger.debug("Creando anuncio {}: {}".format(anuncio_id, company.fullname))
 
 
 def logger_borme_create(cve):
@@ -26,15 +26,15 @@ def logger_cargo(nombre_cargo, nombres):
     logger.debug("{} {} {}".format(nombre_cargo, nombres, len(nombres)))
 
 
-def logger_empresa_create(empresa, tipo):
-    logger.debug('Creando empresa %s %s' % (empresa, tipo))
+def logger_empresa_create(empresa):
+    logger.debug('Creando empresa ' + empresa)
 
 
-def logger_empresa_similar(slug, company, empresa, cve):
+def logger_empresa_similar(company, empresa, cve):
     logger.warn("[{cve}] WARNING: Empresa similar. Mismo slug: {0}\n"
                 "[{cve}] {1}\n"
                 "[{cve}] {2}\n"
-                .format(slug, company.name, empresa, cve=cve))
+                .format(company.slug, company.name, empresa, cve=cve))
 
 
 def logger_persona_create(nombre):

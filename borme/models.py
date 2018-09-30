@@ -11,6 +11,7 @@ import re
 from datetime import datetime
 
 from django.db import models as m
+from borme.utils.strings import parse_empresa
 from bormeparser.sociedad import SOCIEDADES as SOCIEDADES_DICT
 
 SOCIEDADES = sorted(SOCIEDADES_DICT.items())
@@ -213,7 +214,8 @@ class Company(m.Model):
 
     @property
     def fullname(self):
-        return "{} {}".format(self.name.title(), self.type)
+        empresa, type_, _ = parse_empresa(self.name)
+        return "{} {}".format(empresa.title(), self.type)
 
     def get_cargos_actuales(self, offset=0, limit=settings.CARGOS_LIMIT):
         cargos_p = self.cargos_actuales_p.copy()
@@ -253,12 +255,9 @@ class Company(m.Model):
     # number of visits
 
     def save(self, *args, **kwargs):
-        # TODO:
-        # Cambiar SOCIEDAD LIMITADA por SL,
-        # SOCIEDAD ANONIMA por SA, COOP, SCL...
-        # if self.name.endswith('SOCIEDAD LIMITADA'): ...
-
-        self.slug = slugify(self.name)
+        empresa, tipo, _ = parse_empresa(self.name)
+        self.slug = slugify(empresa)
+        self.type = tipo
         super(Company, self).save(*args, **kwargs)
 
     def update_cargos_entrantes(self, cargos):
@@ -387,17 +386,19 @@ def anuncio_get_or_create(anuncio, year, borme):
     return nuevo_anuncio, created
 
 
-def company_get_or_create(empresa, tipo, slug_c):
+def company_get_or_create(nombre):
     """Devuelve una instancia de Company.
 
     :rtype: (borme.models.Company, bool company created)
     """
 
+    empresa, tipo, slug_c = parse_empresa(nombre)
+
     try:
         company = Company.objects.get(slug=slug_c)
         created = False
     except Company.DoesNotExist:
-        company = Company(name=empresa, type=tipo)
+        company = Company(name=nombre, type=tipo)
         created = True
 
     return company, created

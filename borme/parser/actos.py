@@ -53,7 +53,7 @@ def is_acto_cierre_hoja_registral(acto):
     return acto.startswith("Cierre provisional")
 
 
-def activar_sociedad(company, date):
+def activar_sociedad(company):
     """Marca en la BD una sociedad como activa (Reapertura hoja registral).
 
     Se llama a esta función cuando se reabre la hoja registral de una sociedad.
@@ -62,15 +62,12 @@ def activar_sociedad(company, date):
 
     :param company: Compañía que se reabre hoja registral
     :type company: Company object
-    :param date: Fecha de la reapertura
-    :type date: datetime.date
     """
-    company.date_updated = date
     company.status = 'active'
     company.save()
 
 
-def suspender_sociedad(company, date):
+def suspender_sociedad(company):
     """Marca en la BD una sociedad como suspendida (Cierre hoja registral).
 
     Se llama a esta función cuando se cierra la hoja registral de una sociedad.
@@ -79,10 +76,7 @@ def suspender_sociedad(company, date):
 
     :param company: Compañía que se cierra hoja registral
     :type company: Company object
-    :param date: Fecha de la suspensión
-    :type date: datetime.date
     """
-    company.date_updated = date
     company.status = 'suspended'
     company.save()
 
@@ -121,7 +115,6 @@ def disolver_sociedad(company, date, reason):
     :param date: Fecha de la extinción
     :type date: datetime.date
     """
-    company.date_updated = date
     company.date_dissolution = date
     company.reason_dissolution = reason
     company.status = 'dissolved'
@@ -139,15 +132,23 @@ def extinguir_sociedad(company, date):
     Se llama a esta función cuando una sociedad se extingue.
     Todos los cargos vigentes pasan a la lista de cargos cesados (historial).
     Modifica los modelos Company y Person.
-    company: Company object
 
     :param company: Compañía que se extingue
     :type company: Company object
     :param date: Fecha de la extinción
     :type date: datetime.date
     """
-    company.date_updated = date
     company.date_extinction = date
     company.status = 'inactive'
     _resign_positions(company, date)
+    company.save()
+
+
+def constitucion_sociedad(company, acto, date):
+    if acto.begin != '0000-00-00':
+        company.inicio_actividad = acto.begin
+    company.capital = acto.capital
+    company.domicilio = acto.address
+    company.objeto = acto.purpose
+    company.date_creation = date
     company.save()

@@ -30,12 +30,8 @@ def slug2(val):
     return slugify(empresa)
 
 
-def parse_empresa(cve, nombre):
+def parse_empresa(nombre):
     empresa, tipo = regex_empresa_tipo(nombre)
     slug_c = slugify(empresa)
-
-    if tipo == '':
-        logger.warn("[{}] Tipo de empresa no detectado: {}"
-                    .format(cve, empresa))
 
     return empresa, tipo, slug_c
