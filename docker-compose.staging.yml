@@ -22,7 +22,7 @@ services:
         target: 80
         published: 80
     volumes:
-      - /opt/libreborme/static:/static
+      - /opt/libreborme/static:/static:ro
       # Logs don't show up in docker if the volume is mounted
       # - /opt/libreborme/log/nginx:/var/log/nginx/
       - /opt/libreborme/run:/run

@@ -17,7 +17,6 @@ ALLOWED_HOSTS = ['localhost', DOMAIN]
 SITE_URL = 'http://beta.libreborme.net/'
 
 INSTALLED_APPS += [
-    'django_extensions',
     'debug_toolbar',
     'elastic_panel',
 ]
@@ -79,4 +78,8 @@ LOPD = {'provider': 'Some real name',
 
 INTERNAL_IPS.extend(['90.162.50.235', '93.176.138.65'])
 
-PARSER = 'yabormeparser'
+EMAIL_HOST = "mailsrv9.dondominio.com"
+EMAIL_HOST_USER = "noreply@libreborme.net"
+EMAIL_HOST_PASSWORD = 'l$p_bRtWS5(Y'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

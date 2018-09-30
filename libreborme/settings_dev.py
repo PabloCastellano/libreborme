@@ -14,7 +14,6 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.ngrok.io']
 SITE_URL = 'http://localhost:8000/'
 
 INSTALLED_APPS += [
-    'django_extensions',
     'debug_toolbar',
     'elastic_panel',
 ]

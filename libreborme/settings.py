@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'bootstrapform',
     'djstripe',
     'prettyjson',
+    'django_extensions',
 ]
 
 
