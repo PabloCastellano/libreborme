@@ -58,6 +58,10 @@ services:
       ENV_TYPE: staging
       ELASTICSEARCH_URI: http://elastic:changeme@elasticsearch:9200
       RAVEN_DSN: https://d0c18e5df3ac420a89014b9e0dafdd55@sentry.io/1290035
+      DB_HOST: postgres
+      DB_PORT: 5432
+      PIWIK_URL: ""
+      PIWIK_SITE_ID: ""
     deploy:
       replicas: 1
       placement:

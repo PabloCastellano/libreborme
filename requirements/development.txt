@@ -1,4 +1,5 @@
 -r base.txt
 -r documentation.txt
 bpython==0.17.1
+pdbpp==0.9.2
 zest.releaser==6.15.0
