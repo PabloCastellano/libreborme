@@ -11,10 +11,16 @@ RUN apk add --no-cache linux-headers bash gcc \
 ADD requirements /requirements
 RUN pip install -U -r /requirements/production.txt
 
+# FIXME: Ugly hardcoded user/pass
+# RUN pip install git+https://USER:PASS@gitlab.com/libreborme/yabormeparser.git@develop2
+# RUN pip install git+https://USER:PASS@gitlab.com/libreborme/bormescraper.git
+
+RUN mkdir -p /run/libreborme
+
 COPY docker/libreborme/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
-RUN echo '0 8 * * 1-5 ./manage.py importbormetoday' > /etc/crontabs/root
+COPY docker/libreborme/crontab /etc/crontabs/root
 
 WORKDIR /site
 COPY ./ /site
