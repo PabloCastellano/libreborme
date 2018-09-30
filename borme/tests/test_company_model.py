@@ -18,10 +18,11 @@ class TestCompanyModel(TestCase):
         c1.save()
 
     def test_company_object(self):
-        find = Company.objects.filter(name='PATATAS JUAN SL')
-        self.assertEqual(len(find), 1)
-        self.assertEqual(find[0].slug, 'patatas-juan-sl')
-        self.assertEqual(find[0].date_updated, today)
+        company = Company.objects.filter(name='PATATAS JUAN SL')
+        self.assertEqual(len(company), 1)
+        company = company[0]
+        self.assertEqual(company.slug, 'patatas-juan')
+        self.assertEqual(company.date_updated, today)
 
     def test_update_cargos(self):
         c = Company.objects.get(name='PATATAS JUAN SL')

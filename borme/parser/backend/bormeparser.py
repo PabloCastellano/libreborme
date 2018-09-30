@@ -36,9 +36,9 @@ class BormeActo(BormeActoBase):
 
     @property
     def value(self):
-        if self.name == 'Disolución':
+        if self.name in ('Disolución', 'Cambio de domicilio social', 'Cambio de objeto social'):
             return self._value
-        raise ValueError('Cannot return value for acto: ' + name)
+        raise ValueError('Cannot return value for acto: ' + self.name)
 
     @property
     def roles(self):

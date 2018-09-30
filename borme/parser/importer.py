@@ -151,6 +151,7 @@ def _from_instance(borme):
             nuevo_anuncio, created = anuncio_get_or_create(anuncio,
                                                            borme.date.year,
                                                            nuevo_borme)
+
             if created:
                 logger_anuncio_create(anuncio.id, company)
                 results['created_anuncios'] += 1

@@ -61,6 +61,16 @@ class TestImportAnuncios_BORME_A_2012_197_28(TestCase):
         self.assertEqual(len(company.liquidators), 2)
         self.assertEqual(company.reason_dissolution, "Voluntaria.")
 
+        # Acto: Cambio de domicilio social
+        company = Company.objects.get(slug='cifialdecor')
+        self.assertEqual(company.type, "SA")
+        self.assertEqual(company.domicilio, "C/ URANIO 3 - POLIGONO INDUSTRIAL SAN JOSE DE VALD (LEGANES).")
+
+        # Acto: Cambio de objeto social
+        company = Company.objects.get(slug='defcon-technologies')
+        self.assertEqual(company.type, "SL")
+        self.assertEqual(company.objeto, "EL ASESORAMIENTO Y LA CONSULTORIA, IMPORTACION, EXPORTACION, DISTRIBUCIONE INSTALACION DE SISTEMAS FISICOS Y ELECTRONICOS DE SEGURIDAD Y SUS NECESARIAS INFRAESTRUCTURAS.")
+
         # Acto: "Disolución" y "Extinción"
         company = Company.objects.get(slug='modas-venus')
         self.assertEqual(company.status, "inactive")
@@ -89,10 +99,11 @@ class TestImportAnuncios_BORME_A_2012_246_28(TestCase):
            (primero Ceses y luego Nombramientos)
         """
         company = Company.objects.get(slug='ferreteria-viena')
-        self.assertEqual(company.name, 'FERRETERIA VIENA')
+        self.assertEqual(company.name, 'FERRETERIA VIENA SL')
+        self.assertEqual(company.fullname, 'Ferreteria Viena SL')
         self.assertEqual(len(company.get_cargos_actuales()[0]), 2)
         self.assertEqual(len(company.get_cargos_historial()[0]), 2)
-        self.assertEqual(company.date_updated, datetime.date(2012, 12, 26))
+        self.assertEqual(company.date_updated, datetime.date(2012, 12, 18))
 
     def test_extincion(self):
         # Acto: "Extinción"
@@ -100,6 +111,7 @@ class TestImportAnuncios_BORME_A_2012_246_28(TestCase):
         self.assertEqual(company.is_active, False)
         self.assertEqual(company.status, 'inactive')
         self.assertEqual(company.date_extinction, datetime.date(2012, 12, 14))
+
 
 # TODO: Buscar un BORME que tenga los siguientes actos:
 # "Reapertura hoja registral"
