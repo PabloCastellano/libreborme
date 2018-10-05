@@ -1,0 +1,75 @@
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:9.5
+          env:
+            - name: POSTGRES_DB
+              value: libreborme
+            - name: POSTGRES_USER
+              value: libreborme
+            - name: POSTGRES_PASSWORD
+              value: password
+          ports:
+            - containerPort: 5432
+#         volumeMounts:
+#           - mountPath: /var/lib/postgresql/data
+#             name: postgres-data
+#     volumes:
+#       - name: postgres-data
+#         persistentVolumeClaim:
+#           claimName: postgres-pv-claim
+
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: elasticsearch
+  labels:
+    app: elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+        - name: elasticsearch
+          image: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
+          env:
+            - name: discovery.type
+              value: single-node
+            - name: xpack.security.enabled
+              value: "false"
+            - name: ES_JAVA_OPTS
+              value: -Xms256m -Xmx512m
+          ports:
+            - containerPort: 9200
+#         volumeMounts:
+#           - mountPath: /usr/share/elasticsearch/data
+#             name: es-data
+#     volumes:
+#       - name: es-data
+#         persistentVolumeClaim:
+#           claimName: elasticsearch-pv-claim

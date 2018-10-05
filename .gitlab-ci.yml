@@ -44,15 +44,8 @@ release_stg:
     - docker tag registry.gitlab.com/libreborme/libreborme/nginx:$CI_BUILD_REF_NAME registry.gitlab.com/libreborme/libreborme/nginx:staging
     - docker push registry.gitlab.com/libreborme/libreborme/nginx:staging
 
-
 deploy_stg:
   stage: deploy
-  variables:
-    DOCKER_CERT_PATH: ~/.docker
-    # DOCKER_CERT_PATH: ~/.docker/machine/certs/
-    DOCKER_HOST: tcp://142.93.228.30:2376
-    DOCKER_TLS_VERIFY: 1
-    SERVICE_NAME: libreborme
   tags:
     - shell
   only:
@@ -61,9 +54,4 @@ deploy_stg:
     name: staging
     url: http://beta.libreborme.net
   script:
-    - mkdir -p $DOCKER_CERT_PATH
-    - echo "$TLSCACERT" > $DOCKER_CERT_PATH/ca.pem
-    - echo "$TLSCERT" > $DOCKER_CERT_PATH/cert.pem
-    - echo "$TLSKEY" > $DOCKER_CERT_PATH/key.pem
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-    - docker stack deploy --with-registry-auth --compose-file=docker-compose.staging.yml ${SERVICE_NAME}
+    - echo "TODO"

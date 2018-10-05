@@ -1,0 +1,53 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: app
+spec:
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  selector:
+    app: libreborme
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: libreborme
+spec:
+  selector:
+    app: libreborme
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: elasticsearch
+spec:
+  selector:
+    app: elasticsearch
+  ports:
+    - protocol: TCP
+      port: 9200
+      targetPort: 9200

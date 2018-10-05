@@ -1,0 +1,45 @@
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: libreborme
+  labels:
+    app: libreborme
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: libreborme
+  template:
+    metadata:
+      labels:
+        app: libreborme
+    spec:
+      containers:
+        - name: libreborme
+          image: registry.gitlab.com/libreborme/libreborme:staging
+          imagePullPolicy: Always
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: libreborme.settings_staging
+            - name: ENV_TYPE
+              value: staging
+            - name: ELASTICSEARCH_URI
+              value: http://elastic:changeme@elasticsearch:9200
+            - name: RAVEN_DSN
+              value: https://d0c18e5df3ac420a89014b9e0dafdd55@sentry.io/1290035
+            - name: DB_HOST
+              value: postgres
+            - name: DB_PORT
+              value: "5432"
+            - name: PIWIK_URL
+              value: "http://"
+            - name: PIWIK_SITE_ID
+              value: "5"
+          ports:
+            - containerPort: 8000
+      imagePullSecrets:
+        - name: regcred
+
+---

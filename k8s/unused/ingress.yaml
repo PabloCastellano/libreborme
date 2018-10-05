@@ -1,0 +1,16 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: test
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: beta.libreborme.net
+      http:
+        paths:
+          - backend:
+              serviceName: libreborme
+              servicePort: 8000

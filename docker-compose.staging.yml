@@ -4,8 +4,8 @@ version: "3.4"
 services:
 
   nginx:
-    image: registry.gitlab.com/libreborme/libreborme/nginx:staging
-    # build: ./docker/nginx
+    # image: registry.gitlab.com/libreborme/libreborme/nginx:staging
+    build: ./docker/nginx
     depends_on:
       - app
     #    healthcheck:
@@ -15,12 +15,7 @@ services:
     #      retries: 3
     #      start_period: 40s
     ports:
-      # Workaround to get real IP in NGINX logs - Not good for LB nor HA
-      # https://stackoverflow.com/questions/39854682/log-clients-real-ip-address-in-docker-swarm-1-12-when-accessing-a-service
-      - protocol: tcp
-        mode: host
-        target: 80
-        published: 80
+      - "80:80"
     volumes:
       - /opt/libreborme/static:/static:ro
       # Logs don't show up in docker if the volume is mounted
@@ -36,8 +31,8 @@ services:
         constraints: [node.hostname == staging-node-1]
 
   app:
-    image: registry.gitlab.com/libreborme/libreborme:staging
-    # build: ./docker/libreborme
+    # image: registry.gitlab.com/libreborme/libreborme:staging
+    build: .
     command: make staging
     depends_on:
       - postgres

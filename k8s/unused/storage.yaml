@@ -1,0 +1,33 @@
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: elasticsearch-pv-claim
+  labels:
+    app: elasticsearch
+  annotations:
+    pv.beta.kubernetes.io/gid: "1000"
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 8Gi
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgres-pv-claim
+  labels:
+    app: postgres
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 8Gi
