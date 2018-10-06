@@ -46,9 +46,8 @@ MIDDLEWARE += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
-STATIC_ROOT = '/static'
+STATIC_ROOT = os.path.join(SITE_ROOT, 'static')
+MEDIA_URL = '%s/media/' % SITE_URL
 
 # BORME
 BORME_ROOT = os.path.expanduser('~/.bormes')
@@ -58,4 +57,8 @@ BORME_JSON_ROOT = os.path.join(BORME_ROOT, 'json')
 BORME_LOG_ROOT = os.path.join(BASE_DIR, '..', 'log')
 
 EMAIL_HOST = 'localhost'
+EMAIL_HOST_USER = 'root@localhost'
 EMAIL_PORT = 1025
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER  # used for error reporting

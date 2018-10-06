@@ -56,9 +56,8 @@ sentry_sdk.init(
 )
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
-STATIC_ROOT = '/static'
+STATIC_ROOT = os.path.join(SITE_ROOT, 'static')
+MEDIA_URL = '%s/media/' % SITE_URL
 
 # BORME
 BORME_ROOT = '/opt/libreborme/bormes'
@@ -69,12 +68,11 @@ BORME_LOG_ROOT = os.path.join(BASE_DIR, '..', 'log')
 
 EMAIL_CONTACT = 'contacto@libreborme.net'
 
-# TODO
-LOPD = {'provider': 'Some real name',
-        'id': 'Some real state issued ID number',
-        'domain': 'The domain that hosts this website',
+LOPD = {'provider': 'Pablo Castellano García-Saavedra',
+        'id': '76429329F',
+        'domain': 'libreborme.net',
         'email':  EMAIL_CONTACT,
-        'address': 'Some real address'}
+        'address': 'Carrer de Morella 47, 12170 - Sant Mateu (Castellón)'}
 
 INTERNAL_IPS.extend(['90.162.50.235', '93.176.138.65'])
 
@@ -83,3 +81,41 @@ EMAIL_HOST_USER = "noreply@libreborme.net"
 EMAIL_HOST_PASSWORD = 'l$p_bRtWS5(Y'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER  # used for error reporting
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'applogfile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(SITE_ROOT, '..', 'log', 'libreborme_errors.log'),
+            'maxBytes': 1024 * 1024 * 15,  # 15MB
+            'backupCount': 10,
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'libreborme': {
+            'handlers': ['applogfile', ],
+            'level': 'DEBUG',
+        },
+    }
+}

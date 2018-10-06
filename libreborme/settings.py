@@ -1,6 +1,7 @@
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '41+h()yq5-!*=)sh+_%4wal8=+*e)dlrau*81odpu7n&9^7d5h'
@@ -8,6 +9,7 @@ SECRET_KEY = '41+h()yq5-!*=)sh+_%4wal8=+*e)dlrau*81odpu7n&9^7d5h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SITE_NAME = 'LibreBORME'
 ALLOWED_HOSTS = ['libreborme.net']
 
 # Application definition
@@ -32,6 +34,7 @@ INSTALLED_APPS = [
     'djstripe',
     'prettyjson',
     'django_extensions',
+    'dataremoval',
 ]
 
 
@@ -130,6 +133,11 @@ LOPD = {'provider': 'Some real name',
 
 HOST_BUCKET = "https://libreborme-prod.ams3.digitaloceanspaces.com"
 
+ADMINS = (
+    ('Pablo', 'pablo@anche.no'),
+    ('Libreborme', 'libreborme@libreborme.net'))
+MANAGERS = ADMINS
+
 INTERNAL_IPS = ['127.0.0.1']
 LOGIN_URL = '/admin/login/'
 
@@ -157,3 +165,5 @@ PARSER = 'yabormeparser'
 # django-registration
 ACCOUNT_ACTIVATION_DAYS = 7
 REGISTRATION_OPEN = True
+
+MEDIA_ROOT = '%s/media/' % SITE_ROOT
