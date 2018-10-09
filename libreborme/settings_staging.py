@@ -102,8 +102,7 @@ LOGGING = {
         'applogfile': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/home/libreborme/log/libreborme_errors.log',
-            # 'filename': os.path.join(SITE_ROOT, '..', 'log', 'libreborme_errors.log'),
+            'filename': '/home/libreborme/libreborme-web/log/libreborme_errors.log',
             'maxBytes': 1024 * 1024 * 15,  # 15MB
             'backupCount': 10,
         },
