@@ -33,7 +33,7 @@ services:
   app:
     # image: registry.gitlab.com/libreborme/libreborme:staging
     build: .
-    command: make staging
+    command: make staging settings=libreborme.settings_staging
     depends_on:
       - postgres
       - elasticsearch

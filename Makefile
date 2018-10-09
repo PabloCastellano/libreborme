@@ -1,3 +1,5 @@
+settings := libreborme.settings_dev
+
 index:
 		./manage.py search_index --models borme.Company --populate
 		./manage.py search_index --models borme.Person --populate
@@ -32,21 +34,21 @@ recreate_db2:
 
 run:
 		docker-compose up -d
-		./manage.py migrate --settings libreborme.settings_dev
-		./manage.py runserver --settings libreborme.settings_dev
+		./manage.py migrate --settings $(settings)
+		./manage.py runserver --settings $(settings)
 		# ./manage.py runserver_plus
 
 shell:
-		./manage.py shell_plus --settings libreborme.settings_dev
+		./manage.py shell_plus --settings $(settings)
 
 import:
-		./manage.py importborme -f 2018-03-13 -t 2018-03-13 --local-only --settings libreborme.settings_dev
+		./manage.py importborme -f 2018-03-13 -t 2018-03-13 --local-only --settings $(settings)
 
 import1:
-		./manage.py importbormejson /home/pablo2/.bormes/json/2018/03/13/BORME-A-2018-51-41.json --settings libreborme.settings_dev
+		./manage.py importbormejson /home/pablo2/.bormes/json/2018/03/13/BORME-A-2018-51-41.json --settings $(settings)
 
 import2:
-		./manage.py importbormejson /home/pablo2/bormes_spider/json/2018/03/13/BORME-A-2018-51-41.json --settings libreborme.settings_dev
+		./manage.py importbormejson /home/pablo2/bormes_spider/json/2018/03/13/BORME-A-2018-51-41.json --settings $(settings)
 
 emailserver:
 		./manage.py mail_debug
@@ -79,12 +81,12 @@ test_docker:
 		CONTAINER_IMAGE=libreborme CI_BUILD_REF_NAME=ci docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
 
 staging:
-		./manage.py check
-		./manage.py check --deploy
-		./manage.py collectstatic --noinput
-		./manage.py migrate
-		./manage.py loaddata ./libreborme/fixtures/config.json
-		./manage.py loaddata ./alertas/fixtures/alertasconfig.json
+		./manage.py check --settings $(settings)
+		./manage.py check --deploy --settings $(settings)
+		./manage.py collectstatic --noinput --settings $(settings)
+		./manage.py migrate --settings $(settings)
+		./manage.py loaddata ./libreborme/fixtures/config.json --settings $(settings)
+		./manage.py loaddata ./alertas/fixtures/alertasconfig.json --settings $(settings)
 		uwsgi --ini=/site/uwsgi.ini
 
 update_staging_images:
