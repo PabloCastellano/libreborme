@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /static/
+Disallow: /borme/api/
+Disallow: /borme/borme/
+Disallow: /borme/anuncio/
+Disallow: /borme/*.csv$
+Disallow: /aviso-legal/
+
+{% for c in companies %}Disallow: {{ c.get_absolute_url }}
+{% endfor %}
+
+{% for p in persons %}Disallow: {{ p.get_absolute_url }}
+{% endfor %}

@@ -1,0 +1,55 @@
+{% extends "borme/base.html" %}
+
+{% load staticfiles %}
+{% load utils %}
+
+{% block title %} Dataremoval | LibreBORME{% endblock %}
+
+{% block javascript %}
+    <script src="{% static "js/libreborme.js" %}"></script>
+    <script>
+        function searchbb(step) {
+            var query = $("#search_input").val();
+            var data = { query: query, step: step };
+            console.log(data);
+            var params = JSON.stringify(data);
+            $("#name_found").removeClass()
+            AjaxRequest("search", function (res) {
+                $("#template").html(res.responseText);
+
+                $("#name_found").addClass("fa")
+                $("#name_found").addClass("fa-check")
+            }, "post", params);
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="col-md-10 col-md-offset-1">
+    <h1>Data removal (robots.txt)</h1>
+
+    <h3>Plantillas</h3>
+
+      <form class="form-horizontal" role="search" action="{% url "datarem-search" %}" method="post">
+      <div class="form-group">
+        <div class="form-group">
+          <label for="search_input" class="col-sm-2 control-label">Nombre:</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="search_input" name="q" autofocus>
+          </div>
+          <i id="name_found"></i>
+        </div>
+            <a href="#" onclick="javascript:searchbb(1);return false;">Template 1</a>
+            <a href="#" onclick="javascript:searchbb(2);return false;">Template 2</a>
+      </div>
+      </form>
+
+    {# include template, and JS call only returns list of urls #}
+    <div id="template" class="roundcorners"></div>
+
+    <h3>Fichero robots.txt</h3>
+    <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"> Re-generar robots.txt</i></button>
+
+</div>
+
+{% endblock %}
