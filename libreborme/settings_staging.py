@@ -61,11 +61,11 @@ sentry_sdk.init(
 )
 
 
-STATIC_ROOT = os.path.join(SITE_ROOT, 'static')
+STATIC_ROOT = '/home/libreborme/libreborme-web/static'
 MEDIA_URL = '%s/media/' % SITE_URL
 
 # BORME
-BORME_ROOT = '/opt/libreborme/bormes'
+BORME_ROOT = '/home/libreborme/.bormes'
 BORME_PDF_ROOT = os.path.join(BORME_ROOT, 'pdf')
 BORME_XML_ROOT = os.path.join(BORME_ROOT, 'xml')
 BORME_JSON_ROOT = os.path.join(BORME_ROOT, 'json')
