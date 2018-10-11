@@ -2,6 +2,7 @@ import os
 
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from bormeparser.config import CONFIG
 
 from .settings import *
 
@@ -56,7 +57,7 @@ MIDDLEWARE += (
 
 
 sentry_sdk.init(
-    dsn=os.getenv('RAVEN_DSN'),
+    dsn=os.environ['RAVEN_DSN'],
     integrations=[DjangoIntegration()]
 )
 
@@ -65,7 +66,7 @@ STATIC_ROOT = '/home/libreborme/libreborme-web/static'
 MEDIA_URL = '%s/media/' % SITE_URL
 
 # BORME
-BORME_ROOT = '/home/libreborme/.bormes'
+BORME_ROOT = CONFIG['borme_root']
 BORME_PDF_ROOT = os.path.join(BORME_ROOT, 'pdf')
 BORME_XML_ROOT = os.path.join(BORME_ROOT, 'xml')
 BORME_JSON_ROOT = os.path.join(BORME_ROOT, 'json')
