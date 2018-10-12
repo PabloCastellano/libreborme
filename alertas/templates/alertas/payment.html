@@ -13,18 +13,18 @@
 
           <h1 class="page-header">Métodos de pago</h1>
 
-            <div class="col-sm-6">
-            {% if not customer.can_charge %}
-              <p>No tienes ningún método de pago válido.</p>
-            {% else %}
-            <p><strong>Tarjetas de crédito disponibles</strong></p>
+            <div class="col-sm-8">
+              <p>Almacena y gestiona tus métodos de pago para pagar más rápido.</p>
+            {% if customer.can_charge %}
+
                 <div class="form-group">
 
                   <table class="table table-hover">
                     <thead>
                       <tr>
                         <td></td>
-                        <td></td>
+                        <td>Titular</td>
+                        <td>Fecha caducidad</td>
                         <td></td>
                       </tr>
                     </thead>
@@ -34,17 +34,17 @@
                         <td>
                           <p>
                           <img src="/static/card_{{ card.brand }}.png" width=42 height=26>
-                          <strong>{{ card.name }}</strong> xxxx-<strong>{{ card.last4 }}</strong>
+                          **** **** **** <strong>{{ card.last4 }}</strong>
                           </p>
                           <p>
-                           Caduca en <strong>{{ card.exp_month | stringformat:"02d" }}/{{ card.exp_year }}</strong>  •
                            Añadida el <strong>{{ card.djstripe_created|date:"d/m/y" }}</strong>
                           </p>
                         </td>
                         <td>
-                          {% if card.stripe_id == customer.default_source_id %}
-                            <span title="Predeterminada" class="glyphicon glyphicon-check" aria-hidden="true"></span> Predeterminada
-                          {% endif %}
+                          <strong>{{ card.name }}</strong>
+                        </td>
+                        <td>
+                                <strong>{{ card.exp_month | stringformat:"02d" }}/{{ card.exp_year }}</strong>
                         </td>
                         <td>
                           <a class="remove_card" id="{{ card.stripe_id }}">
@@ -58,6 +58,8 @@
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Predeterminada
                               </button>
                             </a>
+                          {% else %}
+                            <span title="Predeterminada" class="glyphicon glyphicon-check" aria-hidden="true"></span> Predeterminada
                           {% endif %}
                         </td>
                       </tr>
@@ -86,8 +88,10 @@
                 </script>
               </form>
               <p class="help-block">
-              Usamos <a href="https://stripe.com/es" target="_blank">Stripe</a>
-              como pasarela de pago. LibreBORME no almacena los datos de su tarjeta.</p>
+                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span><strong>Pago seguro.</strong>
+                Usamos <a href="https://stripe.com/es" target="_blank">Stripe</a>
+                como pasarela de pago. LibreBORME no almacena los datos de su tarjeta.
+              </p>
             </div>
 
         </div>

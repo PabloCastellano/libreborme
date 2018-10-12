@@ -341,7 +341,7 @@ def settings_update_stripe(request):
         user_input = utils.stripe_parse_input(request)
         customer.add_card(source=user_input["token"])
         customer.save()
-        messages.add_message(request, messages.INFO,
+        messages.add_message(request, messages.SUCCESS,
                              'Tarjeta añadida correctamente')
 
     return redirect(reverse('alertas-payment'))
@@ -358,7 +358,7 @@ def set_default_card(request):
         customer.default_source_id = card_id
         try:
             customer.save()
-            messages.add_message(request, messages.INFO,
+            messages.add_message(request, messages.SUCCESS,
                                  'Tarjeta modificada correctamente')
             return HttpResponse("Success", status=200)
         except Exception:
@@ -380,7 +380,7 @@ def remove_card(request):
         for card in cards:
             if card.stripe_id == card_id:
                 card.remove()
-                messages.add_message(request, messages.INFO,
+                messages.add_message(request, messages.SUCCESS,
                                      'Tarjeta eliminada correctamente')
                 return HttpResponse("Success", status=200)
 
