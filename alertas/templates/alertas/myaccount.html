@@ -6,14 +6,11 @@
 
           <p>Tipo de cuenta: <strong>{{ user.profile.get_account_type_display }}</strong>
             {% if user.profile.account_type == 'free' %}
+              La cuenta gratuita te permite activar 3 alertas.
               {% include 'upgrade_button.html' %}
             {% endif %}
           </p>
           <p>Fecha de alta: <strong>{{ user.date_joined.date }}</strong></p>
-
-          {% if not customer.can_charge %}
-          <p>No tiene ningún método de pago configurado. <a href="{% url 'alertas-payment' %}">Añada uno</a></p>
-          {% endif %}
 
           <a href="#">
           <button type="button" class="btn btn-danger btn-xs">
@@ -21,60 +18,81 @@
           </button>
           </a>
 
+          <h2 class="sub-header">Suscripciones activas / Productos suscritos</h2>
+
+          {% if customer.has_any_active_subscription %}
+            <p>Tiene las siguientes suscripciones activas</p>
+
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Suscripción</th>
+                    <th>Comienzo</th>
+                    <th>Final del período</th>
+                    <th>Cantidad</th>
+                    <th>Estado</th>
+                    <th>Período de prueba</th>
+                    <th>Otros</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for subscription in customer.subscriptions.all %}
+                  <tr {% if subscription.status != 'trialing' %}class="success"{% else %}class="warning"{% endif %}>
+                    <td>{{ subscription.plan.nickname }}</td>
+                    <td>{{ subscription.start.date }}</td>
+                    <td>{{ subscription.current_period_end.date }}</td>
+                    <td>{{ subscription.quantity }}</td>
+                    <td>
+                      {% if subscription.status == 'trialing' %}
+                      <span class="label label-warning">{{ subscription.status }}</span>
+                      {% elif subscription.status == 'active' %}
+                      <span class="label label-success">{{ subscription.status }}</span>
+                      {% else %}
+                      <span class="label label-danger">{{ subscription.status }}</span>
+                      {% endif %}
+                    </td>
+                    <td>{% if subscription.trial_end %}
+                            Hasta el {{ subscription.trial_end.date }}
+                        {% else %}
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        {% endif %}</td>
+                    <td>
+                       is_period_current: {{ subscription.is_period_current }}, is_status_current: {{ subscription.is_status_current }}, is_status_temporarily_current: {{ subscription.is_status_temporarily_current }}
+                    </td>
+                    <td>
+                      {% if subscription.status == 'trialing' %}
+                        {% if subscription.cancel_at_period_end %}
+                        Cancelada el {{ subscription.canceled_at.date }}
+                        {% else %}
+                          <a href="#">
+                          <button type="button" class="btn btn-primary btn-xs">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cancelar
+                          </button>
+                          </a>
+                        {% endif %}
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+          {% else %}
+            <p>No tiene ninguna suscripción activa</p>
+
+            <p>
+              <a href="#">Suscribirme con el source que tengo</a>
+            </p>
+
+            <p>Suscribir pidiendo source:</br>
+          {% endif %}
+
           <h2 class="sub-header">Datos de envío/facturación?</h2>
             <p>(TEST if customer has configured shipping)</p>
             <p>{{ customer.shipping }}</p>
-
-          <h2 class="sub-header">Suscripciones activas</h2>
-
-          {% if customer.has_any_active_subscription %}
-            <p>You have active subscriptions</p>
-            <ul>
-                {% for subscription in customer.active_subscriptions %}
-                <li>{{ subscription }} (status: {{ subscription.status }}, is_period_current: {{ subscription.is_period_current }}, is_status_current: {{ subscription.is_status_current }}, is_status_temporarily_current: {{ subscription.is_status_temporarily_current }})</li>
-                {% endfor %}
-            </ul>
-             <a href="#">
-            <button type="button" class="btn btn-primary btn-xs">
-              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cancelar
-            </button>
-            </a>
-          {% else %}
-            <p>No tiene ninguna suscripción activa</p>
-          {% endif %}
-
-          <h2 class="sub-header">Alertas definidas</h2>
-          <p>Tienes
-            <a href="{% url 'alertas-list' %}">
-              <span>{{ n_alertas }}</span> alerta{{ n_alertas|pluralize }}
-            </a>
-            definida{{ n_alertas|pluralize }} en total
-          </p>
-
-          <div class="row">
-          <div class="col-sm-3">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Tipo de alerta</th>
-                  <th>Alertas definidas</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Personas y empresas</td>
-                  <td>{{ count_f }} / {{ limite_f }}</td>
-                </tr>
-                <tr>
-                  <td>Acto</td>
-                  <td>
-                    {{ count_a }} / {{ limite_a }} {% include 'upgrade_button.html' %}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          </div>
 
         </div>
 

@@ -46,6 +46,16 @@
               </form>
             </div>
 
+            <div class="col-sm-4 col-sm-offset-1">
+              <form action="#TODO" role="form" method="post">
+                <legend>Boletín</legend>
+                {% csrf_token %}
+                {{ form_newsletter|bootstrap }}
+                <div class="form-group">
+                  <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
+                </div>
+              </form>
+            </div>
           </div>
 
         </div>

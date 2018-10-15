@@ -213,4 +213,4 @@ STRIPE_LIVE_MODE = False  # Change to True in production
 DEFAULT_PLAN_MONTH = "Subscription Monthly 20180701"
 DEFAULT_PLAN_YEAR = "Subscription Yearly 20180701"
 
-PARSER = 'bormeparser'
+PARSER = 'borme.parser.backend.bormeparser'

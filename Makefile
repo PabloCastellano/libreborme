@@ -25,7 +25,7 @@ recreate_db:
 		./manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'pablo@anche.no', '000000')"
 		./manage.py djstripe_sync_customers
 		./manage.py djstripe_sync_plans_from_stripe
-
+		# from djstripe.models import Product; for product in Product.api_list(): Product.sync_from_stripe_data(product)
 
 recreate_db2:
 		# pg_dump -c -C -h localhost -U libreborme > clean_dump.sql

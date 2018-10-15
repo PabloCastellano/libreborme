@@ -17,14 +17,14 @@
     "model": "alertas.alertasconfig",
     "pk": "max_alertas_actos_paid",
     "fields": {
-        "value": "6"
+        "value": "1"
     }
 },
 {
     "model": "alertas.alertasconfig",
     "pk": "max_alertas_follower_free",
     "fields": {
-        "value": "5"
+        "value": "3"
     }
 },
 {

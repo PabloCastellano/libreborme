@@ -58,8 +58,10 @@
       {% if user.is_staff %}<a href="/admin">Admin</a>{% endif %}
     {% else %}
       <a href="{% url 'login' %}">Entrar</a>
+      {% if registration_open %}
       |
       <a href="{% url 'django_registration_register' %}">Registrarme</a>
+      {% endif %}
     {% endif %}
   </div>
 </div>

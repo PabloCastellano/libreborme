@@ -5,7 +5,11 @@
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <div class="alert alert-info" role="alert">
-              Su próxima factura será emitida el <strong>{{ upcoming_invoice.date }}</strong>
+              {% if upcoming_invoice.date %}
+              Tu próxima factura será emitida el <strong>{{ upcoming_invoice.date }}</strong>
+              {% else %}
+              No tienes ninguna factura próximamente
+              {% endif %}
             </div>
           <h1 class="page-header">Listado de facturas</h1>
 
@@ -31,7 +35,7 @@
                   <tr {% if not invoice.is_paid %}class="danger"{% endif %}>
                     <td>{{ invoice.id }}</td>
                     <td>Del {{ invoice.start_date|date:"d/M/y"}} al {{ invoice.end_date|date:"d/M/y" }}</td>
-                    <td>{{ invoice.amount }}</td>
+                    <td>{{ invoice.amount }} €</td>
                     <td>{{ invoice.get_payment_type_display }}</td>
                     <td>{% if invoice.is_paid %}
                       <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
@@ -75,7 +79,7 @@
                     <tr {% if not invoice.paid %}class="danger"{% endif %}>
                       <td>{{ invoice.number }}</td>
                       <td>{{ invoice.date.date }}</td>
-                      <td>{{ invoice.amount_due }}</td>
+                      <td>{{ invoice.amount_due }} €</td>
                       <td>{% if invoice.paid %}
                         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                         {% else %}

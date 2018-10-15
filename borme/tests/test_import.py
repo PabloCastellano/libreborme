@@ -19,7 +19,7 @@ borme.parser.importer.logger.setLevel(logging.ERROR)
 borme.parser.logger.logger.setLevel(logging.ERROR)
 
 
-# TODO: with settings.PARSER = 'yabormeparser'
+# TODO: with settings.PARSER = 'borme.parser.backend.yabormeparser'
 # TODO: yabormeparser json files
 
 def load_borme_from_gzipped_json(filename):

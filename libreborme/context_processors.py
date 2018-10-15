@@ -12,4 +12,7 @@ def common(request):
     version = getattr(config, 'version', 'Unknown')
     return {'version': version,
             'email_contact': settings.EMAIL_CONTACT,
-            'DOMAIN': settings.DOMAIN}
+            'DOMAIN': settings.DOMAIN,
+            'registration_open': settings.REGISTRATION_OPEN,
+            'cart': request.session.get('cart', []),
+            'num_cart': len(request.session.get('cart', []))}

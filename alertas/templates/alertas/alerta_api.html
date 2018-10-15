@@ -1,0 +1,30 @@
+{% extends "alertas/base_dashboard.html" %}
+{% load staticfiles %}
+{% load bootstrap %}
+
+{% block content %}
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <div id="messages"></div>
+          <h1 class="page-header">API</h1>
+
+          <p>Este producto se encuentra en fase Beta. Si quieres probarlo, contáctanos</p>
+          <p>Tienes 30 consultas gratis al mes para probar la API de LibreBORME</p>
+
+          {% include 'pricing_api_table.html' %}
+
+          <p>¿Trabajas en la investigación o en un proyecto sin ánimo de lucro? Contáctanos</p>
+          <p>¿Necesitas que integremos la API con tu propio sistema? Contáctanos</p>
+
+          <div class="row placeholders">
+
+          </div>
+
+          <h3>When will you be billed?</h3>
+          <p>You will be billed immediately when you subscribe a plan. Subsequently you will be billed every 30 days.</p>
+
+          <h3>What do I get when I upgrade?</h3>
+          <p>Your API key is authorized to access the API functions and credits as per your chosen plan are deposited in your credit balance.</p>
+
+        </div>
+{% endblock %}

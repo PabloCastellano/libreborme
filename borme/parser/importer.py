@@ -311,8 +311,7 @@ def _load_and_append(files_list, strict, seccion=bormeparser.SECCION.A):
     # TODO: yabormeparser and pdf not supported at the moment
     if files_list[0].endswith("json"):
         file_format = "json"
-        module = import_module('borme.parser.backend.' + settings.PARSER)
-        parse_func = module.Borme.from_json
+        parse_func = import_module(settings.PARSER).Borme.from_json
     else:
         file_format = "pdf"
         parse_func = bormeparser.parse
@@ -543,8 +542,7 @@ def from_json_file(filename):
         'errors': 0
     }
 
-    module = import_module('borme.parser.backend.' + settings.PARSER)
-    parse_func = module.Borme.from_json
+    parse_func = import_module(settings.PARSER).Borme.from_json
 
     try:
         borme = parse_func(filename)

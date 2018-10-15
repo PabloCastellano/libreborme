@@ -156,11 +156,14 @@ STRIPE_TEST_PUBLIC_KEY = STRIPE_PUBLIC_KEY
 STRIPE_TEST_SECRET_KEY = STRIPE_SECRET_KEY
 STRIPE_LIVE_MODE = False  # Change to True in production
 
-DEFAULT_PLAN_MONTH = "Subscription Monthly 20180701"
-DEFAULT_PLAN_YEAR = "Subscription Yearly 20180701"
+ALERTS_YEAR_PLAN = "follow100"
+SUBSCRIPTION_MONTH_PLAN = "subscription_month"
+SUBSCRIPTION_YEAR_PLAN = "subscription_year"
+API_MONTH_PLAN = "api_month"
+API_YEAR_PLAN = "api_year"
 
-# PARSER = 'bormeparser'
-PARSER = 'yabormeparser'
+PARSER = 'borme.parser.backend.bormeparser'
+#PARSER = 'borme.parser.backend.yabormeparser'
 
 # django-registration
 ACCOUNT_ACTIVATION_DAYS = 7

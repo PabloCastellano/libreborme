@@ -8,31 +8,70 @@
           <div id="messages"></div>
           <h1 class="page-header">Listado de Alertas</h1>
 
-          <p>Aquí puedes definir tus alertas de LibreBORME.</p>
-          <p>A continuación se detallan los límites asociados a tu tipo de cuenta <strong>{{ user.profile.get_account_type_display }}</strong>:</p>
-          <div class="col-sm-3">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Tipo de alerta</th>
-                  <th>Alertas máximas</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Personas y empresas</td>
-                  <td>{{ limite_f }}</td>
-                </tr>
-                <tr>
-                  <td>Actos mercantiles</td>
-                  <td>{{ limite_a }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="row placeholders">
+            <p>Aquí puedes definir tus alertas de LibreBORME.</p>
+            <p>Recibirás un email cada vez que una persona o una empresa monitoreada aparezca en un BORME</p>
 
-          </div>
+          <h2>Suscripciones</h2>
+          {% for subscription in subscriptions %}
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Suscripción</th>
+                    <th>Comienzo</th>
+                    <th>Final del período</th>
+                    <th>Cantidad</th>
+                    <th>Estado</th>
+                    <th>Período de prueba</th>
+                    <th>Otros</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for subscription in customer.subscriptions.all %}
+                  <tr {% if subscription.status != 'trialing' %}class="success"{% else %}class="warning"{% endif %}>
+                    <td>{{ subscription.plan.nickname }}</td>
+                    <td>{{ subscription.start.date }}</td>
+                    <td>{{ subscription.current_period_end.date }}</td>
+                    <td>{{ subscription.quantity }}</td>
+                    <td>
+                      {% if subscription.status == 'trialing' %}
+                      <span class="label label-warning">{{ subscription.status }}</span>
+                      {% elif subscription.status == 'active' %}
+                      <span class="label label-success">{{ subscription.status }}</span>
+                      {% else %}
+                      <span class="label label-danger">{{ subscription.status }}</span>
+                      {% endif %}
+                    </td>
+                    <td>{% if subscription.trial_end %}
+                            Hasta el {{ subscription.trial_end.date }}
+                        {% else %}
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        {% endif %}</td>
+                    <td>
+                       is_period_current: {{ subscription.is_period_current }}, is_status_current: {{ subscription.is_status_current }}, is_status_temporarily_current: {{ subscription.is_status_temporarily_current }}
+                    </td>
+                    <td>
+                      {% if subscription.status == 'trialing' %}
+                        {% if subscription.cancel_at_period_end %}
+                        Cancelada el {{ subscription.canceled_at.date }}
+                        {% else %}
+                          <a href="#">
+                          <button type="button" class="btn btn-primary btn-xs">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cancelar
+                          </button>
+                          </a>
+                        {% endif %}
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% empty %}
+          <p>No tienes ninguna suscripción</p>
+          {% endfor %}
 
           <h2 class="sub-header">Alertas de personas y empresas</h2>
           {% if restantes_f > 0 %}
@@ -43,6 +82,8 @@
               </p>
           {% endif %}
           {% if followers %}
+          <div class="row">
+            <div class="col-sm-9">
             <div class="table-responsive">
               <table class="table table-striped">
                 <thead>
@@ -70,65 +111,11 @@
               </table>
 
             </div>
-          {% else %}
-              <p>Aún no sigues a ninguna persona ni empresa. <a href="#" data-toggle="modal" data-target="#alerta-follow-modal">Añade una alerta nueva</a>.</p>
-          {% endif %}
-
-          <h2 class="sub-header">Alertas de actos mercantiles</h2>
-          {% if restantes_a > 0 %}
-            <p>Dispones aún de {{ restantes_a }} alertas. <a href="#" data-toggle="modal" data-target="#alerta-acto-modal">Añade una alerta nueva</a>.</p>
-          {% else %}
-            <p>Has agotado todas tus alertas
-            {% include 'upgrade_button.html' %}
-            </p>
-          {% endif %}
-          {% if alertas_a %}
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Tipo de evento</th>
-                  <th>Provincia</th>
-                  <th>Periodicidad</th>
-                  <th>Enviar HTML</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-              {% for alerta in alertas_a %}
-                <tr>
-                  <td>{{ forloop.counter }}</td>
-                  <td>{{ alerta.get_evento_display }}</td>
-                  <td>{{ alerta.get_provincia_display }}</td>
-                  <td>{{ alerta.get_periodicidad_display }}</td>
-                  <td>{% if alerta.send_html %}
-                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                    {% else %}
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    {% endif %}
-                  </td>
-                  <td>
-                    {% comment %}
-                    <button type="button" class="btn btn-primary btn-xs">
-                      <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Editar
-                    </button>
-                    {% endcomment %}
-                    <a href="{% url 'alerta-remove-acto' alerta.id %}">
-                    <button type="button" class="btn btn-primary btn-xs">
-                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar
-                    </button>
-                    </a>
-                  </td>
-                </tr>
-              {% endfor %}
-              </tbody>
-            </table>
+            </div>
+            <div class="col-sm-2">
+              {% include 'pricing_alerts_table.html' %}
+            </div>
           </div>
-          {% else %}
-            {% if restantes_a > 0 %}
-              <p>Aún no tienes configurada ninguna alerta. <a href="#" data-toggle="modal" data-target="#alerta-acto-modal">Añade una alerta nueva</a>.</p>
-            {% endif %}
           {% endif %}
 
         </div>
@@ -140,21 +127,6 @@
         <legend>Añadir una nueva Alerta</legend>
           {% csrf_token %}
           {{ form_f|bootstrap }}
-          <div class="form-group">
-            <input type="submit" name="create" class="login loginmodal-submit" value="Crear">
-          </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="alerta-acto-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="loginmodal-container">
-      <form action="{% url "alertas-new-acto" %}" role="form" method="post">
-        <legend>Añadir una nueva Alerta</legend>
-          {% csrf_token %}
-          {{ form_a|bootstrap }}
           <div class="form-group">
             <input type="submit" name="create" class="login loginmodal-submit" value="Crear">
           </div>

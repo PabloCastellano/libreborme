@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-2">
+    <table class="table table-bordered table-sm">
+      <tbody>
+        <tr>
+          <td>Starter</td>
+          <td>Advanced</td>
+          <td>Pro</td>
+        </tr>
+        <tr>
+          <td>
+            <ul>
+              <li>30 consultas al mes</li>
+              <li>Sin soporte técnico</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>1000 consultas al día</li>
+              <li>Sin soporte técnico</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>Más de 1000 consultas al día</li>
+              <li>Soporte técnico 24x7</li>
+              <li>SLA</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>Gratis</td>
+          <td>
+            <ul>
+              <li>{{ plan_month.amount }} {{ plan_month.currency }} / {{ plan_month.interval }}</li>
+              <li>{{ plan_year.amount }} {{ plan_year.currency }} / {{ plan_year.interval }}</li>
+            </ul>
+          </td>
+          <td>Contáctanos</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="#">
+              <button type="button" class="btn btn-primary">
+                Solicitar API Key
+              </button>
+            </a>
+          </td>
+          <td>
+            <p>
+            <a href="{% url 'add-to-cart' product=plan_month.nickname %}">
+              <button type="button" class="btn btn-primary">
+                Añadir a la cesta (mensual)
+              </button>
+            </a>
+            <p>
+            </p>
+            <a href="{% url 'add-to-cart' product=plan_year.nickname %}">
+              <button type="button" class="btn btn-primary">
+                Añadir a la cesta (anual)
+              </button>
+            </a>
+            </p>
+          </td>
+          <td>
+              <button type="button" class="btn btn-primary">
+                Contáctanos
+              </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.shortcuts import redirect
 from django.views.generic.edit import CreateView
@@ -11,22 +11,21 @@ from django.views.generic.detail import DetailView
 from django.views.generic import TemplateView
 from django.urls import reverse
 
-from .models import (
-        AlertaActo, AlertaHistory,
-        Follower, LBInvoice
-)
-from borme.models import Company, Person
-from borme.templatetags.utils import slug, slug2
-from . import forms
-
-from djstripe.models import Customer, Event, Plan
-from libreborme.models import Profile
-from libreborme import utils
-
 import datetime
 import json
 import stripe
 
+from djstripe.models import Customer, Event, Plan, Subscription
+from borme.models import Company, Person
+from borme.templatetags.utils import slug, slug2
+from libreborme.models import Profile
+from libreborme import utils
+
+from . import forms
+from .models import (
+    AlertaActo, AlertaHistory,
+    Follower, LBInvoice
+)
 from .utils import get_alertas_config
 
 
@@ -71,6 +70,23 @@ class MyAccountView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
+class CartView(TemplateView):
+    template_name = 'alertas/cart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CartView, self).get_context_data(**kwargs)
+        context['cart'] = self.request.session.get('cart', [])
+        context['total_price'] = sum(k['price'] for k in context['cart'])
+        context['tax_amount'] = 0.21 * context['total_price']
+        context['tax_percentage'] = 21
+        context['total_with_tax'] = context['total_price'] + context['tax_amount']
+
+        context['STRIPE_PUBLIC_KEY'] = settings.STRIPE_PUBLIC_KEY
+        context['active'] = 'cart'
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
 class DashboardSupportView(TemplateView):
     template_name = 'alertas/dashboard_support.html'
 
@@ -90,18 +106,19 @@ class DashboardSettingsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(DashboardSettingsView, self).get_context_data(**kwargs)
         context['active'] = 'settings'
-        context['form_personal'] = forms.PersonalSettingsForm(initial={'email': self.request.user.email})
 
         initial = {}
         initial['notification_method'] = self.request.user.profile.notification_method
         initial['notification_email'] = self.request.user.profile.notification_email
         initial['notification_url'] = self.request.user.profile.notification_url
 
-        context['form_notification'] = forms.NotificationSettingsForm(initial=initial)
-
         customer = Customer.objects.get(subscriber=self.request.user)
         context["customer"] = customer
+
         context["form_billing"] = forms.BillingSettingsForm(initial={'business_vat_id': customer.business_vat_id})
+        context['form_notification'] = forms.NotificationSettingsForm(initial=initial)
+        context['form_personal'] = forms.PersonalSettingsForm(initial={'email': self.request.user.email})
+        context['form_newsletter'] = forms.NewsletterForm(initial={'email': self.request.user.email})
         return context
 
 
@@ -208,23 +225,24 @@ class SubscriptionListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(SubscriptionListView, self).get_context_data(**kwargs)
+        context['active'] = 'subscriptions'
+
+        context['alertas_a'] = AlertaActo.objects.filter(user=self.request.user)
+        context['form_a'] = forms.AlertaActoModelForm()
+        context['count_a'] = context['alertas_a'].count()
 
         customer = Customer.objects.get(subscriber=self.request.user)
         context["customer"] = customer
         context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
 
-        plan_year = Plan.objects.get(nickname=settings.DEFAULT_PLAN_YEAR)
-        context["plan_year"] = {
-            "amount": plan_year.amount * 100,
-            "description": "Suscripción a Libreborme",
-            "label": "Suscripción anual",
-        }
-        plan_month = Plan.objects.get(nickname=settings.DEFAULT_PLAN_MONTH)
-        context["plan_month"] = {
-            "amount": plan_month.amount * 100,
-            "description": "Suscripción a Libreborme",
-            "label": "Suscripción mensual",
-        }
+        plan_month = Plan.objects.get(nickname=settings.SUBSCRIPTION_MONTH_PLAN)
+        context["plan_month"] = plan_month
+        plan_year = Plan.objects.get(nickname=settings.SUBSCRIPTION_YEAR_PLAN)
+        context["plan_year"] = plan_year
+
+        context["subscriptions"] = Subscription.objects.filter(
+                plan__nickname__in=(settings.SUBSCRIPTION_MONTH_PLAN, settings.SUBSCRIPTION_YEAR_PLAN),
+                customer=customer)
 
         return context
 
@@ -235,46 +253,39 @@ class AlertaListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AlertaListView, self).get_context_data(**kwargs)
-        context['alertas_a'] = AlertaActo.objects.filter(user=self.request.user)
-        context['alertas_f'] = Follower.objects.filter(user=self.request.user)
-        context['form_a'] = forms.AlertaActoModelForm()
+        context['active'] = 'alertas'
 
+        context['alertas_f'] = Follower.objects.filter(user=self.request.user)
         context['count_f'] = context['alertas_f'].count()
-        context['count_a'] = context['alertas_a'].count()
 
         alertas_config = get_alertas_config()
         account_type = self.request.user.profile.account_type
 
         context['limite_f'] = alertas_config['max_alertas_follower_' + account_type]
-        context['limite_a'] = alertas_config['max_alertas_actos_' + account_type]
-
         context['restantes_f'] = int(context['limite_f']) - context['count_f']
-        context['restantes_a'] = int(context['limite_a']) - context['count_a']
 
-        context['active'] = 'alertas'
         context["followers"] = Follower.objects.filter(user=self.request.user)
         context['form_f'] = forms.FollowerForm()
 
         customer = Customer.objects.get(subscriber=self.request.user)
         context["customer"] = customer
 
+        context["subscriptions"] = Subscription.objects.filter(
+                plan__nickname=settings.ALERTS_YEAR_PLAN, customer=customer)
         context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
         return context
 
 
 @method_decorator(login_required, name='dispatch')
-class UpgradeFollowersView(TemplateView):
-    template_name = "alertas/upgrade_followers.html"
+class APIView(TemplateView):
+    template_name = "alertas/alerta_api.html"
 
     def get_context_data(self, **kwargs):
-        context = super(UpgradeFollowersView, self).get_context_data(**kwargs)
-        plan_follow50 = Plan.objects.get(nickname="Follow50")
-        context["amount"] = plan_follow50.amount
-        context["plan_follow50"] = {
-            "amount": plan_follow50.amount * 100,
-            "description": "Suscripción a Libreborme Followers",
-            "label": "Actualizar mi plan",
-        }
+        context = super(APIView, self).get_context_data(**kwargs)
+        context['active'] = 'api'
+
+        context["plan_month"] = Plan.objects.get(nickname=settings.API_MONTH_PLAN)
+        context["plan_year"] = Plan.objects.get(nickname=settings.API_YEAR_PLAN)
         return context
 
 
@@ -298,6 +309,22 @@ def alerta_acto_create(request):
             alerta.user = request.user
             alerta.save()
     return redirect(reverse('alertas-list'))
+
+
+@login_required
+def add_to_cart(request, product):
+    try:
+        plan = Plan.objects.get(nickname=product)
+    except Plan.DoesNotExist:
+        return redirect(reverse('dashboard-index'))
+
+    price = float(plan.amount) # Decimal
+    # TODO: Get product from plan
+    product = {'name': product, 'qty': 1, 'price': price}
+    request.session.setdefault('cart', [])
+    request.session['cart'].append(product)
+    request.session.modified = True
+    return redirect(reverse('alertas-cart'))
 
 
 @login_required
@@ -462,6 +489,12 @@ def download_alerta_history_csv(request, id):
         response = HttpResponse()
 
     return response
+
+
+@login_required
+def remove_cart(request):
+    request.session['cart'] = []
+    return redirect(reverse('alertas-cart'))
 
 
 # login_required
