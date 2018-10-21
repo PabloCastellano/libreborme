@@ -10,9 +10,9 @@ def piwik(request):
 def common(request):
     config = Config.objects.first()
     version = getattr(config, 'version', 'Unknown')
+    num_cart = 1 if 'cart' in request.session else 0
     return {'version': version,
             'email_contact': settings.EMAIL_CONTACT,
             'DOMAIN': settings.DOMAIN,
             'registration_open': settings.REGISTRATION_OPEN,
-            'cart': request.session.get('cart', []),
-            'num_cart': len(request.session.get('cart', []))}
+            'num_cart': num_cart}

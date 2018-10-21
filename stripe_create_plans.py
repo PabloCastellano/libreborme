@@ -18,7 +18,7 @@ TRIAL_PERIOD_DAYS = 7
 def create_follow100_product_and_plan():
     """Plan anual para 100 followers"""
     product = stripe.Product.create(
-        name='Suscripción Libreborme 100 Followers',
+        name='Suscripción 100 Followers',
         type='service',
     )
     product.save()
@@ -37,7 +37,7 @@ def create_follow100_product_and_plan():
 def create_subscription_product_and_plans():
     """Planes mensual y anual de subscripción a actos mercantiles"""
     product = stripe.Product.create(
-        name='Suscripción Libreborme',
+        name='Suscripción Empresas Nueva Creación',
         type='service',
         active=False,
     )
@@ -50,17 +50,18 @@ def create_subscription_product_and_plans():
         product=product.id,
         amount=3000,
         currency='eur',
-        interval='month',
-        trial_period_days=TRIAL_PERIOD_DAYS,
+        interval='month'
+        trial_period_days=TRIAL_PERIOD_DAYS
     )
     print("Created plan '{}' ({})".format(plan.nickname, plan.id))
 
     plan = stripe.Plan.create(
         nickname=SUBSCRIPTION_YEAR_PLAN,
-        product={"name": "Subscripción Libreborme"},
+        product=product.id,
         amount=30000,
         currency='eur',
         interval='year',
+        trial_period_days=TRIAL_PERIOD_DAYS
     )
     print("Created plan '{}' ({})".format(plan.nickname, plan.id))
 
@@ -68,7 +69,7 @@ def create_subscription_product_and_plans():
 def create_api_product_and_plans():
     """Planes mensual y anual de uso de API"""
     product = stripe.Product.create(
-        name='API Libreborme',
+        name='Suscripción API',
         type='service',
     )
     product.save()
@@ -80,7 +81,6 @@ def create_api_product_and_plans():
         amount=8000,
         currency='eur',
         interval='month',
-        trial_period_days=TRIAL_PERIOD_DAYS,
     )
     print("Created plan '{}' ({})".format(plan.nickname, plan.id))
 
@@ -89,8 +89,7 @@ def create_api_product_and_plans():
         product=product.id,
         amount=80000,
         currency='eur',
-        interval='year',
-        trial_period_days=TRIAL_PERIOD_DAYS,
+        interval='year'
     )
     print("Created plan '{}' ({})".format(plan.nickname, plan.id))
 

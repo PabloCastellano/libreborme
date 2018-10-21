@@ -34,9 +34,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-              <li {% if active == 'cart' %}class="active"{% endif %}><a href="{% url 'alertas-cart' %}"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Cesta{% if num_cart > 0 %} <span class="badge">{{ num_cart }}</span>{% endif %}</a></li>
+            <li {% if active == 'cart' %}class="active"{% endif %}><a href="{% url 'alertas-cart' %}"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Cesta{% if num_cart > 0 %} <span class="badge">{{ num_cart }}</span>{% endif %}</a></li>
             <li {% if active == 'settings' %}class="active"{% endif %}><a href="{% url 'alertas-settings' %}"><span class="glyphicon glyphicon-settings" aria-hidden="true"></span> Configuración</a></li>
-            <li {% if active == 'ayuda' %}class="active"{% endif %}><a href="{% url 'alertas-ayuda' %}">Ayuda</a></li>
+            <li {% if active == 'ayuda' %}class="active"{% endif %}><a href="{% url 'alertas-ayuda' %}">Soporte</a></li>
           </ul>
         </div>
       </div>

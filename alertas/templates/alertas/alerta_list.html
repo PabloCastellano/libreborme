@@ -11,8 +11,15 @@
             <p>Aquí puedes definir tus alertas de LibreBORME.</p>
             <p>Recibirás un email cada vez que una persona o una empresa monitoreada aparezca en un BORME</p>
 
+          <h3>¿Cómo añadir una alerta?</h3>
+          <p>Para las Alertas de Empresas y Personas, puedes añadirlas a través de la página de la empresa o persona, usando el botón "Seguir"</p>
+
+          <h3>¿Cuándo recibiré las alertas?</h3>
+          <p>Todas las alertas se envían entre las 9AM y las 12PM.</p>
+          <p>Para las Alertas de Empresas y Personas, recibirás una alerta por e-mail cuando éstas hayan aparecido en un Boletín Oficial.</p>
+
           <h2>Suscripciones</h2>
-          {% for subscription in subscriptions %}
+          {% if subscriptions %}
             <div class="table-responsive">
               <table class="table table-striped">
                 <thead>
@@ -28,7 +35,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for subscription in customer.subscriptions.all %}
+                  {% for subscription in subscriptions %}
                   <tr {% if subscription.status != 'trialing' %}class="success"{% else %}class="warning"{% endif %}>
                     <td>{{ subscription.plan.nickname }}</td>
                     <td>{{ subscription.start.date }}</td>
@@ -69,9 +76,9 @@
                 </tbody>
               </table>
             </div>
-          {% empty %}
+          {% else %}
           <p>No tienes ninguna suscripción</p>
-          {% endfor %}
+          {% endif %}
 
           <h2 class="sub-header">Alertas de personas y empresas</h2>
           {% if restantes_f > 0 %}

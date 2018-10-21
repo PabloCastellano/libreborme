@@ -40,7 +40,7 @@
         </tr>
         <tr>
           <td>
-            <a href="#">
+            <a href="#" data-toggle="modal" data-target="#requestAPIKeyModal">
               <button type="button" class="btn btn-primary">
                 Solicitar API Key
               </button>
@@ -48,24 +48,26 @@
           </td>
           <td>
             <p>
-            <a href="{% url 'add-to-cart' product=plan_month.nickname %}">
-              <button type="button" class="btn btn-primary">
-                Añadir a la cesta (mensual)
+            <a href="{% url 'buy-product' product=plan_month.nickname %}">
+              <button type="button" class="btn btn-success">
+                Comprar (mensual)
               </button>
             </a>
             <p>
             </p>
-            <a href="{% url 'add-to-cart' product=plan_year.nickname %}">
-              <button type="button" class="btn btn-primary">
-                Añadir a la cesta (anual)
+            <a href="{% url 'buy-product' product=plan_year.nickname %}">
+              <button type="button" class="btn btn-success">
+                Comprar (anual)
               </button>
             </a>
             </p>
           </td>
           <td>
+            <a href="#" data-toggle="modal" data-target="#contactModal">
               <button type="button" class="btn btn-primary">
                 Contáctanos
               </button>
+            </a>
           </td>
         </tr>
       </tbody>

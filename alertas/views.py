@@ -70,23 +70,6 @@ class MyAccountView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class CartView(TemplateView):
-    template_name = 'alertas/cart.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(CartView, self).get_context_data(**kwargs)
-        context['cart'] = self.request.session.get('cart', [])
-        context['total_price'] = sum(k['price'] for k in context['cart'])
-        context['tax_amount'] = 0.21 * context['total_price']
-        context['tax_percentage'] = 21
-        context['total_with_tax'] = context['total_price'] + context['tax_amount']
-
-        context['STRIPE_PUBLIC_KEY'] = settings.STRIPE_PUBLIC_KEY
-        context['active'] = 'cart'
-        return context
-
-
-@method_decorator(login_required, name='dispatch')
 class DashboardSupportView(TemplateView):
     template_name = 'alertas/dashboard_support.html'
 
@@ -270,9 +253,35 @@ class AlertaListView(TemplateView):
         customer = Customer.objects.get(subscriber=self.request.user)
         context["customer"] = customer
 
+        context["plan_year"] = Plan.objects.get(nickname=settings.ALERTS_YEAR_PLAN)
+
         context["subscriptions"] = Subscription.objects.filter(
                 plan__nickname=settings.ALERTS_YEAR_PLAN, customer=customer)
         context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class CartView(TemplateView):
+    template_name = "alertas/cart.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(CartView, self).get_context_data(**kwargs)
+
+        if 'cart' in self.request.session:
+            plan_name = self.request.session['cart']['name']
+            price = self.request.session['cart']['price']
+
+            # TODO: Get product from plan
+
+            context['product'] = {'name': plan_name, 'qty': 1, 'price': price}
+            context['total_price'] = price
+            context['tax_amount'] = 0.21 * context['total_price']
+            context['tax_percentage'] = 21
+            context['total_with_tax'] = context['total_price'] + context['tax_amount']
+
+        context['STRIPE_PUBLIC_KEY'] = settings.STRIPE_PUBLIC_KEY
+        context['active'] = 'cart'
         return context
 
 
@@ -286,6 +295,13 @@ class APIView(TemplateView):
 
         context["plan_month"] = Plan.objects.get(nickname=settings.API_MONTH_PLAN)
         context["plan_year"] = Plan.objects.get(nickname=settings.API_YEAR_PLAN)
+
+        customer = Customer.objects.get(subscriber=self.request.user)
+        context["subscriptions"] = Subscription.objects.filter(
+                plan__nickname__in=(settings.API_MONTH_PLAN, settings.API_YEAR_PLAN),
+                customer=customer)
+        # TODO: api enabled if contated support or paid
+        context["api_enabled"] = "yes"
         return context
 
 
@@ -313,17 +329,26 @@ def alerta_acto_create(request):
 
 @login_required
 def add_to_cart(request, product):
+    # TODO: no cobrar si ya tiene la suscripción
     try:
         plan = Plan.objects.get(nickname=product)
     except Plan.DoesNotExist:
         return redirect(reverse('dashboard-index'))
 
-    price = float(plan.amount) # Decimal
-    # TODO: Get product from plan
+    customer = Customer.objects.get(subscriber=request.user)
+    # TODO: filter status=active?
+    existing_subscriptions = Subscription.objects.filter(
+            plan__nickname=product, customer=customer)
+
+    if existing_subscriptions:
+        # TODO: return to correct page
+        messages.add_message(request, messages.WARNING,
+                             'Ya tienes una suscripción activa')
+        return redirect(reverse('alertas-cart'))
+
+    price = float(plan.amount)  # Decimal
     product = {'name': product, 'qty': 1, 'price': price}
-    request.session.setdefault('cart', [])
-    request.session['cart'].append(product)
-    request.session.modified = True
+    request.session['cart'] = product
     return redirect(reverse('alertas-cart'))
 
 
@@ -361,7 +386,7 @@ def settings_update_billing(request):
 
 
 @login_required
-def settings_update_stripe(request):
+def add_card(request):
 
     if request.method == 'POST':
         customer = Customer.objects.get(subscriber=request.user)
@@ -372,6 +397,79 @@ def settings_update_stripe(request):
                              'Tarjeta añadida correctamente')
 
     return redirect(reverse('alertas-payment'))
+
+
+@login_required
+def checkout(request):
+    """Checkout
+
+    Llegados a este punto, la compra ya está aceptada y tenemos el token,
+    solo nos falta crear la suscripción
+    """
+    # TODO: make params
+    # TODO: Capture name when get token
+    # TODO: description en el payment
+    # TODO: no salvar el metodo de pago si no se pide expresamente
+    # TODO: Guardar si ya ha hecho el periodo de prueba
+    if request.method == "POST":
+
+        # TODO: Log user created
+        try:
+            customer = Customer.objects.get(subscriber=request.user)
+        except Customer.DoesNotExist:
+            customer = Customer.create(subscriber=request.user)
+
+        nickname = request.session['cart']['name']
+        qty = request.session['cart']['qty']
+        plan = Plan.objects.get(nickname=nickname)
+        tax_percent = 21.0  # TODO: tax per country (?) - limit to Spain
+        # next_first_timestamp = utils.date_next_first(timestamp=True)
+
+        token = request.POST.get("stripeToken")
+        try:
+            # TODO: if not saved/save card, use the token once, otherwise
+            # attach to customer
+            # If the customer has already a source, use it
+            # TODO: cuanto hay un source, se puede sacar tambien un token?
+            # if customer.has_valid_source():
+            #     subscription = customer.subscribe(plan, quantity=qty,
+            # else:
+
+            # TODO: Use djstripe.Subscription
+            # qty = 555
+            stripe.Subscription.create(
+                customer=customer.stripe_id,
+                items=[
+                    {"plan": plan.stripe_id, "quantity": qty}
+                ],
+                source=token,
+                tax_percent=tax_percent
+            )
+            # billing_cycle_anchor=next_first_timestamp,
+
+            # TODO: fix new invoice
+            # new_invoice = create_new_invoice(request, customer, subscription, plan, user_input)
+
+        except stripe.error.CardError as ce:
+            # :?
+            return False, ce
+
+        else:
+            # TODO
+            # new_invoice.save()
+            del request.session['cart']
+            return redirect("dashboard-index")
+
+    """
+    acct = stripe.Account.create(
+      country="US",
+      type="custom",
+      account_token=token,
+    )
+    """
+    # https://stripe.com/docs/api/account/object#account_object-tos_acceptance
+
+    return HttpResponse("", status=400)
 
 
 @login_required
@@ -493,7 +591,7 @@ def download_alerta_history_csv(request, id):
 
 @login_required
 def remove_cart(request):
-    request.session['cart'] = []
+    del request.session['cart']
     return redirect(reverse('alertas-cart'))
 
 

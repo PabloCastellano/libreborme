@@ -79,49 +79,6 @@ def create_new_invoice(request, customer, subscription, plan, user_input):
     return new_invoice
 
 
-def checkout(request):
-    # TODO: make params
-    qty = 1
-    nickname = settings.DEFAULT_PLAN_MONTH
-    tax_percent = 21.0  # TODO: tax per country (?)
-
-    plan = Plan.objects.get(nickname=nickname)
-    customer = Customer.objects.get(subscriber=request.user)
-    next_first_timestamp = utils.date_next_first(timestamp=True)
-
-    if request.method == "POST":
-        user_input = utils.stripe_parse_input(request)
-        try:
-            # TODO: if not saved/save card, use the token once, otherwise
-            # attach to customer
-            # If the customer has already a source, use it
-            if customer.has_valid_source():
-                subscription = customer.subscribe(plan, quantity=qty,
-                                                  tax_percent=tax_percent)
-            else:
-                # TODO: Use djstripe.Subscription
-                subscription = stripe.Subscription.create(
-                    customer=customer.stripe_id,
-                    items=[
-                        {"plan": plan.stripe_id, "quantity": qty}
-                    ],
-                    source=user_input["token"],
-                    tax_percent=tax_percent,
-                    billing_cycle_anchor=next_first_timestamp,
-                )
-            new_invoice = create_new_invoice(request, customer, subscription, plan, user_input)
-
-        except stripe.error.CardError as ce:
-            # :?
-            return False, ce
-
-        else:
-            new_invoice.save()
-            return redirect("dashboard-index")
-
-    return HttpResponse("", status=400)
-
-
 # XXX: UNUSED
 def register(request):
     if request.method == 'POST':

@@ -26,6 +26,7 @@ def get_git_revision_short_hash():
     return version
 
 
+# TODO: remove unused stuff
 def stripe_parse_input(request):
     user_input = {}
     user_input["token"] = request.POST.get("stripeToken")

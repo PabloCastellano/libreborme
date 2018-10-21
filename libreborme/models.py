@@ -8,6 +8,7 @@ from alertas.utils import insert_libreborme_log
 
 from djstripe.models import Customer
 
+
 ACCOUNT_CHOICES = {
     'free': "Básica",
     'paid': "Premium",
@@ -94,5 +95,4 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
         # TODO: set currency="eur", account_type='free'
-        Customer.create(subscriber=instance)
     instance.profile.save()

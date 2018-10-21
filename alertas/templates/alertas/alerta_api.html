@@ -8,23 +8,93 @@
           <div id="messages"></div>
           <h1 class="page-header">API</h1>
 
-          <p>Este producto se encuentra en fase Beta. Si quieres probarlo, contáctanos</p>
-          <p>Tienes 30 consultas gratis al mes para probar la API de LibreBORME</p>
+          {% if subscriptions %}
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Suscripción</th>
+                    <th>Comienzo</th>
+                    <th>Final del período</th>
+                    <th>Cantidad</th>
+                    <th>Estado</th>
+                    <th>Período de prueba</th>
+                    <th>Otros</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for subscription in subscriptions %}
+                  <tr {% if subscription.status != 'trialing' %}class="success"{% else %}class="warning"{% endif %}>
+                    <td>{{ subscription.plan.nickname }}</td>
+                    <td>{{ subscription.start.date }}</td>
+                    <td>{{ subscription.current_period_end.date }}</td>
+                    <td>{{ subscription.quantity }}</td>
+                    <td>
+                      {% if subscription.status == 'trialing' %}
+                      <span class="label label-warning">{{ subscription.status }}</span>
+                      {% elif subscription.status == 'active' %}
+                      <span class="label label-success">{{ subscription.status }}</span>
+                      {% else %}
+                      <span class="label label-danger">{{ subscription.status }}</span>
+                      {% endif %}
+                    </td>
+                    <td>{% if subscription.trial_end %}
+                            Hasta el {{ subscription.trial_end.date }}
+                        {% else %}
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        {% endif %}</td>
+                    <td>
+                       is_period_current: {{ subscription.is_period_current }}, is_status_current: {{ subscription.is_status_current }}, is_status_temporarily_current: {{ subscription.is_status_temporarily_current }}
+                    </td>
+                    <td>
+                      {% if subscription.status == 'trialing' %}
+                        {% if subscription.cancel_at_period_end %}
+                        Cancelada el {{ subscription.canceled_at.date }}
+                        {% else %}
+                          <a href="#">
+                          <button type="button" class="btn btn-primary btn-xs">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cancelar
+                          </button>
+                          </a>
+                        {% endif %}
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <p>Este producto se encuentra en fase Beta. Si quieres probarlo, <a href="#" data-toggle="modal" data-target="#requestAPIKeyModal">solicita una API Key</a>.</p>
+            <h2>Suscripciones</h2>
+            <p>Tienes 30 consultas gratis al mes para probar la API de LibreBORME</p>
 
-          {% include 'pricing_api_table.html' %}
+            {% include 'pricing_api_table.html' %}
 
-          <p>¿Trabajas en la investigación o en un proyecto sin ánimo de lucro? Contáctanos</p>
-          <p>¿Necesitas que integremos la API con tu propio sistema? Contáctanos</p>
+            <h3>¿Existe un periodo de prueba para los planes de pago?</h3>
+            <p>Al actualizar tu plan para Alertas de Actos Mercantiles, tu cuenta tiene un período de prueba gratuito de 7 días. Si cancelas el plan antes del período de prueba, no tendrá ningún coste para ti.</p>
 
-          <div class="row placeholders">
+            <p>¿Trabajas en la investigación o en un proyecto sin ánimo de lucro? Contáctanos</p>
+            <p>¿Necesitas que integremos la API con tu propio sistema? Contáctanos</p>
 
-          </div>
+            <h3>When will you be billed?</h3>
+            <p>You will be billed immediately when you subscribe a plan. Subsequently you will be billed every 30 days.</p>
 
-          <h3>When will you be billed?</h3>
-          <p>You will be billed immediately when you subscribe a plan. Subsequently you will be billed every 30 days.</p>
+            <h3>What do I get when I upgrade?</h3>
+            <p>Your API key is authorized to access the API functions and credits as per your chosen plan are deposited in your credit balance.</p>
 
-          <h3>What do I get when I upgrade?</h3>
-          <p>Your API key is authorized to access the API functions and credits as per your chosen plan are deposited in your credit balance.</p>
+          {% endif %}
 
+          {% if api_enabled %}
+          <h2>Detalles de API</h2>
+          <ul>
+              <li>API Access ID: </li>
+              <li>API Access Key:</li>
+              <li>Periodo: </li>
+          </ul>
+          {% endif %}
         </div>
+
+        {% include 'form_solicitar_api_key.html' %}
+        {% include 'form_contacto.html' %}
 {% endblock %}

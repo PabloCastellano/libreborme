@@ -23,9 +23,6 @@ urlpatterns = [
     path('support/', t(template_name="libreborme/support.html"), name='support'),
     path('supporters/', t(template_name="libreborme/supporters.html"), name='supporters'),
 
-    # Stripe test
-    path('checkout', views.checkout, name="checkout_page"),
-
     # dj-stripe
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
 

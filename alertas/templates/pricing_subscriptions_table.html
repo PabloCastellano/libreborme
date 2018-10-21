@@ -28,16 +28,16 @@
         </tr>
         <tr>
           <td>
-            <a href="{% url 'add-to-cart' product=plan_month.nickname %}">
-              <button type="button" class="btn btn-primary">
-                Añadir a la cesta
+            <a href="{% url 'buy-product' product=plan_month.nickname %}">
+              <button type="button" class="btn btn-success">
+                Comprar
               </button>
             </a>
           </td>
           <td>
-            <a href="{% url 'add-to-cart' product=plan_year.nickname %}">
-              <button type="button" class="btn btn-primary">
-                Añadir a la cesta
+            <a href="{% url 'buy-product' product=plan_year.nickname %}">
+              <button type="button" class="btn btn-success">
+                Comprar
               </button>
             </a>
           </td>

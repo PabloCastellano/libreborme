@@ -1,0 +1,619 @@
+* {
+  box-sizing: border-box;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+button,
+select {
+  border: none;
+  outline: none;
+  background: none;
+  font-family: inherit;
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  overflow-x: hidden;
+  height: 100%;
+}
+
+
+.container-lg {
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.container-lg {
+  max-width: 1040px;
+}
+
+/** Page-specific styles */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes void-animation-out {
+  0%,
+  to {
+    opacity: 1;
+  }
+}
+
+body {
+  overflow-x: hidden;
+  background-color: #f6f9fc;
+}
+
+main {
+  position: relative;
+  display: block;
+  z-index: 1;
+}
+
+.stripes {
+  position: absolute;
+  width: 100%;
+  transform: skewY(-12deg);
+  height: 950px;
+  top: -350px;
+  background: linear-gradient(180deg, #e6ebf1 350px, rgba(230, 235, 241, 0));
+}
+
+.stripes .stripe {
+  position: absolute;
+  height: 190px;
+}
+
+.stripes .s1 {
+  height: 380px;
+  top: 0;
+  left: 0;
+  width: 24%;
+  background: linear-gradient(90deg, #e6ebf1, rgba(230, 235, 241, 0));
+}
+
+.stripes .s2 {
+  top: 380px;
+  left: 4%;
+  width: 35%;
+  background: linear-gradient(
+    90deg,
+    hsla(0, 0%, 100%, 0.65),
+    hsla(0, 0%, 100%, 0)
+  );
+}
+
+.stripes .s3 {
+  top: 380px;
+  right: 0;
+  width: 38%;
+  background: linear-gradient(90deg, #e4e9f0, rgba(228, 233, 240, 0));
+}
+
+main > .container-lg {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  position: relative;
+  max-width: 750px;
+  padding: 110px 20px 110px;
+}
+
+main > .container-lg .cell {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-pack: center;
+  justify-content: center;
+  position: relative;
+  -ms-flex: auto;
+  flex: auto;
+  min-width: 100%;
+  min-height: 500px;
+  padding: 0 40px;
+}
+
+main > .container-lg .cell + .cell {
+  margin-top: 70px;
+}
+
+main > .container-lg .cell.intro {
+  padding: 0;
+}
+
+@media (min-width: 670px) {
+  main > .container-lg .cell.intro {
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .optionList {
+    margin-left: 13px;
+  }
+}
+
+main > .container-lg .cell.intro > * {
+  width: 100%;
+  max-width: 700px;
+}
+
+main > .container-lg .example {
+  -ms-flex-align: center;
+  align-items: center;
+  border-radius: 4px;
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+  padding: 80px 0px;
+  margin-left: -20px;
+  margin-right: -20px;
+}
+
+@media (min-width: 670px) {
+  main > .container-lg .example {
+    padding: 40px;
+  }
+}
+
+main > .container-lg .example.submitted form,
+main > .container-lg .example.submitting form {
+  opacity: 0;
+  transform: scale(0.9);
+  pointer-events: none;
+}
+
+main > .container-lg .example.submitted .success,
+main > .container-lg .example.submitting .success {
+  pointer-events: all;
+}
+
+main > .container-lg .example.submitting .success .icon {
+  opacity: 1;
+}
+
+main > .container-lg .example.submitted .success > * {
+  opacity: 1;
+  transform: none !important;
+}
+
+main > .container-lg .example.submitted .success > :nth-child(2) {
+  transition-delay: 0.1s;
+}
+
+main > .container-lg .example.submitted .success > :nth-child(3) {
+  transition-delay: 0.2s;
+}
+
+main > .container-lg .example.submitted .success > :nth-child(4) {
+  transition-delay: 0.3s;
+}
+
+main > .container-lg .example.submitted .success .icon .border,
+main > .container-lg .example.submitted .success .icon .checkmark {
+  opacity: 1;
+  stroke-dashoffset: 0 !important;
+}
+
+main > .container-lg .example * {
+  margin: 0;
+  padding: 0;
+}
+
+main > .container-lg .example .caption {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  width: 100%;
+  top: 100%;
+  left: 0;
+  padding: 15px 10px 0;
+  color: #aab7c4;
+  font-family: Roboto, "Open Sans", "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+main > .container-lg .example .caption * {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+main > .container-lg .example .caption .no-charge {
+  color: #cfd7df;
+  margin-right: 10px;
+}
+
+main > .container-lg .example .caption a.source {
+  text-align: right;
+  color: inherit;
+  transition: color 0.1s ease-in-out;
+  margin-left: 10px;
+}
+
+main > .container-lg .example .caption a.source:hover {
+  color: #6772e5;
+}
+
+main > .container-lg .example .caption a.source:active {
+  color: #43458b;
+}
+
+main > .container-lg .example .caption a.source  svg {
+  margin-right: 10px;
+}
+
+main > .container-lg .example .caption a.source svg path {
+  fill: currentColor;
+}
+
+main > .container-lg .example form {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  transition-property: opacity, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+main > .container-lg .example form input::-webkit-input-placeholder {
+  opacity: 1;
+}
+
+main > .container-lg .example form input::-moz-placeholder {
+  opacity: 1;
+}
+
+main > .container-lg .example form input:-ms-input-placeholder {
+  opacity: 1;
+}
+
+main > .container-lg .example .error {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  top: 100%;
+  margin-top: 20px;
+  left: 0;
+  padding: 0 15px;
+  font-size: 13px !important;
+  opacity: 0;
+  transform: translateY(10px);
+  transition-property: opacity, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+main > .container-lg .example .error.visible {
+  opacity: 1;
+  transform: none;
+}
+
+main > .container-lg .example .error .message {
+  font-size: inherit;
+}
+
+main > .container-lg .example .error svg {
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  margin-top: -1px;
+  margin-right: 10px;
+}
+
+main > .container-lg .example .success {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  text-align: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+@media (min-width: 670px) {
+  main > .container-lg .example .success {
+    padding: 40px;
+  }
+}
+
+main > .container-lg .example .success > * {
+  transition-property: opacity, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+main > .container-lg .example .success .icon {
+  margin: 15px 0 30px;
+  transform: translateY(70px) scale(0.75);
+}
+
+main > .container-lg .example .success .icon svg {
+  will-change: transform;
+}
+
+main > .container-lg .example .success .icon .border {
+  stroke-dasharray: 251;
+  stroke-dashoffset: 62.75;
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+  animation: spin 1s linear infinite;
+}
+
+main > .container-lg .example .success .icon .checkmark {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  transition: stroke-dashoffset 0.35s cubic-bezier(0.165, 0.84, 0.44, 1) 0.35s;
+}
+
+main > .container-lg .example .success .title {
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+main > .container-lg .example .success .message {
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 25px;
+  line-height: 1.6em;
+}
+
+main > .container-lg .example .success .message span {
+  font-size: inherit;
+}
+
+main > .container-lg .example .success .reset:active {
+  transition-duration: 0.15s;
+  transition-delay: 0s;
+  opacity: 0.65;
+}
+
+main > .container-lg .example .success .reset svg {
+  will-change: transform;
+}
+
+.example.example2 {
+  background-color: #fff;
+}
+
+.example.example2 * {
+  font-family: Source Code Pro, Consolas, Menlo, monospace;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.example.example2 .row {
+  display: -ms-flexbox;
+  display: flex;
+  margin: 0 5px 10px;
+}
+
+.example.example2 .field {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 0 10px;
+}
+
+.example.example2 .field.half-width {
+  width: 50%;
+}
+
+.example.example2 .field.quarter-width {
+  width: calc(25% - 10px);
+}
+
+.example.example2 .baseline {
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  left: 0;
+  bottom: 0;
+  background-color: #cfd7df;
+  transition: background-color 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.example.example2 label {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 8px;
+  color: #cfd7df;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transform-origin: 0 50%;
+  cursor: text;
+  transition-property: color, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.example.example2 .input {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  padding-bottom: 7px;
+  color: #32325d;
+  background-color: transparent;
+}
+
+.example.example2 .input::-webkit-input-placeholder {
+  color: transparent;
+  transition: color 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.example.example2 .input::-moz-placeholder {
+  color: transparent;
+  transition: color 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.example.example2 .input:-ms-input-placeholder {
+  color: transparent;
+  transition: color 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.example.example2 .input.StripeElement {
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  will-change: opacity;
+}
+
+.example.example2 .input.focused,
+.example.example2 .input:not(.empty) {
+  opacity: 1;
+}
+
+.example.example2 .input.focused::-webkit-input-placeholder,
+.example.example2 .input:not(.empty)::-webkit-input-placeholder {
+  color: #cfd7df;
+}
+
+.example.example2 .input.focused::-moz-placeholder,
+.example.example2 .input:not(.empty)::-moz-placeholder {
+  color: #cfd7df;
+}
+
+.example.example2 .input.focused:-ms-input-placeholder,
+.example.example2 .input:not(.empty):-ms-input-placeholder {
+  color: #cfd7df;
+}
+
+.example.example2 .input.focused + label,
+.example.example2 .input:not(.empty) + label {
+  color: #aab7c4;
+  transform: scale(0.85) translateY(-25px);
+  cursor: default;
+}
+
+.example.example2 .input.focused + label {
+  color: #24b47e;
+}
+
+.example.example2 .input.invalid + label {
+  color: #ffa27b;
+}
+
+.example.example2 .input.focused + label + .baseline {
+  background-color: #24b47e;
+}
+
+.example.example2 .input.focused.invalid + label + .baseline {
+  background-color: #e25950;
+}
+
+.example.example2 input, .example.example2 button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  border-style: none;
+}
+
+.example.example2 input:-webkit-autofill {
+  -webkit-text-fill-color: #e39f48;
+  transition: background-color 100000000s;
+  -webkit-animation: 1ms void-animation-out;
+}
+
+.example.example2 .StripeElement--webkit-autofill {
+  background: transparent !important;
+}
+
+.example.example2 input, .example.example2 button {
+  -webkit-animation: 1ms void-animation-out;
+}
+
+.example.example2 button {
+  display: block;
+  width: calc(100% - 30px);
+  height: 40px;
+  margin: 40px 15px 0;
+  background-color: #24b47e;
+  border-radius: 4px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.example.example2 input:active {
+  background-color: #159570;
+}
+
+.example.example2 .error svg {
+  margin-top: 0 !important;
+}
+
+.example.example2 .error svg .base {
+  fill: #e25950;
+}
+
+.example.example2 .error svg .glyph {
+  fill: #fff;
+}
+
+.example.example2 .error .message {
+  color: #e25950;
+}
+
+.example.example2 .success .icon .border {
+  stroke: #abe9d2;
+}
+
+.example.example2 .success .icon .checkmark {
+  stroke: #24b47e;
+}
+
+.example.example2 .success .title {
+  color: #32325d;
+  font-size: 16px !important;
+}
+
+.example.example2 .success .message {
+  color: #8898aa;
+  font-size: 13px !important;
+}
+
+.example.example2 .success .reset path {
+  fill: #24b47e;
+}

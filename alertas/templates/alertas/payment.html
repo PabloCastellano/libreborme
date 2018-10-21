@@ -70,7 +70,7 @@
 
             {% endif %}
 
-              <form action="{% url 'alertas-settings-stripe' %}" method="POST">
+              <form action="{% url 'alertas-payment-add-card' %}" method="POST">
                 {% csrf_token %}
                 <script
                   src="https://checkout.stripe.com/checkout.js" class="stripe-button"
