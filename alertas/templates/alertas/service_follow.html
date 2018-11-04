@@ -8,79 +8,28 @@
           <div id="messages"></div>
           <h1 class="page-header">Seguimiento</h1>
 
-            <p>Aquí puedes definir tus alertas de seguimiento en LibreBORME.</p>
-            <p>Recibirás un email cada vez que una persona o una empresa monitoreada aparezca en un BORME</p>
+          <p>Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa monitoreada aparezca en un BORME</p>
 
-          <h3>¿Cómo añadir una alerta?</h3>
-          <p>Para las Alertas de Empresas y Personas, puedes añadirlas a través de la página de la empresa o persona, usando el botón "Seguir"</p>
-
-          <h3>¿Cuándo recibiré las alertas?</h3>
-          <p>Todas las alertas se envían entre las 9AM y las 12PM.</p>
-          <p>Para las Alertas de Empresas y Personas, recibirás una alerta por e-mail cuando éstas hayan aparecido en un Boletín Oficial.</p>
-
-          <h2>Suscripciones</h2>
-          {% if subscriptions %}
-            <div class="table-responsive">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Suscripción</th>
-                    <th>Comienzo</th>
-                    <th>Final del período</th>
-                    <th>Cantidad</th>
-                    <th>Estado</th>
-                    <th>Período de prueba</th>
-                    <th>Otros</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for subscription in subscriptions %}
-                  <tr {% if subscription.status != 'trialing' %}class="success"{% else %}class="warning"{% endif %}>
-                    <td>{{ subscription.plan.nickname }}</td>
-                    <td>{{ subscription.start.date }}</td>
-                    <td>{{ subscription.current_period_end.date }}</td>
-                    <td>{{ subscription.quantity }}</td>
-                    <td>
-                      {% if subscription.status == 'trialing' %}
-                      <span class="label label-warning">{{ subscription.status }}</span>
-                      {% elif subscription.status == 'active' %}
-                      <span class="label label-success">{{ subscription.status }}</span>
-                      {% else %}
-                      <span class="label label-danger">{{ subscription.status }}</span>
-                      {% endif %}
-                    </td>
-                    <td>{% if subscription.trial_end %}
-                            Hasta el {{ subscription.trial_end.date }}
-                        {% else %}
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        {% endif %}</td>
-                    <td>
-                       is_period_current: {{ subscription.is_period_current }}, is_status_current: {{ subscription.is_status_current }}, is_status_temporarily_current: {{ subscription.is_status_temporarily_current }}
-                    </td>
-                    <td>
-                      {% if subscription.status == 'trialing' %}
-                        {% if subscription.cancel_at_period_end %}
-                        Cancelada el {{ subscription.canceled_at.date }}
-                        {% else %}
-                          <a href="#">
-                          <button type="button" class="btn btn-primary btn-xs">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cancelar
-                          </button>
-                          </a>
-                        {% endif %}
-                      {% endif %}
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+          <h2>¿Cómo funciona?</h2>
+          <div class="row">
+            <div class="col-sm-6">
+              <p>Ve a la página de la empresa o persona que quiras añadir y pulsa en el botón "Seguir"</p>
+              <p>A partir de ahora recibirás una alerta por e-mail cuando ésta haya aparecido en un Boletín Oficial.</p>
+              <p>Puedes probar el servicio de forma gratuita con 3 personas y empresas de tu elección.</p>
+              {% include 'pricing_alerts_table.html' %}
             </div>
+            <div class="col-sm-6">
+              <img src="{% static 'img/como_seguir.png' %}" style="border:1px solid black">
+            </div>
+          </div>
+
+          <h2>Lista de Seguimiento</h2>
+          {% if subscriptions %}
+            {% include 'table_active_subscriptions.html' %}
           {% else %}
-          <p>No tienes ninguna suscripción</p>
+          <p>No estás suscrito, puedes probar el servicio con hasta 3 seguimientos</p>
           {% endif %}
 
-          <h2 class="sub-header">Alertas de personas y empresas</h2>
           {% if restantes_f > 0 %}
               <p>Dispones aún de {{ restantes_f }} alertas. <a href="#" data-toggle="modal" data-target="#alerta-follow-modal">Añade una alerta nueva</a>.</p>
           {% else %}
@@ -120,9 +69,6 @@
             </div>
             </div>
           {% endif %}
-            <div class="col-sm-2">
-              {% include 'pricing_alerts_table.html' %}
-            </div>
           </div>
 
         </div>

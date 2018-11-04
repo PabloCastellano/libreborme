@@ -7,91 +7,35 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Suscripciones</h1>
 
-        {% include 'pricing_subscriptions_table.html' %}
-
-        <p>Tipos de notificación:</p>
-        <ul>
-          <li>Empresas de nueva creación</li>
-          <li>Empresas en concurso de acreedores / liquidación</li>
-        </ul>
-
-          <h3>¿Existe un periodo de prueba para los planes de pago?</h3>
-          <p>Al actualizar tu plan para Alertas de Actos Mercantiles, tu cuenta tiene un período de prueba gratuito de 7 días. Si cancelas el plan antes del período de prueba, no tendrá ningún coste para ti.</p>
-
-          <h3>¿Cuándo recibiré las alertas?</h3>
-          <p>Todas las alertas se envían entre las 9AM y las 12PM.</p>
-          <p>En el caso de las Alertas de Actos Mercantiles (Por ejemplo: <em>Liquidación de empresas</em>) recibirás un email de lunes a viernes siempre que se publique un boletín.</p>
-
-        <h2>Suscripciones</h2>
-          {% for subscription in subscriptions %}
-            <div class="table-responsive">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Suscripción</th>
-                    <th>Comienzo</th>
-                    <th>Final del período</th>
-                    <th>Cantidad</th>
-                    <th>Estado</th>
-                    <th>Período de prueba</th>
-                    <th>Otros</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for subscription in customer.subscriptions.all %}
-                  <tr {% if subscription.status != 'trialing' %}class="success"{% else %}class="warning"{% endif %}>
-                    <td>{{ subscription.plan.nickname }}</td>
-                    <td>{{ subscription.start.date }}</td>
-                    <td>{{ subscription.current_period_end.date }}</td>
-                    <td>{{ subscription.quantity }}</td>
-                    <td>
-                      {% if subscription.status == 'trialing' %}
-                      <span class="label label-warning">{{ subscription.status }}</span>
-                      {% elif subscription.status == 'active' %}
-                      <span class="label label-success">{{ subscription.status }}</span>
-                      {% else %}
-                      <span class="label label-danger">{{ subscription.status }}</span>
-                      {% endif %}
-                    </td>
-                    <td>{% if subscription.trial_end %}
-                            Hasta el {{ subscription.trial_end.date }}
-                        {% else %}
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        {% endif %}</td>
-                    <td>
-                       is_period_current: {{ subscription.is_period_current }}, is_status_current: {{ subscription.is_status_current }}, is_status_temporarily_current: {{ subscription.is_status_temporarily_current }}
-                    </td>
-                    <td>
-                      {% if subscription.status == 'trialing' %}
-                        {% if subscription.cancel_at_period_end %}
-                        Cancelada el {{ subscription.canceled_at.date }}
-                        {% else %}
-                          <a href="#">
-                          <button type="button" class="btn btn-primary btn-xs">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cancelar
-                          </button>
-                          </a>
-                        {% endif %}
-                      {% endif %}
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+          <p>Mediante el Servicio de Suscripciones recibirás un email cada día con la información mercantil solicitada</p>
+          <h2>¿Cómo funciona?</h2>
+          <div class="row">
+            <div class="col-sm-6">
+              <p>Elige un tipo de suscripción entre las siguientes:</p>
+              <ul>
+                <li>Empresas de nueva creación</li>
+                <li>Empresas en concurso de acreedores / liquidación</li>
+              </ul>
+              <p>Cada día recibirás en tu email información con las nuevas empresas creadas / liquidadas</p>
+              <p>Las suscripciones incluyen un período de prueba de 7 días. Puedes cancelar la suscripción en cualquier momento antes de los 7 días, sin que esto tenga ningún coste.</p>
+              <p>El ciclo de facturación de la suscripción mensual comienza siempre el día 1 de cada mes. El primer mes será prorrateado.</p>
+              <p>El período de prueba solo es válido la primera vez.</p>
             </div>
-          {% empty %}
-          <p>No tienes ninguna suscripción</p>
-          {% endfor %}
+            <div class="col-sm-6">
+              {% include 'pricing_subscriptions_table.html' %}
+            </div>
+          </div>
 
-        <h2 class="sub-header">Alertas de actos mercantiles</h2>
-        {% if restantes_a > 0 %}
-          <p>Dispones aún de {{ restantes_a }} alertas. <a href="#" data-toggle="modal" data-target="#alerta-acto-modal">Añade una alerta nueva</a>.</p>
-        {% else %}
-          <p>Has agotado todas tus alertas
-          {% include 'upgrade_button.html' %}
-          </p>
-        {% endif %}
+
+        <h2>Lista de Suscripciones</h2>
+          {% if subscriptions %}
+            {% include 'table_active_subscriptions.html' %}
+          {% else %}
+          <p>No tienes ninguna suscripción</p>
+          {% endif %}
+
+          <p>Debes suscribirte a algo primero.</p>
+          <p><a href="#" data-toggle="modal" data-target="#alerta-acto-modal">Añade una alerta nueva</a>.</p>
         {% if alertas_a %}
         <div class="table-responsive">
           <table class="table table-striped">
@@ -100,7 +44,6 @@
                 <th>#</th>
                 <th>Tipo de evento</th>
                 <th>Provincia</th>
-                <th>Periodicidad</th>
                 <th>Enviar HTML</th>
                 <th>Acciones</th>
               </tr>
@@ -111,7 +54,6 @@
                 <td>{{ forloop.counter }}</td>
                 <td>{{ alerta.get_evento_display }}</td>
                 <td>{{ alerta.get_provincia_display }}</td>
-                <td>{{ alerta.get_periodicidad_display }}</td>
                 <td>{% if alerta.send_html %}
                   <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                   {% else %}
@@ -141,12 +83,8 @@
           {% endif %}
         {% endif %}
 
-        <h2>Condiciones</h2>
-        <p>Las suscripciones incluyen un período de prueba de 7 días</p>
-        <p>Usted puede cancelar la suscripción en cualquier momento antes de los 7 días</p>
-        <p>Para la actualización al Plan de Alertas de Empresas y Personas, el periodo cuenta a partir del momento de la actualización</p>
-        <p>Para las Alertas de Actos Mercantiles, el ciclo de facturación de la suscripción mensual comienza siempre el día 1 de cada mes. El primer mes será prorrateado</p>
         </div>
+
 
 <div class="modal fade" id="alerta-acto-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">

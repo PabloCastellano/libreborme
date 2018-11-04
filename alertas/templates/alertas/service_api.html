@@ -9,61 +9,7 @@
           <h1 class="page-header">API</h1>
 
           {% if subscriptions %}
-            <div class="table-responsive">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Suscripción</th>
-                    <th>Comienzo</th>
-                    <th>Final del período</th>
-                    <th>Cantidad</th>
-                    <th>Estado</th>
-                    <th>Período de prueba</th>
-                    <th>Otros</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for subscription in subscriptions %}
-                  <tr {% if subscription.status != 'trialing' %}class="success"{% else %}class="warning"{% endif %}>
-                    <td>{{ subscription.plan.nickname }}</td>
-                    <td>{{ subscription.start.date }}</td>
-                    <td>{{ subscription.current_period_end.date }}</td>
-                    <td>{{ subscription.quantity }}</td>
-                    <td>
-                      {% if subscription.status == 'trialing' %}
-                      <span class="label label-warning">{{ subscription.status }}</span>
-                      {% elif subscription.status == 'active' %}
-                      <span class="label label-success">{{ subscription.status }}</span>
-                      {% else %}
-                      <span class="label label-danger">{{ subscription.status }}</span>
-                      {% endif %}
-                    </td>
-                    <td>{% if subscription.trial_end %}
-                            Hasta el {{ subscription.trial_end.date }}
-                        {% else %}
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        {% endif %}</td>
-                    <td>
-                       is_period_current: {{ subscription.is_period_current }}, is_status_current: {{ subscription.is_status_current }}, is_status_temporarily_current: {{ subscription.is_status_temporarily_current }}
-                    </td>
-                    <td>
-                      {% if subscription.status == 'trialing' %}
-                        {% if subscription.cancel_at_period_end %}
-                        Cancelada el {{ subscription.canceled_at.date }}
-                        {% else %}
-                          <a href="#">
-                          <button type="button" class="btn btn-primary btn-xs">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cancelar
-                          </button>
-                          </a>
-                        {% endif %}
-                      {% endif %}
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
+            {% include 'table_active_subscriptions.html' %}
           {% else %}
             <p>Este producto se encuentra en fase Beta. Si quieres probarlo, <a href="#" data-toggle="modal" data-target="#requestAPIKeyModal">solicita una API Key</a>.</p>
             <h2>Suscripciones</h2>

@@ -26,6 +26,8 @@
           {% if customer.has_any_active_subscription %}
             <p>Tiene las siguientes suscripciones activas</p>
 
+            <div class="row">
+            <div class="col-sm-8">
             <div class="table-responsive">
               <table class="table table-striped">
                 <thead>
@@ -33,25 +35,22 @@
                     <th>Suscripción</th>
                     <th>Comienzo</th>
                     <th>Final del período</th>
-                    <th>Cantidad</th>
                     <th>Estado</th>
                     <th>Período de prueba</th>
-                    <th>Otros</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for subscription in customer.subscriptions.all %}
                   <tr {% if subscription.status != 'trialing' %}class="success"{% else %}class="warning"{% endif %}>
-                    <td>{{ subscription.plan.nickname }}</td>
+                    <td>{{ subscription.plan.product.name }}</td>
                     <td>{{ subscription.start.date }}</td>
                     <td>{{ subscription.current_period_end.date }}</td>
-                    <td>{{ subscription.quantity }}</td>
                     <td>
                       {% if subscription.status == 'trialing' %}
-                      <span class="label label-warning">{{ subscription.status }}</span>
+                      <span class="label label-warning">Periodo de prueba</span>
                       {% elif subscription.status == 'active' %}
-                      <span class="label label-success">{{ subscription.status }}</span>
+                      <span class="label label-success">Activo</span>
                       {% else %}
                       <span class="label label-danger">{{ subscription.status }}</span>
                       {% endif %}
@@ -61,9 +60,6 @@
                         {% else %}
                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                         {% endif %}</td>
-                    <td>
-                       is_period_current: {{ subscription.is_period_current }}, is_status_current: {{ subscription.is_status_current }}, is_status_temporarily_current: {{ subscription.is_status_temporarily_current }}
-                    </td>
                     <td>
                       {% if subscription.status == 'trialing' %}
                         {% if subscription.cancel_at_period_end %}
@@ -81,6 +77,8 @@
                   {% endfor %}
                 </tbody>
               </table>
+            </div>
+            </div>
             </div>
 
           {% else %}
