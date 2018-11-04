@@ -120,11 +120,10 @@
                    <strong>{{ card.exp_month | stringformat:"02d" }}/{{ card.exp_year }}</strong>
                 </td>
                 <td>
-                  <a class="use_card" id="{{ card.stripe_id }}">
-                    <button type="button" class="btn btn-primary">
-                      <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> Usar esta tarjeta
-                    </button>
-                  </a>
+                  <form action="{% url 'checkout_existing' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" name="update" class="btn btn-primary" value="Usar esta tarjeta">
+                  </form>
                 </td>
               </tr>
             {% endfor %}

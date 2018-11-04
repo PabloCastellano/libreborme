@@ -28,14 +28,18 @@ COUNTRY_CHOICE = (
 
 class Profile(m.Model):
     user = m.OneToOneField(User, on_delete=m.CASCADE, related_name='profile')
+
+    language = m.CharField(max_length=3,
+                           choices=LANGUAGE_CHOICES,
+                           default='es')
+
+    # Subscriptions service
+    has_tried_subscriptions = m.BooleanField(default=False)
     notification_method = m.CharField(max_length=10,
                                       choices=NOTIFICATION_CHOICES,
                                       default='email')
     notification_email = m.EmailField(blank=True)
     notification_url = m.URLField(blank=True)
-    language = m.CharField(max_length=3,
-                           choices=LANGUAGE_CHOICES,
-                           default='es')
     send_html = m.BooleanField(default=True)
 
     # Datos de contacto

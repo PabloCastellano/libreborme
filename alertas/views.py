@@ -240,6 +240,9 @@ class ServiceSubscriptionView(TemplateView):
         context['form_a'] = forms.AlertaActoModelForm()
         context['count_a'] = context['alertas_a'].count()
 
+        # TODO: Si tiene suscripciones pagadas y no ha definido qué quiere, mostrarle form
+        # TODO: Solo una suscripción de prueba
+
         try:
             customer = Customer.objects.get(subscriber=self.request.user)
             context["subscriptions"] = Subscription.objects.filter(
@@ -375,7 +378,8 @@ def alerta_acto_create(request):
 
 @login_required
 def add_to_cart(request, product):
-    # TODO: no cobrar si ya tiene la suscripción
+    # TODO: avisar si ya tiene la suscripción, aunque puede
+    # querer pagar dos veces para tener más followers o suscripciones
     try:
         plan = Plan.objects.get(nickname=product)
     except Plan.DoesNotExist:
@@ -383,9 +387,15 @@ def add_to_cart(request, product):
 
     # TODO: test when Customer doesn't exist
     customer = Customer.objects.get(subscriber=request.user)
+    profile = request.user.profile
     # TODO: filter status=active?
     existing_subscriptions = Subscription.objects.filter(
             plan__nickname=product, customer=customer)
+
+    # TODO: En vez de message de una vez, mostrar permanentemente en el cart
+    if product in ('subscription_month', 'subscription_year') and not profile.has_tried_subscriptions:
+        messages.add_message(request, messages.WARNING,
+                             'Tienes un periodo de prueba de 7 días para este servicio')
 
     if existing_subscriptions:
         # TODO: return to correct page
@@ -448,6 +458,27 @@ def add_card(request):
 
 
 @login_required
+def checkout_existing_card(request):
+    if request.method == "POST":
+        nickname = request.session['cart']['name']
+        plan = Plan.objects.get(nickname=nickname)
+        # Customer is cheargeable so he already exists
+        customer = Customer.objects.get(subscriber=request.user)
+        profile = request.user.profile
+
+        if not profile.has_tried_subscriptions:
+            do_trial = True
+            profile.has_tried_subscriptions = True
+        else:
+            do_trial = None
+        customer.subscribe(plan=plan, trial_from_plan=do_trial)
+        profile.save()
+        # TODO: review parameters: tax_percent, trial_end, ...
+        # tax_percent se suma al precio
+        return redirect("dashboard-index")
+
+
+@login_required
 def checkout(request):
     """Checkout
 
@@ -466,7 +497,7 @@ def checkout(request):
 
         nickname = request.session['cart']['name']
         plan = Plan.objects.get(nickname=nickname)
-        tax_percent = 21.0  # TODO: tax per country (?) - limit to Spain
+        tax_percent = 21.0  # TODO: tax per province - limited to Spain
         # next_first_timestamp = utils.date_next_first(timestamp=True)
 
         token = request.POST.get("stripeToken")
@@ -508,15 +539,6 @@ def checkout(request):
             # new_invoice.save()
             del request.session['cart']
             return redirect("dashboard-index")
-
-    """
-    acct = stripe.Account.create(
-      country="US",
-      type="custom",
-      account_token=token,
-    )
-    """
-    # https://stripe.com/docs/api/account/object#account_object-tos_acceptance
 
     return HttpResponse("", status=400)
 
