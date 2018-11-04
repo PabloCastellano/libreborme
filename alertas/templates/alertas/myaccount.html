@@ -10,14 +10,16 @@
             </div>
           {% endfor %}
 
-          <h1 class="page-header">Información de la cuenta</h1>
-          <p>Fecha de alta: <strong>{{ user.date_joined.date }}</strong></p>
-
-          <a href="#">
-          <button type="button" class="btn btn-danger btn-xs">
-            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cerrar mi cuenta
-          </button>
-          </a>
+          <div class="row">
+            <div class="col-sm-1 col-sm-offset-11">
+              <a href="#">
+              <button type="button" class="btn btn-danger btn-xs">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cerrar mi cuenta
+              </button>
+              </a>
+            </div>
+          </div>
+          <h1 class="page-header">Mi Cuenta</h1>
 
           <h3 class="sub-header">Servicios contratados</h3>
 
@@ -89,28 +91,29 @@
 
         <h2 class="sub-header">Mi Perfil</h2>
 
-          <div class="row">
-            <div class="col-sm-6">
-              <form action="{% url "alertas-settings-billing" %}" role="form" method="post">
-                {% csrf_token %}
-
+          <form action="{% url "alertas-settings-billing" %}" role="form" method="post">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-sm-5">
                 <legend>Datos personales</legend>
-                {{ form_personal|bootstrap_horizontal }}
-
+                {{ form_personal|bootstrap_horizontal:'col-sm-3'}}
                 <p><a href="{% url 'password_change' %}">Cambiar contraseña</a></p>
-
+              </div>
+              <div class="col-sm-6 col-sm-offset-1">
                 <legend>Datos de facturación</legend>
-                {{ form_profile|bootstrap_horizontal }}
-
+                {{ form_profile|bootstrap_horizontal:'col-sm-3' }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-5">
                 <legend>Boletín</legend>
                 {{ form_newsletter|bootstrap_horizontal }}
-
-               <div class="form-group">
-                 <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
-               </div>
-              </form>
+              </div>
             </div>
-          </div>
+            <div class="form-group">
+              <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
+            </div>
+          </form>
 
         </div>
 

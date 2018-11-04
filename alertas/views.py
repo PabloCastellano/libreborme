@@ -58,18 +58,20 @@ class MyAccountView(TemplateView):
         #     'notification_email': user_profile.notification_email,
         #     'notification_url': user_profile.notification_url})
 
-        context['form_personal'] = forms.PersonalSettingsForm(initial={
+        context['form_personal'] = forms.PersonalDataForm(initial={
             'first_name': self.request.user.first_name,
             'last_name': self.request.user.last_name,
-            'email': self.request.user.email})
+            'email': self.request.user.email,
+            'home_phone': user_profile.home_phone,
+            'date_joined': self.request.user.date_joined.date()})
 
         context['form_profile'] = forms.ProfileDataForm(initial={
             'home_phone': user_profile.home_phone,
-            'work_phone': user_profile.work_phone,
             'account_type': user_profile.account_type,
             'razon_social': user_profile.razon_social,
             'cif_nif': user_profile.cif_nif,
             'address': user_profile.address,
+            'post_code': user_profile.post_code,
             'poblacion': user_profile.poblacion,
             'provincia': user_profile.provincia,
             'country': user_profile.country})
@@ -408,14 +410,15 @@ def settings_update_billing(request):
 
         # TODO: Update business_vat_id in Customer model
 
-        form = forms.PersonalSettingsForm(request.POST, instance=user)
+        form = forms.PersonalDataForm(request.POST)
         if form.is_valid():
-            form.save()
-        # form = forms.NotificationSettingsForm(request.POST)
-        # if form.is_valid():
-        #     profile.notification_method = form.cleaned_data['notification_method']
-        #     profile.notification_email = form.cleaned_data['notification_email']
-        #     profile.notification_url = form.cleaned_data['notification_url']
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+            # Do not update the following fields:
+            # email - use another procedure
+            # date_joined
+            user.save()
+            profile.home_phone = form.cleaned_data['home_phone']
         form = forms.NewsletterForm(request.POST)
         if form.is_valid():
             profile.newsletter_promotions = form.cleaned_data['newsletter_promotions']

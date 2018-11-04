@@ -40,7 +40,6 @@ class Profile(m.Model):
 
     # Datos de contacto
     home_phone = m.CharField(max_length=20, blank=True)
-    work_phone = m.CharField(max_length=20, blank=True)
 
     # Datos de facturación
     account_type = m.CharField(max_length=20, choices=ACCOUNT_TYPE_CHOICE,

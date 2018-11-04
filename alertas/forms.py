@@ -23,6 +23,14 @@ class AlertaActoModelForm(forms.ModelForm):
         exclude = ('user', 'is_enabled')
 
 
+class PersonalDataForm(forms.Form):
+    date_joined = forms.CharField(label="Fecha de alta", required=False, widget=forms.TextInput(attrs={'disabled': True}))
+    email = forms.CharField(label="E-Mail", required=False, widget=forms.TextInput(attrs={'disabled': True}))
+    first_name = forms.CharField(label="Nombre", required=False)
+    last_name = forms.CharField(label="Apellidos", required=False)
+    home_phone = forms.CharField(label="Teléfono", required=False, widget=forms.TextInput(attrs={'placeholder': '+34xxxxxxxxx'}))
+
+
 class PersonalSettingsForm(forms.ModelForm):
     class Meta:
         model = models.User
@@ -38,13 +46,10 @@ class PersonalSettingsForm(forms.ModelForm):
 class ProfileDataForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['account_type', 'home_phone', 'work_phone', 'razon_social',
-                  'cif_nif', 'address', 'post_code', 'poblacion', 'provincia',
-                  'country']
+        fields = ['account_type', 'razon_social', 'cif_nif', 'address',
+                  'post_code', 'poblacion', 'provincia', 'country']
         labels = {
             "account_type": "Tipo",
-            "home_phone": "Teléfono",
-            "work_phone": "Otro teléfono",
             "razon_social": "Razón social",
             "cif_nif": "CIF / NIF",
             "address": "Dirección",
@@ -54,8 +59,6 @@ class ProfileDataForm(forms.ModelForm):
             "country": "País",
         }
         widgets = {
-            'home_phone': forms.TextInput(attrs={'placeholder': '+34xxxxxxxxx'}),
-            'work_phone': forms.TextInput(attrs={'placeholder': '+34xxxxxxxxx'}),
             'provincia': forms.Select(choices=PROVINCIAS_CHOICES),
         }
 
