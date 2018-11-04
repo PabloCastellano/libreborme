@@ -39,11 +39,6 @@ class MyAccountView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(MyAccountView, self).get_context_data(**kwargs)
 
-        initial = {}
-        initial['notification_method'] = self.request.user.profile.notification_method
-        initial['notification_email'] = self.request.user.profile.notification_email
-        initial['notification_url'] = self.request.user.profile.notification_url
-
         try:
             customer = Customer.objects.get(subscriber=self.request.user)
             business_vat_id = customer.business_vat_id
@@ -52,13 +47,38 @@ class MyAccountView(TemplateView):
             business_vat_id = None
         context["customer"] = customer
 
-        context["form_billing"] = forms.BillingSettingsForm(initial={'business_vat_id': business_vat_id})
-        context['form_notification'] = forms.NotificationSettingsForm(initial=initial)
-        context['form_personal'] = forms.PersonalSettingsForm(initial={'email': self.request.user.email})
-        context['form_newsletter'] = forms.NewsletterForm(initial={'email': self.request.user.email})
+        # Prepare forms
+        user_profile = self.request.user.profile
+
+        # context["form_billing"] = forms.BillingSettingsForm(initial={
+        #     'business_vat_id': business_vat_id})
+
+        # context['form_notification'] = forms.NotificationSettingsForm(initial={
+        #     'notification_method': user_profile.notification_method,
+        #     'notification_email': user_profile.notification_email,
+        #     'notification_url': user_profile.notification_url})
+
+        context['form_personal'] = forms.PersonalSettingsForm(initial={
+            'first_name': self.request.user.first_name,
+            'last_name': self.request.user.last_name,
+            'email': self.request.user.email})
+
+        context['form_profile'] = forms.ProfileDataForm(initial={
+            'home_phone': user_profile.home_phone,
+            'work_phone': user_profile.work_phone,
+            'account_type': user_profile.account_type,
+            'razon_social': user_profile.razon_social,
+            'cif_nif': user_profile.cif_nif,
+            'address': user_profile.address,
+            'poblacion': user_profile.poblacion,
+            'provincia': user_profile.provincia,
+            'country': user_profile.country})
+
+        context['form_newsletter'] = forms.NewsletterForm(initial={
+            'newsletter_promotions': user_profile.newsletter_promotions,
+            'newsletter_features': user_profile.newsletter_features})
 
         context['active'] = 'dashboard'
-
         context['count_a'] = AlertaActo.objects.filter(
                                     user=self.request.user).count()
         context['count_f'] = Follower.objects.filter(
@@ -376,36 +396,36 @@ def add_to_cart(request, product):
     return redirect(reverse('alertas-cart'))
 
 
-@login_required
-def settings_update_notifications(request):
-    if request.method == 'POST':
-        form = forms.NotificationSettingsForm(request.POST)
-        if form.is_valid():
-            profile = Profile.objects.get(user=request.user)
-            profile.notification_method = form.cleaned_data['notification_method']
-            profile.notification_email = form.cleaned_data['notification_email']
-            profile.notification_url = form.cleaned_data['notification_url']
-            profile.save()
-    return redirect(reverse('dashboard-index'))
-
-
-@login_required
-def settings_update_personal(request):
-    if request.method == 'POST':
-        instance = User.objects.get(pk=request.user.id)
-        form = forms.PersonalSettingsForm(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
-    return redirect(reverse('dashboard-index'))
-
-
+# Salvar en Profile ne vez de Customer?
 @login_required
 def settings_update_billing(request):
     if request.method == 'POST':
-        instance = Customer.objects.get(subscriber=request.user)
-        form = forms.BillingSettingsForm(request.POST, instance=instance)
+        customer = Customer.objects.get(subscriber=request.user)
+        user = User.objects.get(pk=request.user.id)
+        profile = user.profile
+
+        # Process forms
+
+        # TODO: Update business_vat_id in Customer model
+
+        form = forms.PersonalSettingsForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
+        # form = forms.NotificationSettingsForm(request.POST)
+        # if form.is_valid():
+        #     profile.notification_method = form.cleaned_data['notification_method']
+        #     profile.notification_email = form.cleaned_data['notification_email']
+        #     profile.notification_url = form.cleaned_data['notification_url']
+        form = forms.NewsletterForm(request.POST)
+        if form.is_valid():
+            profile.newsletter_promotions = form.cleaned_data['newsletter_promotions']
+            profile.newsletter_features = form.cleaned_data['newsletter_features']
+        form = forms.ProfileDataForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+
+        messages.add_message(request, messages.SUCCESS,
+                             'Se han guardado los cambios')
     return redirect(reverse('dashboard-index'))
 
 

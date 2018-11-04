@@ -80,11 +80,6 @@ class TestAlertasLoginRequired(TestCase):
         response = self.client.get(url)
         self.assertTrue(response.url.startswith(self.login_url))
 
-    def test_alertas_settings_personal(self):
-        url = reverse('alertas-settings-personal')
-        response = self.client.get(url)
-        self.assertTrue(response.url.startswith(self.login_url))
-
     def test_alertas_ajax_suggest_company(self):
         url = reverse('suggest_company')
         response = self.client.get(url)

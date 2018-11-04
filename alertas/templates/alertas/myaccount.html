@@ -3,6 +3,13 @@
 
 {% block content %}
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+
           <h1 class="page-header">Información de la cuenta</h1>
           <p>Fecha de alta: <strong>{{ user.date_joined.date }}</strong></p>
 
@@ -12,7 +19,7 @@
           </button>
           </a>
 
-          <h2 class="sub-header">Servicios contratados</h2>
+          <h3 class="sub-header">Servicios contratados</h3>
 
           {% if customer.has_any_active_subscription %}
             <p>Tiene las siguientes suscripciones activas</p>
@@ -80,56 +87,27 @@
             <p>Puedes obtener más información sobre los servicios disponibles <a href="#">Aquí (TODO)</a></p>
           {% endif %}
 
-        <h2 class="sub-header">Configuración</h2>
+        <h2 class="sub-header">Mi Perfil</h2>
 
           <div class="row">
-            <div class="col-sm-4">
-              <form action="{% url "alertas-settings-personal" %}" role="form" method="post">
-                <legend>Datos personales</legend>
-                {% csrf_token %}
-                <div class="form-group">
-                  <p>Nombre: {{ user.get_full_name }}</p>
-                </div>
-                {{ form_personal|bootstrap }}
-                <p><a href="{% url 'password_change' %}">Cambiar contraseña</a></p>
-                <div class="form-group">
-                  <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
-                </div>
-              </form>
-            </div>
-
-            <div class="col-sm-4 col-sm-offset-1">
+            <div class="col-sm-6">
               <form action="{% url "alertas-settings-billing" %}" role="form" method="post">
-                <legend>Datos de facturación</legend>
                 {% csrf_token %}
-                {{ form_billing|bootstrap }}
-                <div class="form-group">
-                  <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
-                </div>
-              </form>
-            </div>
-          </div>
 
-          <div class="row">
-            <div class="col-sm-4">
-              <form action="{% url "alertas-settings-notifications" %}" role="form" method="post">
-               <legend>Notificaciones</legend>
-               {% csrf_token %}
-               {{ form_notification|bootstrap }}
+                <legend>Datos personales</legend>
+                {{ form_personal|bootstrap_horizontal }}
+
+                <p><a href="{% url 'password_change' %}">Cambiar contraseña</a></p>
+
+                <legend>Datos de facturación</legend>
+                {{ form_profile|bootstrap_horizontal }}
+
+                <legend>Boletín</legend>
+                {{ form_newsletter|bootstrap_horizontal }}
+
                <div class="form-group">
                  <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
                </div>
-              </form>
-            </div>
-
-            <div class="col-sm-4 col-sm-offset-1">
-              <form action="#TODO" role="form" method="post">
-                <legend>Boletín</legend>
-                {% csrf_token %}
-                {{ form_newsletter|bootstrap }}
-                <div class="form-group">
-                  <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
-                </div>
               </form>
             </div>
           </div>

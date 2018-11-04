@@ -2,7 +2,8 @@ from django import forms
 from . import models
 from djstripe.models import Customer
 
-from libreborme.models import NOTIFICATION_CHOICES
+from libreborme.models import NOTIFICATION_CHOICES, Profile
+from libreborme.provincias import PROVINCIAS_CHOICES
 
 
 class FollowerModelForm(forms.ModelForm):
@@ -25,13 +26,45 @@ class AlertaActoModelForm(forms.ModelForm):
 class PersonalSettingsForm(forms.ModelForm):
     class Meta:
         model = models.User
-        fields = ['email']
+        fields = ['first_name', 'last_name', 'email']
+        labels = {
+            "email": "E-Mail",
+        }
+        widgets = {
+            'email': forms.TextInput(attrs={'disabled': True}),
+        }
 
 
-class BillingSettingsForm(forms.ModelForm):
+class ProfileDataForm(forms.ModelForm):
     class Meta:
-        model = Customer
-        fields = ['business_vat_id']
+        model = Profile
+        fields = ['account_type', 'home_phone', 'work_phone', 'razon_social',
+                  'cif_nif', 'address', 'post_code', 'poblacion', 'provincia',
+                  'country']
+        labels = {
+            "account_type": "Tipo",
+            "home_phone": "Teléfono",
+            "work_phone": "Otro teléfono",
+            "razon_social": "Razón social",
+            "cif_nif": "CIF / NIF",
+            "address": "Dirección",
+            "post_code": "C.P.",
+            "poblacion": "Población",
+            "provincia": "Provincia",
+            "country": "País",
+        }
+        widgets = {
+            'home_phone': forms.TextInput(attrs={'placeholder': '+34xxxxxxxxx'}),
+            'work_phone': forms.TextInput(attrs={'placeholder': '+34xxxxxxxxx'}),
+            'provincia': forms.Select(choices=PROVINCIAS_CHOICES),
+        }
+
+
+# FIXME: It doesn't work: https://github.com/dj-stripe/dj-stripe/issues/753
+# class BillingSettingsForm(forms.ModelForm):
+#     class Meta:
+#         model = Customer
+#         fields = ['business_vat_id']
 
 
 class NotificationSettingsForm(forms.Form):
@@ -42,5 +75,5 @@ class NotificationSettingsForm(forms.Form):
 
 
 class NewsletterForm(forms.Form):
-    promotions = forms.BooleanField(label="Recibir promociones", help_text="¿Quieres recibir información sobre descuentos y nuevas promociones en tu correo electrónico?")
-    features = forms.BooleanField(label="Recibir novedades", help_text="Información sobre novedades de LibreBORME")
+    newsletter_promotions = forms.BooleanField(label="Recibir promociones", required=False, help_text="¿Quieres recibir información sobre descuentos y nuevas promociones en tu correo electrónico?")
+    newsletter_features = forms.BooleanField(label="Recibir novedades", required=False, help_text="Información sobre novedades de LibreBORME")

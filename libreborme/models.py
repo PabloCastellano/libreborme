@@ -49,7 +49,8 @@ class Profile(m.Model):
     cif_nif = m.CharField(max_length=20, blank=True)
     address = m.CharField(max_length=200, blank=True)
     post_code = m.CharField(max_length=20, blank=True)
-    city = m.CharField(max_length=50, blank=True)
+    poblacion = m.CharField(max_length=50, blank=True)
+    provincia = m.CharField(max_length=50, blank=True)
     country = m.CharField(max_length=50, choices=COUNTRY_CHOICE, default='ES')
 
     # Newsletter

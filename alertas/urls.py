@@ -20,9 +20,7 @@ urlpatterns = [
     path('alertas/cart', views.CartView.as_view(), name='alertas-cart'),
     path('alertas/cart/buy/<product>', views.add_to_cart, name='buy-product'),
     path('alertas/cart/removecart', views.remove_cart, name='alertas-removecart'),
-    path('alertas/settings/update/personal/', views.settings_update_personal, name='alertas-settings-personal'),
     path('alertas/settings/update/billing/', views.settings_update_billing, name='alertas-settings-billing'),
-    path('alertas/settings/update/notifications/', views.settings_update_notifications, name='alertas-settings-notifications'),
     path('alertas/history/download/<id>/', views.download_alerta_history_csv, name='alerta-history-download'),
     path('alertas/<id>/', views.AlertaDetailView.as_view(), name='alertas-detail'),
 
