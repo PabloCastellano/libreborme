@@ -150,6 +150,7 @@ class PaymentView(TemplateView):
             cards = None
         context["customer"] = customer
         context["cards"] = cards
+        # context["form"] = forms.CreditCardForm()
 
         context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
 

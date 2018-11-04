@@ -80,3 +80,14 @@ class NotificationSettingsForm(forms.Form):
 class NewsletterForm(forms.Form):
     newsletter_promotions = forms.BooleanField(label="Recibir promociones", required=False, help_text="¿Quieres recibir información sobre descuentos y nuevas promociones en tu correo electrónico?")
     newsletter_features = forms.BooleanField(label="Recibir novedades", required=False, help_text="Información sobre novedades de LibreBORME")
+
+
+class CreditCardForm(forms.Form):
+    cardholder = forms.CharField(label="Titular")
+    address = forms.CharField(label="Dirección")
+    post_code = forms.CharField(label="Código postal")
+    province = forms.CharField(label="Provincia")
+    country = forms.CharField(label="País")
+    card_number = forms.CharField(label="Número de tarjeta")
+    exp_month = forms.CharField(label="Caducidad (mes)")
+    exp_year = forms.CharField(label="Caducidad (año)")
