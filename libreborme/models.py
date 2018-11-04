@@ -6,8 +6,6 @@ from django.db.models.signals import post_save
 from alertas.email import send_expiration_email
 from alertas.utils import insert_libreborme_log
 
-from djstripe.models import Customer
-
 
 NOTIFICATION_CHOICES = (
     ('email', "E-mail"),
@@ -19,6 +17,14 @@ LANGUAGE_CHOICES = (
     ('es', 'Español'),
 )
 
+ACCOUNT_TYPE_CHOICE = (
+    ('individual', 'Particular'),
+    ('company', 'Empresa'),
+)
+
+COUNTRY_CHOICE = (
+    ('ES', 'España'),
+)
 
 class Profile(m.Model):
     user = m.OneToOneField(User, on_delete=m.CASCADE, related_name='profile')
@@ -32,16 +38,30 @@ class Profile(m.Model):
                            default='es')
     send_html = m.BooleanField(default=True)
 
+    # Datos de contacto
+    home_phone = m.CharField(max_length=20, blank=True)
+    work_phone = m.CharField(max_length=20, blank=True)
+
+    # Datos de facturación
+    account_type = m.CharField(max_length=20, choices=ACCOUNT_TYPE_CHOICE,
+                               default='company')
+    razon_social = m.CharField(max_length=200, blank=True)
+    cif_nif = m.CharField(max_length=20, blank=True)
+    address = m.CharField(max_length=200, blank=True)
+    post_code = m.CharField(max_length=20, blank=True)
+    city = m.CharField(max_length=50, blank=True)
+    country = m.CharField(max_length=50, choices=COUNTRY_CHOICE, default='ES')
+
+    # Newsletter
+    newsletter_promotions = m.BooleanField(default=False)
+    newsletter_features = m.BooleanField(default=False)
+
     def save(self, *args, **kwargs):
         if not self.notification_email:
             self.notification_email = self.user.email
         super(Profile, self).save(*args, **kwargs)
 
-    def is_premium(self):
-        pass
-        # return all(for invoice in self.invoices:
-        #    invoice
-
+    # TODO: review need
     def expire_subscription(self, send_email):
         if self.user.is_active:
             self.user.is_active = False
@@ -55,7 +75,7 @@ class Profile(m.Model):
         return False
 
     def __str__(self):
-        return "Profile {} ({})".format(self.user)
+        return "Profile {}".format(self.user)
 
 
 class MailTemplate(m.Model):
