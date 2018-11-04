@@ -11,8 +11,8 @@ django-prettyjson==0.4.0
 django-registration==3.0
 django-static-jquery==2.1.4
 django-tastypie==0.14.1
-dj-stripe==1.2.0
+dj-stripe==1.2.3
 elasticsearch==5.5.2
 elasticsearch-dsl==5.4.0
 psycopg2-binary==2.7.4
-stripe==1.82.2
+stripe==2.11.0

@@ -125,14 +125,14 @@ function registerElements(elements, exampleName) {
     var name = form.querySelector('#' + exampleName + '-name');
     var address1 = form.querySelector('#' + exampleName + '-address');
     var city = form.querySelector('#' + exampleName + '-city');
-    var state = form.querySelector('#' + exampleName + '-state');
     var zip = form.querySelector('#' + exampleName + '-zip');
+    var country = form.querySelector('#' + exampleName + '-country');
     var additionalData = {
       name: name ? name.value : undefined,
       address_line1: address1 ? address1.value : undefined,
       address_city: city ? city.value : undefined,
-      address_state: state ? state.value : undefined,
       address_zip: zip ? zip.value : undefined,
+      address_country: country ? country.value : undefined,
     };
 
     // Use Stripe.js to create a token. We only need to pass in one Element
@@ -256,5 +256,7 @@ function registerElements(elements, exampleName) {
   });
   cardCvc.mount('#example2-card-cvc');
 
+  // Just try elements.create('card') (recommended!)
+  // https://stripe.com/docs/stripe-js/reference#element-types
   registerElements([cardNumber, cardExpiry, cardCvc], 'example2');
 })();

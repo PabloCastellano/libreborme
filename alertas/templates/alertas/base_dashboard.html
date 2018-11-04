@@ -35,7 +35,6 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li {% if active == 'cart' %}class="active"{% endif %}><a href="{% url 'alertas-cart' %}"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Cesta{% if num_cart > 0 %} <span class="badge">{{ num_cart }}</span>{% endif %}</a></li>
-            <li {% if active == 'settings' %}class="active"{% endif %}><a href="{% url 'alertas-settings' %}"><span class="glyphicon glyphicon-settings" aria-hidden="true"></span> Configuración</a></li>
             <li {% if active == 'ayuda' %}class="active"{% endif %}><a href="{% url 'alertas-ayuda' %}">Soporte</a></li>
           </ul>
         </div>
@@ -51,9 +50,9 @@
           </ul>
 
           <ul class="nav nav-sidebar">
-            <li {% if active == 'subscriptions' %}class="active"{% endif %}><a href="{% url 'subscriptions-list' %}"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> Suscripciones</a></li>
-            <li {% if active == 'alertas' %}class="active"{% endif %}><a href="{% url 'alertas-list' %}"><span class="glyphicon glyphicon-flash" aria-hidden="true"></span> Alertas</a></li>
-            <li {% if active == 'api' %}class="active"{% endif %}><a href="{% url 'alertas-api' %}"><span class="glyphicon glyphicon-compare" aria-hidden="true"></span> API</a></li>
+            <li {% if active == 'alertas' %}class="active"{% endif %}><a href="{% url 'service-follow' %}"><span class="glyphicon glyphicon-flash" aria-hidden="true"></span> Seguimiento</a></li>
+            <li {% if active == 'subscriptions' %}class="active"{% endif %}><a href="{% url 'service-subscriptions' %}"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> Suscripciones</a></li>
+            <li {% if active == 'api' %}class="active"{% endif %}><a href="{% url 'service-api' %}"><span class="glyphicon glyphicon-compare" aria-hidden="true"></span> API</a></li>
           </ul>
           <ul class="nav nav-sidebar">
                   <li {% if active == 'billing' %}class="active"{% endif %}><a href="{% url 'alertas-billing' %}"><span class="glyphicon glyphicon-invoice" aria-hidden="true"></span> Facturas <span class="badge badge-info">1</span></a></li>

@@ -13,7 +13,7 @@ class MailTemplateAdmin(admin.ModelAdmin):
 
 @admin.register(m.Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'account_type', 'notification_method',
+    list_display = ('user', 'notification_method',
                     'notification_email', 'notification_url')
     list_filter = ('notification_method',)
     search_fields = ['user__username', 'user__email', 'notification_email',

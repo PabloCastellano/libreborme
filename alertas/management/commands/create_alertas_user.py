@@ -4,7 +4,6 @@
 # 	./manage.py create_alertas_user weekly liq
 #
 # TODO: send email
-# TODO: check type argument
 # TODO: crear factura?
 # TODO: crear alerta de prueba?
 # TODO: generate random password and show/email it
@@ -28,7 +27,6 @@ class Command(BaseCommand):
         parser.add_argument("--first_name")
         parser.add_argument("--last_name")
         parser.add_argument("--password")
-        parser.add_argument("--type", default="test")
 
     def handle(self, *args, **options):
         ch = logging.StreamHandler()
@@ -64,4 +62,4 @@ class Command(BaseCommand):
         else:
             password = options["password"]
 
-        create_alertas_user(username, email, password, first_name, last_name, options["type"])
+        create_alertas_user(username, email, password, first_name, last_name)

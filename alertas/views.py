@@ -39,6 +39,24 @@ class MyAccountView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(MyAccountView, self).get_context_data(**kwargs)
 
+        initial = {}
+        initial['notification_method'] = self.request.user.profile.notification_method
+        initial['notification_email'] = self.request.user.profile.notification_email
+        initial['notification_url'] = self.request.user.profile.notification_url
+
+        try:
+            customer = Customer.objects.get(subscriber=self.request.user)
+            business_vat_id = customer.business_vat_id
+        except Customer.DoesNotExist:
+            customer = None
+            business_vat_id = None
+        context["customer"] = customer
+
+        context["form_billing"] = forms.BillingSettingsForm(initial={'business_vat_id': business_vat_id})
+        context['form_notification'] = forms.NotificationSettingsForm(initial=initial)
+        context['form_personal'] = forms.PersonalSettingsForm(initial={'email': self.request.user.email})
+        context['form_newsletter'] = forms.NewsletterForm(initial={'email': self.request.user.email})
+
         context['active'] = 'dashboard'
 
         context['count_a'] = AlertaActo.objects.filter(
@@ -52,13 +70,11 @@ class MyAccountView(TemplateView):
                                     user=self.request.user, end_date__gt=today)
 
         aconfig = get_alertas_config()
-        account_type = self.request.user.profile.account_type
 
+        # TODO: account_type
+        account_type = 'free'
         context['limite_f'] = aconfig['max_alertas_follower_' + account_type]
         context['limite_a'] = aconfig['max_alertas_actos_' + account_type]
-
-        customer = Customer.objects.get(subscriber=self.request.user)
-        context["customer"] = customer
 
         """
         try:
@@ -79,29 +95,6 @@ class DashboardSupportView(TemplateView):
         n_alertas += Follower.objects.filter(user=self.request.user).count()
         context['n_alertas'] = n_alertas
         context['active'] = 'ayuda'
-        return context
-
-
-@method_decorator(login_required, name='dispatch')
-class DashboardSettingsView(TemplateView):
-    template_name = 'alertas/dashboard_settings.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(DashboardSettingsView, self).get_context_data(**kwargs)
-        context['active'] = 'settings'
-
-        initial = {}
-        initial['notification_method'] = self.request.user.profile.notification_method
-        initial['notification_email'] = self.request.user.profile.notification_email
-        initial['notification_url'] = self.request.user.profile.notification_url
-
-        customer = Customer.objects.get(subscriber=self.request.user)
-        context["customer"] = customer
-
-        context["form_billing"] = forms.BillingSettingsForm(initial={'business_vat_id': customer.business_vat_id})
-        context['form_notification'] = forms.NotificationSettingsForm(initial=initial)
-        context['form_personal'] = forms.PersonalSettingsForm(initial={'email': self.request.user.email})
-        context['form_newsletter'] = forms.NewsletterForm(initial={'email': self.request.user.email})
         return context
 
 
@@ -127,10 +120,15 @@ class PaymentView(TemplateView):
         context['active'] = 'payment'
 
         # TODO: get or 500
-        customer = Customer.objects.get(subscriber=self.request.user)
-        context['customer'] = customer
+        try:
+            customer = Customer.objects.get(subscriber=self.request.user)
+            cards = customer.sources.order_by('-exp_year', '-exp_month')
+        except Customer.DoesNotExist:
+            customer = None
+            cards = None
+        context["customer"] = customer
+        context["cards"] = cards
 
-        context["cards"] = customer.sources.order_by('-exp_year', '-exp_month')
         context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
 
         return context
@@ -146,14 +144,19 @@ class BillingView(TemplateView):
         context['lbinvoices'] = LBInvoice.objects.filter(user=self.request.user)
 
         # TODO: get or 500
-        customer = Customer.objects.get(subscriber=self.request.user)
-        context['customer'] = customer
-        context['invoices'] = customer.invoices.all()
-
         try:
-            context["upcoming_invoice"] = customer.upcoming_invoice()
+            customer = Customer.objects.get(subscriber=self.request.user)
+            context['invoices'] = customer.invoices.all()
+        except Customer.DoesNotExist:
+            customer = None
+        context["customer"] = customer
+
+        # TODO: esta llamada relentiza bastante la carga
+        try:
+            upcoming_invoice = customer.upcoming_invoice()
         except stripe.error.InvalidRequestError:
-            context["upcoming_invoice"] = None
+            upcoming_invoice = None
+        context["upcoming_invoice"] = upcoming_invoice
 
         return context
 
@@ -203,18 +206,24 @@ class AlertaEventsView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class SubscriptionListView(TemplateView):
-    template_name = "alertas/subscription_list.html"
+class ServiceSubscriptionView(TemplateView):
+    template_name = "alertas/service_subscription.html"
 
     def get_context_data(self, **kwargs):
-        context = super(SubscriptionListView, self).get_context_data(**kwargs)
+        context = super(ServiceSubscriptionView, self).get_context_data(**kwargs)
         context['active'] = 'subscriptions'
 
         context['alertas_a'] = AlertaActo.objects.filter(user=self.request.user)
         context['form_a'] = forms.AlertaActoModelForm()
         context['count_a'] = context['alertas_a'].count()
 
-        customer = Customer.objects.get(subscriber=self.request.user)
+        try:
+            customer = Customer.objects.get(subscriber=self.request.user)
+            context["subscriptions"] = Subscription.objects.filter(
+                    plan__nickname__in=(settings.SUBSCRIPTION_MONTH_PLAN, settings.SUBSCRIPTION_YEAR_PLAN),
+                    customer=customer)
+        except Customer.DoesNotExist:
+            customer = None
         context["customer"] = customer
         context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
 
@@ -223,40 +232,40 @@ class SubscriptionListView(TemplateView):
         plan_year = Plan.objects.get(nickname=settings.SUBSCRIPTION_YEAR_PLAN)
         context["plan_year"] = plan_year
 
-        context["subscriptions"] = Subscription.objects.filter(
-                plan__nickname__in=(settings.SUBSCRIPTION_MONTH_PLAN, settings.SUBSCRIPTION_YEAR_PLAN),
-                customer=customer)
-
         return context
 
 
 @method_decorator(login_required, name='dispatch')
-class AlertaListView(TemplateView):
-    template_name = "alertas/alerta_list.html"
+class ServiceAlertaView(TemplateView):
+    template_name = "alertas/service_follow.html"
 
     def get_context_data(self, **kwargs):
-        context = super(AlertaListView, self).get_context_data(**kwargs)
+        context = super(ServiceAlertaView, self).get_context_data(**kwargs)
         context['active'] = 'alertas'
 
         context['alertas_f'] = Follower.objects.filter(user=self.request.user)
         context['count_f'] = context['alertas_f'].count()
 
         alertas_config = get_alertas_config()
-        account_type = self.request.user.profile.account_type
 
+        # TODO: account_type
+        account_type = 'free'
         context['limite_f'] = alertas_config['max_alertas_follower_' + account_type]
         context['restantes_f'] = int(context['limite_f']) - context['count_f']
 
         context["followers"] = Follower.objects.filter(user=self.request.user)
         context['form_f'] = forms.FollowerForm()
 
-        customer = Customer.objects.get(subscriber=self.request.user)
+        try:
+            customer = Customer.objects.get(subscriber=self.request.user)
+            context["subscriptions"] = Subscription.objects.filter(
+                    plan__nickname=settings.ALERTS_YEAR_PLAN, customer=customer)
+        except Customer.DoesNotExist:
+            customer = None
         context["customer"] = customer
 
         context["plan_year"] = Plan.objects.get(nickname=settings.ALERTS_YEAR_PLAN)
 
-        context["subscriptions"] = Subscription.objects.filter(
-                plan__nickname=settings.ALERTS_YEAR_PLAN, customer=customer)
         context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
         return context
 
@@ -274,11 +283,20 @@ class CartView(TemplateView):
 
             # TODO: Get product from plan
 
-            context['product'] = {'name': plan_name, 'qty': 1, 'price': price}
-            context['total_price'] = price
-            context['tax_amount'] = 0.21 * context['total_price']
+            context['product'] = {'name': plan_name, 'price': price}
+            context['total_with_tax'] = price
+            context['total_price'] = round(price / 1.21, 2)
+            context['tax_amount'] = round(context['total_with_tax'] - context['total_price'], 2)
             context['tax_percentage'] = 21
-            context['total_with_tax'] = context['total_price'] + context['tax_amount']
+
+            try:
+                customer = Customer.objects.get(subscriber=self.request.user)
+                cards = customer.sources.order_by('-exp_year', '-exp_month')
+            except Customer.DoesNotExist:
+                customer = None
+                cards = None
+            context["customer"] = customer
+            context["cards"] = cards
 
         context['STRIPE_PUBLIC_KEY'] = settings.STRIPE_PUBLIC_KEY
         context['active'] = 'cart'
@@ -286,20 +304,25 @@ class CartView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class APIView(TemplateView):
-    template_name = "alertas/alerta_api.html"
+class ServiceAPIView(TemplateView):
+    template_name = "alertas/service_api.html"
 
     def get_context_data(self, **kwargs):
-        context = super(APIView, self).get_context_data(**kwargs)
+        context = super(ServiceAPIView, self).get_context_data(**kwargs)
         context['active'] = 'api'
 
         context["plan_month"] = Plan.objects.get(nickname=settings.API_MONTH_PLAN)
         context["plan_year"] = Plan.objects.get(nickname=settings.API_YEAR_PLAN)
 
-        customer = Customer.objects.get(subscriber=self.request.user)
-        context["subscriptions"] = Subscription.objects.filter(
-                plan__nickname__in=(settings.API_MONTH_PLAN, settings.API_YEAR_PLAN),
-                customer=customer)
+        try:
+            customer = Customer.objects.get(subscriber=self.request.user)
+            context["subscriptions"] = Subscription.objects.filter(
+                    plan__nickname__in=(settings.API_MONTH_PLAN, settings.API_YEAR_PLAN),
+                    customer=customer)
+        except Customer.DoesNotExist:
+            customer = None
+        context["customer"] = customer
+
         # TODO: api enabled if contated support or paid
         context["api_enabled"] = "yes"
         return context
@@ -313,7 +336,7 @@ def alerta_person_create(request):
             alerta = form.save(commit=False)
             alerta.user = request.user
             alerta.save()
-    return redirect(reverse('alertas-list'))
+    return redirect(reverse('service-follow'))
 
 
 @login_required
@@ -324,7 +347,7 @@ def alerta_acto_create(request):
             alerta = form.save(commit=False)
             alerta.user = request.user
             alerta.save()
-    return redirect(reverse('alertas-list'))
+    return redirect(reverse('service-follow'))
 
 
 @login_required
@@ -335,6 +358,7 @@ def add_to_cart(request, product):
     except Plan.DoesNotExist:
         return redirect(reverse('dashboard-index'))
 
+    # TODO: test when Customer doesn't exist
     customer = Customer.objects.get(subscriber=request.user)
     # TODO: filter status=active?
     existing_subscriptions = Subscription.objects.filter(
@@ -347,7 +371,7 @@ def add_to_cart(request, product):
         return redirect(reverse('alertas-cart'))
 
     price = float(plan.amount)  # Decimal
-    product = {'name': product, 'qty': 1, 'price': price}
+    product = {'name': product, 'price': price}
     request.session['cart'] = product
     return redirect(reverse('alertas-cart'))
 
@@ -362,7 +386,7 @@ def settings_update_notifications(request):
             profile.notification_email = form.cleaned_data['notification_email']
             profile.notification_url = form.cleaned_data['notification_url']
             profile.save()
-    return redirect(reverse('alertas-settings'))
+    return redirect(reverse('dashboard-index'))
 
 
 @login_required
@@ -372,7 +396,7 @@ def settings_update_personal(request):
         form = forms.PersonalSettingsForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
-    return redirect(reverse('alertas-settings'))
+    return redirect(reverse('dashboard-index'))
 
 
 @login_required
@@ -382,14 +406,14 @@ def settings_update_billing(request):
         form = forms.BillingSettingsForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
-    return redirect(reverse('alertas-settings'))
+    return redirect(reverse('dashboard-index'))
 
 
 @login_required
 def add_card(request):
 
     if request.method == 'POST':
-        customer = Customer.objects.get(subscriber=request.user)
+        customer, created = Customer.get_or_create(subscriber=request.user)
         user_input = utils.stripe_parse_input(request)
         customer.add_card(source=user_input["token"])
         customer.save()
@@ -414,13 +438,9 @@ def checkout(request):
     if request.method == "POST":
 
         # TODO: Log user created
-        try:
-            customer = Customer.objects.get(subscriber=request.user)
-        except Customer.DoesNotExist:
-            customer = Customer.create(subscriber=request.user)
+        customer = Customer.get_or_create(subscriber=request.user)
 
         nickname = request.session['cart']['name']
-        qty = request.session['cart']['qty']
         plan = Plan.objects.get(nickname=nickname)
         tax_percent = 21.0  # TODO: tax per country (?) - limit to Spain
         # next_first_timestamp = utils.date_next_first(timestamp=True)
@@ -432,16 +452,21 @@ def checkout(request):
             # If the customer has already a source, use it
             # TODO: cuanto hay un source, se puede sacar tambien un token?
             # if customer.has_valid_source():
-            #     subscription = customer.subscribe(plan, quantity=qty,
+            #     subscription = customer.subscribe(plan)
             # else:
 
             # TODO: Use djstripe.Subscription
-            # qty = 555
             stripe.Subscription.create(
                 customer=customer.stripe_id,
                 items=[
-                    {"plan": plan.stripe_id, "quantity": qty}
+                    {"plan": plan.stripe_id}
                 ],
+                # TODO: source here is deprecated
+                # Changes since API version 2018-05-21:
+                # The subscription endpoints no longer support the source parameter.
+                # If you want to change the default source for a customer, instead
+                # use the source creation API to add the new source and then
+                # the customer update API to set it as the default.
                 source=token,
                 tax_percent=tax_percent
             )
@@ -479,6 +504,7 @@ def set_default_card(request):
     if request.method == 'POST':
         card_id = request.GET.get("cardId")
 
+        # TODO: create customer if doesn't exist
         customer = Customer.objects.get(subscriber=request.user)
         customer.default_source_id = card_id
         try:
@@ -496,6 +522,7 @@ def set_default_card(request):
 @login_required
 def remove_card(request):
 
+    # TODO: if customer doesn't exist, ignore, shouldn't be called
     # FIXME: weird, mixed POST + GET
     if request.method == 'POST':
         card_id = request.GET.get("cardId")
@@ -518,14 +545,14 @@ def remove_card(request):
 def alerta_remove_acto(request, id):
     alerta = AlertaActo.objects.get(user=request.user, pk=id)
     alerta.delete()
-    return redirect(reverse('alertas-list'))
+    return redirect(reverse('service-follow'))
 
 
 @login_required
 def alerta_remove_person(request, id):
     alerta = AlertaPerson.objects.get(user=request.user, pk=id)
     alerta.delete()
-    return redirect(reverse('alertas-list'))
+    return redirect(reverse('service-follow'))
 
 
 @method_decorator(login_required, name='dispatch')

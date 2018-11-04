@@ -48,9 +48,9 @@ class TestCommandExpireTest(TestCase):
         super(TestCommandExpireTest, cls).setUpClass()
 
         create_alertas_user("fred", "fred@localhost", "secret", "Fred",
-                            "Foo", "test")
+                            "Foo")
         john = create_alertas_user("john", "john@localhost", "secret",
-                                   "John", "Foo", "test")
+                                   "John", "Foo")
         days = int(get_alertas_config("days_test_subscription_expire"))
         john.date_joined = timezone.now() - timezone.timedelta(days=days)
         john.save()
@@ -83,7 +83,7 @@ class TestCommandNotifications(TestCase):
 
     def setUp(self):
         self.john = create_alertas_user("john", "john@localhost", "secret",
-                                        "John", "Foo", "test")
+                                        "John", "Foo")
         AlertaActo.objects.create(user=self.john, evento="liq",
                                   provincia="Lugo", periodicidad="daily")
         AlertaActo.objects.create(user=self.john, evento="liq",

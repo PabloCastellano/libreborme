@@ -14,7 +14,7 @@ class TestAlertasHttp(TestCase):
 
     def setUp(self):
         super(TestAlertasHttp, self).setUp()
-        self.user = create_alertas_user("fred", "fred@localhost", "secret", "Fred", "Foo", "test")
+        self.user = create_alertas_user("fred", "fred@localhost", "secret", "Fred", "Foo")
         self.client = Client()
         self.client.login(username='fred', password='secret')
 
@@ -72,11 +72,6 @@ class TestAlertasLoginRequired(TestCase):
 
     def test_alertas_remove_acto(self):
         url = reverse('alerta-remove-acto', args=['1'])
-        response = self.client.get(url)
-        self.assertTrue(response.url.startswith(self.login_url))
-
-    def test_alertas_settings(self):
-        url = reverse('alertas-settings')
         response = self.client.get(url)
         self.assertTrue(response.url.startswith(self.login_url))
 

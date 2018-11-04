@@ -1,15 +1,9 @@
 {% extends "alertas/base_dashboard.html" %}
+{% load bootstrap %}
 
 {% block content %}
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Información de la cuenta</h1>
-
-          <p>Tipo de cuenta: <strong>{{ user.profile.get_account_type_display }}</strong>
-            {% if user.profile.account_type == 'free' %}
-              La cuenta gratuita te permite activar 3 alertas.
-              {% include 'upgrade_button.html' %}
-            {% endif %}
-          </p>
           <p>Fecha de alta: <strong>{{ user.date_joined.date }}</strong></p>
 
           <a href="#">
@@ -18,7 +12,7 @@
           </button>
           </a>
 
-          <h2 class="sub-header">Suscripciones activas / Productos suscritos</h2>
+          <h2 class="sub-header">Servicios contratados</h2>
 
           {% if customer.has_any_active_subscription %}
             <p>Tiene las siguientes suscripciones activas</p>
@@ -81,12 +75,64 @@
             </div>
 
           {% else %}
-            <p>No tiene ninguna suscripción activa</p>
+            <p>No tienes ningún servicio contratado actualmente.</p>
+            <p>Sin embargo, puedes probar el servicio de <a href="{% url 'service-follow' %}">Seguimiento</a> de forma gratuita.</p>
+            <p>Puedes obtener más información sobre los servicios disponibles <a href="#">Aquí (TODO)</a></p>
           {% endif %}
 
-          <h2 class="sub-header">Datos de envío/facturación?</h2>
-            <p>(TEST if customer has configured shipping)</p>
-            <p>{{ customer.shipping }}</p>
+        <h2 class="sub-header">Configuración</h2>
+
+          <div class="row">
+            <div class="col-sm-4">
+              <form action="{% url "alertas-settings-personal" %}" role="form" method="post">
+                <legend>Datos personales</legend>
+                {% csrf_token %}
+                <div class="form-group">
+                  <p>Nombre: {{ user.get_full_name }}</p>
+                </div>
+                {{ form_personal|bootstrap }}
+                <p><a href="{% url 'password_change' %}">Cambiar contraseña</a></p>
+                <div class="form-group">
+                  <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
+                </div>
+              </form>
+            </div>
+
+            <div class="col-sm-4 col-sm-offset-1">
+              <form action="{% url "alertas-settings-billing" %}" role="form" method="post">
+                <legend>Datos de facturación</legend>
+                {% csrf_token %}
+                {{ form_billing|bootstrap }}
+                <div class="form-group">
+                  <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-4">
+              <form action="{% url "alertas-settings-notifications" %}" role="form" method="post">
+               <legend>Notificaciones</legend>
+               {% csrf_token %}
+               {{ form_notification|bootstrap }}
+               <div class="form-group">
+                 <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
+               </div>
+              </form>
+            </div>
+
+            <div class="col-sm-4 col-sm-offset-1">
+              <form action="#TODO" role="form" method="post">
+                <legend>Boletín</legend>
+                {% csrf_token %}
+                {{ form_newsletter|bootstrap }}
+                <div class="form-group">
+                  <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
+                </div>
+              </form>
+            </div>
+          </div>
 
         </div>
 

@@ -9,11 +9,6 @@ from alertas.utils import insert_libreborme_log
 from djstripe.models import Customer
 
 
-ACCOUNT_CHOICES = {
-    'free': "Básica",
-    'paid': "Premium",
-}
-
 NOTIFICATION_CHOICES = (
     ('email', "E-mail"),
     ('url', "URL"),
@@ -47,26 +42,6 @@ class Profile(m.Model):
         # return all(for invoice in self.invoices:
         #    invoice
 
-    # TODO:
-    # different types, basic, active...
-    # different for subscriptions and just alerts
-    @property
-    def account_type(self):
-        customer = Customer.objects.get(subscriber=self.user)
-        try:
-            subscription = customer.subscription
-        except:
-            return "free"
-        if not subscription:
-            return "free"
-        elif subscription.status == "active":
-            return "free"
-        else:
-            return subscription.status
-
-    def get_account_type_display(self):
-        return ACCOUNT_CHOICES[self.account_type]
-
     def expire_subscription(self, send_email):
         if self.user.is_active:
             self.user.is_active = False
@@ -80,7 +55,7 @@ class Profile(m.Model):
         return False
 
     def __str__(self):
-        return "Profile {} ({})".format(self.user, self.account_type)
+        return "Profile {} ({})".format(self.user)
 
 
 class MailTemplate(m.Model):
@@ -94,5 +69,5 @@ class MailTemplate(m.Model):
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-        # TODO: set currency="eur", account_type='free'
+        # TODO: set currency="eur"
     instance.profile.save()

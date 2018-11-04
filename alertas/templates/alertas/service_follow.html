@@ -6,9 +6,9 @@
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <div id="messages"></div>
-          <h1 class="page-header">Listado de Alertas</h1>
+          <h1 class="page-header">Seguimiento</h1>
 
-            <p>Aquí puedes definir tus alertas de LibreBORME.</p>
+            <p>Aquí puedes definir tus alertas de seguimiento en LibreBORME.</p>
             <p>Recibirás un email cada vez que una persona o una empresa monitoreada aparezca en un BORME</p>
 
           <h3>¿Cómo añadir una alerta?</h3>
@@ -88,8 +88,8 @@
               {% include 'upgrade_button.html' %}
               </p>
           {% endif %}
-          {% if followers %}
           <div class="row">
+          {% if followers %}
             <div class="col-sm-9">
             <div class="table-responsive">
               <table class="table table-striped">
@@ -119,11 +119,11 @@
 
             </div>
             </div>
+          {% endif %}
             <div class="col-sm-2">
               {% include 'pricing_alerts_table.html' %}
             </div>
           </div>
-          {% endif %}
 
         </div>
 

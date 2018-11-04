@@ -15,7 +15,7 @@ def get_alertas_config(key=None):
 
 
 def create_alertas_user(username, email, password,
-                        first_name, last_name, account_type):
+                        first_name, last_name):
     new_user = User.objects.create_user(username=username,
                                         email=email,
                                         password=password,

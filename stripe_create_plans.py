@@ -3,6 +3,7 @@ import os
 
 import stripe
 
+stripe.log = 'debug'
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY",
                            "sk_test_eVEoxiTuoWOlSw104llgXvcs")
 
@@ -50,7 +51,7 @@ def create_subscription_product_and_plans():
         product=product.id,
         amount=3000,
         currency='eur',
-        interval='month'
+        interval='month',
         trial_period_days=TRIAL_PERIOD_DAYS
     )
     print("Created plan '{}' ({})".format(plan.nickname, plan.id))
@@ -94,6 +95,7 @@ def create_api_product_and_plans():
     print("Created plan '{}' ({})".format(plan.nickname, plan.id))
 
 
+# UNUSED
 def rest(plan):
     customer = stripe.Customer.create(
         email='pablo@anche.no',
