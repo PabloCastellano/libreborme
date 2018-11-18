@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: libreborme
-          image: registry.gitlab.com/libreborme/libreborme:staging
+          image: registry.gitlab.com/libreborme/libreborme:login_users
           imagePullPolicy: Always
           env:
             - name: DJANGO_SETTINGS_MODULE

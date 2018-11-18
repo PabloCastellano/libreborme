@@ -1,0 +1,10 @@
+ku port-forward svc/nginx 8000:80
+ku port-forward svc/libreborme 8000:8000
+
+
+
+ku set image deployment/libreborme libreborme=registry.gitlab.com/libreborme/libreborme:latest
+ku rollout status deployment/libreborme
+
+
+kubectl run lbtest --image=registry.gitlab.com/libreborme/libreborme:login_users

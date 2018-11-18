@@ -103,8 +103,8 @@ data:
                 access_log off;
             }
 
-            location /static {
-                alias /static/;
+            location /static/ {
+                alias /opt/libreborme/static/;
                 expires 1h;
                 # expires @8h00m;
 

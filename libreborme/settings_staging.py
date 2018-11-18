@@ -62,7 +62,7 @@ sentry_sdk.init(
 )
 
 
-STATIC_ROOT = '/home/libreborme/libreborme-web/static'
+STATIC_ROOT = '/opt/libreborme/static'
 MEDIA_URL = '%s/media/' % SITE_URL
 
 # BORME

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e
+set -xe
 
 crond
 
@@ -19,5 +19,7 @@ fi
 cd /site
 ./scripts/wait-for-it.sh $ES_HOST --timeout=30
 ./scripts/wait-for-it.sh $PG_HOST --timeout=30
+./manage.py check --deploy
 ./manage.py migrate
+./manage.py collectstatic
 uwsgi --ini=/site/uwsgi.ini
