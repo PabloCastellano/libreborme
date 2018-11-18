@@ -59,6 +59,7 @@ release_stg:
     - staging
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    - docker pull $CONTAINER_TEST_IMAGE
     - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_IMAGE:staging
     - docker push $CONTAINER_IMAGE:staging
     # - docker tag registry.gitlab.com/libreborme/libreborme/nginx:$CI_BUILD_REF_NAME registry.gitlab.com/libreborme/libreborme/nginx:staging
@@ -75,6 +76,5 @@ deploy_stg:
     name: staging
     url: http://staging.ingress.libreborme.net
   script:
-    - echo "Hello"
     - kubectl set image deployment/libreborme libreborme=registry.gitlab.com/libreborme/libreborme:staging
     - kubectl rollout status deployment/libreborme
