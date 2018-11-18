@@ -10,10 +10,10 @@ variables:
   DOCKER_DRIVER: overlay
   DOCKER_HOST: tcp://localhost:2375
 
-  POSTGRES_HOST: postgres-postgresql.libreborme-6554539.svc.cluster.local
-  POSTGRES_DB: libreborme
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: iul6RBi9DP
+  DB_HOST: postgres-postgresql.libreborme-6554539.svc.cluster.local
+  DB_NAME: libreborme
+  DB_USER: postgres
+  DB_PASS: iul6RBi9DP
   DJANGO_SETTINGS_MODULE: libreborme.settings_ci
   ENV_TYPE: ci
   ELASTICSEARCH_URI: http://elasticsearch-client.libreborme-6554539.svc:9200
