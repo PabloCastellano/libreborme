@@ -16,8 +16,7 @@ variables:
   DB_PASS: iul6RBi9DP
   DJANGO_SETTINGS_MODULE: libreborme.settings_ci
   ENV_TYPE: ci
-  ELASTICSEARCH_URI: http://elasticsearch-client.libreborme-6554539.svc:9200
-
+  ELASTICSEARCH_URI: http://elasticsearch.libreborme-6554539.svc.cluster.local:9200
 
 stages:
   - build
@@ -48,7 +47,7 @@ test:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker pull $CONTAINER_TEST_IMAGE
     # - docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
-    - docker run $CONTAINER_TEST_IMAGE bash -c "make test_k8s_ci"
+    - docker run $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=$ELASTICSEARCH_URI DB_HOST=$DB_HOST make test_k8s_ci"
   coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'
 
 
