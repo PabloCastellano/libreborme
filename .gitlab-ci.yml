@@ -18,6 +18,8 @@ variables:
   ENV_TYPE: ci
   ELASTICSEARCH_URI: http://elasticsearch.libreborme-6554539.svc.cluster.local:9200
 
+  KUBECONFIG: /etc/deploy/config
+
 stages:
   - build
   - test
@@ -66,6 +68,7 @@ release_stg:
     # - docker push registry.gitlab.com/libreborme/libreborme/nginx:staging
 
 
+# Usar algo como https://hub.docker.com/r/lwolf/kubectl_deployer/~/dockerfile/
 deploy_stg:
   stage: deploy
   tags:
@@ -75,6 +78,12 @@ deploy_stg:
   environment:
     name: staging
     url: http://staging.ingress.libreborme.net
+  before_script:
+    - wget https://storage.googleapis.com/kubernetes-release/release/v1.9.7/bin/linux/amd64/kubectl -P /usr/local/bin/
+    - chmod +x /usr/local/bin/kubectl
+    - mkdir -p /etc/deploy
+    - echo ${kube_config} | base64 -d > ${KUBECONFIG}
+    - kubectl config use-context gke_libreborme-staging-test_europe-west1-c_libreborme-staging
   script:
     - kubectl set image deployment/libreborme libreborme=registry.gitlab.com/libreborme/libreborme:staging
     - kubectl rollout status deployment/libreborme
