@@ -26,6 +26,7 @@ from .models import (
     AlertaActo, AlertaHistory,
     Follower, LBInvoice
 )
+from .mixin import CustomerMixin, StripeMixin
 from .utils import get_alertas_config
 
 
@@ -33,19 +34,16 @@ MAX_RESULTS_AJAX = 15
 
 
 @method_decorator(login_required, name='dispatch')
-class MyAccountView(TemplateView):
+class MyAccountView(CustomerMixin, TemplateView):
     template_name = 'alertas/myaccount.html'
 
     def get_context_data(self, **kwargs):
         context = super(MyAccountView, self).get_context_data(**kwargs)
 
-        try:
-            customer = Customer.objects.get(subscriber=self.request.user)
-            business_vat_id = customer.business_vat_id
-        except Customer.DoesNotExist:
-            customer = None
+        if context['customer'] is None:
             business_vat_id = None
-        context["customer"] = customer
+        else:
+            business_vat_id = customer.business_vat_id
 
         # Prepare forms
         user_profile = self.request.user.profile
@@ -134,7 +132,7 @@ class DashboardHistoryView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class PaymentView(TemplateView):
+class PaymentView(StripeMixin, CustomerMixin, TemplateView):
     template_name = 'alertas/payment.html'
 
     def get_context_data(self, **kwargs):
@@ -142,23 +140,18 @@ class PaymentView(TemplateView):
         context['active'] = 'payment'
 
         # TODO: get or 500
-        try:
-            customer = Customer.objects.get(subscriber=self.request.user)
-            cards = customer.sources.order_by('-exp_year', '-exp_month')
-        except Customer.DoesNotExist:
-            customer = None
+        if context["customer"] is None:
             cards = None
-        context["customer"] = customer
+        else:
+            cards = customer.sources.order_by('-exp_year', '-exp_month')
         context["cards"] = cards
         # context["form"] = forms.CreditCardForm()
-
-        context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
 
         return context
 
 
 @method_decorator(login_required, name='dispatch')
-class BillingView(TemplateView):
+class BillingView(CustomerMixin, TemplateView):
     template_name = 'alertas/billing.html'
 
     def get_context_data(self, **kwargs):
@@ -166,13 +159,9 @@ class BillingView(TemplateView):
         context['active'] = 'billing'
         context['lbinvoices'] = LBInvoice.objects.filter(user=self.request.user)
 
-        # TODO: get or 500
-        try:
-            customer = Customer.objects.get(subscriber=self.request.user)
-            context['invoices'] = customer.invoices.all()
-        except Customer.DoesNotExist:
-            customer = None
-        context["customer"] = customer
+        # TODO: get customer or 500
+        if context['customer']:
+            context['invoices'] = context["customer"].invoices.all()
 
         # TODO: esta llamada relentiza bastante la carga
         try:
@@ -229,7 +218,7 @@ class AlertaEventsView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class ServiceSubscriptionView(TemplateView):
+class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
     template_name = "alertas/service_subscription.html"
 
     def get_context_data(self, **kwargs):
@@ -243,15 +232,10 @@ class ServiceSubscriptionView(TemplateView):
         # TODO: Si tiene suscripciones pagadas y no ha definido qué quiere, mostrarle form
         # TODO: Solo una suscripción de prueba
 
-        try:
-            customer = Customer.objects.get(subscriber=self.request.user)
+        if context['customer']:
             context["subscriptions"] = Subscription.objects.filter(
                     plan__nickname__in=(settings.SUBSCRIPTION_MONTH_PLAN, settings.SUBSCRIPTION_YEAR_PLAN),
-                    customer=customer)
-        except Customer.DoesNotExist:
-            customer = None
-        context["customer"] = customer
-        context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
+                    customer=context["customer"])
 
         plan_month = Plan.objects.get(nickname=settings.SUBSCRIPTION_MONTH_PLAN)
         context["plan_month"] = plan_month
@@ -262,7 +246,7 @@ class ServiceSubscriptionView(TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class ServiceAlertaView(TemplateView):
+class ServiceAlertaView(CustomerMixin, StripeMixin, TemplateView):
     template_name = "alertas/service_follow.html"
 
     def get_context_data(self, **kwargs):
@@ -282,22 +266,17 @@ class ServiceAlertaView(TemplateView):
         context["followers"] = Follower.objects.filter(user=self.request.user)
         context['form_f'] = forms.FollowerForm()
 
-        try:
-            customer = Customer.objects.get(subscriber=self.request.user)
+        if context["customer"]:
             context["subscriptions"] = Subscription.objects.filter(
-                    plan__nickname=settings.ALERTS_YEAR_PLAN, customer=customer)
-        except Customer.DoesNotExist:
-            customer = None
-        context["customer"] = customer
+                    plan__nickname=settings.ALERTS_YEAR_PLAN,
+                    customer=context["customer"])
 
         context["plan_year"] = Plan.objects.get(nickname=settings.ALERTS_YEAR_PLAN)
-
-        context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLIC_KEY
         return context
 
 
 @method_decorator(login_required, name='dispatch')
-class CartView(TemplateView):
+class CartView(CustomerMixin, StripeMixin, TemplateView):
     template_name = "alertas/cart.html"
 
     def get_context_data(self, **kwargs):
@@ -315,22 +294,18 @@ class CartView(TemplateView):
             context['tax_amount'] = round(context['total_with_tax'] - context['total_price'], 2)
             context['tax_percentage'] = 21
 
-            try:
-                customer = Customer.objects.get(subscriber=self.request.user)
+            if context["customer"]:
                 cards = customer.sources.order_by('-exp_year', '-exp_month')
-            except Customer.DoesNotExist:
-                customer = None
+            else:
                 cards = None
-            context["customer"] = customer
             context["cards"] = cards
 
-        context['STRIPE_PUBLIC_KEY'] = settings.STRIPE_PUBLIC_KEY
         context['active'] = 'cart'
         return context
 
 
 @method_decorator(login_required, name='dispatch')
-class ServiceAPIView(TemplateView):
+class ServiceAPIView(CustomerMixin, TemplateView):
     template_name = "alertas/service_api.html"
 
     def get_context_data(self, **kwargs):
@@ -340,14 +315,10 @@ class ServiceAPIView(TemplateView):
         context["plan_month"] = Plan.objects.get(nickname=settings.API_MONTH_PLAN)
         context["plan_year"] = Plan.objects.get(nickname=settings.API_YEAR_PLAN)
 
-        try:
-            customer = Customer.objects.get(subscriber=self.request.user)
+        if context["customer"]:
             context["subscriptions"] = Subscription.objects.filter(
                     plan__nickname__in=(settings.API_MONTH_PLAN, settings.API_YEAR_PLAN),
-                    customer=customer)
-        except Customer.DoesNotExist:
-            customer = None
-        context["customer"] = customer
+                    customer=context["customer"])
 
         # TODO: api enabled if contated support or paid
         context["api_enabled"] = "yes"
@@ -475,6 +446,9 @@ def checkout_existing_card(request):
         profile.save()
         # TODO: review parameters: tax_percent, trial_end, ...
         # tax_percent se suma al precio
+        messages.add_message(request, messages.SUCCESS,
+                             'Pago realizado con éxito')
+        del request.session['cart']
         return redirect("dashboard-index")
 
 
@@ -537,6 +511,8 @@ def checkout(request):
         else:
             # TODO
             # new_invoice.save()
+            messages.add_message(request, messages.SUCCESS,
+                                 'Pago realizado con éxito')
             del request.session['cart']
             return redirect("dashboard-index")
 
@@ -573,6 +549,8 @@ def remove_card(request):
     if request.method == 'POST':
         card_id = request.GET.get("cardId")
 
+        # Check self.request.user.customer
+        # or .djstripe_customers
         customer = Customer.objects.get(subscriber=request.user)
         cards = customer.sources.all()
         for card in cards:

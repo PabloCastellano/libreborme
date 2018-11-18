@@ -8,12 +8,14 @@
           <div id="messages"></div>
           <h1 class="page-header">Seguimiento</h1>
 
-          <p>Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa monitoreada aparezca en un BORME</p>
+          <p>Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa monitoreada aparezca en un Boletín Oficial</p>
+
+          if alertas_a > 0: esconder ¿Cómo funciona?, dejarlo como un desplegable.
 
           <h2>¿Cómo funciona?</h2>
           <div class="row">
             <div class="col-sm-6">
-              <p>Ve a la página de la empresa o persona que quiras añadir y pulsa en el botón "Seguir"</p>
+              <p>Ve a la página de la empresa o persona que quieras monitorear y pulsa en el botón "Seguir"</p>
               <p>A partir de ahora recibirás una alerta por e-mail cuando ésta haya aparecido en un Boletín Oficial.</p>
               <p>Puedes probar el servicio de forma gratuita con 3 personas y empresas de tu elección.</p>
               {% include 'pricing_alerts_table.html' %}

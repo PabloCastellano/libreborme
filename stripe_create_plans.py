@@ -19,7 +19,7 @@ TRIAL_PERIOD_DAYS = 7
 def create_follow100_product_and_plan():
     """Plan anual para 100 followers"""
     product = stripe.Product.create(
-        name='Suscripción 100 Followers',
+        name='Suscripción Seguimiento 100',
         type='service',
     )
     product.save()
@@ -38,7 +38,7 @@ def create_follow100_product_and_plan():
 def create_subscription_product_and_plans():
     """Planes mensual y anual de subscripción a actos mercantiles"""
     product = stripe.Product.create(
-        name='Suscripción Empresas Nueva Creación',
+        name='Suscripción Empresas',
         type='service',
         active=False,
     )

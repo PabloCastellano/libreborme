@@ -31,16 +31,14 @@
                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                         {% endif %}</td>
                     <td>
-                      {% if subscription.status == 'trialing' %}
-                        {% if subscription.cancel_at_period_end %}
-                        Cancelada el {{ subscription.canceled_at.date }}
-                        {% else %}
-                          <a href="#">
-                          <button type="button" class="btn btn-primary btn-xs">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cancelar
-                          </button>
-                          </a>
-                        {% endif %}
+                      {% if subscription.cancel_at_period_end %}
+                      Cancelada el {{ subscription.canceled_at.date }}
+                      {% else %}
+                        <a href="#">
+                        <button type="button" class="btn btn-primary btn-xs">
+                          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cancelar
+                        </button>
+                        </a>
                       {% endif %}
                     </td>
                   </tr>
