@@ -80,7 +80,7 @@ LOPD = {'provider': 'Pablo Castellano García-Saavedra',
         'email':  EMAIL_CONTACT,
         'address': 'Carrer de Morella 47, 12170 - Sant Mateu (Castellón)'}
 
-INTERNAL_IPS.extend(['90.162.50.235', '93.176.138.65'])
+INTERNAL_IPS.extend(['88.13.29.103'])
 
 EMAIL_HOST = "mailsrv9.dondominio.com"
 EMAIL_HOST_USER = "noreply@libreborme.net"
@@ -108,7 +108,7 @@ LOGGING = {
         'applogfile': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/home/libreborme/libreborme-web/log/libreborme_errors.log',
+            'filename': '/opt/libreborme/logs/libreborme_errors.log',
             'maxBytes': 1024 * 1024 * 15,  # 15MB
             'backupCount': 10,
         },
