@@ -2,6 +2,11 @@ image: docker:18.09
 
 services:
   - docker:dind
+  - postgres:9.5
+  # https://gitlab.com/gitlab-org/gitlab-ce/issues/42214
+  - name: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
+    alias: elasticsearch
+    command: ["bin/elasticsearch", "-Ediscovery.type=single-node", "-Expack.security.enabled=false"]
 
 variables:
   CONTAINER_IMAGE: registry.gitlab.com/libreborme/libreborme
@@ -10,11 +15,20 @@ variables:
   DOCKER_DRIVER: overlay
   DOCKER_HOST: tcp://localhost:2375
 
+  POSTGRES_DB: libreborme
+  POSTGRES_USER: libreborme
+  POSTGRES_PASSWORD: password
+  DJANGO_SETTINGS_MODULE: libreborme.settings_ci
+  ENV_TYPE: ci
+  ELASTICSEARCH_URI: http://elasticsearch:9200
+
+
 stages:
   - build
   - test
   - release
   - deploy
+
 
 build:
   stage: build
@@ -24,8 +38,8 @@ build:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker build -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
-    - cd docker/nginx && docker build -t registry.gitlab.com/libreborme/libreborme/nginx:$CI_BUILD_REF_NAME .
-    - docker push registry.gitlab.com/libreborme/libreborme/nginx:$CI_BUILD_REF_NAME
+    # - cd docker/nginx && docker build -t registry.gitlab.com/libreborme/libreborme/nginx:$CI_BUILD_REF_NAME .
+    # - docker push registry.gitlab.com/libreborme/libreborme/nginx:$CI_BUILD_REF_NAME
 
 test:
   stage: test
@@ -34,7 +48,8 @@ test:
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker pull $CONTAINER_TEST_IMAGE
-    - docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
+    # - docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
+    - docker run $CONTAINER_TEST_IMAGE bash -c "make test_ci"
   coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'
 
 
@@ -48,8 +63,9 @@ release_stg:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_IMAGE:staging
     - docker push $CONTAINER_IMAGE:staging
-    - docker tag registry.gitlab.com/libreborme/libreborme/nginx:$CI_BUILD_REF_NAME registry.gitlab.com/libreborme/libreborme/nginx:staging
-    - docker push registry.gitlab.com/libreborme/libreborme/nginx:staging
+    # - docker tag registry.gitlab.com/libreborme/libreborme/nginx:$CI_BUILD_REF_NAME registry.gitlab.com/libreborme/libreborme/nginx:staging
+    # - docker push registry.gitlab.com/libreborme/libreborme/nginx:staging
+
 
 deploy_stg:
   stage: deploy
