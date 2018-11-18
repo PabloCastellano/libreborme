@@ -1,3 +1,5 @@
+image: docker:18.09
+
 stages:
   - build
   - test
