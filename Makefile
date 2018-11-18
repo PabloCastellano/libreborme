@@ -74,6 +74,11 @@ test3:
 
 test_ci:
 		./scripts/wait-for-it.sh elasticsearch:9200 --timeout=30
+		coverage run --source='.' manage.py test --noinput -v 3
+		coverage report
+
+test_k8s_ci:
+		./scripts/wait-for-it.sh elasticsearch-client.libreborme-6554539.svc:9200 --timeout=30
 		DJANGO_SETTINGS_MODULE=libreborme.settings_ci coverage run --source='.' manage.py test --noinput -v 3
 		coverage report
 
