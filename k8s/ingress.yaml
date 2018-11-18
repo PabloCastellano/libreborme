@@ -12,11 +12,11 @@ metadata:
     kubernetes.io/tls-acme: 'true'
 
 spec:
-  tls:
-    - hosts:
-        - logojoy.com
-        - www.logojoy.com
-      secretName: tls-secret
+#  tls:
+#    - hosts:
+#        - staging.ingress.libreborme.net
+#        - beta.ingress.libreborme.net
+#      secretName: tls-secret
   rules:
     - host: staging.ingress.libreborme.net
       http:

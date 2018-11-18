@@ -76,5 +76,5 @@ deploy_stg:
     url: http://staging.ingress.libreborme.net
   script:
     - echo "Hello"
-    - kubectl set image deployment/libreborme libreborme-container=libreborme:staging
+    - kubectl set image deployment/libreborme libreborme=registry.gitlab.com/libreborme/libreborme:staging
     - kubectl rollout status deployment/libreborme

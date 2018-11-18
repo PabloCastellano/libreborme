@@ -19,7 +19,5 @@ fi
 cd /site
 ./scripts/wait-for-it.sh $ES_HOST --timeout=30
 ./scripts/wait-for-it.sh $PG_HOST --timeout=30
-./manage.py check --deploy
-./manage.py migrate
-./manage.py collectstatic
+make staging settings=libreborme.settings_staging
 uwsgi --ini=/site/uwsgi.ini
