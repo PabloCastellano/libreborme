@@ -18,9 +18,9 @@ SECRET_KEY = '41+h()yq5-!*=)sh+_%4wal8=+*e)dlrau*81odpu7n&9^7d5h'
 DEBUG = True
 
 DOMAIN = 'beta.libreborme.net'
-ALLOWED_HOSTS = ['localhost', DOMAIN]
+ALLOWED_HOSTS = ['localhost', 'beta.libreborme.net', 'staging.ingress.libreborme.net', 'staging.libreborme.net']
 
-SITE_URL = 'http://beta.libreborme.net/'
+SITE_URL = 'http://staging.ingress.libreborme.net/'
 
 INSTALLED_APPS += [
     'debug_toolbar',

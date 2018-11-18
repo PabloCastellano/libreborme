@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+
+metadata:
+  name: libreborme
+  annotations:
+    nginx.ingress.kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/tls-acme: 'true'
+    nginx.ingress.kubernetes.io/rewrite-target: /
+
+    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: 'true'
+
+spec:
+  tls:
+    - hosts:
+        - logojoy.com
+        - www.logojoy.com
+      secretName: tls-secret
+  rules:
+    - host: staging.ingress.libreborme.net
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: nginx
+              servicePort: 80
+    - host: beta.ingress.libreborme.net
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: nginx
+              servicePort: 80
