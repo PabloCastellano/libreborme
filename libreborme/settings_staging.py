@@ -70,7 +70,6 @@ BORME_ROOT = CONFIG['borme_root']
 BORME_PDF_ROOT = BORME_ROOT
 BORME_XML_ROOT = os.path.join(BORME_ROOT, '..', 'xml')
 BORME_JSON_ROOT = os.path.join(BORME_ROOT, '..', 'json')
-BORME_LOG_ROOT = os.path.join(BASE_DIR, '..', 'log')
 
 EMAIL_CONTACT = 'contacto@libreborme.net'
 
