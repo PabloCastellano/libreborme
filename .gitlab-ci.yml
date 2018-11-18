@@ -10,7 +10,7 @@ variables:
   DOCKER_DRIVER: overlay
   DOCKER_HOST: tcp://localhost:2375
 
-  DB_HOST: postgres-postgresql.libreborme-6554539.svc.cluster.local
+  DB_HOST: postgres.libreborme-6554539.svc.cluster.local
   DB_NAME: libreborme
   DB_USER: postgres
   DB_PASS: iul6RBi9DP
