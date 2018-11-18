@@ -1,15 +1,20 @@
-image: docker:dind
+image: docker:18:09
+
+services:
+  - docker:dind
+
+variables:
+  CONTAINER_IMAGE: registry.gitlab.com/libreborme/libreborme
+  CONTAINER_TEST_IMAGE: $CONTAINER_IMAGE:$CI_BUILD_REF_NAME
+  DEPLOY_PATH: /opt/libreborme
+  DOCKER_DRIVER: overlay
+  DOCKER_HOST: tcp://localhost:2375
 
 stages:
   - build
   - test
   - release
   - deploy
-
-variables:
-  CONTAINER_IMAGE: registry.gitlab.com/libreborme/libreborme
-  CONTAINER_TEST_IMAGE: $CONTAINER_IMAGE:$CI_BUILD_REF_NAME
-  DEPLOY_PATH: /opt/libreborme
 
 build:
   stage: build
