@@ -12,7 +12,7 @@ variables:
 build:
   stage: build
   tags:
-    - shell
+    - kubernetes
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker build -t $CONTAINER_TEST_IMAGE .
@@ -23,7 +23,7 @@ build:
 test:
   stage: test
   tags:
-    - shell
+    - kubernetes
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker pull $CONTAINER_TEST_IMAGE
@@ -34,7 +34,7 @@ test:
 release_stg:
   stage: release
   tags:
-    - shell
+    - kubernetes
   only:
     - staging
   script:
@@ -47,11 +47,13 @@ release_stg:
 deploy_stg:
   stage: deploy
   tags:
-    - shell
+    - kubernetes
   only:
     - staging
   environment:
     name: staging
-    url: http://beta.libreborme.net
+    url: http://staging.ingress.libreborme.net
   script:
-    - echo "TODO"
+    - echo "Hello"
+    - kubectl set image deployment/libreborme libreborme-container=libreborme:staging
+    - kubectl rollout status deployment/libreborme
