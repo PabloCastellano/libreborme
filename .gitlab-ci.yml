@@ -2,11 +2,6 @@ image: docker:18.09
 
 services:
   - docker:dind
-  - postgres:9.5
-  # https://gitlab.com/gitlab-org/gitlab-ce/issues/42214
-  - name: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
-    alias: elasticsearch
-    command: ["bin/elasticsearch", "-Ediscovery.type=single-node", "-Expack.security.enabled=false"]
 
 variables:
   CONTAINER_IMAGE: registry.gitlab.com/libreborme/libreborme
@@ -15,12 +10,13 @@ variables:
   DOCKER_DRIVER: overlay
   DOCKER_HOST: tcp://localhost:2375
 
+  POSTGRES_HOST: postgres-postgresql.libreborme-6554539.svc.cluster.local
   POSTGRES_DB: libreborme
-  POSTGRES_USER: libreborme
-  POSTGRES_PASSWORD: password
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: iul6RBi9DP
   DJANGO_SETTINGS_MODULE: libreborme.settings_ci
   ENV_TYPE: ci
-  ELASTICSEARCH_URI: http://elasticsearch:9200
+  ELASTICSEARCH_URI: http://elasticsearch-client.libreborme-6554539.svc:9200
 
 
 stages:
@@ -32,6 +28,9 @@ stages:
 
 build:
   stage: build
+  cache:
+    paths:
+    - /root/
   tags:
     - kubernetes
   script:
