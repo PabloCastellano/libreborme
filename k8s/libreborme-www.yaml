@@ -1,7 +1,5 @@
----
-
-kind: Deployment
 apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: libreborme
   labels:
@@ -43,3 +41,15 @@ spec:
         - name: regcred
 
 ---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: libreborme
+spec:
+  selector:
+    app: libreborme
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
