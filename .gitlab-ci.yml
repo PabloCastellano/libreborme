@@ -30,7 +30,7 @@ build:
   stage: build
   cache:
     paths:
-    - /root/
+    - /root/.cache
   tags:
     - kubernetes
   script:
