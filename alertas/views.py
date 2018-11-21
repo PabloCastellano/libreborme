@@ -154,16 +154,15 @@ class BillingView(CustomerMixin, TemplateView):
         context = super(BillingView, self).get_context_data(**kwargs)
         context['active'] = 'billing'
 
-        # TODO: get customer or 500
         if context['customer']:
             context['invoices'] = context["customer"].invoices.all()
 
-        # TODO: esta llamada relentiza bastante la carga
-        try:
-            upcoming_invoice = customer.upcoming_invoice()
-        except stripe.error.InvalidRequestError:
-            upcoming_invoice = None
-        context["upcoming_invoice"] = upcoming_invoice
+            # TODO: esta llamada relentiza bastante la carga
+            try:
+                upcoming_invoice = context['customer'].upcoming_invoice()
+            except stripe.error.InvalidRequestError:
+                upcoming_invoice = None
+            context["upcoming_invoice"] = upcoming_invoice
 
         return context
 

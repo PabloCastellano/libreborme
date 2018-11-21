@@ -7,6 +7,8 @@ metadata:
     nginx.ingress.kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/tls-acme: 'true'
     nginx.ingress.kubernetes.io/rewrite-target: /
+    # not working ;/
+    nginx.ingress.kubernetes.io/whitelist-source-range: 10.0.0.0/8
 
     kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: 'true'
