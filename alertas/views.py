@@ -43,7 +43,7 @@ class MyAccountView(CustomerMixin, TemplateView):
         if context['customer'] is None:
             business_vat_id = None
         else:
-            business_vat_id = customer.business_vat_id
+            business_vat_id = context['customer'].business_vat_id
 
         # Prepare forms
         user_profile = self.request.user.profile
@@ -139,7 +139,7 @@ class PaymentView(StripeMixin, CustomerMixin, TemplateView):
         if context["customer"] is None:
             cards = None
         else:
-            cards = customer.sources.order_by('-exp_year', '-exp_month')
+            cards = context['customer'].sources.order_by('-exp_year', '-exp_month')
         context["cards"] = cards
         # context["form"] = forms.CreditCardForm()
 
@@ -290,7 +290,7 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
             context['tax_percentage'] = 21
 
             if context["customer"]:
-                cards = customer.sources.order_by('-exp_year', '-exp_month')
+                cards = context['customer'].sources.order_by('-exp_year', '-exp_month')
             else:
                 cards = None
             context["cards"] = cards
