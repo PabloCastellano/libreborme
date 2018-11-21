@@ -87,3 +87,21 @@ deploy_stg:
   script:
     - kubectl set image deployment/libreborme libreborme=registry.gitlab.com/libreborme/libreborme:staging
     - kubectl rollout status deployment/libreborme
+
+# manual step
+# deploy_pro:
+#   stage: deploy
+#   tags:
+#     - kubernetes
+#   environment:
+#     name: production
+#     url: http://production.ingress.libreborme.net
+#   before_script:
+#     - wget https://storage.googleapis.com/kubernetes-release/release/v1.9.7/bin/linux/amd64/kubectl -P /usr/local/bin/
+#     - chmod +x /usr/local/bin/kubectl
+#     - mkdir -p /etc/deploy
+#     - echo ${kube_config} | base64 -d > ${KUBECONFIG}
+#     - kubectl config use-context gke_libreborme-staging-test_europe-west1-c_libreborme-staging
+#   script:
+#     - kubectl set image deployment/libreborme libreborme=registry.gitlab.com/libreborme/libreborme:staging
+#     - kubectl rollout status deployment/libreborme
