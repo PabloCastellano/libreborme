@@ -24,7 +24,7 @@ from libreborme import utils
 from . import forms
 from .models import (
     AlertaActo, AlertaHistory,
-    Follower, LBInvoice
+    Follower
 )
 from .mixin import CustomerMixin, StripeMixin
 from .utils import get_alertas_config
@@ -84,10 +84,6 @@ class MyAccountView(CustomerMixin, TemplateView):
         context['count_f'] = Follower.objects.filter(
                                     user=self.request.user).count()
         context['n_alertas'] = context['count_a'] + context['count_f']
-
-        today = datetime.date.today()
-        context['lbinvoices'] = LBInvoice.objects.filter(
-                                    user=self.request.user, end_date__gt=today)
 
         aconfig = get_alertas_config()
 
@@ -157,7 +153,6 @@ class BillingView(CustomerMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BillingView, self).get_context_data(**kwargs)
         context['active'] = 'billing'
-        context['lbinvoices'] = LBInvoice.objects.filter(user=self.request.user)
 
         # TODO: get customer or 500
         if context['customer']:
@@ -172,7 +167,7 @@ class BillingView(CustomerMixin, TemplateView):
 
         return context
 
-
+"""
 @method_decorator(login_required, name='dispatch')
 class BillingDetailView(DetailView):
     model = LBInvoice
@@ -185,6 +180,7 @@ class BillingDetailView(DetailView):
         context = super(BillingDetailView, self).get_context_data(**kwargs)
         context['active'] = 'billing'
         return context
+"""
 
 
 @method_decorator(login_required, name='dispatch')

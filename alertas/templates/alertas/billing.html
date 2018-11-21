@@ -17,52 +17,8 @@
             invoice.get_absolute_url, subscription.description
           {% endcomment %}
 
-          {% if lbinvoices %}
-            <div class="table-responsive">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Período</th>
-                    <th>Cantidad</th>
-                    <th>Forma de pago</th>
-                    <th>Pagado</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for invoice in lbinvoices %}
-                  <tr {% if not invoice.is_paid %}class="danger"{% endif %}>
-                    <td>{{ invoice.id }}</td>
-                    <td>Del {{ invoice.start_date|date:"d/M/y"}} al {{ invoice.end_date|date:"d/M/y" }}</td>
-                    <td>{{ invoice.amount }} €</td>
-                    <td>{{ invoice.get_payment_type_display }}</td>
-                    <td>{% if invoice.is_paid %}
-                      <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                      {% else %}
-                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                      {% endif %}
-                    </td>
-                    <td>
-                      <a href="{% url 'alertas-invoice-view' invoice.id %}">
-                      <button type="button" class="btn btn-primary btn-xs">
-                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Ver
-                      </button>
-                      </a>
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          {% else %}
-            <p>Aún no se ha generado ninguna factura</p>
-          {% endif %}
-
-          <h1>Stripe invoices</h1>
-
             {% if invoices %}
-              <p>There are actually {{ invoices | length }} invoices.</p>
+              <p>Tienes {{ invoices | length }} facturas.</p>
               <div class="table-responsive">
                 <table class="table table-striped">
                   <thead>

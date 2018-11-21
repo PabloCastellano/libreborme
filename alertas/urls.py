@@ -9,7 +9,6 @@ urlpatterns = [
     path('alertas/service/api/', views.ServiceAPIView.as_view(), name='service-api'),
     path('alertas/service/subscriptions/', views.ServiceSubscriptionView.as_view(), name='service-subscriptions'),
     path('alertas/billing/', views.BillingView.as_view(), name='alertas-billing'),
-    path('alertas/billing/<id>/', views.BillingDetailView.as_view(), name='alertas-invoice-view'),
     path('alertas/payment/', views.PaymentView.as_view(), name='alertas-payment'),
     path('alertas/payment/new_card/', views.add_card, name='alertas-payment-add-card'),
     path('alertas/payment/checkout', views.checkout, name="checkout_page"),

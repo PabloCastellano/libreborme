@@ -50,11 +50,6 @@ class TestAlertasLoginRequired(TestCase):
         response = self.client.get(url)
         self.assertTrue(response.url.startswith(self.login_url))
 
-    def test_alertas_invoice_view(self):
-        url = reverse('alertas-invoice-view', args=['1'])
-        response = self.client.get(url)
-        self.assertTrue(response.url.startswith(self.login_url))
-
     def test_alertas_history(self):
         url = reverse('alertas-history')
         response = self.client.get(url)

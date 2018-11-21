@@ -10,8 +10,6 @@ from djstripe.models import Customer, Plan
 
 from pathlib import Path
 
-from alertas.models import LBInvoice
-
 from .forms import LBUserCreationForm
 from . import utils
 
@@ -54,12 +52,14 @@ def robotstxt(request):
     return HttpResponse(response, content_type='text/plain')
 
 
-def create_new_invoice(request, customer, subscription, plan, user_input):
-    """Creates new invoice (LBInvoice)
+# XXX: Do we really need this?
+"""Creates new invoice (LBInvoice)
 
-    Set the following fields: start_date, end_date, amount, payment_type
-    name, email, address, ip, subscription_id and nif (TODO)
-    """
+Set the following fields: start_date, end_date, amount, payment_type
+name, email, address, ip, subscription_id and nif (TODO)
+"""
+"""
+def create_new_invoice(request, customer, subscription, plan, user_input):
     new_invoice = LBInvoice(user=request.user)
     new_invoice.start_date = subscription.current_period_start
     new_invoice.end_date = subscription.current_period_end
@@ -77,6 +77,7 @@ def create_new_invoice(request, customer, subscription, plan, user_input):
     new_invoice.subscription_id = subscription.stripe_id
     new_invoice.nif = customer.business_vat_id or "TODO"
     return new_invoice
+"""
 
 
 # XXX: UNUSED

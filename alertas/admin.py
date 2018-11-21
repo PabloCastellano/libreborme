@@ -20,6 +20,7 @@ class AlertaActoAdmin(admin.ModelAdmin):
 #     fk_name = 'id'
 
 
+"""
 @admin.register(m.LBInvoice)
 class LBInvoiceAdmin(admin.ModelAdmin):
     # inlines = (SubscriptionInline, )
@@ -31,6 +32,7 @@ class LBInvoiceAdmin(admin.ModelAdmin):
     #     if not obj:
     #         return list()
     #     return super(LBInvoiceAdmin, self).get_inline_instances(request, obj)
+"""
 
 
 @admin.register(m.AlertasConfig)
