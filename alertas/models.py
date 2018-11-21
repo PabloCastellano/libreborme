@@ -121,8 +121,8 @@ class AlertaActo(m.Model):
 
 # UNUSED: should be removed at some time if proven useless
 class LBInvoice(m.Model):
-""" This table stores event subscriptions by users
-"""
+    """ This table stores event subscriptions by users
+    """
     user = m.ForeignKey(User, on_delete=m.PROTECT)
     start_date = m.DateTimeField()
     end_date = m.DateTimeField()
