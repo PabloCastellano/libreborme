@@ -1,21 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: libreborme
-spec:
-  selector:
-    app: libreborme
-  ports:
-    - protocol: TCP
-      port: 8000
-      targetPort: 8000
-
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: nginx
+  name: libreborme-nginx
 spec:
   selector:
     app: libreborme
@@ -32,7 +18,7 @@ metadata:
   name: libreborme
   labels:
     app: libreborme
-    track: stable
+    track: staging
 spec:
   replicas: 2
   selector:

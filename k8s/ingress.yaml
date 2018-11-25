@@ -25,7 +25,7 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: nginx
+              serviceName: libreborme-nginx
               servicePort: 80
               # probar aqui libreborme:8000 del tiri
     - host: beta.ingress.libreborme.net
