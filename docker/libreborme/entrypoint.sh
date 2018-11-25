@@ -2,7 +2,8 @@
 
 set -xe
 
-crond
+# Disabled - Use Kubernetes CronJobs instead
+# crond
 
 if [ -n "$ELASTICSEARCH_URI" ]; then
 	ES_HOST=$(echo "$ELASTICSEARCH_URI" | sed 's/.*@\(.*\).*/\1/')

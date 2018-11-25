@@ -1,0 +1,18 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: libreborme-daily-import
+spec:
+  schedule: "0 8 * * 1-5"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: libreborme-daily-import
+              image: registry.gitlab.com/libreborme/libreborme:staging
+              args:
+                - /bin/sh
+                - -c
+                - date; ./manage.py importbormetoday
+          restartPolicy: OnFailure

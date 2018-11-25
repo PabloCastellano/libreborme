@@ -20,7 +20,8 @@ RUN mkdir -p /opt/libreborme/bormes /opt/libreborme/run/libreborme /opt/librebor
 COPY docker/libreborme/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
-COPY docker/libreborme/crontab /etc/crontabs/root
+# Disabled - Use Kubernetes CronJobs instead
+# COPY docker/libreborme/crontab /etc/crontabs/root
 
 WORKDIR /site
 COPY ./ /site
