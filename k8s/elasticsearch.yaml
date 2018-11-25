@@ -40,10 +40,15 @@ spec:
               value: -Xms256m -Xmx512m
           ports:
             - containerPort: 9200
-#         volumeMounts:
+          volumeMounts:
+            - name: tz-config
+              mountPath: /etc/localtime
 #           - mountPath: /usr/share/elasticsearch/data
 #             name: es-data
-#     volumes:
+      volumes:
+        - name: tz-config
+          hostPath:
+            path: /usr/share/zoneinfo/Europe/Madrid
 #       - name: es-data
 #         persistentVolumeClaim:
 #           claimName: elasticsearch-pv-claim

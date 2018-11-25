@@ -69,6 +69,8 @@ spec:
               mountPath: "/etc/nginx/conf.d"
             - name: "staticfiles"
               mountPath: "/opt/libreborme/static"
+            - name: tz-config
+              mountPath: /etc/localtime
         - name: libreborme
           image: registry.gitlab.com/libreborme/libreborme:staging
           imagePullPolicy: Always
@@ -105,6 +107,8 @@ spec:
           volumeMounts:
             - name: staticfiles
               mountPath: "/opt/libreborme/static"
+            - name: tz-config
+              mountPath: /etc/localtime
           # add settings.py here as secret configmap
       imagePullSecrets:
         - name: "registry.gitlab.com"
@@ -117,3 +121,6 @@ spec:
                 path: "libreborme.conf"
         - name: "staticfiles"
           emptyDir: {}
+        - name: tz-config
+          hostPath:
+            path: /usr/share/zoneinfo/Europe/Madrid

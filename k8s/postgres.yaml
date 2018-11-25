@@ -41,9 +41,14 @@ spec:
           ports:
             - containerPort: 5432
 #         volumeMounts:
+#           - name: tz-config
+#             mountPath: /etc/localtime
 #           - mountPath: /var/lib/postgresql/data
 #             name: postgres-data
 #     volumes:
+#       - name: tz-config
+#         hostPath:
+#           path: /usr/share/zoneinfo/Europe/Madrid
 #       - name: postgres-data
 #         persistentVolumeClaim:
 #           claimName: postgres-pv-claim
