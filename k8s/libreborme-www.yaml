@@ -49,8 +49,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          # image: nginx:1.15-alpine
-          image: nginx:1.15
+          image: nginx:1.15-alpine
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
@@ -79,14 +78,10 @@ spec:
                   value: staging.ingress.libreborme.net
             initialDelaySeconds: 10
             timeoutSeconds: 1
-          # Mejor montar en mountPath: /etc/nginx/conf.d
-          # nginx-conf con la config de proxy_pass http://127.0.0.1:8000
-          # https://github.com/kelseyhightower/talks/blob/master/kubecon-eu-2016/demo/configs/ghost.conf
           volumeMounts:
-            - name: config
-              mountPath: "/etc/nginx/nginx.conf"
-              subPath: nginx.conf
-            - name: staticfiles
+            - name: "nginx-conf"
+              mountPath: "/etc/nginx/conf.d"
+            - name: "staticfiles"
               mountPath: "/opt/libreborme/static"
         - name: libreborme
           image: registry.gitlab.com/libreborme/libreborme:staging
@@ -126,10 +121,13 @@ spec:
               mountPath: "/opt/libreborme/static"
           # add settings.py here as secret configmap
       imagePullSecrets:
-        - name: registry.gitlab.com
+        - name: "registry.gitlab.com"
       volumes:
-        - name: config
+        - name: "nginx-conf"
           configMap:
-            name: nginx-conf
-        - name: staticfiles
+            name: "nginx-libreborme"
+            items:
+              - key: "libreborme.conf"
+                path: "libreborme.conf"
+        - name: "staticfiles"
           emptyDir: {}
