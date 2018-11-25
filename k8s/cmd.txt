@@ -8,3 +8,9 @@ ku rollout status deployment/libreborme
 
 
 kubectl run lbtest --image=registry.gitlab.com/libreborme/libreborme:login_users
+
+
+kubectl create configmap NAME [--from-file=[key=]source]
+kubectl create secret generic ghost-tls --from-file=tls/
+
+https://github.com/kelseyhightower/talks/tree/master/kubecon-eu-2016/demo#deploy-a-canary

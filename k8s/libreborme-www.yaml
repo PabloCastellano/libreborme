@@ -1,69 +1,3 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: libreborme
-  labels:
-    app: libreborme
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: libreborme
-  template:
-    metadata:
-      labels:
-        app: libreborme
-    spec:
-      containers:
-        - name: nginx
-          image: nginx:1.15
-          imagePullPolicy: IfNotPresent
-          ports:
-            - name: http
-              containerPort: 80
-              hostPort: 80
-          volumeMounts:
-            - name: config
-              mountPath: "/etc/nginx/nginx.conf"
-              subPath: nginx.conf
-            - name: staticfiles
-              mountPath: "/opt/libreborme/static"
-        - name: libreborme
-          image: registry.gitlab.com/libreborme/libreborme:login_users
-          imagePullPolicy: Always
-          env:
-            - name: DJANGO_SETTINGS_MODULE
-              value: libreborme.settings_staging
-            - name: ENV_TYPE
-              value: staging
-            - name: ELASTICSEARCH_URI
-              value: http://elastic:changeme@elasticsearch:9200
-            - name: RAVEN_DSN
-              value: https://d0c18e5df3ac420a89014b9e0dafdd55@sentry.io/1290035
-            - name: DB_HOST
-              value: postgres
-            - name: DB_PORT
-              value: "5432"
-            - name: PIWIK_URL
-              value: "http://"
-            - name: PIWIK_SITE_ID
-              value: "5"
-          ports:
-            - containerPort: 8000
-          volumeMounts:
-            - name: staticfiles
-              mountPath: "/opt/libreborme/static"
-      imagePullSecrets:
-        - name: regcred
-      volumes:
-        - name: config
-          configMap:
-            name: nginx-conf
-        - name: staticfiles
-          emptyDir: {}
-
----
-
 kind: Service
 apiVersion: v1
 metadata:
@@ -89,3 +23,113 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
+
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: libreborme
+  labels:
+    app: libreborme
+    track: stable
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: libreborme
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: libreborme
+    spec:
+      containers:
+        - name: nginx
+          # image: nginx:1.15-alpine
+          image: nginx:1.15
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx", "-s", "quit"]
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+              httpHeaders:
+                - name: Host
+                  value: staging.ingress.libreborme.net
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+              httpHeaders:
+                - name: Host
+                  value: staging.ingress.libreborme.net
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+          # Mejor montar en mountPath: /etc/nginx/conf.d
+          # nginx-conf con la config de proxy_pass http://127.0.0.1:8000
+          # https://github.com/kelseyhightower/talks/blob/master/kubecon-eu-2016/demo/configs/ghost.conf
+          volumeMounts:
+            - name: config
+              mountPath: "/etc/nginx/nginx.conf"
+              subPath: nginx.conf
+            - name: staticfiles
+              mountPath: "/opt/libreborme/static"
+        - name: libreborme
+          image: registry.gitlab.com/libreborme/libreborme:staging
+          imagePullPolicy: Always
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: libreborme.settings_staging
+            - name: ENV_TYPE
+              value: staging
+            - name: ELASTICSEARCH_URI
+              value: http://elastic:changeme@elasticsearch:9200
+            - name: RAVEN_DSN
+              value: https://d0c18e5df3ac420a89014b9e0dafdd55@sentry.io/1290035
+            - name: DB_HOST
+              value: postgres
+            - name: DB_PORT
+              value: "5432"
+            - name: PIWIK_URL
+              value: "http://"
+            - name: PIWIK_SITE_ID
+              value: "5"
+          ports:
+            - containerPort: 8000
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+              scheme: HTTP
+              httpHeaders:
+                - name: Host
+                  value: staging.ingress.libreborme.net
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 1
+          volumeMounts:
+            - name: staticfiles
+              mountPath: "/opt/libreborme/static"
+          # add settings.py here as secret configmap
+      imagePullSecrets:
+        - name: registry.gitlab.com
+      volumes:
+        - name: config
+          configMap:
+            name: nginx-conf
+        - name: staticfiles
+          emptyDir: {}

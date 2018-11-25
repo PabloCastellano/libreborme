@@ -1,3 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: elasticsearch
+spec:
+  selector:
+    app: elasticsearch
+  ports:
+    - protocol: TCP
+      port: 9200
+      targetPort: 9200
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -33,17 +47,3 @@ spec:
 #       - name: es-data
 #         persistentVolumeClaim:
 #           claimName: elasticsearch-pv-claim
-
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: elasticsearch
-spec:
-  selector:
-    app: elasticsearch
-  ports:
-    - protocol: TCP
-      port: 9200
-      targetPort: 9200

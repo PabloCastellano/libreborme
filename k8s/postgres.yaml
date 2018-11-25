@@ -1,3 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -33,17 +47,3 @@ spec:
 #       - name: postgres-data
 #         persistentVolumeClaim:
 #           claimName: postgres-pv-claim
-
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: postgres
-spec:
-  selector:
-    app: postgres
-  ports:
-    - protocol: TCP
-      port: 5432
-      targetPort: 5432
