@@ -8,7 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/tls-acme: 'true'
     nginx.ingress.kubernetes.io/rewrite-target: /
     # not working ;/
-    nginx.ingress.kubernetes.io/whitelist-source-range: 10.0.0.0/8
+    # nginx.ingress.kubernetes.io/whitelist-source-range: 10.0.0.0/8
 
     kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: 'true'
@@ -26,12 +26,4 @@ spec:
           - path: /
             backend:
               serviceName: libreborme-nginx
-              servicePort: 80
-              # probar aqui libreborme:8000 del tiri
-    - host: beta.ingress.libreborme.net
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: nginx
               servicePort: 80
