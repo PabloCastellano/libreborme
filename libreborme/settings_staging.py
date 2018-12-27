@@ -66,10 +66,10 @@ STATIC_ROOT = '/opt/libreborme/static'
 MEDIA_URL = '%s/media/' % SITE_URL
 
 # BORME
-BORME_ROOT = CONFIG['borme_root']
-BORME_PDF_ROOT = BORME_ROOT
-BORME_XML_ROOT = os.path.join(BORME_ROOT, '..', 'xml')
-BORME_JSON_ROOT = os.path.join(BORME_ROOT, '..', 'json')
+BORME_ROOT = "/opt/libreborme/bormes/"
+BORME_PDF_ROOT = os.path.join(BORME_ROOT, "pdf")
+BORME_XML_ROOT = os.path.join(BORME_ROOT, "xml")
+BORME_JSON_ROOT = os.path.join(BORME_ROOT, "json")
 
 EMAIL_CONTACT = 'contacto@libreborme.net'
 
