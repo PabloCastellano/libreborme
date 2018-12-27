@@ -152,6 +152,7 @@ deploy_stg:
   script:
     - kubectl set image deployment/libreborme libreborme=registry.gitlab.com/libreborme/libreborme:staging
     - kubectl rollout status deployment/libreborme
+    - kubectl patch deployment libreborme -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
 
 # manual step
 # deploy_pro:
