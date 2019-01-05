@@ -8,7 +8,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.conf import settings
 
 import re
-from datetime import datetime
+import datetime
 
 from django.db import models as m
 from borme.utils.strings import parse_empresa
@@ -153,6 +153,17 @@ class Person(m.Model):
         return self.name
 
 
+class CompanyManager(m.Manager):
+    def get_modified_on(self, date):
+        """ Get list of companies that have been last modified on a
+        specified date """
+        return self.filter(date_updated=date)
+
+    def get_modified_today(self):
+        """ Get list of companies that have been last modified today """
+        return self.get_modified_on(datetime.date.today())
+
+
 class Company(m.Model):
     """ Sociedad """
     name = m.CharField(max_length=260, db_index=True)
@@ -182,6 +193,7 @@ class Company(m.Model):
     cargos_historial_c = JSONField(default=list)
 
     document = SearchVectorField(null=True, db_index=True)
+    objects = CompanyManager()
 
     def add_auditor(self, auditor_name, type_, date):
         auditor = {'name': auditor_name, 'type': type_, 'date_from': date}
@@ -336,7 +348,7 @@ class Anuncio(m.Model):
     def date(self):
         regexp = r'\(\s*\d{1,2}\.\d{2}\.\d{2}\)\.'
         fecha = re.findall(regexp, self.datos_registrales)[0]
-        return datetime.strptime(fecha, '(%d.%m.%y).').date()
+        return datetime.datetime.strptime(fecha, '(%d.%m.%y).').date()
 
     def get_absolute_url(self):
         year = str(self.year)

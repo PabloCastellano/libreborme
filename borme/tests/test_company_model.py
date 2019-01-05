@@ -63,3 +63,12 @@ class TestCompanyModel(TestCase):
             c.cargos_historial_c,
             cargos_salientes
         )
+
+    def test_company_manager_modified_on(self):
+        companies1 = Company.objects.get_modified_on(today)
+        companies2 = Company.objects.get_modified_today()
+
+        self.assertEqual(len(companies1), 1)
+        self.assertEqual(len(companies2), 1)
+        self.assertEqual(companies1[0], companies2[0])
+        self.assertEqual(companies1[0].slug, 'patatas-juan')
