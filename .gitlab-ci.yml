@@ -2,93 +2,97 @@ image: docker:18.09
 
 services:
   - docker:dind
+  - postgres:9.5
+  - name: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
+    alias: elasticsearch
+    command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
 
 variables:
   CONTAINER_IMAGE: registry.gitlab.com/libreborme/libreborme
   CONTAINER_TEST_IMAGE: $CONTAINER_IMAGE:$CI_BUILD_REF_NAME
   DEPLOY_PATH: /opt/libreborme
   DOCKER_DRIVER: overlay
-  DOCKER_HOST: tcp://localhost:2375
 
-  DB_HOST: postgres.libreborme-6554539.svc.cluster.local
-  DB_NAME: libreborme
-  DB_USER: postgres
-  DB_PASS: iul6RBi9DP
-  DJANGO_SETTINGS_MODULE: libreborme.settings_ci
-  ENV_TYPE: ci
-  ELASTICSEARCH_URI: http://elasticsearch.libreborme-6554539.svc.cluster.local:9200
-
+  # Kubernetes
   KUBE_DOMAIN: ingress.libreborme.net
-
+  # DOCKER_HOST: tcp://localhost:2375
+  # DB_HOST: postgres.libreborme-6554539.svc.cluster.local
+  # DB_NAME: libreborme
+  # DB_USER: postgres
+  # DB_PASS: iul6RBi9DP
+  # DJANGO_SETTINGS_MODULE: libreborme.settings_ci
+  # ENV_TYPE: ci
+  # ELASTICSEARCH_URI: http://elasticsearch.libreborme-6554539.svc.cluster.local:9200
 
 stages:
   - build
   - test
   - release
-  - deploy
+#  - deploy
+
 
 # Define some helper functions
-.common: &common
-  |
-    set -eo pipefail
-
-    [[ "$TRACE" ]] && set -x
-
-    export CI_CONTAINER_NAME="ci_job_build_$CI_BUILD_ID"
-    export CI_REGISTRY_TAG="$CI_BUILD_REF_NAME"
-
-    create_kubeconfig() {
-      echo "Generating kubeconfig..."
-      export KUBECONFIG="$(pwd)/kubeconfig"
-      export KUBE_CLUSTER_OPTIONS=
-      if [[ -n "$KUBE_CA_PEM" ]]; then
-        echo "Using KUBE_CA_PEM..."
-        echo "$KUBE_CA_PEM" > "$(pwd)/kube.ca.pem"
-        export KUBE_CLUSTER_OPTIONS=--certificate-authority="$(pwd)/kube.ca.pem"
-      fi
-      kubectl config set-cluster gitlab-deploy --server="$KUBE_URL" $KUBE_CLUSTER_OPTIONS
-      kubectl config set-credentials gitlab-deploy --token="$KUBE_TOKEN" $KUBE_CLUSTER_OPTIONS
-      kubectl config set-context gitlab-deploy --cluster=gitlab-deploy --user=gitlab-deploy --namespace="$KUBE_NAMESPACE"
-      kubectl config use-context gitlab-deploy
-      echo ""
-    }
-
-    ensure_deploy_variables() {
-      if [[ -z "$KUBE_URL" ]]; then
-        echo "Missing KUBE_URL."
-        exit 1
-      fi
-
-      if [[ -z "$KUBE_TOKEN" ]]; then
-        echo "Missing KUBE_TOKEN."
-        exit 1
-      fi
-
-      if [[ -z "$KUBE_NAMESPACE" ]]; then
-        echo "Missing KUBE_NAMESPACE."
-        exit 1
-      fi
-
-      if [[ -z "$CI_ENVIRONMENT_SLUG" ]]; then
-        echo "Missing CI_ENVIRONMENT_SLUG."
-        exit 1
-      fi
-
-      if [[ -z "$CI_ENVIRONMENT_URL" ]]; then
-        echo "Missing CI_ENVIRONMENT_URL."
-        exit 1
-      fi
-    }
-
-    ping_kube() {
-      if kubectl version > /dev/null; then
-        echo "Kubernetes is online!"
-        echo ""
-      else
-        echo "Cannot connect to Kubernetes."
-        return 1
-      fi
-    }
+#.common: &common
+#  |
+#    set -eo pipefail
+#
+#    [[ "$TRACE" ]] && set -x
+#
+#    export CI_CONTAINER_NAME="ci_job_build_$CI_BUILD_ID"
+#    export CI_REGISTRY_TAG="$CI_BUILD_REF_NAME"
+#
+#    create_kubeconfig() {
+#      echo "Generating kubeconfig..."
+#      export KUBECONFIG="$(pwd)/kubeconfig"
+#      export KUBE_CLUSTER_OPTIONS=
+#      if [[ -n "$KUBE_CA_PEM" ]]; then
+#        echo "Using KUBE_CA_PEM..."
+#        echo "$KUBE_CA_PEM" > "$(pwd)/kube.ca.pem"
+#        export KUBE_CLUSTER_OPTIONS=--certificate-authority="$(pwd)/kube.ca.pem"
+#      fi
+#      kubectl config set-cluster gitlab-deploy --server="$KUBE_URL" $KUBE_CLUSTER_OPTIONS
+#      kubectl config set-credentials gitlab-deploy --token="$KUBE_TOKEN" $KUBE_CLUSTER_OPTIONS
+#      kubectl config set-context gitlab-deploy --cluster=gitlab-deploy --user=gitlab-deploy --namespace="$KUBE_NAMESPACE"
+#      kubectl config use-context gitlab-deploy
+#      echo ""
+#    }
+#
+#    ensure_deploy_variables() {
+#      if [[ -z "$KUBE_URL" ]]; then
+#        echo "Missing KUBE_URL."
+#        exit 1
+#      fi
+#
+#      if [[ -z "$KUBE_TOKEN" ]]; then
+#        echo "Missing KUBE_TOKEN."
+#        exit 1
+#      fi
+#
+#      if [[ -z "$KUBE_NAMESPACE" ]]; then
+#        echo "Missing KUBE_NAMESPACE."
+#        exit 1
+#      fi
+#
+#      if [[ -z "$CI_ENVIRONMENT_SLUG" ]]; then
+#        echo "Missing CI_ENVIRONMENT_SLUG."
+#        exit 1
+#      fi
+#
+#      if [[ -z "$CI_ENVIRONMENT_URL" ]]; then
+#        echo "Missing CI_ENVIRONMENT_URL."
+#        exit 1
+#      fi
+#    }
+#
+#    ping_kube() {
+#      if kubectl version > /dev/null; then
+#        echo "Kubernetes is online!"
+#        echo ""
+#      else
+#        echo "Cannot connect to Kubernetes."
+#        return 1
+#      fi
+#    }
 
 
 build:
@@ -96,8 +100,8 @@ build:
   cache:
     paths:
     - /root/.cache
-  tags:
-    - kubernetes
+  #tags:
+  #  - kubernetes
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker build -t $CONTAINER_TEST_IMAGE .
@@ -107,20 +111,22 @@ build:
 
 test:
   stage: test
-  tags:
-    - kubernetes
+  #tags:
+  #  - kubernetes
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker pull $CONTAINER_TEST_IMAGE
     # - docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
-    - docker run $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=$ELASTICSEARCH_URI DB_HOST=$DB_HOST make test_k8s_ci"
+    # - docker run $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=$ELASTICSEARCH_URI DB_HOST=$DB_HOST make test_k8s_ci"
+    - coverage run --source='.' manage.py test --noinput -v 3
+    - coverage report
   coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'
 
 
 release_stg:
   stage: release
-  tags:
-    - kubernetes
+  #tags:
+  #  - kubernetes
   only:
     - staging
   script:
@@ -133,26 +139,26 @@ release_stg:
 
 
 # Usar algo como https://hub.docker.com/r/lwolf/kubectl_deployer/~/dockerfile/
-deploy_stg:
-  stage: deploy
-  tags:
-    - kubernetes
-  only:
-    - staging
-  environment:
-    name: staging
-    url: http://staging.$KUBE_DOMAIN
-    # url: http://$CI_PROJECT_NAME-staging.$KUBE_DOMAIN
-  before_script:
-    - *common
-    - wget https://storage.googleapis.com/kubernetes-release/release/v1.9.7/bin/linux/amd64/kubectl -P /usr/local/bin/
-    - chmod +x /usr/local/bin/kubectl
-    - ensure_deploy_variables
-    - create_kubeconfig
-  script:
-    - kubectl set image deployment/libreborme libreborme=registry.gitlab.com/libreborme/libreborme:staging
-    # - kubectl rollout status deployment/libreborme
-    - kubectl patch deployment libreborme -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%Y-%m-%d %H:%M:%S'`\"}}}}}"
+#deploy_stg:
+#  stage: deploy
+#  #tags:
+#  #  - kubernetes
+#  only:
+#    - staging
+#  environment:
+#    name: staging
+#    url: http://staging.$KUBE_DOMAIN
+#    # url: http://$CI_PROJECT_NAME-staging.$KUBE_DOMAIN
+#  before_script:
+#    - *common
+#    - wget https://storage.googleapis.com/kubernetes-release/release/v1.9.7/bin/linux/amd64/kubectl -P /usr/local/bin/
+#    - chmod +x /usr/local/bin/kubectl
+#    - ensure_deploy_variables
+#    - create_kubeconfig
+#  script:
+#    - kubectl set image deployment/libreborme libreborme=registry.gitlab.com/libreborme/libreborme:staging
+#    # - kubectl rollout status deployment/libreborme
+#    - kubectl patch deployment libreborme -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%Y-%m-%d %H:%M:%S'`\"}}}}}"
 
 # manual step
 # deploy_pro:
