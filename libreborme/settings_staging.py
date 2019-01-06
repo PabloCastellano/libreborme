@@ -70,6 +70,7 @@ BORME_ROOT = "/opt/libreborme/bormes/"
 BORME_PDF_ROOT = os.path.join(BORME_ROOT, "pdf")
 BORME_XML_ROOT = os.path.join(BORME_ROOT, "xml")
 BORME_JSON_ROOT = os.path.join(BORME_ROOT, "json")
+BORME_LOG_DIR = os.path.join(BORME_ROOT, "logs")
 
 EMAIL_CONTACT = 'contacto@libreborme.net'
 
@@ -108,7 +109,7 @@ LOGGING = {
         'applogfile': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/opt/libreborme/logs/libreborme.log',
+            'filename': os.path.join(BORME_LOG_DIR, 'libreborme.log'),
             'maxBytes': 1024 * 1024 * 50,  # 50MB
             # 'backupCount': 10,
         },
