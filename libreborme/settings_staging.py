@@ -70,7 +70,7 @@ BORME_ROOT = "/opt/libreborme/bormes/"
 BORME_PDF_ROOT = os.path.join(BORME_ROOT, "pdf")
 BORME_XML_ROOT = os.path.join(BORME_ROOT, "xml")
 BORME_JSON_ROOT = os.path.join(BORME_ROOT, "json")
-BORME_LOG_DIR = os.path.join(BORME_ROOT, "logs")
+BORME_LOG_ROOT = os.path.join(BORME_ROOT, "logs")
 
 EMAIL_CONTACT = 'contacto@libreborme.net'
 
@@ -103,30 +103,58 @@ LOGGING = {
             '()': 'django.utils.log.RequireDebugFalse'
         }
     },
+    'formatters': {
+        'verbose': {
+            'format': '\n\n[%(levelname)s %(asctime)s] module: %(module)s, process: %(process)d, thread: %(thread)d\n%(message)s'
+        },
+    },
     'handlers': {
         'console': {
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'filters': ['require_debug_true'],
-            'level': 'INFO'
+            # 'formatter': 'verbose',
         },
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
+            'class': 'django.utils.log.AdminEmailHandler',
         },
-        'applogfile': {
+        'errorlogfile': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BORME_LOG_ROOT, 'libreborme.error.log'),
+            'maxBytes': 1024 * 1024 * 50,  # 50MB
+        },
+        'logfile': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BORME_LOG_DIR, 'libreborme.log'),
+            'filename': os.path.join(BORME_LOG_ROOT, 'libreborme.log'),
+            'maxBytes': 1024 * 1024 * 50,  # 50MB
+            # 'backupCount': 10,
+        },
+        'bormelogfile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BORME_LOG_ROOT, 'borme.log'),
             'maxBytes': 1024 * 1024 * 50,  # 50MB
             # 'backupCount': 10,
         },
     },
     'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
+        'django': {
+            'handlers': ['logfile'],
             'level': 'ERROR',
             'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['mail_admins', 'logfile'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        '': {
+            'handlers': ['console', 'logfile'],
+            'level': 'ERROR',
         },
         # Elasticsearch module is quite noisy
         'elasticsearch': {
@@ -135,15 +163,15 @@ LOGGING = {
             'propagate': False,
         },
         'libreborme': {
-            'handlers': ['applogfile', ],
+            'handlers': ['logfile', 'errorlogfile'],
             'level': LOGLEVEL,
         },
         'borme': {
-            'handlers': ['applogfile', ],
+            'handlers': ['logfile', 'bormelogfile'],
             'level': LOGLEVEL,
         },
         'dataremoval': {
-            'handlers': ['applogfile', ],
+            'handlers': ['logfile', ],
             'level': LOGLEVEL,
         },
     }

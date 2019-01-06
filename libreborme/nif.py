@@ -10,7 +10,7 @@ from borme.models import Company
 
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger('nif')
+logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 

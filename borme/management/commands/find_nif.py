@@ -37,10 +37,10 @@ class Command(BaseCommand):
 
     def set_verbosity(self, verbosity):
         if verbosity == 0:
-            logging.getLogger('nif').setLevel(logging.ERROR)
+            logging.getLogger('libreborme.nif').setLevel(logging.ERROR)
         elif verbosity == 1:  # default
-            logging.getLogger('nif').setLevel(logging.INFO)
+            logging.getLogger('libreborme.nif').setLevel(logging.INFO)
         elif verbosity == 2:
-            logging.getLogger('nif').setLevel(logging.INFO)
+            logging.getLogger('libreborme.nif').setLevel(logging.INFO)
         elif verbosity > 2:
-            logging.getLogger('nif').setLevel(logging.DEBUG)
+            logging.getLogger('libreborme.nif').setLevel(logging.DEBUG)

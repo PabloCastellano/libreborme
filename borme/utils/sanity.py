@@ -18,8 +18,8 @@ def check_permissions():
     # These are only defined in staging and produciton environments
     # If they are defined, they have to exist
     try:
-        if not os.access(settings.BORME_LOG_DIR, os.W_OK):
-            raise ImproperlyConfigured("The logs directory is not writable: " + settings.BORME_LOG_DIR)
+        if not os.access(settings.BORME_LOG_ROOT, os.W_OK):
+            raise ImproperlyConfigured("The logs directory is not writable: " + settings.BORME_LOG_ROOT)
     except AttributeError:
         pass
 
