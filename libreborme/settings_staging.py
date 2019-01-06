@@ -90,6 +90,7 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER  # used for error reporting
 
+LOGLEVEL = os.environ.get('LOGLEVEL', 'info').upper()
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -107,9 +108,9 @@ LOGGING = {
         'applogfile': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/opt/libreborme/logs/libreborme_errors.log',
-            'maxBytes': 1024 * 1024 * 15,  # 15MB
-            'backupCount': 10,
+            'filename': '/opt/libreborme/logs/libreborme.log',
+            'maxBytes': 1024 * 1024 * 50,  # 50MB
+            # 'backupCount': 10,
         },
     },
     'loggers': {
@@ -120,7 +121,15 @@ LOGGING = {
         },
         'libreborme': {
             'handlers': ['applogfile', ],
-            'level': 'DEBUG',
+            'level': LOGLEVEL,
+        },
+        'borme': {
+            'handlers': ['applogfile', ],
+            'level': LOGLEVEL,
+        },
+        'dataremoval': {
+            'handlers': ['applogfile', ],
+            'level': LOGLEVEL,
         },
     }
 }
