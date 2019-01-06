@@ -4,11 +4,13 @@ from django.utils import timezone
 
 from datetime import datetime
 import logging
+import time
 
 from borme.models import Company
-from libreborme.nif import find_nif
+import libreborme.nif
 
 logger = logging.getLogger(__name__)
+
 
 class Command(BaseCommand):
     # args = '<ISO formatted date (ex. 2015-01-01 or --init)> [--local]'
@@ -42,12 +44,34 @@ class Command(BaseCommand):
         logger.debug(companies)
 
         found = 0
-        for company in companies:
-            nif = find_nif(company)
-            if nif:
-                found += 1
+        added = 0
+        skipped = 0
+        for num, company in enumerate(companies, 1):
+            # mejorar, tenemos el tipo y podemos generar otro slug
+            # necesitamos busqueda si o si
+            try:
+                nif, created, provider = libreborme.nif.find_nif(company.slug)
+                if created:
+                    added += 1
+                else:
+                    skipped += 1
+                if nif:
+                    found += 1
 
-        logger.info("Result: found NIF for {} out of {} companies".format(found, total))
+            except libreborme.nif.NIFNotFoundException:
+                print("[{}/{}] {}: ERROR (not found)".format(num, total, company.slug))
+            except libreborme.nif.NIFParserException:
+                print("[{}/{}] {}: ERROR (parsing)".format(num, total, company.slug))
+            except libreborme.nif.NIFInvalidException as e:
+                print("[{}/{}] {}: ERROR (invalid): '{}'".format(num, total, company.slug, e))
+            else:
+                if created:
+                    print("[{}/{}] {}: NEW [{}] ({})".format(num, total, company.slug, nif, provider))
+                else:
+                    print("[{}/{}] {}: SKIP [{}]".format(num, total, company.slug, nif))
+            time.sleep(1)
+
+        logger.info("Result: found NIF for {} out of {} companies. NEW: {}, SKIPPED: {}".format(found, total, added, skipped))
 
     def set_verbosity(self, verbosity):
         if verbosity == 0:

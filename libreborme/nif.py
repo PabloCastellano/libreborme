@@ -13,7 +13,7 @@ logger = logging.getLogger('nif')
 logger.setLevel(logging.DEBUG)
 
 
-PROVIDERS = ('infocif', 'infoempresa', 'empresia')
+PROVIDERS = ('empresia', 'infocif', 'infoempresa')
 
 
 class NIFException(Exception):
@@ -31,8 +31,15 @@ class NIFParserException(NIFException):
     pass
 
 
+class NIFInvalidException(NIFException):
+    """ Exception raised when NIF is invalid """
+    pass
+
+
 class NIFProvider(object):
     """ Get company NIF from other sources """
+
+    headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
 
     def __init__(self, company):
         self.company = company
@@ -43,7 +50,7 @@ class NIFProvider(object):
 
     def _get_content_and_xpath(self, url, xpath, provider):
         logger.debug(url)
-        page = requests.get(url, allow_redirects=True)
+        page = requests.get(url, allow_redirects=True, headers=self.headers)
         logger.debug(page.status_code)
 
         # Works for: infoempresa
@@ -56,7 +63,7 @@ class NIFProvider(object):
         except IndexError:
             raise NIFParserException("Error while parsing title in URL " + url)
 
-        if (provider == 'empresia' and 'Informe de la empresa' not in title) \
+        if (provider == 'empresia' and 'Resultados de búsqueda' in title) \
            or (provider == 'infocif' and 'Informacion Financiera' not in title):
             raise NIFNotFoundException(self.company)
 
@@ -98,7 +105,7 @@ class NIFProvider(object):
         return nif
 
     def _get_nif_from_provider(self, provider):
-        logger.info("Get using provider {}".format(provider))
+        logger.debug("Get using provider {}".format(provider))
 
         nif = None
         if provider == 'empresia':
@@ -117,17 +124,17 @@ class NIFProvider(object):
         if provider:
             nif = self._get_nif_from_provider(provider)
         else:
-            for p in PROVIDERS:
-                nif = self._get_nif_from_provider(p)
+            for provider in PROVIDERS:
+                nif = self._get_nif_from_provider(provider)
                 if nif:
                     break
 
         if not nif:
             logger.warning("Could not find NIF for company '{}'".format(self.company))
         elif not validate_nif(nif):
-            logger.warning("NIF {} for company '{}' looks invalid".format(nif, self.company))
+            raise NIFInvalidException(nif)
 
-        return nif
+        return nif, provider
 
     def _search(self, company):
         raise NotImplementedError
@@ -148,9 +155,10 @@ def validate_nif(nif):
 
 def find_nif(company, provider=None, save_to_db=True):
     nif = None
+    created = False
 
     nif_provider = NIFProvider(company)
-    nif = nif_provider.get(provider=provider)
+    nif, provider = nif_provider.get(provider=provider)
 
     if not nif:
         raise NIFNotFoundException(company)
@@ -161,16 +169,20 @@ def find_nif(company, provider=None, save_to_db=True):
             c = Company.objects.get(slug=slug)
         except Company.DoesNotExist:
             logger.warning("Company {} doesn't exist in DB, hence not saving NIF".format(slug))
-            return nif
+            return nif, created
 
         if c.nif:
             if c.nif == nif:
-                logger.warning("NIF for Company '{}' already exists in DB.".format(company))
+                logger.debug("NIF for Company '{}' already exists in DB.".format(company))
             else:
                 logger.error("NIF for Company '{}' in DB [{}] is different from found [{}]".format(company, c.nif, nif))
         else:
+            created = True
             c.nif = nif
             c.save()
             logger.debug("NIF for Company '{}' saved [{}]".format(company, nif))
 
-    return nif
+    if created:
+        logger.debug("Got NIF '{}' for '{}' using provider '{}'".format(nif, company, provider))
+
+    return nif, created, provider
