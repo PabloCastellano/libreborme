@@ -1,4 +1,5 @@
 # PRIVATE
+import csv
 import logging
 import requests
 
@@ -186,3 +187,15 @@ def find_nif(company, provider=None, save_to_db=True):
         logger.debug("Got NIF '{}' for '{}' using provider '{}'".format(nif, company, provider))
 
     return nif, created, provider
+
+
+def export(filename):
+    companies = Company.objects.filter(nif__isnull=False).order_by('name')
+
+    with open(filename, 'w') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(["Name", "Slug", "NIF"])
+        for company in companies:
+            csvwriter.writerow([company.name, company.slug, company.nif])
+
+    return len(companies)
