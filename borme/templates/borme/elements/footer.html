@@ -1,3 +1,4 @@
+{% load staticfiles %}
 {% comment %}
 
 <p class="text-muted">Esta web muestra únicamente datos públicos disponibles desde el año 2009. <a href="#" data-toggle="modal" data-target="#myModal"><small>¿Por qué?</small></a></p>
@@ -96,7 +97,7 @@
             <div class="modal-header">
                 <div class="row justify-content-center w-100">
                     <div class="col-md-12 text-center">
-                        <p class="text-header">Entrar en <img src="/assets/img/logo.svg" alt="" style="width: 163px;"></p>
+                         <p class="text-header">Entrar en <img src="{% static '/assets/img/logo.svg' %}" alt="" style="width: 163px;"></p>
                     </div>
                 </div>
 
@@ -128,6 +129,7 @@
                     </div>
                 </div>
             </div>
+            {% if registration_open %}
             <div class="modal-footer">
                 <div class="container">
                     <div class="row justify-content-md-center">
@@ -140,6 +142,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 </div>

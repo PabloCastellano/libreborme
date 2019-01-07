@@ -1,6 +1,7 @@
 {% load staticfiles %}
 {% comment %}
 - libreborne.css
+- can be merged with navbar from borme, just needs to hide Area personal / servicios
 
 {% endcomment %}
 
@@ -14,12 +15,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav position-navbar">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'services' %}">Servicios</a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-primary btn-transparent" href="#" role="button" data-toggle="modal" data-target="#exampleModalCenter">Area personal</a>
-                </li>
                 <li class="nav-item dropdown menu-panel-user">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <img src="{% static 'assets/img/menu-panel/cuenta.svg' %}" alt="" class="img-navbar-account">
