@@ -1,0 +1,156 @@
+.view-details {
+  .section-title-result-details {
+    background-color: #fcfdfc;
+    padding: 20px 0 0px;
+    h1 {
+      margin-bottom: 0;
+      font-size: 20px;
+      font-weight: bold;
+      color: $color-dark;
+      position: relative;
+      top: 3px;
+    }
+  }
+  .background-result {
+    background-color: #fafafa;
+  }
+  .tab-view-details {
+    .ul-resum {
+      li {
+        p {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+  .table-company-information {
+    td, th {
+      padding: 5px;
+      border-top: 1px solid transparent;
+    }
+    tbody {
+      tr {
+        th {
+          color: $color-dark;
+        }
+      }
+    }
+  }
+  .table-executive-positions {
+    th {
+      border-top: 1px solid transparent;
+    }
+  }
+  .card-header {
+    font-size: 16px;
+    font-weight: bold;
+    background-color: $grey-33;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    img {
+      width: 30px;
+      margin-right: 15px;
+    }
+  }
+  .line-tabs {
+    hr {
+      position: relative;
+      width: 100%;
+      top: 55px;
+    }
+  }
+  .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: $red-dark;
+    background-color: #fbfbfb;
+    border-color: #dee2e6 #dee2e6 #fbfbfb;
+  }
+  .nav-item {
+    a {
+      color: $grey-99;
+    }
+  }
+  .card.official-bulletins {
+    .description {
+      font-size: 12px;
+    }
+    h3 {
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .hr-official-bulletins {
+      top: 0;
+      margin: 0 0 10px;
+    }
+    label {
+      font-size: 12px;
+    }
+  }
+
+  .section-roadmap {
+    .line-roadmap:before {
+      content: '';
+      position: absolute;
+      width: 2px;
+      height: 100%;
+      left: 140px;
+      top: 0;
+      background: $grey-99;
+    }
+    .item-roadmap {
+      position: relative;
+      .box-date {
+        border: 1px solid $grey-66;
+        width: 110px;
+        padding: 10px;
+        height: 70px;
+        h1 {
+          font-size: 26px;
+          font-weight: bold;
+          margin-bottom: 0;
+        }
+      }
+      .box-date:after {
+        content: '';
+        width: 15px;
+        height: 15px;
+        background: #fff;
+        border: 2px solid $grey-99;
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        margin-left:107px;
+      }
+      .box-content {
+        margin-left: 70px;
+        width: 100%;
+        border: solid 1px $grey-66;
+        .item-content {
+          padding: 20px;
+          hr {
+            top: 0;
+          }
+          h3 {
+            color: $color-dark;
+            font-size: 14px;
+            font-weight: bold;
+          }
+          h1 {
+            color: $red-dark;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 0;
+          }
+          p {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 300px) and (max-width: 767px) {
+  .view-details .section-roadmap .item-roadmap .box-date {
+    width: 140px;
+  }
+}

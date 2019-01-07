@@ -1,18 +1,54 @@
-{% extends 'borme/base.html' %}
+{% extends 'borme/base2.html' %}
+{% comment %}
+  - loren ipsum
+  - <i class="fa fa-envelope"></i>
+{% endcomment %}
 
 {% block title %} Contacto | LibreBORME{% endblock %}
 
 {% block content %}
-      <h1>Contacto</h1>
 
-    <div class="container">
-      <p>
-        <i class="fa fa-envelope"></i> Puedes contactar con nosotros a través de la siguiente dirección de correo electrónico:
-        <br/>
-        {{ email_contact|reverse|safe }}
-        <br/>
-      </p>
-      
-    </div>
+  <div class="view-contacto mt-4">
+      <section class="contenido-descripcion">
+          <div class="container">
+              <div class="row">
+                  <div class="col-md-12">
+                      <h1 class="title-section">
+                          <span>|</span>contacto
+                      </h1>
+                  </div>
+              </div>
+              <div class="row mt-5">
+                  <div class="col-md-6 text-justify">
+                      <h3 class="mb-3">Puedes contactar con nosotros a través de la siguiente dirección de correo electrónico:</h3>
+                      <span class="text-description-contact">Ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</span>
+                      <div class="row mt-5">
+                          <div class="col-md-12">
+                              {{ email_contact|reverse|safe }}
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-6 text-justify">
+                      <h3 class="mb-3">Formulario de contacto</h3>
+                      <form>
+                          <div class="form-group">
+                              <input type="text" class="form-control" id="" aria-describedby="emailHelp" placeholder="Nombre">
+                          </div>
+                          <div class="form-group">
+                              <input type="text" class="form-control" id="" placeholder="Tema">
+                          </div>
+                          <div class="form-group">
+                              <textarea class="form-control" id="" rows="3" placeholder="Mensaje"></textarea>
+                          </div>
 
+                          <button type="submit" class="btn btn-primary btn-transparent">Enviar</button>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      {% include 'borme/sections/slide-services.html' %}
+
+  </div>
 {% endblock %}

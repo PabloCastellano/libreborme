@@ -1,116 +1,220 @@
-{% extends "alertas/base_dashboard.html" %}
-{% load bootstrap %}
+{% load staticfiles %}
+{% include 'borme/elements/navbar.html' %}
 
-{% block content %}
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
-          {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}" role="alert">
-              {{ message }}
-            </div>
-          {% endfor %}
-
-          <div class="row">
-            <div class="col-sm-1 col-sm-offset-11">
-              <a href="#">
-              <button type="button" class="btn btn-danger btn-xs">
-                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cerrar mi cuenta
-              </button>
-              </a>
-            </div>
-          </div>
-          <h1 class="page-header">Mi Cuenta</h1>
-
-          <h3 class="sub-header">Servicios contratados</h3>
-
-          {% if customer.has_any_active_subscription %}
-            <p>Tiene las siguientes suscripciones activas</p>
-
-            <div class="row">
-            <div class="col-sm-8">
-            <div class="table-responsive">
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Suscripción</th>
-                    <th>Comienzo</th>
-                    <th>Final del período</th>
-                    <th>Estado</th>
-                    <th>Período de prueba</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for subscription in customer.subscriptions.all %}
-                  <tr {% if subscription.status != 'trialing' %}class="success"{% else %}class="warning"{% endif %}>
-                    <td>{{ subscription.plan.product.name }}</td>
-                    <td>{{ subscription.start.date }}</td>
-                    <td>{{ subscription.current_period_end.date }}</td>
-                    <td>
-                      {% if subscription.status == 'trialing' %}
-                      <span class="label label-warning">Periodo de prueba</span>
-                      {% elif subscription.status == 'active' %}
-                      <span class="label label-success">Activo</span>
-                      {% else %}
-                      <span class="label label-danger">{{ subscription.status }}</span>
-                      {% endif %}
-                    </td>
-                    <td>{% if subscription.trial_end %}
-                            Hasta el {{ subscription.trial_end.date }}
-                        {% else %}
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        {% endif %}</td>
-                    <td>
-                      {% if subscription.cancel_at_period_end %}
-                      Cancelada el {{ subscription.canceled_at.date }}
-                      {% else %}
-                        <a href="#">
-                        <button type="button" class="btn btn-primary btn-xs">
-                          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cancelar
-                        </button>
+<div class="container-fluid view-panel">
+    <div class="row">
+        <nav class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <img src="{% static 'assets/img/menu-panel/cuenta.svg' %}" alt="" class="feather feather-home">
+                            Mi cuenta
                         </a>
-                      {% endif %}
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            </div>
-            </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <img src="{% static 'assets/img/menu-panel/facturas.svg' %}" alt="" class="feather feather-home">
+                            Facturas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <img src="{% static 'assets/img/menu-panel/metodo_pago.svg' %}" alt="" class="feather feather-home">
+                            Métodos de pago
+                        </a>
+                    </li>
+                </ul>
 
-          {% else %}
-            <p>No tienes ningún servicio contratado actualmente.</p>
-            <p>Sin embargo, puedes probar el servicio de <a href="{% url 'service-follow' %}">Seguimiento</a> de forma gratuita.</p>
-            <p>Puedes obtener más información sobre los servicios disponibles <a href="#">Aquí (TODO)</a></p>
-          {% endif %}
-
-        <h2 class="sub-header">Mi Perfil</h2>
-
-          <form action="{% url "alertas-settings-billing" %}" role="form" method="post">
-            {% csrf_token %}
-            <div class="row">
-              <div class="col-sm-5">
-                <legend>Datos personales</legend>
-                {{ form_personal|bootstrap_horizontal:'col-sm-3'}}
-                <p><a href="{% url 'password_change' %}">Cambiar contraseña</a></p>
-              </div>
-              <div class="col-sm-6 col-sm-offset-1">
-                <legend>Datos de facturación</legend>
-                {{ form_profile|bootstrap_horizontal:'col-sm-3' }}
-              </div>
+                <h6 class="sidebar-heading px-3 mt-4 mb-1 text-muted">
+                    <span>Servicios</span>
+                </h6>
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <img src="{% static 'assets/img/menu-panel/seguimiento.svg' %}" alt="" class="feather feather-home">
+                            Seguimiento
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <img src="{% static 'assets/img/menu-panel/subscripciones.svg' %}" alt="" class="feather feather-home">
+                            Subscripciones
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <img src="{% static 'assets/img/menu-panel/api.svg' %}" alt="" class="feather feather-home">
+                            Api
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <img src="{% static 'assets/img/menu-panel/cerrar_sesion.svg' %}" alt="" class="feather feather-home">
+                            Cerrar sesión
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <div class="row">
-              <div class="col-sm-5">
-                <legend>Boletín</legend>
-                {{ form_newsletter|bootstrap_horizontal }}
-              </div>
-            </div>
-            <div class="form-group">
-              <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
-            </div>
-          </form>
+        </nav>
 
-        </div>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4"><div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+            <section style="padding: 20px 0;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="title-section">
+                            <span>|</span>Mi cuenta
+                        </h1>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <h3 class="subtitle-panel">Servicios contratados</h3>
+                        <p class="description mt-4">No tienes ningún servicio contratado actualmente.</p>
+                        <p class="description">Sin embargo, puedes probar el servicio de Seguimiento de forma gratuita.</p>
+                        <p class="description">Puedes obtener más información sobre los servicios disponibles Aquí (TODO)</p>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="title-section">
+                            <span>|</span>Mi perfil
+                        </h1>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h3 class="subtitle-panel">Datos Personales</h3>
+                        <form class="mt-4">
+                            <div class="form-group row">
+                                <label for="" class="col-sm-3 col-form-label">Fecha de Alta</label>
+                                <div class="col-sm-9">
+                                    <input type="date" class="form-control" id="inputDate" placeholder="Fecha de Alta">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-3 col-form-label">Nombre</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputName" placeholder="Nombre">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputSureName" class="col-sm-3 col-form-label">Apellidos</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputSureName" placeholder="Apellidos">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail" class="col-sm-3 col-form-label">E-Mail</label>
+                                <div class="col-sm-9">
+                                    <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputPhone" class="col-sm-3 col-form-label">Teléfono</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" id="inputPhone" placeholder="Teléfono">
+                                </div>
+                            </div>
+                        </form>
 
-{% endblock %}
+                        <a href="" class="change-pass">Cambiar contraseña</a>
+
+                        <h3 class="subtitle-panel mt-4">Boletín</h3>
+
+                        <form class="mt-4">
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck3" required>
+                                    <label class="form-check-label" for="invalidCheck3">
+                                        Recibir promociones
+                                    </label>
+                                    <div class="subtext-form-check-label">
+                                        ¿Quieres recibir información sobre descuentos y nuevas promociones en tu correo electrónico?
+                                    </div>
+                                </div>
+                                <div class="form-check mt-3">
+                                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck3" required>
+                                    <label class="form-check-label" for="invalidCheck3">
+                                        Recibir novedades
+                                    </label>
+                                    <div class="subtext-form-check-label">
+                                        Información sobre novedades de LibreBORME
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row mt-5">
+                            <div class="col-md-12">
+                                <a class="btn btn-primary btn-transparent" href="#" role="button">Actualizar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3 class="subtitle-panel">Datos de Facturación</h3>
+                        <form class="mt-4">
+                            <div class="form-group row">
+                                <label for="" class="col-sm-3 col-form-label">Tipo</label>
+                                <div class="col-sm-9">
+                                    <input type="date" class="form-control" id="inputDate" placeholder="Fecha de Alta">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputRazon" class="col-sm-3 col-form-label">Razón social</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputRazon" placeholder="Razón social">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputAddress" class="col-sm-3 col-form-label">Dirección</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputAddress" placeholder="Dirección">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputCode" class="col-sm-3 col-form-label">C.P</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" id="inputCode" placeholder="Código Postal">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputTown" class="col-sm-3 col-form-label">Población</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputTown" placeholder="Población">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputProvince" class="col-sm-3 col-form-label">Provincia</label>
+                                <div class="col-sm-9">
+                                    <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+                                        <option selected>Provincia</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputCountry" class="col-sm-3 col-form-label">País</label>
+                                <div class="col-sm-9">
+                                    <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+                                        <option selected>País</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+{% include 'alertas/elements/footer-panel.html' %}

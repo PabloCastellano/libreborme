@@ -1,237 +1,283 @@
-{% extends 'borme/base.html' %}
+{% comment %}
+{% if query %}
+<h1>Resultados de la búsqueda «{{ query }}»</h1>
+
+<form class="form-horizontal" role="search" action="{% url "borme-search" %}" method="get">
+
+<div class="form-group">
+  <div class="form-group">
+    <label for="searchtitle" class="col-sm-2 control-label">Nombre:</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control" id="searchtitle" name="q" value="{{ query }}">
+    </div>
+  </div>
+
+  <input type="hidden" name="page" value="1">
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Tipo:</label>
+    <div class="col-sm-6">
+      <input type="radio" name="type" value="all" {% if form.cleaned_data.type == 'all' %}checked{% endif %}>Todos
+      <input type="radio" name="type" value="company" {% if form.cleaned_data.type == 'company' %}checked{% endif %}> Empresa
+      <input type="radio" name="type" value="person" {% if form.cleaned_data.type == 'person' %}checked{% endif %}> Persona
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"> Buscar</i></button>
+    </div>
+  </div>
+</div>
+</form>
+
+<p>Se encontraron {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company'%} <strong>{{ count_companies }}</strong> empresa{{ count_companies|pluralize }}{% endif %}{% if form.cleaned_data.type == 'all' %} y {% endif %}{% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'person'%}<strong>{{ count_persons }}</strong> persona{{ count_persons|pluralize }}{% endif %}.</p>
+
+{% if suggestion %}
+<h3>Sugerencias:</h3>
+    {{ suggestion }}
+{% endif %}
+
+{% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company' %}
+<h2>Empresas:</h2>
+    <div class="search-companies">
+        {% if results_companies %}
+            {% for cs in results_companies|rows_distributed:3 %}
+                {% if results_companies|length > 5 %}
+                    <div class="col-md-4">
+                {% endif %}
+                <ul>
+                {% for company in cs %}
+                    <li><a href="{% url "borme-empresa" company.slug %}">{{ company.name }}</a></li>
+                {% endfor %}
+                </ul>
+                {% if results_companies|length > 5 %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <i>No se encontraron empresas.</i>
+        {% endif %}
+    </div>
+
+
+{% if results_companies %}
+<nav>
+  <ul class="pagination">
+    {% if page_companies.has_previous %}
+    <li>
+      <a href="?q={{ query }}&page={{ page_companies.previous_page_number }}&type=company" rel="nofollow" aria-label="Previous">
+    {% else %}
+    <li class="disabled">
+      <a href="#" rel="nofollow" aria-label="Previous">
+    {% endif %}
+        <span aria-hidden="true">&laquo; Anterior</span>
+      </a>
+    </li>
+
+    {% for num in range_companies %}
+        {% if num == page_companies.number %}
+        <li class="active"><a href="?q={{ query }}&page={{ num }}&type=company" rel="nofollow">{{ num }}</a></li>
+        {% else %}
+        <li><a href="?q={{ query }}&page={{ num }}&type=company" rel="nofollow">{{ num }}</a></li>
+        {% endif %}
+    {% empty %}
+        <li class="active"><a href="?q={{ query }}&page=1&type=company" rel="nofollow">1</a></li>
+    {% endfor %}
+
+    {% if page_companies.has_next %}
+    <li>
+      <a href="?q={{ query }}&page={{ page_companies.next_page_number }}&type=company" rel="nofollow" aria-label="Next">
+    {% else %}
+    <li class="disabled">
+      <a href="#" rel="nofollow" aria-label="Next">
+    {% endif %}
+        <span aria-hidden="true">Siguiente &raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+{% endif %}
+{% endif %}
+
+{% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'person' %}
+<h2>Personas:</h2>
+    <div class="search-persons">
+        {% if results_persons %}
+            {% for ps in results_persons|rows_distributed:3 %}
+                {% if results_persons|length > 5 %}
+                    <div class="col-md-4">
+                {% endif %}
+                <ul>
+                {% for person in ps %}
+                    <li><a href="{% url "borme-persona" person.slug %}">{{ person.name|title }}</a></li>
+                {% endfor %}
+                </ul>
+                {% if results_persons|length > 5 %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <i>No se encontraron personas.</i>
+        {% endif %}
+    </div>
+
+{% if results_persons %}
+<nav>
+  <ul class="pagination">
+    {% if page_persons.has_previous %}
+    <li>
+      <a href="?q={{ query }}&page={{ page_persons.previous_page_number }}&type=person" rel="nofollow" aria-label="Previous">
+    {% else %}
+    <li class="disabled">
+      <a href="#" rel="nofollow" aria-label="Previous">
+    {% endif %}
+        <span aria-hidden="true">&laquo; Anterior</span>
+      </a>
+    </li>
+
+    {% for num in range_persons %}
+        {% if num == page_persons.number %}
+        <li class="active"><a href="?q={{ query }}&page={{ num }}&type=person" rel="nofollow">{{ num }}</a></li>
+        {% else %}
+        <li><a href="?q={{ query }}&page={{ num }}&type=person" rel="nofollow">{{ num }}</a></li>
+        {% endif %}
+    {% empty %}
+        <li class="active"><a href="?q={{ query }}&page=1&type=person" rel="nofollow">1</a></li>
+    {% endfor %}
+
+    {% if page_persons.has_next %}
+    <li>
+      <a href="?q={{ query }}&page={{ page_persons.next_page_number }}&type=person" rel="nofollow" aria-label="Next">
+    {% else %}
+    <li class="disabled">
+      <a href="#" rel="nofollow" aria-label="Next">
+    {% endif %}
+        <span aria-hidden="true">Siguiente &raquo;</span>
+      </a>
+    </li>
+
+  </ul>
+</nav>
+{% endif %}
+{% endif %}
+
+{% else %}
+
+<h1>Búsqueda avanzada</h1>
+
+  <form class="form-horizontal" role="search" action="{% url "borme-search" %}" method="get">
+
+  <div class="form-group">
+    <div class="form-group">
+      <label for="searchtitle" class="col-sm-2 control-label">Nombre:</label>
+      <div class="col-sm-6">
+        <input type="text" class="form-control" id="searchtitle" name="q">
+      </div>
+    </div>
+
+    <input type="hidden" name="page" value="1">
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Tipo:</label>
+      <div class="col-sm-6">
+        <input type="radio" name="type" value="all" {% if form.cleaned_data.type == 'all' %}checked{% endif %}>Todos
+        <input type="radio" name="type" value="company" {% if form.cleaned_data.type == 'company' %}checked{% endif %}> Empresa
+        <input type="radio" name="type" value="person" {% if form.cleaned_data.type == 'person' %}checked{% endif %}> Persona
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"> Buscar</i></button>
+      </div>
+    </div>
+
+  </form>
+
+{% endif %}
+{% endcomment %}
+
+{% extends 'borme/base2.html' %}
 
 {% load utils %}
 
 {% block title %}{% if query %}Resultados de la búsqueda {{ query|upper }} | LibreBORME{% else %}Búsqueda avanzada | LibreBORME{% endif %}{% endblock %}
 
 {% block content %}
-    {% if query %}
-    <h1>Resultados de la búsqueda «{{ query }}»</h1>
-
-    <form class="form-horizontal" role="search" action="{% url "borme-search" %}" method="get">
-
-    <div class="form-group">
-      <div class="form-group">
-        <label for="searchtitle" class="col-sm-2 control-label">Nombre:</label>
-        <div class="col-sm-6">
-          <input type="text" class="form-control" id="searchtitle" name="q" value="{{ query }}">
-        </div>
+<div class="view-search mt-4">
+  <div class="section-title-result-search">
+      <div class="container">
+          <div class="row">
+              <div class="col-md-12">
+                  <h1 class="title-section-result-search">
+                      Resultados de busqueda «{{ query }}»
+                  </h1>
+              </div>
+          </div>
       </div>
-
-      <input type="hidden" name="page" value="1">
-
-      <div class="form-group">
-        <label class="col-sm-2 control-label">Tipo:</label>
-        <div class="col-sm-6">
-          <input type="radio" name="type" value="all" {% if form.cleaned_data.type == 'all' %}checked{% endif %}>Todos
-          <input type="radio" name="type" value="company" {% if form.cleaned_data.type == 'company' %}checked{% endif %}> Empresa
-          <input type="radio" name="type" value="person" {% if form.cleaned_data.type == 'person' %}checked{% endif %}> Persona
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-          <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"> Buscar</i></button>
-        </div>
-      </div>
-    </div>
-    </form>
-
-    <p>Se encontraron {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company'%} <strong>{{ count_companies }}</strong> empresa{{ count_companies|pluralize }}{% endif %}{% if form.cleaned_data.type == 'all' %} y {% endif %}{% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'person'%}<strong>{{ count_persons }}</strong> persona{{ count_persons|pluralize }}{% endif %}.</p>
-
-    {% if suggestion %}
-    <h3>Sugerencias:</h3>
-        {{ suggestion }}
-    {% endif %}
-
-    {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company' %}
-    <h2>Empresas:</h2>
-        <div class="search-companies">
-            {% if results_companies %}
-                {% for cs in results_companies|rows_distributed:3 %}
-                    {% if results_companies|length > 5 %}
-                        <div class="col-md-4">
-                    {% endif %}
-                    <ul>
-                    {% for company in cs %}
-                        <li><a href="{% url "borme-empresa" company.slug %}">{{ company.name }}</a></li>
-                    {% endfor %}
-                    </ul>
-                    {% if results_companies|length > 5 %}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            {% else %}
-                <i>No se encontraron empresas.</i>
-            {% endif %}
-        </div>
-
-
-    {% if results_companies %}
-    <nav>
-      <ul class="pagination">
-        {% if page_companies.has_previous %}
-        <li>
-          <a href="?q={{ query }}&page={{ page_companies.previous_page_number }}&type=company" rel="nofollow" aria-label="Previous">
-        {% else %}
-        <li class="disabled">
-          <a href="#" rel="nofollow" aria-label="Previous">
-        {% endif %}
-            <span aria-hidden="true">&laquo; Anterior</span>
-          </a>
-        </li>
-
-        {% for num in range_companies %}
-            {% if num == page_companies.number %}
-            <li class="active"><a href="?q={{ query }}&page={{ num }}&type=company" rel="nofollow">{{ num }}</a></li>
-            {% else %}
-            <li><a href="?q={{ query }}&page={{ num }}&type=company" rel="nofollow">{{ num }}</a></li>
-            {% endif %}
-        {% empty %}
-            <li class="active"><a href="?q={{ query }}&page=1&type=company" rel="nofollow">1</a></li>
-        {% endfor %}
-
-        {% if page_companies.has_next %}
-        <li>
-          <a href="?q={{ query }}&page={{ page_companies.next_page_number }}&type=company" rel="nofollow" aria-label="Next">
-        {% else %}
-        <li class="disabled">
-          <a href="#" rel="nofollow" aria-label="Next">
-        {% endif %}
-            <span aria-hidden="true">Siguiente &raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-    {% endif %}
-    {% endif %}
-
-    {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'person' %}
-    <h2>Personas:</h2>
-        <div class="search-persons">
-            {% if results_persons %}
-                {% for ps in results_persons|rows_distributed:3 %}
-                    {% if results_persons|length > 5 %}
-                        <div class="col-md-4">
-                    {% endif %}
-                    <ul>
-                    {% for person in ps %}
-                        <li><a href="{% url "borme-persona" person.slug %}">{{ person.name|title }}</a></li>
-                    {% endfor %}
-                    </ul>
-                    {% if results_persons|length > 5 %}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            {% else %}
-                <i>No se encontraron personas.</i>
-            {% endif %}
-        </div>
-
-    {% if results_persons %}
-    <nav>
-      <ul class="pagination">
-        {% if page_persons.has_previous %}
-        <li>
-          <a href="?q={{ query }}&page={{ page_persons.previous_page_number }}&type=person" rel="nofollow" aria-label="Previous">
-        {% else %}
-        <li class="disabled">
-          <a href="#" rel="nofollow" aria-label="Previous">
-        {% endif %}
-            <span aria-hidden="true">&laquo; Anterior</span>
-          </a>
-        </li>
-
-        {% for num in range_persons %}
-            {% if num == page_persons.number %}
-            <li class="active"><a href="?q={{ query }}&page={{ num }}&type=person" rel="nofollow">{{ num }}</a></li>
-            {% else %}
-            <li><a href="?q={{ query }}&page={{ num }}&type=person" rel="nofollow">{{ num }}</a></li>
-            {% endif %}
-        {% empty %}
-            <li class="active"><a href="?q={{ query }}&page=1&type=person" rel="nofollow">1</a></li>
-        {% endfor %}
-
-        {% if page_persons.has_next %}
-        <li>
-          <a href="?q={{ query }}&page={{ page_persons.next_page_number }}&type=person" rel="nofollow" aria-label="Next">
-        {% else %}
-        <li class="disabled">
-          <a href="#" rel="nofollow" aria-label="Next">
-        {% endif %}
-            <span aria-hidden="true">Siguiente &raquo;</span>
-          </a>
-        </li>
-
-      </ul>
-    </nav>
-    {% endif %}
-    {% endif %}
-
-{% else %}
-
-    <h1>Búsqueda avanzada</h1>
-
-      <form class="form-horizontal" role="search" action="{% url "borme-search" %}" method="get">
-
-      <div class="form-group">
-        <div class="form-group">
-          <label for="searchtitle" class="col-sm-2 control-label">Nombre:</label>
-          <div class="col-sm-6">
-            <input type="text" class="form-control" id="searchtitle" name="q">
+  </div>
+  <div class="container">
+      <form>
+          <div class="form-row justify-content-center mt-4">
+              <div class="col-5">
+                  <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                  <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                          <div class="input-group-text">
+                              <i class="fas fa-search"></i>
+                          </div>
+                      </div>
+                      <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Metal">
+                  </div>
+              </div>
           </div>
-        </div>
-
-        <input type="hidden" name="page" value="1">
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Tipo:</label>
-          <div class="col-sm-6">
-            <input type="radio" name="type" value="all" {% if form.cleaned_data.type == 'all' %}checked{% endif %}>Todos
-            <input type="radio" name="type" value="company" {% if form.cleaned_data.type == 'company' %}checked{% endif %}> Empresa
-            <input type="radio" name="type" value="person" {% if form.cleaned_data.type == 'person' %}checked{% endif %}> Persona
-          </div>
-        </div>
-
-{% comment %}
-        <div class="form-group">
-          <div class="col-sm-offset-2 col-sm-10">
-            <div class="checkbox">
-              <label for="exactmatch">
-                <input type="checkbox" name="exactmatch" id="exactmatch" value="1"> Búsqueda exacta
-              </label>
-            </div>
-          <p class="help-block">Palabras claves exactas (no contenidas en otras palabras)</p>
-        </div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Años de actividad</label>
-          <div class="col-sm-6">
-            Desde:
-            <select>
-              <option value="2007">2007</option>
-              <option value="2008">2008</option>
-              <option value="2009">2009</option>
-              <option value="2010">2010</option>
-            </select>
-            hasta:
-            <select>
-              <option value="2007">2007</option>
-              <option value="2008">2008</option>
-              <option value="2009">2009</option>
-              <option value="2010">2010</option>
-            </select>
-          </div>
-        </div>
-{% endcomment %}
-
-        <div class="form-group">
-          <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"> Buscar</i></button>
-          </div>
-        </div>
-
       </form>
+  </div>
+  <div class="line-tabs">
+      <hr>
+      <div class="container">
+          <div class="row align-items-center">
+              <div class="col-md-6">
+                  <ul class="nav nav-tabs" id="myTab" role="tablist">
+                      <li class="nav-item">
+                          <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="true">Todos</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" id="company-tab" data-toggle="tab" href="#company" role="tab" aria-controls="company" aria-selected="false">Empresa</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" id="people-tab" data-toggle="tab" href="#people" role="tab" aria-controls="people" aria-selected="false">Personas</a>
+                      </li>
+                  </ul>
+              </div>
+              <div class="col-md-6 text-right">
+                  <p class="mb-0">Se encontraron {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company'%}<span class="font-weight-bold">{{ count_companies }}</span> empresa{{ count_companies|pluralize }}{% endif %}{% if form.cleaned_data.type == 'all' %} y {% endif %}{% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'person'%}<span class="font-weight-bold">{{ count_persons }}</span> persona{{ count_persons|pluralize }}{% endif %}.</p>
+              </div>
+          </div>
+      </div>
+      <div class="background-result">
+          <div class="container">
+              <div class="row">
+                  <div class="col-md-12">
+                      <div class="tab-content mt-5 mb-5" id="myTabContent">
+                          <div class="tab-pane fade show active " id="all" role="tabpanel" aria-labelledby="all-tab">
+                              {% include 'borme/search/all.html' %}
+                          </div>
+                          <div class="tab-pane fade" id="company" role="tabpanel" aria-labelledby="company-tab">
+                              {% include 'borme/search/company.html' %}
+                          </div>
+                          <div class="tab-pane fade" id="people" role="tabpanel" aria-labelledby="people-tab">
+                              {% include 'borme/search/people.html' %}
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
 
-{% endif %}
+  {% include 'borme/sections/slide-services.html' %}
+
+</div>
 {% endblock %}

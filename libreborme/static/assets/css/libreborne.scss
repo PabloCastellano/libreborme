@@ -1,0 +1,142 @@
+@import "var/colors.scss";
+@import "button.scss";
+@import "home";
+@import "servicios";
+@import "contacto";
+@import "modal";
+@import "search";
+@import "details";
+@import "responsive";
+@import "panel";
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: $grey-99;
+  padding-bottom: 0;
+  padding-top: 2rem;
+}
+.btn {
+  width: 115px;
+  height: 28px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 3px 0 0;
+}
+
+header {
+  .dropdown-item {
+    font-size: 14px;
+    color: $grey-99;
+  }
+  .img-navbar-account {
+    width: 20px;
+  }
+  .navbar-brand {
+    img {
+      width: 164px;
+    }
+  }
+  .position-navbar {
+    justify-content: flex-end;
+    width: 100%;
+  }
+  .navbar-nav {
+    .nav-link {
+      padding: 4px 0;
+      padding-left: 30px !important;
+      padding-right: 30px !important;
+    }
+  }
+  .bg-light {
+    background-color: $grey-33 !important;
+  }
+  .navbar-light {
+    .navbar-nav {
+      .nav-link {
+        color: $grey-99 !important;
+      }
+    }
+  }
+}
+.slide-servicios {
+  img {
+    width: 75px;
+    margin-right: 20px;
+  }
+  span {
+    font-size: 18px;
+    color: $red-dark;
+    font-weight: bold;
+  }
+}
+
+.view-404 {
+  h2 {
+    font-size: 32px;
+    font-weight: bold;
+    color: $color-dark;
+  }
+  .descripcion-404 {
+    font-size: 12px;
+  }
+}
+
+section.footer {
+  height: 295px;
+  background-color: $color-dark;
+  .col-footer {
+    h3 {
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    a {
+      font-size: 14px;
+      color: $color-light;
+    }
+    li {
+      margin-bottom: 10px;
+    }
+  }
+  img {
+    width: 110px;
+  }
+  p {
+    font-size: 12px;
+    color: $grey-66;
+  }
+  hr {
+    border-top: 1px solid $grey-99;
+    margin-top: 40px;
+  }
+  .ul-bottom-footer {
+    margin-bottom: 0;
+  }
+}
+section.cookies {
+  padding: 10px 0 0;
+  position: fixed;
+  bottom: 0;
+  background-color: $color-dark;
+  p {
+    font-size: 12px;
+    color: white;
+  }
+  .btn-more-info {
+    width: auto;
+    padding: 3px 20px;
+    margin-right: 10px;
+  }
+}
+.title-section {
+  font-size: 21px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-bottom: solid 1px $grey-66;
+  padding-bottom: 10px;
+  span {
+    font-size: 24px;
+    margin-right: 5px;
+  }
+}

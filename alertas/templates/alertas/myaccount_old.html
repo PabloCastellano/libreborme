@@ -1,0 +1,116 @@
+{% extends "alertas/base_dashboard.html" %}
+{% load bootstrap %}
+
+{% block content %}
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+
+          <div class="row">
+            <div class="col-sm-1 col-sm-offset-11">
+              <a href="#">
+              <button type="button" class="btn btn-danger btn-xs">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cerrar mi cuenta
+              </button>
+              </a>
+            </div>
+          </div>
+          <h1 class="page-header">Mi Cuenta</h1>
+
+          <h3 class="sub-header">Servicios contratados</h3>
+
+          {% if customer.has_any_active_subscription %}
+            <p>Tiene las siguientes suscripciones activas</p>
+
+            <div class="row">
+            <div class="col-sm-8">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Suscripción</th>
+                    <th>Comienzo</th>
+                    <th>Final del período</th>
+                    <th>Estado</th>
+                    <th>Período de prueba</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for subscription in customer.subscriptions.all %}
+                  <tr {% if subscription.status != 'trialing' %}class="success"{% else %}class="warning"{% endif %}>
+                    <td>{{ subscription.plan.product.name }}</td>
+                    <td>{{ subscription.start.date }}</td>
+                    <td>{{ subscription.current_period_end.date }}</td>
+                    <td>
+                      {% if subscription.status == 'trialing' %}
+                      <span class="label label-warning">Periodo de prueba</span>
+                      {% elif subscription.status == 'active' %}
+                      <span class="label label-success">Activo</span>
+                      {% else %}
+                      <span class="label label-danger">{{ subscription.status }}</span>
+                      {% endif %}
+                    </td>
+                    <td>{% if subscription.trial_end %}
+                            Hasta el {{ subscription.trial_end.date }}
+                        {% else %}
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        {% endif %}</td>
+                    <td>
+                      {% if subscription.cancel_at_period_end %}
+                      Cancelada el {{ subscription.canceled_at.date }}
+                      {% else %}
+                        <a href="#">
+                        <button type="button" class="btn btn-primary btn-xs">
+                          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cancelar
+                        </button>
+                        </a>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            </div>
+            </div>
+
+          {% else %}
+            <p>No tienes ningún servicio contratado actualmente.</p>
+            <p>Sin embargo, puedes probar el servicio de <a href="{% url 'service-follow' %}">Seguimiento</a> de forma gratuita.</p>
+            <p>Puedes obtener más información sobre los servicios disponibles <a href="#">Aquí (TODO)</a></p>
+          {% endif %}
+
+        <h2 class="sub-header">Mi Perfil</h2>
+
+          <form action="{% url "alertas-settings-billing" %}" role="form" method="post">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-sm-5">
+                <legend>Datos personales</legend>
+                {{ form_personal|bootstrap_horizontal:'col-sm-3'}}
+                <p><a href="{% url 'password_change' %}">Cambiar contraseña</a></p>
+              </div>
+              <div class="col-sm-6 col-sm-offset-1">
+                <legend>Datos de facturación</legend>
+                {{ form_profile|bootstrap_horizontal:'col-sm-3' }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-5">
+                <legend>Boletín</legend>
+                {{ form_newsletter|bootstrap_horizontal }}
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
+            </div>
+          </form>
+
+        </div>
+
+{% endblock %}

@@ -1,0 +1,190 @@
+{% load staticfiles %}
+{% comment %}
+- mover newsletter.html a borme/sections/newsletter.html
+- datatables
+- <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+
+<link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+<link href="{% static "fontawesome/css/font-awesome.min.css" %}" rel="stylesheet">
+<link href="{% static "css/libreborme.css" %}" rel="stylesheet">
+
+
+
+<div class="container">
+    <div class="header1">
+    <div class="row">
+
+      <form class="navbar-form navbar-left" role="search" action="{% url "borme-search" %}" method="get">
+      <a href="{% url "borme-home" %}"><img alt="libreborme logo" src="{% static "libreborme_logo.png" %}"></a>
+      <div class="form-group">
+        <input type="text" class="form-control" size="32" name="q" placeholder="Buscar por nombre de empresa o persona" {% if not search_view %}autofocus {% endif %}>
+        <input type="hidden" name="page" value="1">
+        <input type="hidden" name="type" value="all">
+        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
+        <a href="{% url "borme-search" %}">Búsqueda avanzada</a>
+      </div>
+      </form>
+      <div>
+        {% if user.is_authenticated %}
+          <a href="{% url 'dashboard-index' %}">Hola {{ user }}</a> <a href="{% url 'logout' %}">Salir</a>
+          {% if user.is_staff %}<a href="/admin">Admin</a>{% endif %}
+        {% else %}
+          <a href="{% url 'login' %}">Entrar</a>
+          {% if registration_open %}
+          |
+          <a href="{% url 'django_registration_register' %}">Registrarme</a>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">¿Por qué no hay datos anteriores al año 2009?</h4>
+        </div>
+        <div class="modal-body">
+            <p>La ley <i>de acceso electrónico de los ciudadanos a los Servicios Públicos</i></a>, aprobada en España en
+                el año 2007, incluyó entre sus reformas la obligación de publicar en formato electrónico varios Boletines
+                Oficiales como el BOE y el BORME.</p>
+
+            <p>Dicha ley especificó que la fecha a partir de la cual se publicarían los Boletines en formato electrónico sería a partir de 2009,
+                por lo que todos los Boletines Oficiales anteriores sólo están disponibles en papel en la sede de la <i>Agencia Estatal Boletín Oficial del Estado</i>.</p>
+
+            <p>Por este motivo en LibreBORME la información no es completa: aparecen empresas de las que desconocemos sus cargos directivos,
+                sabemos la fecha de disolución de sociedades pero no sabemos la de su constitución y no hay rastro de empresas que no hayan
+                inscrito ningún acto mercantil desde 2009 hasta ahora.</p>
+
+            <p>El proyecto LibreBORME nace para recordar que los datos recogidos en el Registro Mercantil han sido tratados y gestionados por
+                funcionarios públicos, pagados a su vez con los impuestos de los ciudadanos y reivindicar que son datos que nos
+                pertenecen y que en pleno siglo XXI deben estar accesibles a través de Internet.</p>
+
+            <p><a href="https://boe.es/diario_boe/txt.php?id=BOE-A-2007-12352" target="_blank" rel="nofollow"><small>Ley 11/2007, de 22 de junio, de acceso electrónico de los ciudadanos a los Servicios Públicos</small></a>
+            <br/><a href="https://www.rmc.es/" target="_blank" rel="nofollow"><small>Registro Mercantil Central</small></a></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Entendido</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script src="{% static 'static_jquery/js/jquery.min.js' %}"></script>
+  <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+  <script src="{% static "jquery.cookie.js" %}"></script>
+
+  {% if not debug %}
+  <script type="text/javascript">
+      var advice = $("#headerCookies");
+      var closeButton = advice.find(".cookies-header-close");
+      var cookie = $.cookie('cookies');
+
+      if (cookie == null) {
+          advice.show();
+          closeButton.click(function(e){
+          var date = new Date();
+              date.setTime(date.getTime() + (60 * 60 * 24 * 365 * 10 * 1000));
+              $.cookie("cookies", "accept", { expires: date, path: "/", domain: ".{{DOMAIN}}" });
+          e.preventDefault();
+          e.stopPropagation();
+          advice.slideUp("fast");
+          });
+      }
+  </script>
+  {% endif %}
+{% endcomment %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>{% block title %}LibreBORME{% endblock %}</title>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Pablo Castellano">
+
+    {% block meta %}
+    <meta name="keywords" content="Empresas, Informe, CNAE, Registro, Mercantil, Actos, BOE, BORME, Open Data, Cargos, Directivos"/>
+    <meta name="description" content="Libreborme.net ofrece un buscador para el Boletín Oficial del Registro Mercantil. Encuentra información sobre actos mercantiles de empresas."/>
+    {% endblock %}
+
+    <link rel="icon" href="{% static "favicon.ico" %}">
+    <link type="text/plain" rel="author" href="humans.txt" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/libreborne.css' %}">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+</head>
+
+<body>
+  {% include 'borme/elements/navbar.html' %}
+
+  {% if not debug %}
+  <!-- Cookies message -->
+  <div id="headerCookies" style="display:none;">
+    <div class="limiter">
+      <p class="header-message">LibreBORME.net utiliza cookies para que tengas la mejor experiencia de navegación. Si sigues navegando entendemos que aceptas nuestra <a href="{% url 'cookies' %}">política de cookies</a>.</p>
+      <p class="header-buttonline">
+        <button type="button" class="btn btn-primary btn-sm cookies-header-close">OK</button>
+      </p>
+    </div>
+  </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+
+  {% include "newsletter.html" %}
+  {% include "borme/elements/footer.html" %}
+  {% include "matomo.html" %}
+
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  {% block extrajs %}{% endblock %}
+  <script src="//code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="{% static 'assets/js/vendor/jquery-slim.min.js' %}"><\/script>')</script>
+  <script src="{% static 'assets/js/vendor/popper.min.js' %}"></script>
+  <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+  <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+  <script src="{% static 'assets/js/vendor/holder.min.js' %}"></script>
+  <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+  <script>
+      $(document).ready(function(){
+          var $logo = $('#logo');
+          if ( window.location.pathname == '/' ){
+              $logo.addClass('d-none');
+              $(function () {
+                  $(window).scroll(function () {
+                      if ($(this).scrollTop() > 180) {
+                          $logo.removeClass('d-none')
+                      } else {
+                          $logo.addClass('d-none')
+                      }
+                  });
+              });
+          } else {
+              $logo.removeClass('d-none');
+          }
+      });
+
+      $(document).ready(function() {
+          $('#example').DataTable();
+      } );
+  </script>
+
+</body>
+</html>

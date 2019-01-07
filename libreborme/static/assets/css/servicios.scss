@@ -1,0 +1,44 @@
+.view-servicios {
+  section.contenido-servicio {
+    background-color: white;
+    .titulo-servicio {
+      font-size: 24px;
+      font-weight: bold;
+      color: $red-dark;
+    }
+    .descripcion-servicio {
+      font-size: 12px;
+    }
+    .card {
+      border-radius: 10px;
+      max-width: 240px;
+      h4 {
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+      h3 {
+        font-size: 25px;
+        font-weight: bold;
+      }
+      p {
+        font-size: 12px;
+        font-weight: lighter;
+        margin-bottom: 0;
+      }
+      img {
+        margin-right: 10px;
+      }
+      .card-footer {
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        background-color: $red-dark;
+        border-top: 1px solid $red-dark;
+        p {
+          font-size: 12px;
+          color: white;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}

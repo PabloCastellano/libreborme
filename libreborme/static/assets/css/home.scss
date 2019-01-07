@@ -1,0 +1,132 @@
+#myCarousel {
+  margin-bottom: 0;
+  .carousel-caption {
+    top: 20%;
+    .logo-banner {
+      width: 333px;
+      margin-bottom: 30px;
+    }
+  }
+
+
+  .carousel-item {
+    img {
+      left: -10px;
+    }
+  }
+  h1 {
+    font-size: 32px;
+    font-weight: bold;
+    color: $color-dark;
+  }
+}
+section {
+  padding: 40px 0 ;
+}
+
+section.banner-consulta {
+  background: #b9021d;
+  background: -moz-linear-gradient(left, #b9021d 0%, #e0435a 21%, #e0435a 77%, #b9021d 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left, #b9021d 0%,#e0435a 21%,#e0435a 77%,#b9021d 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right, #b9021d 0%,#e0435a 21%,#e0435a 77%,#b9021d 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b9021d', endColorstr='#b9021d',GradientType=1 ); /* IE6-9 */
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  p {
+    font-size: 16px;
+  }
+}
+
+section.featured-section {
+  img {
+    height: 115px;
+  }
+  h2 {
+    font-size: 24px;
+    color: $color-dark;
+    margin: 25px 0;
+  }
+  p {
+    font-size: 12px;
+    width: 85%;
+    margin: 0 auto;
+  }
+}
+section.services {
+  background-color: $color-light;
+  .circle-img {
+    width: 147px;
+    height: 147px;
+    background-color: white;
+    margin: 0 auto;
+    border-radius: 100px;
+    img {
+      margin-top: 20px;
+    }
+  }
+  h2 {
+    font-size: 24px;
+    color: $red-dark;
+    margin: 25px 0;
+  }
+  p {
+    font-size: 12px;
+    width: 85%;
+    margin: 0 auto;
+  }
+  h3 {
+    font-size: 16px;
+  }
+}
+section.customers {
+
+
+}
+
+section.newsletter {
+  padding: 23px;
+  height: auto;
+  background-color: $red-dark;
+  h3 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  input {
+    border-radius: 5px 0 0 5px;
+    padding: 0 0 0 30px;
+    border: none;
+    width: 100%;
+  }
+  .text-field {
+    width: 300px;
+    height: 44px;
+    line-height: 44px;
+  }
+  .common-buttons button {
+    border-radius: 0 5px 5px 0;
+    border: none;
+    padding: 0 50px;
+    height: 44px;
+    line-height: 44px;
+    width: 100%;
+    margin: 0 auto;
+    background: $color-dark;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 200;
+    color: #FFF;
+    text-transform: uppercase;
+    font-family: 'Varela Round', sans-serif;
+    display: inline-block;
+  }
+  .li-form {
+    margin-left: 50px;
+  }
+  form {
+    div {
+      display: flex;
+    }
+  }
+}

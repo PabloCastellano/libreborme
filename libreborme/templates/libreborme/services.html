@@ -1,23 +1,161 @@
-{% extends 'borme/base.html' %}
+{% extends 'borme/base2.html' %}
+{% comment %}
+- loren ipsum
+- <h1>Servicios</h1>
+
+  <p>Desde <strong>LibreBORME</strong> ofrecemos servicios relacionados con los datos del registro mercantil.
+  Algunos de los servicios que ofrecemos son:
+  <ul>
+    <li>Integración de los datos de LibreBORME a través de la API.</li>
+    <li>Cruce de datos con otra aplicación.</li>
+    <li>Acceso a la API para un gran número de peticiones.</li>
+  </ul>
+  </p>
+
+  <p>Si estás interesado en en algún tipo de colaboración, <a href="{% url "contact" %}"><strong>contáctanos sin compromiso</strong></a>.</p>
+{% endcomment %}
+
+{% load staticfiles %}
 
 {% block title %} Servicios | LibreBORME{% endblock %}
 
 {% block content %}
-    <h1>Servicios</h1>
+<div class="view-servicios mt-4">
+    <section class="contenido-descripcion">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="title-section">
+                        <span>|</span>servicios
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <div class="container">
-      <p>Desde <strong>LibreBORME</strong> ofrecemos servicios relacionados con los datos del registro mercantil.
-      Algunos de los servicios que ofrecemos son:
-      <ul>
-        <li>Integración de los datos de LibreBORME a través de la API.</li>
-        <li>Cruce de datos con otra aplicación.</li>
-        <li>Acceso a la API para un gran número de peticiones.</li>
-      </ul>
-      
-      </p>
- 
-      <p>Si estás interesado en en algún tipo de colaboración, <a href="{% url "contact" %}"><strong>contáctanos sin compromiso</strong></a>.</p>
-      
-    </div>
+    <section class="contenido-servicio pt-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2 text-center mb-4">
+                    <img src="{% static 'assets/img/servicios/suscribete.png' %}" alt="">
+                </div>
+                <div class="col-md-10  text-justify">
+                    <h3 class="titulo-servicio">Suscríbete</h3>
+                    <p class="descripcion-servicio">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, </p>
+                    <div class="card-deck">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Mensual</h4>
+                                <h3>4.99€</h3>
+                                <p class="card-text">At vero eos et accusamus</p>
+                                <hr>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">At vero eos et accusamus</p>
+                            </div>
+                            <div class="card-footer text-center">
+                                <p>Contratar</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Anual</h4>
+                                <h3>20.99€</h3>
+                                <p class="card-text">At vero eos et accusamus</p>
+                                <hr>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">At vero eos et accusamus</p>
+                            </div>
+                            <div class="card-footer text-center">
+                                <p>Contratar</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <section class="contenido-servicio bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2 text-center mb-4">
+                    <img src="{% static 'assets/img/servicios/api.png' %}" alt="">
+                </div>
+                <div class="col-md-10 text-justify">
+                    <h3 class="titulo-servicio">Implementar API</h3>
+                    <p class="descripcion-servicio">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, </p>
+
+
+                    <div class="card-deck">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Mensual</h4>
+                                <h3>4.99€</h3>
+                                <p class="card-text">At vero eos et accusamus</p>
+                                <hr>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">At vero eos et accusamus</p>
+                            </div>
+                            <div class="card-footer text-center">
+                                <p>Contratar</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Anual</h4>
+                                <h3>20.99€</h3>
+                                <p class="card-text">At vero eos et accusamus</p>
+                                <hr>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">At vero eos et accusamus</p>
+                            </div>
+                            <div class="card-footer text-center">
+                                <p>Contratar</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contenido-servicio">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2 text-center mb-4">
+                    <img src="{% static 'assets/img/servicios/alert.png' %}" alt="">
+                </div>
+                <div class="col-md-10 text-justify">
+                    <h3 class="titulo-servicio">Activar alertas</h3>
+                    <p class="descripcion-servicio">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, </p>
+
+
+                    <div class="card-deck">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Mensual</h4>
+                                <h3>4.99€</h3>
+                                <p class="card-text">At vero eos et accusamus</p>
+                                <hr>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">At vero eos et accusamus</p>
+                            </div>
+                            <div class="card-footer text-center">
+                                <p>Contratar</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Anual</h4>
+                                <h3>20.99€</h3>
+                                <p class="card-text">At vero eos et accusamus</p>
+                                <hr>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">At vero eos et accusamus</p>
+                            </div>
+                            <div class="card-footer text-center">
+                                <p>Contratar</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
 {% endblock %}

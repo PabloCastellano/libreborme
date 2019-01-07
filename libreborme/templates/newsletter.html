@@ -1,36 +1,64 @@
-    <div class="row">
-    <div class="newsletter-row">
-      <div class="newsletter">
-        <h2>¡Suscríbete a la lista de correo!</h2>
-        <p>Recibirás todas las novedades de LibreBORME directamente en tu e-mail</p>
-        <p>Tus datos no serán compartidos con terceras partes y será utilizado
-        exclusivamente para mantenerte al tanto de información relacionada con LibreBORME.
-        </p>
+{% load staticfiles %}
+{% comment %}
+<div class="row">
+  <div class="newsletter-row">
+    <div class="newsletter">
+      <h2>¡Suscríbete a la lista de correo!</h2>
+      <p>Recibirás todas las novedades de LibreBORME directamente en tu e-mail</p>
+      <p>Tus datos no serán compartidos con terceras partes y será utilizado
+      exclusivamente para mantenerte al tanto de información relacionada con LibreBORME.
+      </p>
 
-      <form class="form-inline">
-        <div class="form-group">
-          <div class="input-group">
-            <div class="input-group-addon">
-              <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-            </div>
-              <input type="text" class="form-control" id="exampleInputName2" placeholder="Nombre">
+    <form class="form-inline">
+      <div class="form-group">
+        <div class="input-group">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
           </div>
+            <input type="text" class="form-control" id="exampleInputName2" placeholder="Nombre">
         </div>
-        <div class="form-group">
-          <div class="input-group">
-            <div class="input-group-addon">
-              <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-						</div>
-              <input type="email" class="form-control" id="exampleInputEmail2" placeholder="E-mail">
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary btn-md">Suscribirme</button>
-      </form>
-
-			<!--
-        <p><a href="https://lists.libreborme.net/subscription/BJK7bzYb7" class="btn btn-primary btn-lg" target="_blank">Suscribirme</a></p>
-			-->
-
       </div>
+      <div class="form-group">
+        <div class="input-group">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+          </div>
+            <input type="email" class="form-control" id="exampleInputEmail2" placeholder="E-mail">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-md">Suscribirme</button>
+    </form>
+
+    <!--
+      <p><a href="https://lists.libreborme.net/subscription/BJK7bzYb7" class="btn btn-primary btn-lg" target="_blank">Suscribirme</a></p>
+    -->
+
     </div>
-    </div>
+  </div>
+</div>
+{% endcomment %}
+
+<section class="newsletter text-center">
+  <div class="container">
+      <div class="row justify-content-center">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+              <ul class="list-unstyled">
+                  <li class="list-inline-item">
+                      <h3 class="text-white">Apúntate a nuestra newsletter</h3>
+                  </li>
+                  <li class="list-inline-item li-form">
+                      <form action="">
+                          <div>
+                              <input type="email" class="text-field" id="email" name="email" placeholder="Dirección Email " required="">
+                              <div class="common-buttons">
+                                  <button type="submit" class="btn btn-start-order d-none d-sm-none d-md-block">Suscribirme</button>
+                                  <button type="submit" class="btn btn-start-order img-search d-sm-block d-md-none"><img src="{% static 'assets/img/search.svg' %}" alt=""></button>
+                              </div>
+                          </div>
+                      </form>
+                  </li>
+              </ul>
+          </div>
+      </div>
+  </div>
+</section>

@@ -1,5 +1,28 @@
-{% extends 'borme/base.html' %}
+{% load staticfiles %}
+{% extends 'borme/base2.html' %}
 
+{% comment %}
+- loren ipsum
+- slide-services include
+{% endcomment %}
 {% block content %}
-    <h1>Uh-oh... ¡NO ENCONTRADO! Error 404</h1>
+<div class="view-404 mt-4">
+    <section class="contenido-descripcion">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <img src="{% static 'assets/img/404.png' %}" alt="">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <h2>Ooops! Página no encontrada</h2>
+                            <p class="descripcion-404">Ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% include 'borme/sections/slide-services.html' %}
+</div>
 {% endblock %}

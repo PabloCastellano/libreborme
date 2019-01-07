@@ -1,0 +1,34 @@
+.btn-primary {
+  background-color: $red-dark;
+  border-color: $red-dark;
+  color: $red-dark;
+}
+.btn-primary:hover {
+  color: #fff;
+  background-color: $red-dark !important;
+  border-color: $red-dark;
+}
+.btn-transparent {
+  background-color: transparent !important;
+}
+
+.btn-secondary {
+  color: $color-dark;
+  background-color: transparent;
+  border-color: $color-dark;
+}
+.btn-secondary:hover {
+  color: #fff;
+  background-color: $color-dark;
+  border-color: $color-dark;
+}
+.btn-white {
+  color: white;
+  background-color: transparent;
+  border-color: white;
+}
+.btn-secondary:hover {
+  color: #fff;
+  background-color: white;
+  border-color: white;
+}

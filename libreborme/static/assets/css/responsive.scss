@@ -1,0 +1,28 @@
+@media (max-width: 768px) {
+  #myCarousel .carousel-caption .logo-banner {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+  section.newsletter {
+    height: auto;
+    .li-form {
+      margin-left: 0;
+    }
+    .img-search {
+      padding: 0 10px !important;
+      img {
+        width: 20px;
+      }
+    }
+
+  }
+  section.footer {
+    height: auto !important;
+  }
+  section.cookies {
+    bottom: 0 !important;
+  }
+  section.cookies-panel {
+    bottom: 0 !important;
+  }
+}

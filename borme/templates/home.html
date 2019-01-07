@@ -1,48 +1,142 @@
-{% extends 'borme/base.html' %}
+{% extends 'borme/base2.html' %}
+{% comment %}
+    - Última actualización (last_modified|date:'d/m/y')
+    - Datos totales (total_companies, total_persons, total_anuncios)
+    - Calendario de anuncios (calendar)
+    - Ejemplos de empresas
+    - Ejemplos de personas
+{% endcomment %}
+{% load staticfiles %}
 
 {% block content %}
-
-    <div class="row">
-
-      <div class="col-lg-3">
-        <h2>Datos totales <i class="glyphicon glyphicon-signal"></i></h2>
-        <ul>
-          <li><strong>{{ total_companies }}</strong> empresas</li>
-          <li><strong>{{ total_persons }}</strong> personas</li>
-          <li><strong>{{ total_anuncios }}</strong> anuncios</li>
-          <li>Última actualización: <strong>{{ last_modified|date:'d/m/y' }}</strong></li>
-        </ul>
-
-          <h2>Calendario de anuncios</h2>
-          {{ calendar }}
-      </div>
-
-      <div class="col-lg-5">
-        <h2>Ejemplos de empresas</h2>
-        <ul>
-            {% for company in random_companies %}
-                <li><a href="{% url "borme-empresa" company.slug %}">{{ company.fullname }}</a></li>
-            {% empty %}
-                <li><a href="{% url "borme-empresa" "el-corte-ingles-sa" %}">EL CORTE INGLES SA</a></li>
-                <li><a href="{% url "borme-empresa" "mercadona-sa" %}">MERCADONA SA</a></li>
-                <li><a href="{% url "borme-empresa" "pc-componentes-y-multimedia-sl" %}">PC COMPONENTES Y MULTIMEDIA SL</a></li>
-                <li>CAJA DE RESISTENCIA MOTIVA 2 PRODUCCIONES SL</li>
-            {% endfor %}
-        </ul>
-      </div>
-
-      <div class="col-lg-4">
-        <h2>Ejemplos de personas <i class="glyphicon glyphicon-user"></i></h2>
-        <ul>
-            {% for person in random_persons %}
-            <li><a href="{% url "borme-persona" person.slug %}">{{ person.name|title }}</a></li>
-            {% empty %}
-                <li>Roig Alfonso Juan Jose</li>
-                <li>Monedero Fernandez Juan Carlos</li>
-            {% endfor %}
-        </ul>
-      </div>
-
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img class="first-slide" src="{% static 'assets/img/banner-home.png' %}" alt="First slide">
+            <div class="container">
+                <div class="carousel-caption text-center">
+                    <img src="{% static 'assets/img/logo.svg' %}" alt="" class="logo-banner">
+                    <h1>Tu fuente de información empresarial en Internet</h1>
+                    <form>
+                        <div class="form-row justify-content-center mt-4">
+                            <div class="col-md-7 col-12">
+                                <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="fas fa-search"></i>
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Consulta y analiza el Boletín Oficial del Registro Mercantil">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
+<section class="banner-consulta">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-11 text-center">
+                <h1 class="text-white mb-4">Consulta y analiza el Boletín Oficial del Registro Mercantil</h1>
+                <p class="text-white mb-0">Desde LibreBORME recopilamos a diario información mercantil desde los distintos Boletines Oficiales y ponemos a tu disposición nuestra base de datos que puedes consultar mediante nuestro buscador gratuito. Conoce también nuestros servicios para empresas y empieza a optimizar tu trabajo recibiendo la información que necesitas en el formato que más te convenga.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="featured-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 text-center mt-4">
+                <img src="{% static 'assets/img/featured-bd.svg' %}" alt="">
+                <h2 class="font-weight-bold">Base de datos</h2>
+                <p>Nuestra base de datos mercantiles contiene más de 4 millones de registros y se actualiza diariamente</p>
+            </div>
+            <div class="col-lg-4 text-center mt-4">
+                <img src="{% static 'assets/img/feature-search.svg' %}" alt="">
+                <h2 class="font-weight-bold">Buscador</h2>
+                <p>Nuestro buscador te permite encontrar la información de manera rápida y eficiente</p>
+            </div>
+            <div class="col-lg-4 text-center mt-4">
+                <img src="{% static 'assets/img/featured-relate.svg' %}" alt="">
+                <h2 class="font-weight-bold">Relaciona</h2>
+                <p>Descubre las relaciones profesionales entre diferentes personas y empresas</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="services">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="title-section">
+                    <span>|</span>servicios
+                </h1>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-lg-4 text-center mt-4">
+                <div class="circle-img">
+                    <img src="{% static 'assets/img/servicios/suscribete.png' %}" alt="">
+                </div>
+                <h2 class="font-weight-bold">Suscribete</h2>
+                <p>Suscríbete a la información mercantil de tu provincia (ej. Empresas de nueva creación, Empresas que entran en concurso de acreedores)</p>
+            </div>
+            <div class="col-lg-4 text-center mt-4">
+                <div class="circle-img">
+                    <img src="{% static 'assets/img/servicios/api.png' %}" alt="">
+                </div>
+                <h2 class="font-weight-bold">Implementar API</h2>
+                <p>Integra los datos de LibreBORME en tu sistema a través de nuestra API</p>
+            </div>
+            <div class="col-lg-4 text-center mt-4">
+                <div class="circle-img">
+                    <img src="{% static 'assets/img/servicios/alert.png' %}" alt="">
+                </div>
+                <h2 class="font-weight-bold">Activar alertas</h2>
+                <p>Activa el servicio de seguimiento/alertas y recibe notificaciones cada vez que haya un cambio empresarial en alguna empresa o directivo de tu interés</p>
+            </div>
+        </div>
+        <div class="row mt-5 justify-content-center">
+            <div class="col-lg-7 col-md-12">
+                <ul class="list-unstyled">
+                    <li class="list-inline-item"><h3>Contacta con nosotros si necesitas más información</h3></li>
+                    <li class="list-inline-item"><a class="btn btn-primary btn-transparent" href="#" role="button">Contactar</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="customers">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="title-section">
+                    <span>|</span>clientes
+                </h1>
+            </div>
+        </div>
+        <div class="row mt-5 align-items-center">
+            <div class="col-lg-4 col-md-4 text-center mt-4">
+                <img src="{% static 'assets/img/clientes/logo-entropy.png' %}" alt="">
+            </div>
+            <div class="col-lg-4 col-md-4 text-center mt-4">
+                <img src="{% static 'assets/img/clientes/blockroot.png' %}" alt="">
+            </div>
+            <div class="col-lg-4 col-md-4 text-center mt-4">
+                <img src="{% static 'assets/img/clientes/universitat-politecnica-valencia.png' %}" alt="">
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

@@ -1,0 +1,14 @@
+.view-contacto {
+  .contenido-descripcion {
+    h3 {
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .text-description-contact {
+      font-size: 12px;
+    }
+  }
+  .form-control {
+    background-color: $color-light;
+  }
+}

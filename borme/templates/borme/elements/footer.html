@@ -1,0 +1,145 @@
+{% comment %}
+
+<p class="text-muted">Esta web muestra únicamente datos públicos disponibles desde el año 2009. <a href="#" data-toggle="modal" data-target="#myModal"><small>¿Por qué?</small></a></p>
+<p class="text-muted"><small>© LibreBORME 2014-2018
+
+| <i class="fa fa-envelope"></i> (contacto)
+| <i class="fa fa-twitter"></i> (@LibreBORME)
+| <i class="fa fa-github"></i> <a href="https://github.com/PabloCastellano/libreborme/" target="_blank" rel="nofollow">Código fuente</a> <i>(<a href="https://github.com/PabloCastellano/libreborme/commit/{{ version }}" target="_blank" rel="nofollow">git-{{ version }}</a>)</i>
+| <i class="fa fa-flag-o"></i> (aviso legal)
+| <i class="fa fa-heart"></i> <a href="{% url 'support' %}">Apoya LibreBORME</a></small>
+
+<img alt="agplv3 logo" class="footerlogo" src="{% static "agplv3-155x51.png" %}">
+<img alt="opendata logo" class="footerlogo" src="{% static "od_80x15_blue.png" %}">
+<img alt="cc by logo" class="footerlogo" src="{% static "by_compact.png" %}">
+{% endcomment %}
+
+<!-- FOOTER -->
+<section class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-footer">
+                <ul class="list-unstyled list-group mt-4">
+                    <li class="list-inline-item"><h3>Acerca de</h3></li>
+                    <li class="list-inline-item"><a href="">Historial</a></li>
+                    <li class="list-inline-item"><a href="{% url 'aviso_legal' %}">Aviso legal</a></li>
+                    <li class="list-inline-item"><a href="">Política de privacidad</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-footer mt-4">
+                <ul class="list-unstyled list-group">
+                    <li class="list-inline-item"><h3>Servicios</h3></li>
+                    <li class="list-inline-item"><a href="">Precios</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-footer mt-4">
+                <ul class="list-unstyled list-group">
+                    <li class="list-inline-item"><h3>Otros</h3></li>
+                    <li class="list-inline-item"><a href="">Estadísticas</a></li>
+                    <li class="list-inline-item"><a href="">Disclaimer datos</a></li>
+                    <li class="list-inline-item"><a href="">Prensa</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-footer mt-4">
+                <ul class="list-unstyled list-group">
+                    <li class="list-inline-item"><h3>Conecta</h3></li>
+                    <li class="list-inline-item"><a href="https://twitter.com/libreborme" target="_blank" rel="nofollow">Twitter</a></li>
+                    <li class="list-inline-item"><a href="{% url 'contact' %}">Contacto</a></li>
+                    <li class="list-inline-item"><a href="">Newsletter</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="list-unstyled ul-bottom-footer">
+                    <li class="list-inline-item">
+                        <img src="/assets/img/logo-footer.svg" alt="">
+                    </li>
+                    <li class="list-inline-item">
+                        <p>Licencia CC 2018</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cookies">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <p>Quietooor magna esse qui torpedo adipisicing. Cillum a peich labore ut labore sit amet consectetur. Papaar papaar commodo adipisicing cillum amatomaa qui veniam aute labore. Jarl apetecan qui officia labore ex voluptate me cago en tus muelas aute. Qui por la gloria de mi madre dolore pupita no te digo trigo por no llamarte Rodrigor ese pedazo de.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col">
+                        <button type="button" class="btn btn-white btn-more-info" data-dismiss="modal">Más información</button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Entiendo</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Modal -->
+<div class="modal fade modal-login" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="row justify-content-center w-100">
+                    <div class="col-md-12 text-center">
+                        <p class="text-header">Entrar en <img src="/assets/img/logo.svg" alt="" style="width: 163px;"></p>
+                    </div>
+                </div>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row justify-content-md-center">
+                        <div class="col-md-10">
+                            <form>
+                                <div class="form-group">
+                                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Nombre de usuario">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Contaseña">
+                                </div>
+                            </form>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-secondary w-100 mb-2" data-dismiss="modal">Cancelar</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-primary btn-transparent w-100 mb-2">Entrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="container">
+                    <div class="row justify-content-md-center">
+                        <div class="col-md-10 text-center">
+                            <ul class="list-inline">
+                                <li class="list-inline-item no-user"><p>¿Aún no eres usuario? </p></li>
+                                <li class="list-inline-item"><button type="button" class="btn btn-secondary" data-dismiss="modal">Registrar</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+/*
+Error: Undefined variable: "$red-dark".
+        on line 3 of button.scss
+
+1: .btn-primary {
+2:   color: #fff;
+3:   background-color: $red-dark;
+4:   border-color: $red-dark;
+5: }
+6: .btn-transparent {
+7:   background-color: transparent !important;
+8: }
+
+Backtrace:
+button.scss:3
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/script/tree/variable.rb:49:in `_perform'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/script/tree/node.rb:50:in `perform'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:402:in `visit_prop'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/base.rb:36:in `visit'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:162:in `block in visit'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/stack.rb:79:in `block in with_base'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/stack.rb:135:in `with_frame'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/stack.rb:79:in `with_base'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:162:in `visit'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:444:in `block (2 levels) in visit_rule'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:444:in `map'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:444:in `block in visit_rule'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:183:in `with_environment'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:442:in `visit_rule'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/base.rb:36:in `visit'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:162:in `block in visit'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/stack.rb:79:in `block in with_base'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/stack.rb:135:in `with_frame'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/stack.rb:79:in `with_base'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:162:in `visit'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/base.rb:52:in `map'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/base.rb:52:in `visit_children'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:171:in `block in visit_children'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:183:in `with_environment'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:170:in `visit_children'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/base.rb:36:in `block in visit'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:190:in `visit_root'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/base.rb:36:in `visit'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:161:in `visit'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/visitors/perform.rb:10:in `visit'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/root_node.rb:36:in `css_tree'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/tree/root_node.rb:29:in `render_with_sourcemap'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/engine.rb:389:in `_render_with_sourcemap'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/engine.rb:307:in `render_with_sourcemap'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/plugin/compiler.rb:462:in `update_stylesheet'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/plugin/compiler.rb:209:in `each'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/plugin.rb:82:in `update_stylesheets'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/exec/sass_scss.rb:340:in `watch_or_update'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/exec/sass_scss.rb:51:in `process_result'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/exec/base.rb:52:in `parse'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/lib/sass/exec/base.rb:19:in `parse!'
+/Users/manolo/.rbenv/versions/2.4.4/lib/ruby/gems/2.4.0/gems/sass-3.5.6/bin/scss:13:in `<top (required)>'
+/Users/manolo/.rbenv/versions/2.4.4/bin/scss:23:in `load'
+/Users/manolo/.rbenv/versions/2.4.4/bin/scss:23:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: Undefined variable: \"$red-dark\".\A         on line 3 of button.scss\A \A 1: .btn-primary {\A 2:   color: #fff;\A 3:   background-color: $red-dark;\A 4:   border-color: $red-dark;\A 5: }\A 6: .btn-transparent {\A 7:   background-color: transparent !important;\A 8: }"; }
