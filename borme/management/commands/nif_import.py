@@ -6,11 +6,12 @@ import logging
 import libreborme.nif
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class Command(BaseCommand):
     # args = '<ISO formatted date (ex. 2015-01-01 or --init)> [--local]'
-    help = 'Export Company NIFs'
+    help = 'Import Company NIFs'
 
     def add_arguments(self, parser):
         parser.add_argument('filename')
@@ -20,5 +21,6 @@ class Command(BaseCommand):
                 help='Output format (default: csv) [FUTURE]')
 
     def handle(self, *args, **options):
-        total = libreborme.nif.export_csv(options['filename'])
-        logger.info("Exported {} companies to {}".format(total, options['filename']))
+        logging.getLogger('nif').setLevel(logging.DEBUG)
+        added, skipped, error = libreborme.nif.import_csv(options['filename'])
+        logger.info("Imported NIF for {} companies ({} skipped, {} errored)".format(added, skipped, error))

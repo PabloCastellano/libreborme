@@ -189,7 +189,7 @@ def find_nif(company, provider=None, save_to_db=True):
     return nif, created, provider
 
 
-def export(filename):
+def export_csv(filename):
     companies = Company.objects.filter(nif__isnull=False).order_by('name')
 
     with open(filename, 'w') as csvfile:
@@ -199,3 +199,36 @@ def export(filename):
             csvwriter.writerow([company.name, company.slug, company.nif])
 
     return len(companies)
+
+
+def import_csv(filename):
+    added = 0
+    skipped = 0
+    error = 0
+
+    with open(filename) as csvfile:
+        csvreader = csv.DictReader(csvfile)
+        for row in csvreader:
+            logger.debug(row["Slug"])
+            try:
+                company = Company.objects.get(slug=row["Slug"])
+            except Company.DoesNotExist:
+                logger.error("Company slug {} does not exist".format(row["Slug"]))
+                error += 1
+                continue
+
+            if company.nif:
+                if company.nif != row["NIF"]:
+                    logger.error("NIF for Company '{}' in DB [{}] is different from found [{}]".format(company.slug, company.nif, row["NIF"]))
+                    error += 1
+                else:
+                    skipped += 1
+            else:
+                if not validate_nif(nif):
+                    logger.error("NIF '{}' for Company '{}' looks invalid".format(nif, company.slug))
+                else:
+                    company.nif = row["NIF"]
+                    company.save()
+                    added += 1
+
+    return added, skipped, error
