@@ -31,7 +31,7 @@ def logger_empresa_create(empresa):
 
 
 def logger_empresa_similar(company, empresa, cve):
-    logger.warn("In {cve} same slug {0} for companies '{1}' and {2}"
+    logger.warn("In {cve} same slug {0} for companies '{1}' and '{2}'"
                 .format(company.slug, company.name, empresa, cve=cve))
 
 
@@ -40,7 +40,7 @@ def logger_persona_create(nombre):
 
 
 def logger_persona_similar(slug, name, nombre, cve):
-    logger.warn("In {cve} same slug {0} for people '{1}' and {2}"
+    logger.warn("In {cve} same slug {0} for people '{1}' and '{2}'"
                 .format(slug, name, nombre, cve=cve))
 
 

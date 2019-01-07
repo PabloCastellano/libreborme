@@ -89,9 +89,12 @@ def _from_instance(borme):
     :param borme: Instancia BORME que se va a importar en la BD
     :type borme: bormeparser.parser.backend.BormeBase
     """
-    logger.info("\nBORME CVE: {} ({}, {}, [{}-{}])"
-                .format(borme.cve, borme.date, borme.provincia,
-                        borme.anuncios_rango[0], borme.anuncios_rango[1]))
+    logger.info("Importing {cve} ({date}, {provincia}, [{first}-{last}])"
+                .format(cve=borme.cve,
+                        date=borme.date,
+                        provincia=borme.provincia,
+                        first=borme.anuncios_rango[0],
+                        last=borme.anuncios_rango[1]))
     results = {
         'created_anuncios': 0,
         'created_bormes': 0,
@@ -237,11 +240,7 @@ def _from_instance(borme):
                                          "id": anuncio.id})
 
         except Exception as e:
-            logger.error("[{}] ERROR importing anuncio {}"
-                         .format(borme.cve, anuncio.id))
-            logger.error("[X] {classname}: {exception}"
-                         .format(classname=e.__class__.__name__,
-                                 exception=e))
+            logger.exception("In {} importing anuncio {}".format(borme.cve, anuncio.id))
             results['errors'] += 1
 
     nuevo_borme.save()
@@ -331,12 +330,7 @@ def _load_and_append(files_list, strict, seccion=bormeparser.SECCION.A):
             bormes.append(borme)
 
         except Exception as e:
-            logger.error("[X] Error grave (I) en {obj}.{method}: {path}"
-                         .format(obj=parse_func.__objclass__,
-                                 method=parse_func.__name__,
-                                 path=filepath))
-            logger.error("[X] {}: {}"
-                         .format(e.__class__.__name__, e))
+            logger.exception("Parsing file {}".format(filepath))
             if strict:
                 logger_resume_import()
                 return bormes, True
@@ -404,36 +398,14 @@ def _import_borme_download_range(begin, end, seccion, local_only,
                 os.makedirs(os.path.dirname(xml_path), exist_ok=True)
                 bxml.save_to_file(xml_path)
 
-            # Add FileHandlers
-            directory = '%02d-%02d' % (bxml.date.year, bxml.date.month)
-            logpath = os.path.join(settings.BORME_LOG_ROOT,
-                                   'imports', directory)
-            os.makedirs(logpath, exist_ok=True)
-
-            fh1_path = os.path.join(logpath, '%02d_info.txt' % bxml.date.day)
-            fh1 = logging.FileHandler(fh1_path)
-            fh1.setLevel(logging.INFO)
-            logger.addHandler(fh1)
-
-            fh2_path = os.path.join(logpath, '%02d_error.txt' % bxml.date.day)
-            fh2 = logging.FileHandler(fh2_path)
-            fh2.setLevel(logging.WARNING)
-            logger.addHandler(fh2)
-
             json_path = get_borme_json_path(bxml.date)
             pdf_path = get_borme_pdf_path(bxml.date)
             os.makedirs(pdf_path, exist_ok=True)
-            logger.info(
-                    "===================================================\n"
-                    "Ran import_borme_download at {now}\n"
-                    "  Import date: {borme_date}. Section: {section}\n"
-                    "==================================================="
-                    .format(now=timezone.now(), section=seccion,
-                            borme_date=bxml.date.isoformat()))
-            print("\nPATH: {}"
-                  "\nDATE: {}"
-                  "\nSECCION: {}\n"
-                  .format(pdf_path, bxml.date, seccion))
+            logger.info("===================================================")
+            logger.info("Ran import_borme_download at {}".format(timezone.now()))
+            logger.info("PATH: {}".format(pdf_path))
+            logger.info("DATE: {}".format(bxml.date.isoformat()))
+            logger.info("SECCION: {}".format(seccion))
 
             bormes = []
             if not local_only:
@@ -447,8 +419,7 @@ def _import_borme_download_range(begin, end, seccion, local_only,
                     try:
                         bormes.append(bormeparser.parse(filepath, seccion))
                     except Exception as e:
-                        logger.error('[X] Error grave (I) en bormeparser.parse(): %s' % filepath)
-                        logger.error('[X] %s: %s' % (e.__class__.__name__, e))
+                        logger.exception("Parsing file {}".format(filepath))
                         if strict:
                             logger_resume_import()
                             return False, total_results
@@ -509,10 +480,8 @@ def _import_borme_download_range(begin, end, seccion, local_only,
                     elapsed_time = time.time() - start_time
                     logger.info('[%s] Elapsed time: %.2f seconds' % (borme.cve, elapsed_time))
 
-            # Remove handlers
-            logger.removeHandler(fh1)
-            logger.removeHandler(fh2)
             next_date = bxml.next_borme
+
     except KeyboardInterrupt:
         logger.info('\nImport aborted.')
 
@@ -548,8 +517,7 @@ def from_json_file(filename):
         borme = parse_func(filename)
         results = _from_instance(borme)
     except Exception as e:
-        logger.error('[X] Error grave (III) en Borme.from_json(): %s' % filename)
-        logger.error('[X] %s: %s' % (e.__class__.__name__, e))
+        logger.exception("Parsing {}".format(filename))
 
     if not all(map(lambda x: x == 0, results.values())):
         _print_results(results, borme)
@@ -567,7 +535,7 @@ def _print_results(results, borme):
     :type results: dict.Borme
     :type borme: bormeparser.Borme
     """
-    log_message = "In {cve} BORME:{bormes}/1, Anuncios: {anuncios}/{total_anuncios}, Empresas {companies}/{total_companies}, Personas: {persons}/{total_persons}"
+    log_message = "In {cve} BORME:{bormes}/1, Anuncios:{anuncios}/{total_anuncios}, Empresas:{companies}/{total_companies}, Personas:{persons}/{total_persons}" \
                   .format(cve=borme.cve, bormes=results['created_bormes'],
                           anuncios=results['created_anuncios'],
                           total_anuncios=len(borme.get_anuncios()),

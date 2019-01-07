@@ -107,8 +107,8 @@ LOGGING = {
         'verbose': {
             'format': '\n\n[%(levelname)s %(asctime)s] module: %(module)s, process: %(process)d, thread: %(thread)d\n%(message)s'
         },
-        'simple': {
-            'format': '%(levelname)s %(asctime)s %(module)s: %(message)s'
+        'normal1': {
+            'format': '%(levelname)-8s %(asctime)s %(module)s: %(message)s'
         },
         'normal2': {
             'format': '%(asctime)s [%(name)-12s] %(levelname)-8s %(message)s'
@@ -117,7 +117,7 @@ LOGGING = {
             'format': '%(asctime)s [%(name)s] %(levelname)s: %(message)s'
         },
         'simple': {
-            'format': '%(levelname)s %(asctime)s %(name)s.%(funcName)s:%(lineno)s- %(message)s'
+            'format': '%(levelname)-8s %(asctime)s %(name)s.%(funcName)s:%(lineno)s- %(message)s'
         },
     },
     'handlers': {
