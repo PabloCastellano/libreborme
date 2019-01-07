@@ -147,6 +147,7 @@ LOGGING = {
             # 'backupCount': 10,
             'formatter': 'simple',
         },
+        # Borme application and parsing logs
         'bormelogfile': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
@@ -183,7 +184,17 @@ LOGGING = {
             'propagate': False,
         },
         'borme': {
-            'handlers': ['logfile', 'bormelogfile'],
+            'handlers': ['bormelogfile', 'errorlogfile'],
+            'level': LOGLEVEL,
+            'propagate': False,
+        },
+        'bormeparser': {
+            'handlers': ['bormelogfile', 'errorlogfile'],
+            'level': LOGLEVEL,
+            'propagate': False,
+        },
+        'yabormeparser': {
+            'handlers': ['bormelogfile', 'errorlogfile'],
             'level': LOGLEVEL,
             'propagate': False,
         },

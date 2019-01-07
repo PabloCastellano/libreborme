@@ -567,10 +567,7 @@ def _print_results(results, borme):
     :type results: dict.Borme
     :type borme: bormeparser.Borme
     """
-    log_message = "[{cve}] BORMEs creados: {bormes}/1\n" \
-                  "[{cve}] Anuncios creados: {anuncios}/{total_anuncios}\n" \
-                  "[{cve}] Empresas creadas: {companies}/{total_companies}\n" \
-                  "[{cve}] Personas creadas: {persons}/{total_persons}" \
+    log_message = "In {cve} BORME:{bormes}/1, Anuncios: {anuncios}/{total_anuncios}, Empresas {companies}/{total_companies}, Personas: {persons}/{total_persons}"
                   .format(cve=borme.cve, bormes=results['created_bormes'],
                           anuncios=results['created_anuncios'],
                           total_anuncios=len(borme.get_anuncios()),
