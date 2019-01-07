@@ -13,6 +13,9 @@
 <img alt="agplv3 logo" class="footerlogo" src="{% static "agplv3-155x51.png" %}">
 <img alt="opendata logo" class="footerlogo" src="{% static "od_80x15_blue.png" %}">
 <img alt="cc by logo" class="footerlogo" src="{% static "by_compact.png" %}">
+
+aira-describedby="" ?
+<input id=id_username maxlength="254" name="username" class="form-control" aria-describedby="emailHelp" placeholder="Nombre de usuario">
 {% endcomment %}
 
 <!-- FOOTER -->
@@ -109,22 +112,24 @@
                 <div class="container">
                     <div class="row justify-content-md-center">
                         <div class="col-md-10">
-                            <form>
+                            <form method="POST" action="{% url 'login' %}">
+                                {% csrf_token %}
                                 <div class="form-group">
-                                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Nombre de usuario">
+                                    <input type="text" class="form-control" id="id_username" maxlength="254" name="username" placeholder="Nombre de usuario">
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Contaseña">
+                                    <input type="password" class="form-control" id="id_password" name="password" placeholder="Contraseña">
+                                </div>
+                                <input type="hidden" name="next" value="" />
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-secondary w-100 mb-2" data-dismiss="modal">Cancelar</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="submit" class="btn btn-primary btn-transparent w-100 mb-2">Entrar</button>
+                                    </div>
                                 </div>
                             </form>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <button type="button" class="btn btn-secondary w-100 mb-2" data-dismiss="modal">Cancelar</button>
-                                </div>
-                                <div class="col-md-6">
-                                    <button type="button" class="btn btn-primary btn-transparent w-100 mb-2">Entrar</button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

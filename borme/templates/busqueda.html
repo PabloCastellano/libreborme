@@ -1,4 +1,8 @@
+{% extends 'borme/base2.html' %}
 {% comment %}
+- adaptar resultados
+- datatables :?
+
 {% if query %}
 <h1>Resultados de la búsqueda «{{ query }}»</h1>
 
@@ -198,7 +202,6 @@
 {% endif %}
 {% endcomment %}
 
-{% extends 'borme/base2.html' %}
 
 {% load utils %}
 
@@ -228,7 +231,7 @@
                               <i class="fas fa-search"></i>
                           </div>
                       </div>
-                      <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Metal">
+                      <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="{{ query }}">
                   </div>
               </div>
           </div>

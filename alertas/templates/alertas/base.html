@@ -42,7 +42,13 @@
     </div>
     {% endif %}
 
-    {% block content %}{% endblock %}
+    <div class="container-fluid view-panel">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar">
+            {% include "alertas/elements/sidebar.html" %}
+            {% block content %}{% endblock %}
+        </div>
+    </div>
 
     {% include "alertas/elements/footer-panel.html" %}
     {% include "matomo.html" %}
