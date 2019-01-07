@@ -107,13 +107,25 @@ LOGGING = {
         'verbose': {
             'format': '\n\n[%(levelname)s %(asctime)s] module: %(module)s, process: %(process)d, thread: %(thread)d\n%(message)s'
         },
+        'simple': {
+            'format': '%(levelname)s %(asctime)s %(module)s: %(message)s'
+        },
+        'normal2': {
+            'format': '%(asctime)s [%(name)-12s] %(levelname)-8s %(message)s'
+        },
+        'normal3': {
+            'format': '%(asctime)s [%(name)s] %(levelname)s: %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(asctime)s %(name)s.%(funcName)s:%(lineno)s- %(message)s'
+        },
     },
     'handlers': {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'filters': ['require_debug_true'],
-            # 'formatter': 'verbose',
+            'formatter': 'simple',
         },
         'mail_admins': {
             'level': 'ERROR',
@@ -125,6 +137,7 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(BORME_LOG_ROOT, 'libreborme.error.log'),
             'maxBytes': 1024 * 1024 * 50,  # 50MB
+            'formatter': 'simple',
         },
         'logfile': {
             'level': 'DEBUG',
@@ -132,6 +145,7 @@ LOGGING = {
             'filename': os.path.join(BORME_LOG_ROOT, 'libreborme.log'),
             'maxBytes': 1024 * 1024 * 50,  # 50MB
             # 'backupCount': 10,
+            'formatter': 'simple',
         },
         'bormelogfile': {
             'level': 'DEBUG',
@@ -139,6 +153,7 @@ LOGGING = {
             'filename': os.path.join(BORME_LOG_ROOT, 'borme.log'),
             'maxBytes': 1024 * 1024 * 50,  # 50MB
             # 'backupCount': 10,
+            'formatter': 'simple',
         },
     },
     'loggers': {
@@ -153,26 +168,29 @@ LOGGING = {
             'propagate': True,
         },
         '': {
-            'handlers': ['console', 'logfile'],
-            'level': 'ERROR',
+            'handlers': ['console', 'logfile', 'errorlogfile'],
+            'level': 'INFO',
         },
         # Elasticsearch module is quite noisy
         'elasticsearch': {
             'level': 'WARNING',
-            'handlers': ['console'],
+            'handlers': ['console', 'errorlogfile'],
             'propagate': False,
         },
         'libreborme': {
             'handlers': ['logfile', 'errorlogfile'],
             'level': LOGLEVEL,
+            'propagate': False,
         },
         'borme': {
             'handlers': ['logfile', 'bormelogfile'],
             'level': LOGLEVEL,
+            'propagate': False,
         },
         'dataremoval': {
-            'handlers': ['logfile', ],
+            'handlers': ['logfile'],
             'level': LOGLEVEL,
+            'propagate': False,
         },
     }
 }
