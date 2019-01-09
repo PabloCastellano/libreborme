@@ -152,8 +152,11 @@ class HomeView(CacheMixin, TemplateView):
 
 
 # TODO:  if 'q' not in request.GET
+# TODO: Mostrar todo junto y para el futuro volver a mezclar personas/empresas
 class BusquedaView(TemplateView):
     template_name = "busqueda.html"
+    results_per_page = 5
+    max_results = 400
 
     def get_context_data(self, **kwargs):
         context = super(BusquedaView, self).get_context_data(**kwargs)
@@ -162,6 +165,8 @@ class BusquedaView(TemplateView):
         context['page'] = page
         context['form'] = form
         context['search_view'] = 1
+        context['page_companies'] = []
+        context['page_persons'] = []
 
         if 'q' in self.request.GET and form.is_valid():
             raw_query = self.request.GET['q']
@@ -174,7 +179,7 @@ class BusquedaView(TemplateView):
 
             if doc_type in ('all', 'company'):
                 try:
-                    companies = Paginator(q_companies, 25)
+                    companies = Paginator(q_companies, self.results_per_page)
                     pg_companies = companies.page(page)
                 except EmptyPage:
                     # If page is out of range (e.g. 9999), deliver last page of results.
@@ -184,9 +189,9 @@ class BusquedaView(TemplateView):
                     context['results_companies'] = list(map(lambda x: x['_source'], pg_companies))
                     context['count_companies'] = q_companies.count()
                     pagerange = list(companies.page_range[:3])
-                    last_page = min(companies.page_range.stop - 1, 400)
-                    if last_page == 400:
-                        pagerange += [388, 389, 400]
+                    last_page = min(companies.page_range.stop - 1, self.max_results)
+                    if last_page == self.max_results:
+                        pagerange += range(self.max_results - 2, self.max_results + 1)
                     else:
                         pagerange += list(companies.page_range[-3:])
                     pagerange.append(pg_companies.number)
@@ -198,7 +203,7 @@ class BusquedaView(TemplateView):
 
             if doc_type in ('all', 'person'):
                 try:
-                    persons = Paginator(q_persons, 25)
+                    persons = Paginator(q_persons, self.results_per_page)
                     pg_persons = persons.page(page)
                 except EmptyPage:
                     pg_persons = persons.page(persons.num_pages)
@@ -207,9 +212,9 @@ class BusquedaView(TemplateView):
                     context['results_persons'] = list(map(lambda x: x['_source'], pg_persons))
                     context['count_persons'] = q_persons.count()
                     pagerange = list(persons.page_range[:3])
-                    last_page = min(persons.page_range.stop - 1, 400)
-                    if last_page == 400:
-                        pagerange += [388, 389, 400]
+                    last_page = min(persons.page_range.stop - 1, self.max_results)
+                    if last_page == self.max_results:
+                        pagerange += range(self.max_results - 2, self.max_results + 1)
                     else:
                         pagerange += list(persons.page_range[-3:])
                     pagerange.append(pg_persons.number)
@@ -219,9 +224,29 @@ class BusquedaView(TemplateView):
                         pagerange = []
                     context['range_persons'] = pagerange
 
-        else:
-            context['page_companies'] = []
-            context['page_persons'] = []
+            q_all = q_companies[slice(0, q_companies.count())] + q_persons[slice(0, q_persons.count())]
+            q_all.sort(key=lambda t: t['_score'])
+            try:
+                all_results = Paginator(q_all, self.results_per_page)
+                pg_all = all_results.page(page)
+            except EmptyPage:
+                pg_all = all_results.page(all_results.num_pages)
+            finally:
+                context['page_all'] = pg_all
+                context['results_all'] = list(map(lambda x: x['_source'], pg_all))
+                context['count_all'] = len(q_all)
+                pagerange = list(all_results.page_range[:3])
+                last_page = min(all_results.page_range.stop - 1, self.max_results)
+                if last_page == self.max_results:
+                    pagerange += range(self.max_results - 2, self.max_results + 1)
+                else:
+                    pagerange += list(all_results.page_range[-3:])
+                pagerange.append(pg_all.number)
+                pagerange = list(set(pagerange))
+                pagerange.sort()
+                if len(pagerange) == 1:
+                    pagerange = []
+                context['range_all'] = pagerange
 
         return context
 

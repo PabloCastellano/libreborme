@@ -84,20 +84,12 @@
         <div class="row">
             <div class="col-md-5">
                 <p>
-                  <strong>Empresas relacionadas:</strong> {{ companies|length }}<br/>
-                  <strong>Personas relacionadas:</strong> {{ persons|length }}<br/>
-                  <strong>Situación mercantil:</strong> {{ company.get_status_display }}<br>
                   {% if company.last_auditor %}
                   <strong>Auditor:</strong> {{ company.last_auditor.name | title}}<br>
                   {% endif %}
                   {% if company.reason_dissolution %}
                   <strong>Motivo de la disolución:</strong> {{ company.reason_dissolution }}<br>
                   {% endif %}
-                  {% if company.liquidators %}
-                  <strong>Liquidador{{ company.liquidators|length|pluralize:"es" }}:</strong>
-                  {% for liquidator in company.liquidators %} {{ liquidator.name | title }}{% if not forloop.last %}, {% endif %} {% endfor %}<br>
-                  {% endif %}
-                  <strong>NIF:</strong> {{ company.nif|default:"Desconocido" }}<br/>
                 </p>
             </div>
             <div class="col-md-6">
@@ -334,10 +326,10 @@
                 <div class="col-md-12">
                     <ul class="list-inline list-unstyled mb-0">
                         <li class="list-inline-item">
-                            <h1>{{ company.fullname|upper }}</h1>
+                            <h1>{{ company.name|upper }}</h1>
                         </li>
                         <li class="list-inline-item">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Seguir</button>
                         </li>
                     </ul>
                 </div>
@@ -362,9 +354,6 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-6 text-right">
-                    <p class="mb-0">Se encontraron <span class="font-weight-bold">1074</span> empresas y <span class="font-weight-bold">8</span> personas</p>
-                </div>
             </div>
         </div>
         <div class="background-result">
@@ -373,10 +362,10 @@
                     <div class="col-md-12">
                         <div class="tab-content mt-5 mb-5" id="myTabContent">
                             <div class="tab-pane fade show active " id="home" role="tabpanel" aria-labelledby="home-tab">
-                                {% include 'borme/details/information.html' %}
+                                {% include 'borme/details/historic.html' %}
                             </div>
                             <div class="tab-pane fade" id="historic" role="tabpanel" aria-labelledby="historic-tab">
-                                {% include 'borme/details/historic.html' %}
+                                {% include 'borme/details/information.html' %}
                             </div>
                             <div class="tab-pane fade" id="related" role="tabpanel" aria-labelledby="related-tab">
                                 {% include 'borme/details/related.html' %}

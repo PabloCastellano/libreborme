@@ -1,5 +1,6 @@
 from django.urls import include, path
 from django.views.generic.base import TemplateView
+from django.views.generic import RedirectView
 
 from . import views
 from .settings import DEBUG
@@ -7,7 +8,8 @@ from .settings import DEBUG
 t = TemplateView.as_view
 
 urlpatterns = [
-    path('', t(template_name="libreborme/index.html"), name='home'),
+    path('', RedirectView.as_view(pattern_name='borme-home')),
+    path('index_old', t(template_name="libreborme/index.html"), name='home'),
     path('borme/', include('borme.urls')),
     path('', include('alertas.urls')),
 

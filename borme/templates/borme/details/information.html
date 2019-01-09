@@ -4,7 +4,7 @@
         <div class="col">
             <ul class="list-inline list-unstyled ul-resum">
                 <li class="list-inline-item">
-                    <p class="font-weight-bold">Última actualización: <span class="font-weight-normal">13/12/2019</span></p>
+                    <p class="font-weight-bold">Última actualización: <span class="font-weight-normal">{{ company.date_updated }}</span></p>
                 </li>
                 <li class="list-inline-item">
                     <p class="font-weight-bold">Fuente de los datos: <span class="font-weight-normal">Agencia Estatal Boletín Oficial del Estado.</span></p>
@@ -21,7 +21,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <p class="description">Resumen cronológico de actos publicados en las ediciones digitales de Boletines Oficiales (BORME, BOE, BOPI) inscritos por ENTROPY FACTORY SL o en los que participa indirectamente.</p>
+                             <p class="description">Resumen cronológico de actos publicados en las ediciones digitales de Boletines Oficiales (BORME, BOE, BOPI) inscritos por {{ company.fullname.upper }} o en los que participa indirectamente.</p>
                         </div>
                     </div>
                     <div class="row mt-2">

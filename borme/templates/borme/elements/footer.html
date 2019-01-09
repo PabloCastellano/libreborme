@@ -71,19 +71,20 @@ aira-describedby="" ?
     </div>
 </section>
 
+
 <section class="cookies">
-    <div class="container-fluid">
+    <div class="container-fluid" id="headerCookies" style="display:none">
         <div class="row align-items-center">
             <div class="col-md-8">
-                <p>Quietooor magna esse qui torpedo adipisicing. Cillum a peich labore ut labore sit amet consectetur. Papaar papaar commodo adipisicing cillum amatomaa qui veniam aute labore. Jarl apetecan qui officia labore ex voluptate me cago en tus muelas aute. Qui por la gloria de mi madre dolore pupita no te digo trigo por no llamarte Rodrigor ese pedazo de.</p>
+                <p>LibreBORME.net utiliza cookies para que tengas la mejor experiencia de navegación. Si sigues navegando entendemos que aceptas nuestra política de cookies.</p>
             </div>
             <div class="col-md-4">
                 <div class="row">
                     <div class="col">
-                        <button type="button" class="btn btn-white btn-more-info" data-dismiss="modal">Más información</button>
+                        <button type="button" class="btn btn-white btn-more-info" data-dismiss="modal"><a href="{% url 'cookies' %}">Más información</a></button>
                     </div>
                     <div class="col">
-                        <button type="button" class="btn btn-white" data-dismiss="modal">Entiendo</button>
+                        <button type="button" class="btn btn-white cookies-header-close" data-dismiss="modal">Entendido</button>
                     </div>
                 </div>
 
@@ -123,10 +124,10 @@ aira-describedby="" ?
                                 <input type="hidden" name="next" value="" />
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <button type="button" class="btn btn-secondary w-100 mb-2" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary btn-transparent w-100 mb-2">Entrar</button>
                                     </div>
                                     <div class="col-md-6">
-                                        <button type="submit" class="btn btn-primary btn-transparent w-100 mb-2">Entrar</button>
+                                        <button type="button" class="btn btn-secondary w-100 mb-2" data-dismiss="modal">Cancelar</button>
                                     </div>
                                 </div>
                             </form>
@@ -141,7 +142,7 @@ aira-describedby="" ?
                         <div class="col-md-10 text-center">
                             <ul class="list-inline">
                                 <li class="list-inline-item no-user"><p>¿Aún no eres usuario? </p></li>
-                                <li class="list-inline-item"><button type="button" class="btn btn-secondary" data-dismiss="modal">Registrar</button></li>
+                                <li class="list-inline-item"><button type="button" class="btn btn-secondary" data-dismiss="modal">Registrarme</button></li>
                             </ul>
                         </div>
                     </div>

@@ -7,206 +7,30 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>
-                <div class="row align-items-center">
-                    <div class="col-12 table-icon">
-                        <ul class="list-inline list-unstyled mb-0">
-                            <li class="list-inline-item">
-                                <img src="{% static 'assets/img/table/icon1.svg' %}" alt="">
-                            </li>
-                            <li class="list-inline-item">
-                                <p class="mb-0">Metal Wood Metal Works SL</p>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-secondary">Segir</button>
-                            </li>
-                        </ul>
+            {% for person in results_persons %}
+            <tr>
+                <td>
+                    <div class="row align-items-center">
+                        <div class="col-12 table-icon">
+                            <ul class="list-inline list-unstyled mb-0">
+                                <li class="list-inline-item">
+                                    <img src="{% static 'assets/img/table/icon2.svg' %}" alt="">
+                                </li>
+                                <li class="list-inline-item">
+                                    <p class="mb-0">
+                                         <a href="{% url "borme-persona" person.slug %}">{{ person.name }}</a>
+                                    </p>
+                                </li>
+                                <li class="list-inline-item">
+                                    <button type="button" class="btn btn-secondary">Seguir</button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </td>
-            <td><p class="mb-0 text-uppercase">Madrid</p></td>
-        </tr>
-        <tr>
-            <td>
-                <div class="row align-items-center">
-                    <div class="col-12 table-icon">
-                        <ul class="list-inline list-unstyled mb-0">
-                            <li class="list-inline-item">
-                                <img src="{% static 'assets/img/table/icon2.svg' %}" alt="">
-                            </li>
-                            <li class="list-inline-item">
-                                <p class="mb-0">Alf Metal Trade SL</p>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-secondary">Segir</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </td>
-            <td><p class="mb-0 text-uppercase">Barcelona</p></td>
-        </tr>
-        <tr>
-            <td>
-                <div class="row align-items-center">
-                    <div class="col-12 table-icon">
-                        <ul class="list-inline list-unstyled mb-0">
-                            <li class="list-inline-item">
-                                <img src="{% static 'assets/img/table/icon1.svg' %}" alt="">
-                            </li>
-                            <li class="list-inline-item">
-                                <p class="mb-0">Metal Wood Metal Works SL</p>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-secondary">Segir</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </td>
-            <td><p class="mb-0 text-uppercase">Madrid</p></td>
-        </tr>
-        <tr>
-            <td>
-                <div class="row align-items-center">
-                    <div class="col-12 table-icon">
-                        <ul class="list-inline list-unstyled mb-0">
-                            <li class="list-inline-item">
-                                <img src="{% static 'assets/img/table/icon2.svg' %}" alt="">
-                            </li>
-                            <li class="list-inline-item">
-                                <p class="mb-0">Alf Metal Trade SL</p>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-secondary">Segir</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </td>
-            <td><p class="mb-0 text-uppercase">Barcelona</p></td>
-        </tr>
-        <tr>
-            <td>
-                <div class="row align-items-center">
-                    <div class="col-12 table-icon">
-                        <ul class="list-inline list-unstyled mb-0">
-                            <li class="list-inline-item">
-                                <img src="{% static 'assets/img/table/icon1.svg' %}" alt="">
-                            </li>
-                            <li class="list-inline-item">
-                                <p class="mb-0">Metal Wood Metal Works SL</p>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-secondary">Segir</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </td>
-            <td><p class="mb-0 text-uppercase">Madrid</p></td>
-        </tr>
-        <tr>
-            <td>
-                <div class="row align-items-center">
-                    <div class="col-12 table-icon">
-                        <ul class="list-inline list-unstyled mb-0">
-                            <li class="list-inline-item">
-                                <img src="{% static 'assets/img/table/icon2.svg' %}" alt="">
-                            </li>
-                            <li class="list-inline-item">
-                                <p class="mb-0">Alf Metal Trade SL</p>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-secondary">Segir</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </td>
-            <td><p class="mb-0 text-uppercase">Barcelona</p></td>
-        </tr>
-        <tr>
-            <td>
-                <div class="row align-items-center">
-                    <div class="col-12 table-icon">
-                        <ul class="list-inline list-unstyled mb-0">
-                            <li class="list-inline-item">
-                                <img src="{% static 'assets/img/table/icon1.svg' %}" alt="">
-                            </li>
-                            <li class="list-inline-item">
-                                <p class="mb-0">Metal Wood Metal Works SL</p>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-secondary">Segir</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </td>
-            <td><p class="mb-0 text-uppercase">Madrid</p></td>
-        </tr>
-        <tr>
-            <td>
-                <div class="row align-items-center">
-                    <div class="col-12 table-icon">
-                        <ul class="list-inline list-unstyled mb-0">
-                            <li class="list-inline-item">
-                                <img src="{% static 'assets/img/table/icon2.svg' %}" alt="">
-                            </li>
-                            <li class="list-inline-item">
-                                <p class="mb-0">Alf Metal Trade SL</p>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-secondary">Segir</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </td>
-            <td><p class="mb-0 text-uppercase">Barcelona</p></td>
-        </tr>
-        <tr>
-            <td>
-                <div class="row align-items-center">
-                    <div class="col-12 table-icon">
-                        <ul class="list-inline list-unstyled mb-0">
-                            <li class="list-inline-item">
-                                <img src="{% static 'assets/img/table/icon1.svg' %}" alt="">
-                            </li>
-                            <li class="list-inline-item">
-                                <p class="mb-0">Metal Wood Metal Works SL</p>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-secondary">Segir</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </td>
-            <td><p class="mb-0 text-uppercase">Madrid</p></td>
-        </tr>
-        <tr>
-            <td>
-                <div class="row align-items-center">
-                    <div class="col-12 table-icon">
-                        <ul class="list-inline list-unstyled mb-0">
-                            <li class="list-inline-item">
-                                <img src="{% static 'assets/img/table/icon2.svg' %}" alt="">
-                            </li>
-                            <li class="list-inline-item">
-                                <p class="mb-0">Alf Metal Trade SL</p>
-                            </li>
-                            <li class="list-inline-item">
-                                <button type="button" class="btn btn-secondary">Segir</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </td>
-            <td><p class="mb-0 text-uppercase">Barcelona</p></td>
-        </tr>
+                </td>
+                <td><p class="mb-0 text-uppercase">Madrid</p></td>
+            </tr>
+            {% endfor %}
         <tr>
             <td>Jena Gaines</td>
             <td>Office Manager</td>
@@ -227,7 +51,7 @@
             <td>Tatyana Fitzpatrick</td>
             <td>Regional Director</td>
         </tr>
-    
+
         </tbody>
         <tfoot>
         <tr>

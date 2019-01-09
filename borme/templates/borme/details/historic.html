@@ -8,7 +8,7 @@
             <div class="col">
                 <ul class="list-inline list-unstyled ul-resum">
                     <li class="list-inline-item">
-                        <p class="font-weight-bold">Última actualización: <span class="font-weight-normal">13/12/2019</span></p>
+                        <p class="font-weight-bold">Última actualización: <span class="font-weight-normal">{{ company.date_updated }}</span></p>
                     </li>
                     <li class="list-inline-item">
                         <p class="font-weight-bold">Fuente de los datos: <span class="font-weight-normal">Agencia Estatal Boletín Oficial del Estado.</span></p>
@@ -33,11 +33,11 @@
                             <tbody>
                             <tr>
                                 <th scope="row">NIF</th>
-                                <td>B12938551</td>
+                                <td>{{ company.nif|default:"Desconocido" }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Situación Mercantil</th>
-                                <td>Situación Mercantil </td>
+                                <td>{{ company.get_status_display }}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Fecha de constitución</th>
@@ -55,6 +55,12 @@
                                 <th scope="row">Capital</th>
                                 <td>1.463.696,00 EUROS 30/10/2014</td>
                             </tr>
+                            {% if company.liquidators %}
+                            <tr>
+                                <th scope="row">Liquidador{{ company.liquidators|length|pluralize:"es" }}</th>
+                                <td>{% for liquidator in company.liquidators %} {{ liquidator.name | title }}{% if not forloop.last %}, {% endif %} {% endfor %}</td>
+                            </tr>
+                            {% endif %}
                             </tbody>
                         </table>
                     </div>
