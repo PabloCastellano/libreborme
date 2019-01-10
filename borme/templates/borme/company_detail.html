@@ -94,10 +94,6 @@
             </div>
             <div class="col-md-6">
                 <p>
-                <strong>Fecha de constitución:</strong> {{ company.date_creation|date|default:"Desconocido" }}<br>
-                  <strong>Domicilio:</strong> {{ company.domicilio|default:"Desconocido" }}<br/>
-                  <strong>Objeto social:</strong> {{ company.objeto|default:"Desconocido" }}<br>
-                  <strong>Capital:</strong> {% if company.capital %}{{ company.capital }} Euros{% else %}Desconocido{% endif %}<br>
                 </p>
             </div>
         </div>

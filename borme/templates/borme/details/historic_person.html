@@ -8,7 +8,7 @@
             <div class="col">
                 <ul class="list-inline list-unstyled ul-resum">
                     <li class="list-inline-item">
-                        <p class="font-weight-bold">Última actualización: <span class="font-weight-normal">{{ company.date_updated }}</span></p>
+                        <p class="font-weight-bold">Última actualización: <span class="font-weight-normal">{{ person.date_updated }}</span></p>
                     </li>
                     <li class="list-inline-item">
                         <p class="font-weight-bold">Fuente de los datos: <span class="font-weight-normal">Agencia Estatal Boletín Oficial del Estado.</span></p>
@@ -16,58 +16,6 @@
                 </ul>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <img src="{% static 'assets/img/table/icon1.svg' %}" alt="">Información de la compañía
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-company-information">
-                            <thead>
-                            <tr class="d-none">
-                                <th scope="col">#</th>
-                                <th scope="col">First</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">NIF</th>
-                                <td>{{ company.nif|default:"Desconocido" }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Situación Mercantil</th>
-                                <td>{{ company.get_status_display }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Fecha de constitución</th>
-                                <td>X años ({{ company.date_creation|date|default:"Desconocido" }})</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Domicilio</th>
-                                <td>{{ company.domicilio|default:"Desconocido" }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Objeto social </th>
-                                <td>{{ company.objeto|default:"Desconocido" }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Capital</th>
-                                <td>{% if company.capital %}{{ company.capital }} Euros{% else %}Desconocido{% endif %}</td>
-                            </tr>
-                            {% if company.liquidators %}
-                            <tr>
-                                <th scope="row">Liquidador{{ company.liquidators|length|pluralize:"es" }}</th>
-                                <td>{% for liquidator in company.liquidators %} {{ liquidator.name | title }}{% if not forloop.last %}, {% endif %} {% endfor %}</td>
-                            </tr>
-                            {% endif %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
 
         <div class="row  mt-4">
             <div class="col-md-12">
