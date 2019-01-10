@@ -1,9 +1,7 @@
 {% load staticfiles %}
 {% comment %}
-- mover newsletter.html a borme/sections/newsletter.html
 - datatables
 - solo cargar fontawesome cuando la pagina lo requiere
-- fontawesome solid (https://fontawesome.com/how-to-use/on-the-web/setup/upgrading-from-version-4)
 - <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
 - si tiramos de cdn, desinstalar deps de FA y BOOTSTRAP
 - libreborme.css
@@ -81,7 +79,7 @@
 
   {% block content %}{% endblock %}
 
-  {% include "newsletter.html" %}
+  {% include "borme/sections/newsletter.html" %}
   {% include "borme/elements/footer.html" %}
   {% include "matomo.html" %}
 
