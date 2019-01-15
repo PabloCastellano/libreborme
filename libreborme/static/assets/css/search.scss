@@ -8,10 +8,25 @@
       color: $grey-99;
     }
   }
+  .input-group-prepend {
+    margin-left: -1px;
+    .input-group-text {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      background-color: $red-dark;
+      border: 1px solid $red-dark;
+      a {
+        color: white;
+      }
+    }
+  }
   .input-group-text {
     background-color: $red-dark;
     border: 1px solid $red-dark;
     color: white;
+  }
+  a {
+    color: $red-dark;
   }
   .line-tabs {
     hr {
@@ -46,5 +61,17 @@
     color: $red-dark;
     background-color: transparent;
     border-color: #dee2e6;
+  }
+  .btn-following {
+    border-radius: 20px;
+    font-size: 12px;
+    padding: 0;
+    min-width: 80px;
+    width: auto;
+    color: $grey-99;
+    border: solid 1px $grey-99;
+  }
+  .btn-following:hover {
+    color: white;
   }
 }

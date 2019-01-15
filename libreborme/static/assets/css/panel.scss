@@ -59,7 +59,11 @@
 .sidebar-heading {
   font-size: .75rem;
   text-transform: uppercase;
-  border-bottom: solid 1px #95989A;
+  span {
+    border-bottom: 1px solid #95989A;
+    width: 100%;
+    display: inline-block;
+  }
 }
 
 /*
@@ -78,6 +82,12 @@
 }
 
 .view-panel {
+  .form-control {
+    background-color: #F5F5F5;
+  }
+  .custom-select {
+    background-color: #F5F5F5 !important;
+  }
   .title-section {
     font-size: 21px;
     font-weight: bold;

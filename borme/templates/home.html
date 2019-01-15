@@ -27,7 +27,7 @@
                                 <div class="input-group mb-2">
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">
-                                            <i class="fas fa-search"></i>
+                                            <a href="#"><i class="fas fa-search"></i></a>
                                         </div>
                                     </div>
                                     <input type="hidden" name="page" value="1">
@@ -108,12 +108,9 @@
                 <p>Mediante el servicio de seguimiento recibirás una notificación cada vez que haya un cambio mercantil en alguna empresa o directivo de tu interés</p>
             </div>
         </div>
-        <div class="row mt-5 justify-content-center">
-            <div class="col-lg-7 col-md-12">
-                <ul class="list-unstyled">
-                    <li class="list-inline-item"><h3>Contacta con nosotros si necesitas más información</h3></li>
-                    <li class="list-inline-item"><a class="btn btn-primary btn-transparent" href="{% url 'contact' %}" role="button">Contactar</a></li>
-                </ul>
+        <div class="row mt-5">
+            <div class="col text-center">
+                <h3 class="font-weight-bold">Contacta con nosotros si necesitas más información <a class="btn btn-primary btn-transparent" href="{% url 'contact' %}" role="button">Contactar</a></h3>
             </div>
         </div>
     </div>

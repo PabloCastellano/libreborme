@@ -23,8 +23,19 @@ body {
   font-weight: bold;
   padding: 3px 0 0;
 }
-
+.form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: $red-light;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem #b9021d5e;
+}
 header {
+  .btn-panel {
+    min-width: 150px;
+    width: 100%;
+    padding: 3px 20px 0;
+  }
   .dropdown-item {
     font-size: 14px;
     color: $grey-99;
@@ -55,6 +66,43 @@ header {
     .navbar-nav {
       .nav-link {
         color: $grey-99 !important;
+      }
+    }
+  }
+  .menu-panel-user {
+    a {
+      span {
+        position: relative;
+        top: 5px;
+      }
+    }
+    .dropdown-toggle::after {
+      top: 8px;
+      position: relative;
+    }
+  }
+  .search-navbar {
+    padding: 0 30px;
+    .input-group {
+      input {
+        height: 28px;
+        font-size: 14px;
+      }
+    }
+    .input-group-prepend {
+      margin-left: -1px;
+      height: 28px;
+      .input-group-text {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        background-color: $red-dark;
+        border: 1px solid $red-dark;
+        a {
+          color: white;
+          i {
+            font-size: 13px !important;
+          }
+        }
       }
     }
   }
@@ -119,6 +167,7 @@ section.cookies {
   position: fixed;
   bottom: 0;
   background-color: $color-dark;
+  width: 100%;
   p {
     font-size: 12px;
     color: white;
@@ -127,6 +176,9 @@ section.cookies {
     width: auto;
     padding: 3px 20px;
     margin-right: 10px;
+  }
+  a {
+    color: $grey-66;
   }
 }
 .title-section {

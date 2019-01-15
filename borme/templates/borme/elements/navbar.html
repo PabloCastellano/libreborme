@@ -1,6 +1,7 @@
 {% load staticfiles %}
 {% comment %}
 - libreborne.css
+- if <mostrar barra busq navbar>
 
 {% endcomment %}
 
@@ -17,8 +18,26 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'services' %}">Servicios</a>
                 </li>
+                <li class="nav-item search-navbar">
+                    <form>
+                        <div class="form-row">
+                            <div class="col-12">
+                                <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Buscar...">
+
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <a href=""><i class="fas fa-search"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </li>
                 <li class="nav-item">
-                    <a class="btn btn-primary btn-transparent" href="#" role="button" data-toggle="modal" data-target="#exampleModalCenter">Area personal</a>
+                    <a class="btn btn-primary btn-transparent btn-panel" href="#" role="button" data-toggle="modal" data-target="#exampleModalCenter">Area personal</a>
                 </li>
                 <li class="nav-item dropdown menu-panel-user">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

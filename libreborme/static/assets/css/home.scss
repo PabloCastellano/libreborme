@@ -19,6 +19,18 @@
     font-weight: bold;
     color: $color-dark;
   }
+  .input-group-prepend {
+    margin-left: -1px;
+    .input-group-text {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      background-color: $red-dark;
+      border: 1px solid $red-dark;
+      a {
+        color: white;
+      }
+    }
+  }
 }
 section {
   padding: 40px 0 ;
@@ -49,17 +61,16 @@ section.featured-section {
     margin: 25px 0;
   }
   p {
-    font-size: 12px;
     width: 85%;
     margin: 0 auto;
   }
 }
 section.services {
-  background-color: $color-light;
+  background-color: $bg-grey-light;
   .circle-img {
     width: 147px;
     height: 147px;
-    background-color: white;
+    background-color: $grey-33;
     margin: 0 auto;
     border-radius: 100px;
     img {
@@ -72,7 +83,6 @@ section.services {
     margin: 25px 0;
   }
   p {
-    font-size: 12px;
     width: 85%;
     margin: 0 auto;
   }
@@ -80,14 +90,11 @@ section.services {
     font-size: 16px;
   }
 }
-section.customers {
 
-
-}
 
 section.newsletter {
   padding: 23px;
-  height: auto;
+  height: 90px;
   background-color: $red-dark;
   h3 {
     font-size: 24px;

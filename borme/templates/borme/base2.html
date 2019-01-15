@@ -100,7 +100,7 @@
   <script>
       $(document).ready(function(){
           var $logo = $('#logo');
-          if ( window.location.pathname == '/' ){
+          if ( window.location.pathname == '/' || window.location.pathname == '/borme/' ){
               $logo.addClass('d-none');
               $(function () {
                   $(window).scroll(function () {

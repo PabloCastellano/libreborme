@@ -4,6 +4,7 @@
 - falta input submit
 - estilo "no results" (c y p)
 - pagination (companies and persons)
+- comproabr el boton de buscar (es un <a> y no un <input>)
 
 {% if query %}
 <h1>Resultados de la búsqueda «{{ query }}»</h1>
@@ -135,12 +136,12 @@
   <div class="container">
       <form method="GET" role="search" action="{% url "borme-search" %}">
           <div class="form-row justify-content-center mt-4">
-              <div class="col-5">
+              <div class="col-md-7 col-12">
                   <label class="sr-only" for="inlineFormInputGroup">Nombre</label>
                   <div class="input-group mb-2">
                       <div class="input-group-prepend">
                           <div class="input-group-text">
-                              <i class="fas fa-search"></i>
+                              <a href="#"><i class="fas fa-search"></i></a>
                           </div>
                       </div>
                       <input type="hidden" name="page" value="1">

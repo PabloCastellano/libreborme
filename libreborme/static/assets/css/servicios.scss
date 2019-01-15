@@ -7,7 +7,7 @@
       color: $red-dark;
     }
     .descripcion-servicio {
-      font-size: 12px;
+      font-size: 14px;
     }
     .card {
       border-radius: 10px;
@@ -21,7 +21,7 @@
         font-weight: bold;
       }
       p {
-        font-size: 12px;
+        font-size: 14px;
         font-weight: lighter;
         margin-bottom: 0;
       }
@@ -34,10 +34,18 @@
         background-color: $red-dark;
         border-top: 1px solid $red-dark;
         p {
-          font-size: 12px;
+          font-size: 14px;
           color: white;
           margin-bottom: 0;
         }
+      }
+    }
+    a:hover {
+      color: #0056b3;
+      text-decoration: none;
+      .card-footer {
+        background-color: $grey-99;
+        border-top: 1px solid $grey-99;
       }
     }
   }

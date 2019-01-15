@@ -31,8 +31,8 @@
 
 .btn-secondary:hover {
   color: #fff;
-  background-color: white;
-  border-color: white; }
+  background-color: #222222;
+  border-color: #222222; }
 
 #myCarousel {
   margin-bottom: 0; }
@@ -47,6 +47,15 @@
     font-size: 32px;
     font-weight: bold;
     color: #222222; }
+  #myCarousel .input-group-prepend {
+    margin-left: -1px; }
+    #myCarousel .input-group-prepend .input-group-text {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      background-color: #B9021D;
+      border: 1px solid #B9021D; }
+      #myCarousel .input-group-prepend .input-group-text a {
+        color: white; }
 
 section {
   padding: 40px 0; }
@@ -74,16 +83,15 @@ section.featured-section h2 {
   color: #222222;
   margin: 25px 0; }
 section.featured-section p {
-  font-size: 12px;
   width: 85%;
   margin: 0 auto; }
 
 section.services {
-  background-color: #F5F5F5; }
+  background-color: #F9F9F9; }
   section.services .circle-img {
     width: 147px;
     height: 147px;
-    background-color: white;
+    background-color: #EEEEEE;
     margin: 0 auto;
     border-radius: 100px; }
     section.services .circle-img img {
@@ -93,7 +101,6 @@ section.services {
     color: #B9021D;
     margin: 25px 0; }
   section.services p {
-    font-size: 12px;
     width: 85%;
     margin: 0 auto; }
   section.services h3 {
@@ -101,7 +108,7 @@ section.services {
 
 section.newsletter {
   padding: 23px;
-  height: auto;
+  height: 90px;
   background-color: #B9021D; }
   section.newsletter h3 {
     font-size: 24px;
@@ -143,7 +150,7 @@ section.newsletter {
     font-weight: bold;
     color: #B9021D; }
   .view-servicios section.contenido-servicio .descripcion-servicio {
-    font-size: 12px; }
+    font-size: 14px; }
   .view-servicios section.contenido-servicio .card {
     border-radius: 10px;
     max-width: 240px; }
@@ -154,7 +161,7 @@ section.newsletter {
       font-size: 25px;
       font-weight: bold; }
     .view-servicios section.contenido-servicio .card p {
-      font-size: 12px;
+      font-size: 14px;
       font-weight: lighter;
       margin-bottom: 0; }
     .view-servicios section.contenido-servicio .card img {
@@ -165,9 +172,15 @@ section.newsletter {
       background-color: #B9021D;
       border-top: 1px solid #B9021D; }
       .view-servicios section.contenido-servicio .card .card-footer p {
-        font-size: 12px;
+        font-size: 14px;
         color: white;
         margin-bottom: 0; }
+  .view-servicios section.contenido-servicio a:hover {
+    color: #0056b3;
+    text-decoration: none; }
+    .view-servicios section.contenido-servicio a:hover .card-footer {
+      background-color: #626262;
+      border-top: 1px solid #626262; }
 
 .view-contacto .contenido-descripcion h3 {
   font-size: 14px;
@@ -176,6 +189,8 @@ section.newsletter {
   font-size: 12px; }
 .view-contacto .form-control {
   background-color: #F5F5F5; }
+.view-contacto .line-separate {
+  border-left: solid 1px #DDDDDD; }
 
 .modal-login .modal-body {
   padding: 30px 0; }
@@ -186,7 +201,7 @@ section.newsletter {
   margin-bottom: -10px;
   color: #222222; }
   .modal-login .text-header img {
-    margin-left: 10px;
+    margin-left: 3px;
     position: relative;
     top: -6px; }
 .modal-login .form-control {
@@ -203,10 +218,21 @@ section.newsletter {
     font-size: 20px;
     font-weight: bold;
     color: #626262; }
+.view-search .input-group-prepend {
+  margin-left: -1px; }
+  .view-search .input-group-prepend .input-group-text {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #B9021D;
+    border: 1px solid #B9021D; }
+    .view-search .input-group-prepend .input-group-text a {
+      color: white; }
 .view-search .input-group-text {
   background-color: #B9021D;
   border: 1px solid #B9021D;
   color: white; }
+.view-search a {
+  color: #B9021D; }
 .view-search .line-tabs hr {
   position: relative;
   width: 100%;
@@ -228,6 +254,16 @@ section.newsletter {
   color: #B9021D;
   background-color: transparent;
   border-color: #dee2e6; }
+.view-search .btn-following {
+  border-radius: 20px;
+  font-size: 12px;
+  padding: 0;
+  min-width: 80px;
+  width: auto;
+  color: #626262;
+  border: solid 1px #626262; }
+.view-search .btn-following:hover {
+  color: white; }
 
 .view-details .section-title-result-details {
   background-color: #fcfdfc;
@@ -332,9 +368,11 @@ section.newsletter {
   .view-details .section-roadmap .item-roadmap .box-date {
     width: 140px; } }
 @media (max-width: 768px) {
-  #myCarousel .carousel-caption .logo-banner {
-    width: 100%;
-    margin-bottom: 30px; }
+  #myCarousel .carousel-caption {
+    top: 5%; }
+    #myCarousel .carousel-caption .logo-banner {
+      width: 100%;
+      margin-bottom: 30px; }
 
   section.newsletter {
     height: auto; }
@@ -353,6 +391,9 @@ section.newsletter {
 
   section.cookies-panel {
     bottom: 0 !important; } }
+@media (max-width: 991px) {
+  section.newsletter {
+    height: auto; } }
 .cookies-panel {
   z-index: 100; }
 
@@ -405,8 +446,11 @@ section.newsletter {
 
 .sidebar-heading {
   font-size: .75rem;
-  text-transform: uppercase;
-  border-bottom: solid 1px #95989A; }
+  text-transform: uppercase; }
+  .sidebar-heading span {
+    border-bottom: 1px solid #95989A;
+    width: 100%;
+    display: inline-block; }
 
 /*
  * Content
@@ -420,6 +464,10 @@ section.newsletter {
   [role="main"] {
     padding-top: 48px;
     /* Space for fixed navbar */ } }
+.view-panel .form-control {
+  background-color: #F5F5F5; }
+.view-panel .custom-select {
+  background-color: #F5F5F5 !important; }
 .view-panel .title-section {
   font-size: 21px;
   font-weight: bold;
@@ -459,6 +507,17 @@ body {
   font-weight: bold;
   padding: 3px 0 0; }
 
+.form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #E0435A;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem #b9021d5e; }
+
+header .btn-panel {
+  min-width: 150px;
+  width: 100%;
+  padding: 3px 20px 0; }
 header .dropdown-item {
   font-size: 14px;
   color: #626262; }
@@ -477,6 +536,29 @@ header .bg-light {
   background-color: #EEEEEE !important; }
 header .navbar-light .navbar-nav .nav-link {
   color: #626262 !important; }
+header .menu-panel-user a span {
+  position: relative;
+  top: 5px; }
+header .menu-panel-user .dropdown-toggle::after {
+  top: 8px;
+  position: relative; }
+header .search-navbar {
+  padding: 0 30px; }
+  header .search-navbar .input-group input {
+    height: 28px;
+    font-size: 14px; }
+  header .search-navbar .input-group-prepend {
+    margin-left: -1px;
+    height: 28px; }
+    header .search-navbar .input-group-prepend .input-group-text {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      background-color: #B9021D;
+      border: 1px solid #B9021D; }
+      header .search-navbar .input-group-prepend .input-group-text a {
+        color: white; }
+        header .search-navbar .input-group-prepend .input-group-text a i {
+          font-size: 13px !important; }
 
 .slide-servicios img {
   width: 75px;
@@ -520,7 +602,8 @@ section.cookies {
   padding: 10px 0 0;
   position: fixed;
   bottom: 0;
-  background-color: #222222; }
+  background-color: #222222;
+  width: 100%; }
   section.cookies p {
     font-size: 12px;
     color: white; }
@@ -528,6 +611,8 @@ section.cookies {
     width: auto;
     padding: 3px 20px;
     margin-right: 10px; }
+  section.cookies a {
+    color: #DDDDDD; }
 
 .title-section {
   font-size: 21px;
