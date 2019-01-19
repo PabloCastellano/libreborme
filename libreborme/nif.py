@@ -45,6 +45,18 @@ class NIFProvider(object):
     def __init__(self, company):
         self.company = company
 
+    def _check_page_title(self, title, provider):
+        found = False
+        if (provider == 'empresia' and 'Resultados de búsqueda' not in title):
+            found = True
+        elif (provider == 'infocif' and 'Informacion Financiera' in title):
+            found = True
+        elif (provider == 'infocif' and 'Informe comercial' in title):
+            found = True
+
+        if not found:
+            raise NIFNotFoundException(self.company.fullname)
+
     def _get_content_and_xpath(self, url, xpath, provider):
         logger.debug(url)
         page = requests.get(url, allow_redirects=True, headers=self.headers)
@@ -60,9 +72,7 @@ class NIFProvider(object):
         except IndexError:
             raise NIFParserException("Error while parsing title in URL " + url)
 
-        if (provider == 'empresia' and 'Resultados de búsqueda' in title) \
-           or (provider == 'infocif' and 'Informacion Financiera' not in title):
-            raise NIFNotFoundException(self.company.fullname)
+        self._check_page_title(title, provider)
 
         try:
             return tree.xpath(xpath)[0]
