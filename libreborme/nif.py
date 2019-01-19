@@ -45,10 +45,6 @@ class NIFProvider(object):
     def __init__(self, company):
         self.company = company
 
-    @property
-    def is_slug(self):
-        return self.company == slugify(self.company)
-
     def _get_content_and_xpath(self, url, xpath, provider):
         logger.debug(url)
         page = requests.get(url, allow_redirects=True, headers=self.headers)
@@ -56,7 +52,7 @@ class NIFProvider(object):
 
         # Works for: infoempresa
         if page.status_code == 404:
-            raise NIFNotFoundException(self.company)
+            raise NIFNotFoundException(self.company.fullname)
 
         tree = html.fromstring(page.content)
         try:
@@ -66,7 +62,7 @@ class NIFProvider(object):
 
         if (provider == 'empresia' and 'Resultados de búsqueda' in title) \
            or (provider == 'infocif' and 'Informacion Financiera' not in title):
-            raise NIFNotFoundException(self.company)
+            raise NIFNotFoundException(self.company.fullname)
 
         try:
             return tree.xpath(xpath)[0]
@@ -74,35 +70,26 @@ class NIFProvider(object):
             raise NIFParserException("Error while parsing NIF in URL " + url)
 
     def _get_nif_infocif(self):
-        nif = None
         xpath = "/html/body/div[1]/section/div/div[5]/div/div/div/div[4]/div[2]/div/div/div[1]/h2/text()"
-        if self.is_slug:
-            url = 'http://www.infocif.es/ficha-empresa/' + self.company
-            nif = self._get_content_and_xpath(url, xpath, provider='infocif')
-        else:
-            self._search(self.company)
-            # if len(results) == 1: save
-            # else: don't save, report
+        slug2 = slugify(self.company.fullname)
+
+        url = 'http://www.infocif.es/ficha-empresa/' + slug2
+        nif = self._get_content_and_xpath(url, xpath, provider='infocif')
         return nif
 
     def _get_nif_empresia(self):
-        nif = None
         xpath = "/html/body/section/div[1]/div[3]/div[2]/div/div[1]/p/text()"
-        if self.is_slug:
-            url = 'https://www.empresia.es/empresa/' + self.company
-            nif = self._get_content_and_xpath(url, xpath, provider='empresia')
-        else:
-            self._search(self.company)
+
+        url = 'https://www.empresia.es/empresa/' + self.company.slug
+        nif = self._get_content_and_xpath(url, xpath, provider='empresia')
         return nif
 
     def _get_nif_infoempresa(self):
-        nif = None
         xpath = "/html/body/div[1]/div[2]/div/div/main/div/div/section[1]/div/div/dl/dd[3]/text()"
-        if self.is_slug:
-            url = 'https://www.infoempresa.com/es-es/es/empresa/' + self.company
-            nif = self._get_content_and_xpath(url, xpath, provider='infoempresa')
-        else:
-            self._search(self.company)
+        slug2 = slugify(self.company.fullname)
+
+        url = 'https://www.infoempresa.com/es-es/es/empresa/' + slug2
+        nif = self._get_content_and_xpath(url, xpath, provider='infoempresa')
         return nif
 
     def _get_nif_from_provider(self, provider):
@@ -117,27 +104,40 @@ class NIFProvider(object):
         elif provider == 'infoempresa':
             nif = self._get_nif_infoempresa()
         else:
-            raise NotImplementedError
+            raise NotImplementedError(provider)
         return nif
 
-    def get(self, provider=None):
-
-        if provider:
-            nif = self._get_nif_from_provider(provider)
-        else:
-            for provider in PROVIDERS:
-                nif = self._get_nif_from_provider(provider)
-                if nif:
-                    break
-
+    def validate_nif(self, nif):
         if not nif:
             logger.warning("Could not find NIF for company '{}'".format(self.company))
+            raise NIFNotFoundException(self.company)
         elif not validate_nif(nif):
             raise NIFInvalidException(nif)
 
-        return nif, provider
+    def get(self, provider):
+        if provider not in PROVIDERS:
+            raise ValueError("Invalid provider: " + provider)
 
-    def _search(self, company):
+        nif = self._get_nif_from_provider(provider)
+        self.validate_nif(nif)
+
+        return nif
+
+    def get_from_any_provider(self):
+        nif = None
+        for provider in PROVIDERS:
+            try:
+                nif = self._get_nif_from_provider(provider)
+                self.validate_nif(nif)
+                return nif, provider
+            except NIFException as e:
+                logger.error(e)
+
+        raise NIFNotFoundException(self.company)
+
+    def _search(self, provider):
+        # if len(results) == 1: save
+        # else: don't save, report
         raise NotImplementedError
 
 
@@ -155,32 +155,29 @@ def validate_nif(nif):
 
 
 def find_nif(company, provider=None, save_to_db=True):
+    """
+    company: borme.models.Company
+    """
     nif = None
     created = False
 
     nif_provider = NIFProvider(company)
-    nif, provider = nif_provider.get(provider=provider)
-
-    if not nif:
-        raise NIFNotFoundException(company)
+    if provider:
+        nif = nif_provider.get(provider=provider)
+    else:
+        nif, provider = nif_provider.get_from_any_provider()
 
     if save_to_db:
-        slug = slugify(company)
-        try:
-            c = Company.objects.get(slug=slug)
-        except Company.DoesNotExist:
-            logger.warning("Company {} doesn't exist in DB, hence not saving NIF".format(slug))
-            return nif, created
 
-        if c.nif:
-            if c.nif == nif:
+        if company.nif:
+            if company.nif == nif:
                 logger.debug("NIF for Company '{}' already exists in DB.".format(company))
             else:
-                logger.error("NIF for Company '{}' in DB [{}] is different from found [{}]".format(company, c.nif, nif))
+                logger.error("NIF for Company '{}' in DB [{}] is different from found [{}]".format(company, company.nif, nif))
         else:
             created = True
-            c.nif = nif
-            c.save()
+            company.nif = nif
+            company.save()
             logger.debug("NIF for Company '{}' saved [{}]".format(company, nif))
 
     if created:

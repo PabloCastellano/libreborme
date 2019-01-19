@@ -35,9 +35,10 @@ class Command(BaseCommand):
             companies = Company.objects.get_modified_today()
         elif options['date']:
             companies = Company.objects.get_modified_on(options['date'])
+        companies = companies.filter(nif__isnull=True)
 
         total = len(companies)
-        logger.info("Found {} companies".format(total))
+        print("Found {} companies".format(total))
         if total == 0:
             return
 
@@ -50,7 +51,7 @@ class Command(BaseCommand):
             # mejorar, tenemos el tipo y podemos generar otro slug
             # necesitamos busqueda si o si
             try:
-                nif, created, provider = libreborme.nif.find_nif(company.slug)
+                nif, created, provider = libreborme.nif.find_nif(company)
                 if created:
                     added += 1
                 else:
@@ -71,7 +72,7 @@ class Command(BaseCommand):
                     print("[{}/{}] {}: SKIP [{}]".format(num, total, company.slug, nif))
             time.sleep(1)
 
-        logger.info("Result: found NIF for {} out of {} companies. NEW: {}, SKIPPED: {}".format(found, total, added, skipped))
+        print("Result: found NIF for {} out of {} companies. NEW: {}, SKIPPED: {}".format(found, total, added, skipped))
 
     def set_verbosity(self, verbosity):
         if verbosity == 0:

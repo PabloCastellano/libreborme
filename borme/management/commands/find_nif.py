@@ -4,7 +4,9 @@ from django.utils import timezone
 
 import logging
 
+from borme.models import Company
 from libreborme.nif import find_nif, PROVIDERS
+
 
 class Command(BaseCommand):
     # args = '<ISO formatted date (ex. 2015-01-01 or --init)> [--local]'
@@ -12,7 +14,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('company', nargs='+', type=str,
-                            help="Company name or slug")
+                            help="Company slug")
         parser.add_argument(
                 '-p', '--provider',
                 required=False,
@@ -28,7 +30,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.set_verbosity(int(options['verbosity']))
 
-        for company in options['company']:
+        for slug in options['company']:
+            company = Company.objects.get(slug=slug)
             nif = find_nif(company, provider=options['provider'], save_to_db=options['save'])
             if nif:
                 print(nif)
