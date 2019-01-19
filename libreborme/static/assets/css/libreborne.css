@@ -536,12 +536,6 @@ header .bg-light {
   background-color: #EEEEEE !important; }
 header .navbar-light .navbar-nav .nav-link {
   color: #626262 !important; }
-header .menu-panel-user a span {
-  position: relative;
-  top: 5px; }
-header .menu-panel-user .dropdown-toggle::after {
-  top: 8px;
-  position: relative; }
 header .search-navbar {
   padding: 0 30px; }
   header .search-navbar .input-group input {

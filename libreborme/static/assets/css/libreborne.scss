@@ -69,18 +69,6 @@ header {
       }
     }
   }
-  .menu-panel-user {
-    a {
-      span {
-        position: relative;
-        top: 5px;
-      }
-    }
-    .dropdown-toggle::after {
-      top: 8px;
-      position: relative;
-    }
-  }
   .search-navbar {
     padding: 0 30px;
     .input-group {
