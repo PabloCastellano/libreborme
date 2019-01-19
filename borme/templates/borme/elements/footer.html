@@ -81,7 +81,7 @@ aira-describedby="" ?
             <div class="col-md-4">
                 <div class="row">
                     <div class="col">
-                        <button type="button" class="btn btn-white btn-more-info" data-dismiss="modal"><a href="{% url 'cookies' %}">Más información</a></button>
+                        <a href="{% url 'cookies' %}"><button type="button" class="btn btn-white btn-more-info" data-dismiss="modal">Más información</button></a>
                     </div>
                     <div class="col">
                         <a href="#"<button type="button" class="btn btn-white cookies-header-close" data-dismiss="modal">Entendido</button></a>
@@ -142,7 +142,7 @@ aira-describedby="" ?
                         <div class="col-md-10 text-center">
                             <ul class="list-inline">
                                 <li class="list-inline-item no-user"><p>¿Aún no eres usuario? </p></li>
-                                <li class="list-inline-item"><button type="button" class="btn btn-secondary">Registrarme</button></li>
+                                <li class="list-inline-item"><a href="{% url 'django_registration_register' %}"><button type="button" class="btn btn-secondary">Registrarme</button></a></li>
                             </ul>
                         </div>
                     </div>
