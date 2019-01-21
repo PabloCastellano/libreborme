@@ -96,6 +96,7 @@ class NIFProvider(object):
 
     def _get_nif_infoempresa(self):
         xpath = "/html/body/div[1]/div[2]/div/div/main/div/div/section[1]/div/div/dl/dd[3]/text()"
+        # TODO: & is also converted to - leading to double hyphens together
         slug2 = slugify(self.company.fullname)
 
         url = 'https://www.infoempresa.com/es-es/es/empresa/' + slug2
