@@ -169,8 +169,8 @@
                       </li>
                   </ul>
               </div>
-              <div class="col-md-6 text-right">
-                  <p class="mb-0">Se encontraron {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company'%}<span class="font-weight-bold">{{ count_companies }}</span> empresa{{ count_companies|pluralize }}{% endif %}{% if form.cleaned_data.type == 'all' %} y {% endif %}{% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'person'%}<span class="font-weight-bold">{{ count_persons }}</span> persona{{ count_persons|pluralize }}{% endif %}.</p>
+              <div class="col-md-5 col-lg-6 text-right">
+                  <p class="mb-0 stats-details">Se encontraron {% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'company'%}<span class="font-weight-bold">{{ count_companies }}</span> empresa{{ count_companies|pluralize }}{% endif %}{% if form.cleaned_data.type == 'all' %} y {% endif %}{% if form.cleaned_data.type == 'all' or form.cleaned_data.type == 'person'%}<span class="font-weight-bold">{{ count_persons }}</span> persona{{ count_persons|pluralize }}{% endif %}.</p>
               </div>
           </div>
       </div>

@@ -40,7 +40,65 @@
                 <li class="nav-item">
                     <a class="btn btn-primary btn-transparent btn-panel" href="#" role="button" data-toggle="modal" data-target="#exampleModalCenter">Area personal</a>
                 </li>
-                <li class="nav-item dropdown menu-panel-user">
+
+                <!-- Menu resoluciones hasta md -->
+                <li class="nav-item menu-panel-user d-block d-md-none">
+                    <a class="nav-link" href="#">
+                        <img src="{% static 'assets/img/menu-panel/cuenta.svg' %}" alt="" class="img-navbar-account">
+                        {% if user.is_authenticated %}
+                        <span>{{ user }}</span>
+                        {% else %}
+                        <span>Tu cuenta</span>
+                        {% endif %}
+                    </a>
+                </li>
+                {% if user.is_authenticated %}
+                    {% if user.is_staff %}
+                    <li class="nav-item menu-panel-user d-block d-md-none">
+                        <a class="nav-link" href="/admin">
+                            <span>Admin</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item menu-panel-user d-block d-md-none">
+                        <a class="nav-link" href="{% url 'dashboard-index' %}">
+                            <span>Mi cuenta</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-panel-user d-block d-md-none">
+                        <a class="nav-link" href="#">
+                            <span>Facturas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-panel-user d-block d-md-none">
+                        <a class="nav-link" href="#">
+                            <span>Métodos de pago</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-panel-user d-block d-md-none">
+                        <a class="nav-link" href="#">
+                            <span>Seguimiento</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-panel-user d-block d-md-none">
+                        <a class="nav-link" href="#">
+                            <span>Subscripciones</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-panel-user d-block d-md-none">
+                        <a class="nav-link" href="#">
+                            <span>API</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-panel-user d-block d-md-none">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <span>Cerrar sesión</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                <!-- Menu resoluciones md -->
+                <li class="nav-item dropdown menu-panel-user d-none d-md-block">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <img src="{% static 'assets/img/menu-panel/cuenta.svg' %}" alt="" class="img-navbar-account">
                         {% if user.is_authenticated %}

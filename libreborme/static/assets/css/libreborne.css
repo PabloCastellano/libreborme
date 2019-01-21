@@ -34,6 +34,16 @@
   background-color: #222222;
   border-color: #222222; }
 
+.btn-details {
+  font-size: 12px;
+  font-weight: normal;
+  color: #626262;
+  border: solid 1px #626262;
+  border-radius: 30px;
+  padding: 0 10px;
+  width: auto;
+  height: 28px; }
+
 #myCarousel {
   margin-bottom: 0; }
   #myCarousel .carousel-caption {
@@ -191,6 +201,8 @@ section.newsletter {
   background-color: #F5F5F5; }
 .view-contacto .line-separate {
   border-left: solid 1px #DDDDDD; }
+.view-contacto a {
+  color: #B9021D; }
 
 .modal-login .modal-body {
   padding: 30px 0; }
@@ -298,6 +310,8 @@ section.newsletter {
   position: relative;
   width: 100%;
   top: 55px; }
+.view-details .line-tabs .stats-details {
+  font-size: 12px; }
 .view-details .nav-tabs .nav-item.show .nav-link, .view-details .nav-tabs .nav-link.active {
   color: #B9021D;
   background-color: #fbfbfb;
@@ -364,9 +378,6 @@ section.newsletter {
       .view-details .section-roadmap .item-roadmap .box-content .item-content p {
         font-size: 12px; }
 
-@media (min-width: 300px) and (max-width: 767px) {
-  .view-details .section-roadmap .item-roadmap .box-date {
-    width: 140px; } }
 @media (max-width: 768px) {
   #myCarousel .carousel-caption {
     top: 5%; }
@@ -382,6 +393,8 @@ section.newsletter {
       padding: 0 10px !important; }
       section.newsletter .img-search img {
         width: 20px; }
+    section.newsletter .text-field {
+      width: 100%; }
 
   section.footer {
     height: auto !important; }
@@ -390,7 +403,29 @@ section.newsletter {
     bottom: 0 !important; }
 
   section.cookies-panel {
-    bottom: 0 !important; } }
+    bottom: 0 !important; }
+
+  .view-details .stats-details {
+    margin: 20px 0 20px 0 !important; }
+  .view-details .section-roadmap .line-roadmap:before {
+    left: 33px;
+    top: 0;
+    background: #626262; }
+  .view-details .section-roadmap .item-roadmap {
+    display: contents !important; }
+    .view-details .section-roadmap .item-roadmap .box-date {
+      margin-left: 50px;
+      margin-bottom: 20px; }
+    .view-details .section-roadmap .item-roadmap .box-date:after {
+      margin-left: -50px; }
+    .view-details .section-roadmap .item-roadmap .box-content {
+      margin-bottom: 20px;
+      margin-left: 50px;
+      width: auto;
+      border: solid 1px #DDDDDD; }
+
+  .view-panel .col-legal {
+    margin-top: 0 !important; } }
 @media (max-width: 991px) {
   section.newsletter {
     height: auto; } }
@@ -464,6 +499,8 @@ section.newsletter {
   [role="main"] {
     padding-top: 48px;
     /* Space for fixed navbar */ } }
+.view-panel .col-legal {
+  margin-top: -90px; }
 .view-panel .form-control {
   background-color: #F5F5F5; }
 .view-panel .custom-select {
@@ -536,6 +573,12 @@ header .bg-light {
   background-color: #EEEEEE !important; }
 header .navbar-light .navbar-nav .nav-link {
   color: #626262 !important; }
+header .menu-panel-user a span {
+  position: relative;
+  top: 5px; }
+header .menu-panel-user .dropdown-toggle::after {
+  top: 8px;
+  position: relative; }
 header .search-navbar {
   padding: 0 30px; }
   header .search-navbar .input-group input {
@@ -554,13 +597,16 @@ header .search-navbar {
         header .search-navbar .input-group-prepend .input-group-text a i {
           font-size: 13px !important; }
 
-.slide-servicios img {
-  width: 75px;
-  margin-right: 20px; }
-.slide-servicios span {
-  font-size: 18px;
-  color: #B9021D;
-  font-weight: bold; }
+.slide-servicios .col-slide-services {
+  display: grid;
+  text-align: center; }
+  .slide-servicios .col-slide-services img {
+    width: 75px;
+    margin: 0 auto 20px; }
+  .slide-servicios .col-slide-services span {
+    font-size: 18px;
+    color: #B9021D;
+    font-weight: bold; }
 
 .view-404 h2 {
   font-size: 32px;

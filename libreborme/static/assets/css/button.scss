@@ -32,3 +32,13 @@
   background-color: $color-dark;
   border-color: $color-dark;
 }
+.btn-details {
+  font-size: 12px;
+  font-weight: normal;
+  color: $grey-99;
+  border: solid 1px $grey-99;
+  border-radius: 30px;
+  padding: 0 10px;
+  width: auto;
+  height: 28px;
+}

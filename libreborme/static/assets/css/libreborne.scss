@@ -69,6 +69,18 @@ header {
       }
     }
   }
+  .menu-panel-user {
+    a {
+      span {
+        position: relative;
+        top: 5px;
+      }
+    }
+    .dropdown-toggle::after {
+      top: 8px;
+      position: relative;
+    }
+  }
   .search-navbar {
     padding: 0 30px;
     .input-group {
@@ -96,14 +108,18 @@ header {
   }
 }
 .slide-servicios {
-  img {
-    width: 75px;
-    margin-right: 20px;
-  }
-  span {
-    font-size: 18px;
-    color: $red-dark;
-    font-weight: bold;
+  .col-slide-services {
+    display: grid;
+    text-align: center;
+    img {
+      width: 75px;
+      margin: 0 auto 20px;
+    }
+    span {
+      font-size: 18px;
+      color: $red-dark;
+      font-weight: bold;
+    }
   }
 }
 

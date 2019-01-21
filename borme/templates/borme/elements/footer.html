@@ -16,6 +16,10 @@
 
 aira-describedby="" ?
 <input id=id_username maxlength="254" name="username" class="form-control" aria-describedby="emailHelp" placeholder="Nombre de usuario">
+
+Registrarme:
+        <li class="list-inline-item"><a href="{% url 'django_registration_register' %}"><button type="button" class="btn btn-secondary">Registrarme</button></a></li>
+Modal registro
 {% endcomment %}
 
 <!-- FOOTER -->
@@ -142,13 +146,75 @@ aira-describedby="" ?
                         <div class="col-md-10 text-center">
                             <ul class="list-inline">
                                 <li class="list-inline-item no-user"><p>¿Aún no eres usuario? </p></li>
-                                <li class="list-inline-item"><a href="{% url 'django_registration_register' %}"><button type="button" class="btn btn-secondary">Registrarme</button></a></li>
+                                <li class="list-inline-item"><button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#ModalRegistro">Registrarme</button></li>
+
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
             {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade modal-login" id="ModalRegistro" tabindex="-1" role="dialog" aria-labelledby="ModalRegistro" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="row justify-content-center w-100">
+                    <div class="col-md-12 text-center">
+                        <p class="text-header">Entrar en <img src="/assets/img/logo.svg" alt="" style="width: 163px;"></p>
+                    </div>
+                </div>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row justify-content-md-center">
+                        <div class="col-md-10">
+                            <form>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Nombre de usuario">
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="E-Mail">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Contaseña">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Repetir Contraseña">
+                                </div>
+                            </form>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-secondary w-100 mb-2" data-dismiss="modal">Cancelar</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-primary btn-transparent w-100 mb-2">Registrarse</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="container">
+                    <div class="row justify-content-md-center">
+                        <div class="col-md-10 text-center">
+                            <ul class="list-inline">
+                                <li class="list-inline-item no-user"><p>¿Ya eres usuario? </p></li>
+                                <li class="list-inline-item"><button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#exampleModalCenter">Registrar</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

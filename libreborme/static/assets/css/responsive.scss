@@ -19,6 +19,9 @@
         width: 20px;
       }
     }
+    .text-field {
+      width: 100%;
+    }
   }
 
   section.footer {
@@ -29,6 +32,39 @@
   }
   section.cookies-panel {
     bottom: 0 !important;
+  }
+  .view-details {
+    .stats-details {
+      margin: 20px 0 20px 0 !important;
+    }
+    .section-roadmap {
+      .line-roadmap:before {
+        left: 33px;
+        top: 0;
+        background: #626262;
+      }
+      .item-roadmap {
+        display: contents !important;
+        .box-date {
+          margin-left: 50px;
+          margin-bottom: 20px;
+        }
+        .box-date:after {
+          margin-left: -50px;
+        }
+        .box-content {
+          margin-bottom: 20px;
+          margin-left: 50px;
+          width: auto;
+          border: solid 1px #DDDDDD;
+        }
+      }
+    }
+  }
+  .view-panel {
+    .col-legal {
+      margin-top: 0 !important;
+    }
   }
 }
 
