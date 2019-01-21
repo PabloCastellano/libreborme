@@ -46,7 +46,6 @@ class Command(BaseCommand):
 
         found = 0
         added = 0
-        skipped = 0
         for num, company in enumerate(companies, 1):
             # mejorar, tenemos el tipo y podemos generar otro slug
             # necesitamos busqueda si o si
@@ -54,8 +53,6 @@ class Command(BaseCommand):
                 nif, created, provider = libreborme.nif.find_nif(company)
                 if created:
                     added += 1
-                else:
-                    skipped += 1
                 if nif:
                     found += 1
 
@@ -72,7 +69,9 @@ class Command(BaseCommand):
                     print("[{}/{}] {}: SKIP [{}]".format(num, total, company.slug, nif))
             time.sleep(1)
 
-        print("Result: found NIF for {} out of {} companies. NEW: {}, SKIPPED: {}".format(found, total, added, skipped))
+        notfound = total - found
+        skipped = total - added
+        print("Result: found NIF for {} out of {} companies. NEW: {}, SKIPPED: {} NOTFOUND: {}".format(found, total, added, skipped, notfound))
 
     def set_verbosity(self, verbosity):
         if verbosity == 0:
