@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     'django_static_jquery',
     'fontawesome',
     'tastypie',
-    # 'maintenancemode',
+    'maintenance_mode',
     'django_elasticsearch_dsl',
     'borme',
     'libreborme',
@@ -44,10 +44,10 @@ MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # 'maintenancemode.middleware.MaintenanceModeMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'maintenance_mode.middleware.MaintenanceModeMiddleware',
 )
 
 STATICFILES_FINDERS = [
@@ -183,3 +183,8 @@ REGISTRATION_OPEN = True
 
 STATIC_ROOT = os.path.join(SITE_ROOT, 'static')
 MEDIA_ROOT = os.path.join(SITE_ROOT, 'media')
+
+# django-maintenance-mode
+MAINTENANCE_MODE = False  # Set to True to enable maintenance mode
+MAINTENANCE_MODE_IGNORE_STAFF = True
+MAINTENANCE_MODE_IGNORE_SUPERUSER = True
