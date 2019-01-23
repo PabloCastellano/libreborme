@@ -60,6 +60,8 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+
     <script>window.jQuery || document.write('<script src="{% static 'assets/js/vendor/jquery-slim.min.js' %}"><\/script>')</script>
     <script src="{% static 'assets/js/vendor/popper.min.js' %}"></script>
     <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
@@ -67,24 +69,23 @@
     <script src="{% static 'assets/js/vendor/holder.min.js' %}"></script>
 
     <script>
-        $(document).ready(function(){
-            var $logo = $('#logo');
-            if ( window.location.pathname == '/' ){
-                $logo.addClass('d-none');
-                $(function () {
-                    $(window).scroll(function () {
-                        if ($(this).scrollTop() > 180) {
-                            $logo.removeClass('d-none')
-                        } else {
-                            $logo.addClass('d-none')
-                        }
-                    });
+        $(document).ready(function() {
+            var advice = $("#headerCookies");
+            var closeButton = advice.find(".cookies-header-close");
+            var cookie = Cookies.get('accept');
+
+            if (cookie === undefined) {
+                advice.show();
+                closeButton.click(function(e){
+                    var date = new Date();
+                    date.setTime(date.getTime() + (60 * 60 * 24 * 365 * 10 * 1000));
+                    Cookies.set("accept", "yes", { expires: date, path: "/", domain: ".{{DOMAIN}}" });
+                    e.preventDefault();
+                    e.stopPropagation();
+                    advice.hide();
                 });
-            } else {
-                $logo.removeClass('d-none');
             }
         });
-
     </script>
 
 </body>

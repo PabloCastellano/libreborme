@@ -132,12 +132,12 @@
           if (cookie === undefined) {
               advice.show();
               closeButton.click(function(e){
-              var date = new Date();
+                  var date = new Date();
                   date.setTime(date.getTime() + (60 * 60 * 24 * 365 * 10 * 1000));
                   Cookies.set("accept", "yes", { expires: date, path: "/", domain: ".{{DOMAIN}}" });
-              e.preventDefault();
-              e.stopPropagation();
-              advice.hide();
+                  e.preventDefault();
+                  e.stopPropagation();
+                  advice.hide();
               });
           }
       });
