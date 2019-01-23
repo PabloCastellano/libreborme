@@ -303,6 +303,7 @@
 
 {% endcomment %}
 
+{% load compress %}
 {% load staticfiles %}
 {% load actos %}
 {% load utils %}
@@ -312,6 +313,12 @@
 {% block meta %}
   <meta name="keywords" content="{{ company.fullname|upper }}, Empresas, Informe, CNAE, Registro, Mercantil, Actos, BOE, BORME, Open Data, Cargos, Directivos"/>
   <meta name="description" content="{{ company.fullname|upper }}. Información mercantil de la empresa {{ company.fullname|upper }}. Cargos directivos de {{ company.fullname|upper }}. Actos publicados en el BORME de {{ company.fullname|upper }}."/>
+{% endblock %}
+
+{% block extrastyles %}
+{% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/details.scss' %}">
+{% endcompress %}
 {% endblock %}
 
 {% block content %}

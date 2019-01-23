@@ -7,6 +7,13 @@
     - Ejemplos de personas
 {% endcomment %}
 {% load staticfiles %}
+{% load compress %}
+
+{% block extrastyles %}
+{% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/home.scss' %}">
+{% endcompress %}
+{% endblock %}
 
 {% block content %}
 <div id="myCarousel" class="carousel slide" data-ride="carousel">

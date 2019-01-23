@@ -1,6 +1,8 @@
 {% extends 'borme/base2.html' %}
+{% load compress %}
+{% load staticfiles %}
+
 {% comment %}
-- datatables :?
 - falta input submit
 - estilo "no results" (c y p)
 - pagination (companies and persons)
@@ -119,6 +121,12 @@
 {% load utils %}
 
 {% block title %}{% if query %}Resultados de la búsqueda {{ query|upper }} | LibreBORME{% else %}Búsqueda avanzada | LibreBORME{% endif %}{% endblock %}
+
+{% block extrastyles %}
+{% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/search.scss' %}">
+{% endcompress %}
+{% endblock %}
 
 {% block content %}
 <div class="view-search mt-4">

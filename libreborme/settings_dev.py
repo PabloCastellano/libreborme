@@ -34,8 +34,6 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.redirects.RedirectsPanel',
 ]
 
-# DEBUG_TOOLBAR_CONFIG{'JQUERY_URL': '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js'}
-
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
@@ -46,7 +44,6 @@ MIDDLEWARE += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
-STATIC_ROOT = os.path.join(SITE_ROOT, 'static')
 MEDIA_URL = '%s/media/' % SITE_URL
 
 # BORME

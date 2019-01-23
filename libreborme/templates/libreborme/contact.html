@@ -1,4 +1,6 @@
 {% extends 'borme/base2.html' %}
+{% load compress %}
+{% load staticfiles %}
 {% comment %}
 - loren ipsum
 - dropdown temas
@@ -6,6 +8,12 @@
 {% endcomment %}
 
 {% block title %} Contacto | LibreBORME{% endblock %}
+
+{% block extrastyles %}
+{% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/contacto.scss' %}">
+{% endcompress %}
+{% endblock %}
 
 {% block content %}
 

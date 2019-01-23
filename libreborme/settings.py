@@ -30,11 +30,12 @@ INSTALLED_APPS = [
     'borme',
     'libreborme',
     'alertas',
+    'dataremoval',
     'bootstrapform',
     'djstripe',
     'prettyjson',
     'django_extensions',
-    'dataremoval',
+    'compressor',
 ]
 
 
@@ -47,6 +48,17 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+)
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+    # 'sass_processor.finders.CssFinder',
+]
+
+COMPRESS_PRECOMPILERS = (
+	('text/x-scss', 'django_libsass.SassCompiler'),
 )
 
 ROOT_URLCONF = 'libreborme.urls'
@@ -169,4 +181,5 @@ PARSER = 'borme.parser.backend.bormeparser'
 ACCOUNT_ACTIVATION_DAYS = 7
 REGISTRATION_OPEN = True
 
-MEDIA_ROOT = '%s/media/' % SITE_ROOT
+STATIC_ROOT = os.path.join(SITE_ROOT, 'static')
+MEDIA_ROOT = os.path.join(SITE_ROOT, 'media')

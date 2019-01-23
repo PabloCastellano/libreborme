@@ -1,6 +1,6 @@
 {% load staticfiles %}
+{% load compress %}
 {% comment %}
-- datatables
 - solo cargar fontawesome cuando la pagina lo requiere
 - <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
 - si tiramos de cdn, desinstalar deps de FA y BOOTSTRAP
@@ -68,10 +68,15 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/carousel.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/libreborne.css' %}">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    {% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/libreborne.scss' %}">
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/button.scss' %}">
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/modal.scss' %}">
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/responsive.scss' %}">
+    {% endcompress %}
     <link href="//fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
     <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+    {% block extrastyles %}{% endblock %}
 </head>
 
 <body>
@@ -94,7 +99,6 @@
   <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
   <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
   <script src="{% static 'assets/js/vendor/holder.min.js' %}"></script>
-  <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
   <script src="{% static "jquery.cookie.js" %}"></script>
 
   <script>
@@ -114,10 +118,6 @@
           } else {
               $logo.removeClass('d-none');
           }
-      });
-
-      $(document).ready(function() {
-          $('#example').DataTable();
       });
 
       {% if not debug %}

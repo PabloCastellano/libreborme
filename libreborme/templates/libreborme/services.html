@@ -1,4 +1,6 @@
 {% extends 'borme/base2.html' %}
+{% load compress %}
+{% load staticfiles %}
 {% comment %}
 - loren ipsum
 - <h1>Servicios</h1>
@@ -15,9 +17,13 @@
   <p>Si estás interesado en en algún tipo de colaboración, <a href="{% url "contact" %}"><strong>contáctanos sin compromiso</strong></a>.</p>
 {% endcomment %}
 
-{% load staticfiles %}
-
 {% block title %} Servicios | LibreBORME{% endblock %}
+
+{% block extrastyles %}
+{% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/servicios.scss' %}">
+{% endcompress %}
+{% endblock %}
 
 {% block content %}
 <div class="view-servicios mt-4">
