@@ -1,0 +1,166 @@
+{% extends "old_alertas/base_dashboard.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+
+          <h1 class="page-header">Métodos de pago</h1>
+          <div class="row">
+            <div class="col-sm-12">
+              <p>Almacena y gestiona tus métodos de pago para pagar más rápido.</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+
+              <form action="{% url 'alertas-payment-add-card' %}" method="POST">
+                {% csrf_token %}
+                <script
+                  src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                  data-key="{{ STRIPE_PUBLIC_KEY }}"
+                  data-email="{{ user.email }}"
+                  data-zip-code="true"
+                  data-billing-address="true"
+                  data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                  data-name="Libreborme"
+                  data-panel-label="Añadir"
+                  data-label="Añadir tarjeta de crédito"
+                  data-allow-remember-me=false
+                  data-currency="eur"
+                  data-locale="auto">
+                </script>
+              </form>
+            </div>
+          </div>
+
+          {% if customer.can_charge %}
+          <div class="row">
+            <div class="col-sm-8">
+              <h2>Tarjetas de crédito</h2>
+
+                <div class="form-group">
+
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <td></td>
+                        <td>Titular</td>
+                        <td>Fecha caducidad</td>
+                        <td></td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for card in cards %}
+                      <tr>
+                        <td>
+                          <p>
+                          <img src="/static/card_{{ card.brand }}.png" width=42 height=26>
+                          **** **** **** <strong>{{ card.last4 }}</strong>
+                          </p>
+                          <p>
+                           Añadida el <strong>{{ card.djstripe_created|date:"d/m/y" }}</strong>
+                          </p>
+                        </td>
+                        <td>
+                          <strong>{{ card.name }}</strong>
+                        </td>
+                        <td>
+                                <strong>{{ card.exp_month | stringformat:"02d" }}/{{ card.exp_year }}</strong>
+                        </td>
+                        <td>
+                          <a class="remove_card" id="{{ card.stripe_id }}">
+                            <button type="button" class="btn btn-danger btn-xs">
+                              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar
+                            </button>
+                          </a>
+                          {% if card.stripe_id != customer.default_source_id %}
+                            <a class="set_default_card" id="{{ card.stripe_id }}">
+                              <button type="button" class="btn btn-primary btn-xs">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Predeterminada
+                              </button>
+                            </a>
+                          {% else %}
+                            <span title="Predeterminada" class="glyphicon glyphicon-check" aria-hidden="true"></span> Predeterminada
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+
+            {% comment %}
+            <!-- https://bootsnipp.com/snippets/featured/credit-card-payment-with-stripe -->
+
+            <form action="#" role="form" method="post">
+              <div class="row">
+                <div class="col-sm-5">
+                  {% csrf_token %}
+                  <legend>Añadir tarjeta de crédito</legend>
+                  {{ form | bootstrap_horizontal:'col-sm-4' }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group">
+                  <input type="submit" name="update" class="btn btn-primary" value="Añadir">
+                </div>
+              </div>
+            </form>
+            {% endcomment %}
+
+            <div class="row">
+              <p class="help-block">
+                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span><strong>Pago seguro.</strong>
+                Usamos <a href="https://stripe.com/es" target="_blank">Stripe</a>
+                como pasarela de pago. LibreBORME no almacena los datos de su tarjeta.
+              </p>
+            </div>
+
+        </div>
+{% endblock %}
+
+
+{% block extrastyles %}
+    <link href="{% static "css/dashboard_form.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block extrajs %}
+  <script src="{% static "jquery-ui-1.12.1.custom/jquery-ui.js" %}"></script>
+  <script src="{% static "js/libreborme.js" %}"></script>
+  <script src="{% static "jquery.cookie.js" %}"></script>
+
+  <script>
+    function remove_card(cardId) {
+      AjaxRequest("{% url 'remove_card' %}?cardId=" + cardId, function (res) {
+        setTimeout(location.reload(), 3000);
+      }, "post", null);
+    }
+
+    function set_default_card(cardId) {
+      AjaxRequest("{% url 'set_default_card' %}?cardId=" + cardId, function (res) {
+        setTimeout(location.reload(), 3000);
+      }, "post", null);
+    }
+
+    $("a.remove_card").click(function(ev) {
+      var cardid = $(ev.currentTarget).attr("id");
+      remove_card(cardid);
+    });
+    $("a.set_default_card").click(function(ev) {
+      var cardid = $(ev.currentTarget).attr("id");
+      set_default_card(cardid);
+    });
+
+  </script>
+{% endblock %}

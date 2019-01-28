@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from . import views, old_views
 
 urlpatterns = [
     path('alertas/', views.MyAccountView.as_view(), name='dashboard-index'),
@@ -24,6 +24,26 @@ urlpatterns = [
     path('alertas/history/download/<id>/', views.download_alerta_history_csv, name='alerta-history-download'),
     path('alertas/<id>/', views.AlertaDetailView.as_view(), name='alertas-detail'),
 
+    path('old/alertas/', old_views.MyAccountView.as_view(), name='old-dashboard-index'),
+    path('old/alertas/events/', old_views.AlertaEventsView.as_view(), name='old-alertas-events'),
+    path('old/alertas/service/follow/', old_views.ServiceAlertaView.as_view(), name='old-service-follow'),
+    path('old/alertas/service/api/', old_views.ServiceAPIView.as_view(), name='old-service-api'),
+    path('old/alertas/service/subscriptions/', old_views.ServiceSubscriptionView.as_view(), name='old-service-subscriptions'),
+    path('old/alertas/billing/', old_views.BillingView.as_view(), name='old-alertas-billing'),
+    path('old/alertas/payment/', old_views.PaymentView.as_view(), name='old-alertas-payment'),
+    path('old/alertas/payment/new_card/', old_views.add_card, name='old-alertas-payment-add-card'),
+    path('old/alertas/payment/checkout', old_views.checkout, name="old-checkout_page"),
+    path('old/alertas/payment/checkout2', old_views.checkout_existing_card, name="old-checkout_existing"),
+    path('old/alertas/new/acto/', old_views.alerta_acto_create, name='old-alertas-new-acto'),
+    path('old/alertas/history/', old_views.DashboardHistoryView.as_view(), name='old-alertas-history'),
+    path('old/alertas/remove/acto/<id>/', old_views.alerta_remove_acto, name='old-alerta-remove-acto'),
+    path('old/alertas/ayuda/', old_views.DashboardSupportView.as_view(), name='old-alertas-ayuda'),
+    path('old/alertas/cart', old_views.CartView.as_view(), name='old-alertas-cart'),
+    path('old/alertas/cart/buy/<product>', old_views.add_to_cart, name='old-buy-product'),
+    path('old/alertas/cart/removecart', old_views.remove_cart, name='old-alertas-removecart'),
+    path('old/alertas/settings/update/billing/', old_views.settings_update_billing, name='old-alertas-settings-billing'),
+    path('old/alertas/history/download/<id>/', old_views.download_alerta_history_csv, name='old-alerta-history-download'),
+    path('old/alertas/<id>/', old_views.AlertaDetailView.as_view(), name='old-alertas-detail'),
 #    url(r'^(?P<id>\d+)/$', views.alertas_view, name='alertas-detail'),
 
     # AJAX

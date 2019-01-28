@@ -1,0 +1,83 @@
+{% extends "old_alertas/base_dashboard.html" %}
+{% load staticfiles %}
+{% load prettyjson %}
+
+{% block extrastyles %}
+    <link href="{% static "css/dashboard_form.css" %}" rel="stylesheet">
+    {% prettyjson_setup %}
+{% endblock %}
+
+{% block content %}
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Listado de eventos</h1>
+          {% if events_by_date.keys %}
+            <p>Ir a fecha:</p>
+            <ul>
+            {% for date in events_by_date.keys %}
+            <li><a href="#{{ date.isoformat }}">{{ date }}</a></li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+
+          {% for date, events in events_by_date.items %}
+          <h2><a id="{{ date.isoformat }}"></a>{{ date }}</h2>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Created</th>
+                  <th>Description</th>
+                  <th>Type</th>
+                  <th>Data</th>
+                  <th>Metadata</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for event in events %}
+                <tr>
+                  <td>{{ event.stripe_id }}</td>
+                  <td>{{ event.created|date:"H:i" }}</td>
+                  <td>{{ event.description }}</td>
+                  <td>{{ event.type }}</td>
+                  <td>
+                    <a href="#" class="show_data" eventid="{{ event.stripe_id}}">Mostrar detalles</a>
+                    <div id="data_{{ event.stripe_id }}" class="show_data">{% prettyjson event.data_json %}</div>
+                  </td>
+                  <td>
+                    <a href="#" class="show_meta" eventid="{{ event.stripe_id}}">Mostrar detalles</a>
+                    <div id="meta_{{ event.stripe_id}}" class="show_meta">{% prettyjson event.metadata_json %}</div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% endfor %}
+
+        </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script src="{% static "jquery-ui-1.12.1.custom/jquery-ui.js" %}"></script>
+    <script>
+    $("div.show_data").toggle();
+    $("div.show_meta").toggle();
+
+    $("a.show_data").click(function(ev) {
+      var eventid = $(ev.target).attr("eventid");
+      var div = $("#data_" + eventid);
+      div.toggle();
+      $(ev.target).text("Ocultar detalles");
+    });
+
+    $("a.show_meta").click(function(ev) {
+      var eventid = $(ev.target).attr("eventid");
+      var div = $("#meta_" + eventid);
+      div.toggle();
+      $(ev.target).text("Ocultar detalles");
+    });
+
+    </script>
+{% endblock %}
