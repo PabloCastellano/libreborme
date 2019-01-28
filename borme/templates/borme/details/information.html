@@ -1,4 +1,9 @@
 {% load staticfiles %}
+{% comment %}
+- box fecha sigue rota
+- Detalles del anuncio <a href="{{ anuncio.get_absolute_url }}">{{ anuncio.id_anuncio }}</a>.
+- <i>No hay anuncios registrados.</i>
+{% endcomment %}
 <div class="tab-view-details">
     <div class="row">
         <div class="col">
@@ -10,6 +15,8 @@
             </ul>
         </div>
     </div>
+
+    {% comment %}
     <div class="row ">
         <div class="col-md-12">
             <div class="card official-bulletins">
@@ -76,6 +83,8 @@
             </div>
         </div>
     </div>
+    {% endcomment %}
+
     <section class="contenido-descripcion">
         <div class="container">
             <div class="row">
@@ -88,40 +97,51 @@
             <div class="row section-roadmap mt-3">
                 <div class="col-md-12">
                     <div class="line-roadmap">
-                        <div class="item-roadmap d-flex">
-                            <div class="box-date">
-                                <h1>13</h1>
-                                <p class="mb-0">Mar 2018</p>
-                            </div>
-                            <div class="box-content">
-                                <div class="item-content">
-                                    <h3>Cambio de objeto social</h3>
-                                    <h1>Entropy Factory SL</h1>
-                                    <hr>
-                                    <p>1. La promoción y construcción , por cuenta propia o de terceros, de toda clase de edificaciones y de obras públicas o privadas. 2. La adquisición , tenencia, arrendamiento, excluido el financiero, explotación, urbanización, administración, enajenación, permuta, rehabilitación, explotación y gestió.</p>
-                                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. </p>
-                                    <p>Detalles del anuncio <span class="color-red-dark">124458</span></p>
-                                </div>
-                            </div>
-                        </div>
+                        {% for anuncio in anuncios %}
+                        {% for acto_name, value in anuncio.actos %}
                         <div class="item-roadmap d-flex mt-4">
                             <div class="box-date">
-                                <h1>13</h1>
-                                <p class="mb-0">Mar 2018</p>
+                                <h1>{{ anuncio.date|date:"d"}}</h1>
+                                <p class="mb-0">{{ anuncio.date|date:"b Y"}}</p>
                             </div>
                             <div class="box-content">
                                 <div class="item-content">
-                                    <h3>Cambio de objeto social</h3>
-                                    <h1>Entropy Factory SL</h1>
+                                    <h3>{{ acto_name }}</h4>
+                                    <h1>{{ company.fullname }}</h1>
                                     <hr>
-                                    <p>1. La promoción y construcción , por cuenta propia o de terceros, de toda clase de edificaciones y de obras públicas o privadas. 2. La adquisición , tenencia, arrendamiento, excluido el financiero, explotación, urbanización, administración, enajenación, permuta, rehabilitación, explotación y gestió.</p>
-                                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. </p>
-                                    <p>Detalles del anuncio <span class="color-red-dark">124458</span></p>
+                                    {% if acto_name|is_acto_cargo %}
+                                    <div class="table-responsive">
+                                        <table class="table table-condensed">
+                                           <thead>
+                                               <tr>
+                                                   <th>Cargo</th>
+                                                   <th>Persona física/jurídica</th>
+                                               </tr>
+                                           </thead>
+                                           <tbody>
+                                           {% for cargo in value %}
+                                               <tr>
+                                                   <td class="color-red-dark">{{ cargo.title.title }}</td>
+                                                   <td class="color-red-dark">{{ cargo | link_to_entity | safe }}</td>
+                                               </tr>
+                                           {% endfor %}
+                                           </tbody>
+                                        </table>
+                                    </div>
+                                    {% elif value|is_string %}
+                                    <p><i class="glyphicon glyphicon-ok"></i>{{ value }}</p>
+                                    {% else %}
+                                    <p>{% acto_as_text acto_name value anuncio.date %}</p>
+                                    {% endif %}
+                                    <p>Detalles del anuncio <span class="color-red-dark">{{ anuncio.id_anuncio }}</span></p>
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
+                        {% empty %}
+                            <i>No hay anuncios registrados.</i>
+                        {% endfor %}
                     </div>
-
                 </div>
             </div>
         </div>

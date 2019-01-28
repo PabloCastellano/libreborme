@@ -32,14 +32,14 @@
                             <div class="col-lg-7 col-md-12 col-12">
                                 <label class="sr-only" for="inlineFormInputGroup">Username</label>
                                 <div class="input-group mb-2">
+                                    <input type="hidden" name="page" value="1">
+                                    <input type="hidden" name="type" value="all">
+                                    <input type="text" class="form-control" name="q" id="inlineFormInputGroup" placeholder="Buscar por nombre de empresa o persona">
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">
                                             <a href="#"><i class="fas fa-search"></i></a>
                                         </div>
                                     </div>
-                                    <input type="hidden" name="page" value="1">
-                                    <input type="hidden" name="type" value="all">
-                                    <input type="text" class="form-control" name="q" id="inlineFormInputGroup" placeholder="Buscar por nombre de empresa o persona">
                                 </div>
                             </div>
                         </div>
@@ -128,7 +128,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h1 class="title-section">
-                    <span>|</span>confían en nosotros
+                    <span>|</span>Confían en nosotros
                 </h1>
             </div>
         </div>
@@ -145,4 +145,7 @@
         </div>
     </div>
 </section>
+
+{% include 'borme/sections/sponsors.html' %}
+
 {% endblock %}

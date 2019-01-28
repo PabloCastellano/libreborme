@@ -66,17 +66,18 @@
     <link type="text/plain" rel="author" href="humans.txt" />
 
     <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
     {% compress css %}
-    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/carousel.css' %}">
     <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/libreborne.scss' %}">
     <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/button.scss' %}">
     <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/modal.scss' %}">
     <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/responsive.scss' %}">
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/var/colors.scss' %}">
     {% block extrastyles %}{% endblock %}
     {% endcompress %}
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 </head>
 
 <body>
@@ -95,26 +96,27 @@
   {% block extrajs %}{% endblock %}
   <script src="//code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-
-  {% compress js %}
-  <script>window.jQuery || document.write('<script src="{% static 'assets/js/vendor/jquery-slim.min.js' %}"><\/script>')</script>
-  <script src="{% static 'assets/js/vendor/popper.min.js' %}"></script>
-  <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
+  <script src="{% static 'bootstrap/js/bootstrap.bundle.js' %}"></script>
+  {# TODO: jquery-slim #}
+  {# <script>window.jQuery || document.write('<script src="{% static 'assets/js/vendor/jquery-slim.min.js' %}"><\/script>')</script> #}
   <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
   <script src="{% static 'assets/js/vendor/holder.min.js' %}"></script>
-  {% endcompress %}
 
   <script>
       $(document).ready(function(){
           var $logo = $('#logo');
+          var $search = $('.search-navbar');
           if ( window.location.pathname == '/' || window.location.pathname == '/borme/' ){
               $logo.addClass('d-none');
               $(function () {
                   $(window).scroll(function () {
                       if ($(this).scrollTop() > 180) {
                           $logo.removeClass('d-none')
+                          $search.removeClass('d-none')
                       } else {
                           $logo.addClass('d-none')
+                          $search.addClass('d-none')
                       }
                   });
               });

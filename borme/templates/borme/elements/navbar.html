@@ -15,10 +15,17 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav position-navbar">
+                {% comment %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'services' %}">Servicios</a>
                 </li>
+                {% endcomment %}
+
+                {% if search_view %}
+                <li class="nav-item search-navbar d-none">
+                {% else %}
                 <li class="nav-item search-navbar">
+                {% endif %}
                     <form>
                         <div class="form-row">
                             <div class="col-12">
@@ -37,7 +44,11 @@
                     </form>
                 </li>
                 <li class="nav-item">
+                    {% if user.is_authenticated %}
+                    <a class="btn btn-primary btn-transparent btn-panel" href="{% url 'dashboard-index' %}">Area personal</a>
+                    {% else %}
                     <a class="btn btn-primary btn-transparent btn-panel" href="#" role="button" data-toggle="modal" data-target="#exampleModalCenter">Area personal</a>
+                    {% endif %}
                 </li>
 
                 <!-- Menu resoluciones hasta md -->
@@ -55,7 +66,7 @@
                     {% if user.is_staff %}
                     <li class="nav-item menu-panel-user d-block d-md-none">
                         <a class="nav-link" href="/admin">
-                            <span>Admin</span>
+                            <span style="color: #B9021D">Admin</span>
                         </a>
                     </li>
                     {% endif %}
@@ -109,7 +120,7 @@
                     {% if user.is_authenticated %}
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         {% if user.is_staff %}
-                        <a class="dropdown-item" href="/admin">Admin</a>
+                        <a class="dropdown-item" style="color: #B9021D" href="/admin">Admin</a>
                         {% endif %}
                         <a class="dropdown-item" href="{% url 'dashboard-index' %}">Mi cuenta</a>
                         <a class="dropdown-item" href="#">Facturas</a>

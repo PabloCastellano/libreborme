@@ -1,3 +1,77 @@
 
                   <strong>Empresas relacionadas:</strong> {{ companies|length }}<br/>
                   <strong>Personas relacionadas:</strong> {{ persons|length }}<br/>
+
+        <h2>Personas relacionadas</h2>
+        <div class="row related-persons">
+        <div class="col-md-10">
+
+        {% if persons %}
+         {% for ps in persons|rows_distributed:3 %}
+            {% if persons|length > 5 %}
+            <div class="col-md-4">
+                {% endif %}
+                <ul>
+                {% for person in ps %}
+                    <li>{{ person | link_to_entity | safe }}</li>
+                {% endfor %}
+                </ul>
+                {% if persons|length > 5 %}
+            </div>
+            {% endif %}
+         {% endfor %}
+         {% else %}
+            <p><i>No hay datos.</i></p>
+        {% endif %}
+        </div>
+        </div>
+
+        <h2>Sociedades relacionadas</h2>
+        <div class="row related-companies">
+        <div class="col-md-10">
+
+         {% if companies %}
+         {% for cs in companies|rows_distributed:3 %}
+            {% if companies|length > 5 %}
+            <div class="col-md-4">
+                {% endif %}
+                <ul>
+                {% for c in cs %}
+                    <li>{{ c | link_to_entity | safe }}</li>
+                {% endfor %}
+                </ul>
+                {% if companies|length > 5 %}
+            </div>
+            {% endif %}
+         {% endfor %}
+         {% else %}
+            <p><i>No hay datos.</i></p>
+         {% endif %}
+        </div>
+        </div>
+
+        <h2>BORMEs relacionados</h2>
+        <div class="row related-bormes">
+        <div class="col-md-10">
+         {% if company.in_bormes %}
+         {% for bs in company.in_bormes|rows_distributed:3 %}
+            {% if company.in_bormes|length > 5 %}
+            <div class="col-md-4">
+                {% endif %}
+                <ul>
+                {% for borme in bs %}
+                    <li><a href="{% url 'borme-borme' borme.cve %}">{{ borme.cve }}</a>
+                        <!--  <a href="#" alt="Ver" title="Ver"><i class="glyphicon glyphicon-share"></i></a> -->
+                        <a href="{{ borme.url }}" title="Descargar PDF" rel="nofollow"><i class="glyphicon glyphicon-download-alt"></i></a>
+                    </li>
+                {% endfor %}
+                </ul>
+                {% if company.in_bormes|length > 5 %}
+            </div>
+            {% endif %}
+         {% endfor %}
+         {% else %}
+            <p><i>No hay actos registrados.</i></p>
+         {% endif %}
+        </div>
+        </div>

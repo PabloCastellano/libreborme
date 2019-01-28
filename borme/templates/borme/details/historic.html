@@ -14,6 +14,16 @@
                 </ul>
             </div>
         </div>
+
+        <div class="container">
+            <div class="row mb-3 align-items-center">
+                <div class="offset-lg-2">
+                    <img src="{% static 'banners/banner2.png' %}">
+                    {# <img src="holder.js/720x90"> #}
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -60,6 +70,18 @@
                                     <td>{% for liquidator in company.liquidators %} {{ liquidator.name | title }}{% if not forloop.last %}, {% endif %} {% endfor %}</td>
                                 </tr>
                                 {% endif %}
+                                {% if company.last_auditor %}
+                                <tr>
+                                    <th scope="row">Auditor</th>
+                                    <td>{{ company.last_auditor.name | title}}</td>
+                                </tr>
+                                {% endif %}
+                                {% if company.reason_dissolution %}
+                                <tr>
+                                    <th scope="row">Motivo de la disolución</th>
+                                    <td>{{ company.reason_dissolution }}</td>
+                                </tr>
+                                {% endif %}
                                 </tbody>
                             </table>
                         </div>
@@ -67,7 +89,6 @@
                 </div>
             </div>
         </div>
-
 
         <div class="row  mt-4">
             <div class="col-md-12">
