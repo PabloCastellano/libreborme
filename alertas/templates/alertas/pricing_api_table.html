@@ -1,0 +1,77 @@
+{% load staticfiles %}
+
+{% comment %}
+    <ul>
+      <li>{{ plan_month.amount }} {{ plan_month.currency }} / {{ plan_month.interval }}</li>
+      <li>{{ plan_year.amount }} {{ plan_year.currency }} / {{ plan_year.interval }}</li>
+    </ul>
+  </td>
+{% endcomment %}
+
+<div class="view-servicios mt-4">
+    <section class="contenido-servicio pt-0">
+        <div class="card-deck">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Starter</h4>
+                    <h3>Gratis</h3>
+                    <p class="card-text"></p>
+                    <hr>
+                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">30 consultas al mes</p>
+                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Sin soporte técnico</p>
+                </div>
+                <a href="#">
+                    <div class="card-footer text-center">
+                        <p>Solicitar API key</p>
+                    </div>
+                </a>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h4>Advanced</h4>
+                    <h3>79,99€ / mes</h3>
+                    <p class="card-text">Pago mensual</p>
+                    <hr>
+                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">1000 consultas al día</p>
+                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Sin soporte técnico</p>
+                </div>
+                <a href="{% url 'buy-product' product=plan_month.nickname %}">
+                    <div class="card-footer text-center">
+                        <p>Suscribirme (mensual)</p>
+                    </div>
+                </a>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h4>Advanced</h4>
+                    <h3>799,99€ / mes</h3>
+                    <p class="card-text">Pago anual</p>
+                    <hr>
+                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">1000 consultas al día</p>
+                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Sin soporte técnico</p>
+                </div>
+                <a href="{% url 'buy-product' product=plan_year.nickname %}">
+                    <div class="card-footer text-center">
+                        <p>Suscribirme (anual)</p>
+                    </div>
+                </a>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h4>Pro</h4>
+                    <h3>Contáctanos</h3>
+                    <p class="card-text"></p>
+                    <hr>
+                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Más de 1000 consultas al día</p>
+                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Soporte técnico 24x7</p>
+                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">SLA</p>
+                </div>
+                <a href="#">
+                    <div class="card-footer text-center">
+                        <p>Suscribirme</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+     </section>
+</div>

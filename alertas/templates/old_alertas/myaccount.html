@@ -81,13 +81,13 @@
 
           {% else %}
             <p>No tienes ningún servicio contratado actualmente.</p>
-            <p>Sin embargo, puedes probar el servicio de <a href="{% url 'service-follow' %}">Seguimiento</a> de forma gratuita.</p>
+            <p>Sin embargo, puedes probar el servicio de <a href="{% url 'old-service-follow' %}">Seguimiento</a> de forma gratuita.</p>
             <p>Puedes obtener más información sobre los servicios disponibles <a href="#">Aquí (TODO)</a></p>
           {% endif %}
 
         <h2 class="sub-header">Mi Perfil</h2>
 
-          <form action="{% url "alertas-settings-billing" %}" role="form" method="post">
+          <form action="{% url "old-alertas-settings-billing" %}" role="form" method="post">
             {% csrf_token %}
             <div class="row">
               <div class="col-sm-5">

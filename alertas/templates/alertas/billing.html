@@ -1,8 +1,11 @@
-{% extends "alertas/base_dashboard.html" %}
+{% extends "alertas/base.html" %}
 {% load staticfiles %}
+
+{% block title %}Facturas | LibreBORME{% endblock %}
 
 {% block content %}
 
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <div class="alert alert-info" role="alert">
               {% if upcoming_invoice %}
@@ -37,20 +40,20 @@
                       <td>{{ invoice.date.date }}</td>
                       <td>{{ invoice.amount_due }} €</td>
                       <td>{% if invoice.paid %}
-                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        <i class="fas fa-check"></i>
                         {% else %}
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <i class="fas fa-times"></i>
                         {% endif %}
                       </td>
                       <td>
                         <a href="{{ invoice.hosted_invoice_url }}" target="_blank">
                         <button type="button" class="btn btn-primary btn-xs">
-                          <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Ver
+                          <i class="fas fa-file"></i> Ver
                         </button>
                         </a>
                         <a href="{{ invoice.invoice_pdf }}" target="_blank">
                         <button type="button" class="btn btn-danger btn-xs">
-                          <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> PDF
+                          <i class="fas fa-download"></i> PDF
                         </button>
                         </a>
                       </td>
@@ -65,9 +68,12 @@
 
           </div>
         </div>
+    </main>
 {% endblock %}
 
 
+{% comment %}
 {% block extrastyles %}
     <link href="{% static "css/dashboard_form.css" %}" rel="stylesheet">
 {% endblock %}
+{% endcomment %}

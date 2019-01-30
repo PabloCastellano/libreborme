@@ -1,15 +1,17 @@
 @import "var/colors.scss";
 
-.btn-primary {
+.btn-primary2 {
   background-color: $red-dark;
   border-color: $red-dark;
   color: $red-dark;
 }
-.btn-primary:hover {
+
+.btn-primary2:hover {
   color: #fff;
   background-color: $red-dark !important;
   border-color: $red-dark;
 }
+
 .btn-transparent {
   background-color: transparent !important;
 }
@@ -19,21 +21,25 @@
   background-color: transparent;
   border-color: $color-dark;
 }
+
 .btn-secondary:hover {
   color: #fff;
   background-color: $color-dark;
   border-color: $color-dark;
 }
+
 .btn-white {
   color: white;
   background-color: transparent;
   border-color: white;
 }
+
 .btn-secondary:hover {
   color: #fff;
   background-color: $color-dark;
   border-color: $color-dark;
 }
+
 .btn-details {
   font-size: 12px;
   font-weight: normal;
@@ -43,4 +49,18 @@
   padding: 0 10px;
   width: auto;
   height: 28px;
+}
+
+.btn-group-xs > .btn, .btn-xs {
+  padding  : .25rem .4rem;
+  font-size  : .775rem;
+  line-height  : .5;
+  border-radius : .2rem;
+}
+
+.btn-group-xs2 > .btn, .btn-xs2 {
+  padding  : .25rem .4rem;
+  font-size  : .875rem;
+  line-height  : .5;
+  border-radius : .2rem;
 }

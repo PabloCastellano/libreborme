@@ -9,13 +9,13 @@
           <h1 class="page-header">API</h1>
 
           {% if subscriptions %}
-            {% include 'table_active_subscriptions.html' %}
+            {% include 'old_alertas/table_active_subscriptions.html' %}
           {% else %}
             <p>Este producto se encuentra en fase Beta. Si quieres probarlo, <a href="#" data-toggle="modal" data-target="#requestAPIKeyModal">solicita una API Key</a>.</p>
             <h2>Suscripciones</h2>
             <p>Tienes 30 consultas gratis al mes para probar la API de LibreBORME</p>
 
-            {% include 'pricing_api_table.html' %}
+            {% include 'old_alertas/pricing_api_table.html' %}
 
             <h3>¿Existe un periodo de prueba para los planes de pago?</h3>
             <p>Al actualizar tu plan para Alertas de Actos Mercantiles, tu cuenta tiene un período de prueba gratuito de 7 días. Si cancelas el plan antes del período de prueba, no tendrá ningún coste para ti.</p>

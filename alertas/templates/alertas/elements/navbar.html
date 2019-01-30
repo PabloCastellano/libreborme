@@ -1,7 +1,10 @@
 {% load staticfiles %}
 {% comment %}
 - can be merged with navbar from borme, just needs to hide Area personal / servicios
+- dropdowns
 
+<li {% if active == 'cart' %}class="active"{% endif %}><a href="{% url 'old-alertas-cart' %}"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Cesta{% if num_cart > 0 %} <span class="badge">{{ num_cart }}</span>{% endif %}</a></li>
+<li {% if active == 'ayuda' %}class="active"{% endif %}><a href="{% url 'old-alertas-ayuda' %}">Soporte</a></li>
 {% endcomment %}
 
 <header>
@@ -14,6 +17,12 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav position-navbar">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'alertas-cart' %}">Cesta</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'alertas-ayuda' %}">Soporte</a>
+                </li>
                 <li class="nav-item dropdown menu-panel-user">
                     <a class="nav-link" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         <img src="{% static 'assets/img/menu-panel/cuenta.svg' %}" alt="" class="img-navbar-account">
@@ -29,7 +38,7 @@
                         <a class="dropdown-item" href="#">Métodos de pago</a>
                         <a class="dropdown-item" href="#">Seguimiento</a>
                         <a class="dropdown-item" href="#">Subscripciones</a>
-                        <a class="dropdown-item" href="#">Api</a>
+                        <a class="dropdown-item" href="#">API</a>
                         <a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a>
                     </div>
                     {% endif %}

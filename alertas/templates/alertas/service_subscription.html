@@ -1,10 +1,11 @@
-{% extends "alertas/base_dashboard.html" %}
+{% extends "alertas/base.html" %}
 {% load staticfiles %}
 {% load bootstrap %}
 
-{% block content %}
+{% block title %}Suscripciones | LibreBORME{% endblock %}
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
           <h1 class="page-header">Suscripciones</h1>
 
           <p>Mediante el Servicio de Suscripciones recibirás un email cada día con la información mercantil solicitada</p>
@@ -22,14 +23,14 @@
               <p>El período de prueba solo es válido la primera vez.</p>
             </div>
             <div class="col-sm-6">
-              {% include 'pricing_subscriptions_table.html' %}
+              {% include 'alertas/pricing_subscriptions_table.html' %}
             </div>
           </div>
 
 
         <h2>Lista de Suscripciones</h2>
           {% if subscriptions %}
-            {% include 'table_active_subscriptions.html' %}
+            {% include 'alertas/table_active_subscriptions.html' %}
           {% else %}
           <p>No tienes ninguna suscripción</p>
           {% endif %}
@@ -83,8 +84,6 @@
           {% endif %}
         {% endif %}
 
-        </div>
-
 
 <div class="modal fade" id="alerta-acto-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -100,5 +99,6 @@
     </div>
   </div>
 </div>
+</main>
 
 {% endblock %}

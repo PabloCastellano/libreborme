@@ -22,14 +22,14 @@
               <p>El período de prueba solo es válido la primera vez.</p>
             </div>
             <div class="col-sm-6">
-              {% include 'pricing_subscriptions_table.html' %}
+              {% include 'old_alertas/pricing_subscriptions_table.html' %}
             </div>
           </div>
 
 
         <h2>Lista de Suscripciones</h2>
           {% if subscriptions %}
-            {% include 'table_active_subscriptions.html' %}
+            {% include 'old_alertas/table_active_subscriptions.html' %}
           {% else %}
           <p>No tienes ninguna suscripción</p>
           {% endif %}

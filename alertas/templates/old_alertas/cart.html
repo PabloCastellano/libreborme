@@ -64,7 +64,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-6 text-right">
-                    <a href="{% url 'alertas-removecart' %}">
+                    <a href="{% url 'old-alertas-removecart' %}">
                       <button type="button" class="btn btn-danger btn-block">
                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Vaciar cesta
                       </button>
@@ -120,7 +120,7 @@
                    <strong>{{ card.exp_month | stringformat:"02d" }}/{{ card.exp_year }}</strong>
                 </td>
                 <td>
-                  <form action="{% url 'checkout_existing' %}" method="POST">
+                  <form action="{% url 'old-checkout_existing' %}" method="POST">
                     {% csrf_token %}
                     <input type="submit" name="update" class="btn btn-primary" value="Usar esta tarjeta">
                   </form>
@@ -142,7 +142,7 @@
 
       <!--Example 2-->
       <div class="cell example example2">
-        <form action="{% url 'checkout_page' %}" method="POST" id="payment-form">
+        <form action="{% url 'old-checkout_page' %}" method="POST" id="payment-form">
           {% csrf_token %}
           <div data-locale-reversible>
             <div class="row">

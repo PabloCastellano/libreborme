@@ -1,0 +1,24 @@
+{% load staticfiles %}
+<p><strong>¿Necesitas seguir a más empresas?</strong></p>
+
+
+<div class="view-servicios mt-4">
+    <section class="contenido-servicio pt-0">
+        <div class="card-deck">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Bono de 100 alertas</h4>
+                    <h3>2,99€ / mes</h3>
+                    <p class="card-text">Pago anual</p>
+                    <hr>
+                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">At vero eos et accusamus</p>
+                </div>
+                <a href="{% url 'buy-product' product=plan_year.nickname %}">
+                    <div class="card-footer text-center">
+                        <p>Suscribirme</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+     </section>
+</div>

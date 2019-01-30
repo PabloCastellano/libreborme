@@ -31,7 +31,7 @@
                   <td>{{ alerta.get_provincia_display|default:"-" }}</td>
                   <td>{{ alerta.get_periodicidad_display|default:"-" }}</td>
                   <td>
-                    <a href="{% url 'alerta-history-download' alerta.id %}">
+                    <a href="{% url 'old-alerta-history-download' alerta.id %}">
                     <button type="button" class="btn btn-primary btn-xs">
                       <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Descargar CSV
                     </button>

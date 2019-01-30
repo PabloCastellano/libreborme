@@ -1,15 +1,17 @@
-{% extends "alertas/base_dashboard.html" %}
+{% extends "alertas/base.html" %}
 {% load staticfiles %}
 
+{% comment %}
+check icon fa-plus
+{% endcomment %}
+
 {% block content %}
-
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
-          {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}" role="alert">
-              {{ message }}
-            </div>
-          {% endfor %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
 
           <h1 class="page-header">Métodos de pago</h1>
           <div class="row">
@@ -77,17 +79,17 @@
                         <td>
                           <a class="remove_card" id="{{ card.stripe_id }}">
                             <button type="button" class="btn btn-danger btn-xs">
-                              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Eliminar
+                                <i class="fas fa-trash-alt"></i> Eliminar
                             </button>
                           </a>
                           {% if card.stripe_id != customer.default_source_id %}
                             <a class="set_default_card" id="{{ card.stripe_id }}">
                               <button type="button" class="btn btn-primary btn-xs">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Predeterminada
+                                <i class="fas fa-plus"></i> Predeterminada
                               </button>
                             </a>
                           {% else %}
-                            <span title="Predeterminada" class="glyphicon glyphicon-check" aria-hidden="true"></span> Predeterminada
+                            <i class="fas fa-check-square"></i> Predeterminada
                           {% endif %}
                         </td>
                       </tr>
@@ -121,13 +123,14 @@
 
             <div class="row">
               <p class="help-block">
-                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span><strong>Pago seguro.</strong>
+                <i class="fas fa-lock"></i> <strong>Pago seguro.</strong>
                 Usamos <a href="https://stripe.com/es" target="_blank">Stripe</a>
                 como pasarela de pago. LibreBORME no almacena los datos de su tarjeta.
               </p>
             </div>
 
         </div>
+</main>
 {% endblock %}
 
 
