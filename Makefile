@@ -37,6 +37,11 @@ sync_stripe:
 run:
 		docker-compose up -d
 		./manage.py migrate --settings $(settings)
+		@echo "\n\n\n#################################################################"
+		@echo "NOTES:\n"
+		@echo "Mailhog is running at http://localhost:8025"
+		@echo "SMTP development server listens at localhost:1025"
+		@echo "#######################################################################\n\n\n"
 		./manage.py runserver --settings $(settings)
 		# ./manage.py runserver_plus
 

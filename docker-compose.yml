@@ -21,6 +21,12 @@ services:
       discovery.type: single-node
       xpack.security.enabled: "false"
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
 #  django:
 #    build: docker/Dockerfile
 #    ports:
