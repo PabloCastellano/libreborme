@@ -35,6 +35,11 @@ class TestAlertasLoginRequired(TestCase):
         response = self.client.get(url)
         self.assertTrue(response.url.startswith(self.login_url))
 
+    def test_alertas_profile(self):
+        url = reverse('alertas-profile')
+        response = self.client.get(url)
+        self.assertTrue(response.url.startswith(self.login_url))
+
     def test_alertas_id(self):
         url = reverse('alertas-detail', args=['1'])
         response = self.client.get(url)

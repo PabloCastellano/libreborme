@@ -471,7 +471,7 @@ def settings_update_billing(request):
 
         messages.add_message(request, messages.SUCCESS,
                              'Se han guardado los cambios')
-    return redirect(reverse('dashboard-index'))
+    return redirect(reverse('alertas-profile'))
 
 
 @login_required

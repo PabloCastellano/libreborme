@@ -41,44 +41,39 @@ css
                 </h1>
             </div>
         </div>
-        <div class="row mt-3">
-            <div class="col-md-6 mt-4 pr-5">
-                <h3 class="subtitle-panel">Datos Personales</h3>
-                <form class="mt-4" action="{% url "old-alertas-settings-billing" %}" role="form" method="post">
-                    {% csrf_token %}
-                    {{ form_personal|bootstrap_horizontal }}
-                </form>
+        <form class="mt-4" action="{% url "alertas-settings-billing" %}" role="form" method="post">
+            {% csrf_token %}
+            <div class="row mt-3">
+                <div class="col-md-6 mt-4 pr-5">
+                    <h3 class="subtitle-panel mb-4">Datos Personales</h3>
+                        {{ form_personal|bootstrap_horizontal }}
 
-                {% comment %}
-                TODO
-                <a class="change-pass" href="{% url 'password_change' %}">Cambiar contraseña</a>
-                {% endcomment %}
+                    {% comment %}
+                    TODO
+                    <a class="change-pass" href="{% url 'password_change' %}">Cambiar contraseña</a>
+                    {% endcomment %}
 
-            </div>
-            <div class="col-md-6 mt-4 pr-5">
-                <h3 class="subtitle-panel">Datos de Facturación</h3>
-                <form class="mt-4">
-                    {% csrf_token %}
-                    {{ form_profile|bootstrap_horizontal }}
-                </form>
-            </div>
-
-            <div class="col-md-6 col-legal">
-                <h3 class="subtitle-panel mt-4">Boletín</h3>
-
-                <form class="mt-4">
-                    {{ form_newsletter|bootstrap_horizontal }}
-                </form>
-                <div class="row mt-5">
-                    <div class="col-md-12">
-                        <a class="btn btn2 btn-primary2 btn-transparent" href="#" role="button">Actualizar</a>
-                    </div>
-                    <div class="col-md-12 mt-5">
-                        <a class="" href="#" role="button"><i class="far fa-trash-alt"></i> Cerrar mi cuenta</a>
-                    </div>
+                </div>
+                <div class="col-md-6 mt-4 pr-5">
+                    <h3 class="subtitle-panel mb-4">Datos de Facturación</h3>
+                        {{ form_profile|bootstrap_horizontal }}
+                </div>
+                <div class="col-md-6 col-legal">
+                    <h3 class="subtitle-panel mb-4">Boletín</h3>
+                        {{ form_newsletter|bootstrap_horizontal }}
+                        <div class="row mt-5">
+                            <div class="col-md-12">
+                                <a class="btn btn2 btn-primary2 btn-transparent" href="#" role="button">Actualizar</a>
+                                <input type="submit" name="update" class="btn btn-primary" value="Actualizar">
+                            </div>
+                            <div class="col-md-12 mt-5">
+                                <a class="" href="#" role="button"><i class="far fa-trash-alt"></i> Cerrar mi cuenta</a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div>
+        </form>
     </section>
 </main>
 {% endblock %}

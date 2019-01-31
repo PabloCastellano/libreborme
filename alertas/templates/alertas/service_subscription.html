@@ -12,31 +12,38 @@
           <h1 class="page-header">Suscripciones</h1>
 
           <p>Mediante el Servicio de Suscripciones recibirás un email cada día con la información mercantil solicitada</p>
-          <h1 class="title-section"><span>|</span>¿Cómo funciona?</h1>
+          <h1 class="title-section mt-4"><span>|</span>¿Cómo funciona?</h1>
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-5 text-justify">
               <p>Elige un tipo de suscripción entre las siguientes:</p>
               <ul>
                 <li>Empresas de nueva creación</li>
+                <li>Empresas que cambian de administrador</li>
                 <li>Empresas en concurso de acreedores / liquidación</li>
               </ul>
-              <p>Cada día recibirás en tu email información con las nuevas empresas creadas / liquidadas</p>
-              <p>Las suscripciones incluyen un período de prueba de 7 días. Puedes cancelar la suscripción en cualquier momento antes de los 7 días, sin que esto tenga ningún coste.</p>
-              <p>El ciclo de facturación de la suscripción mensual comienza siempre el día 1 de cada mes. El primer mes será prorrateado.</p>
-              <p>El período de prueba solo es válido la primera vez.</p>
+              <p class="text-justify">Cada día recibirás en tu email la información que has elegido.</p>
+              <p class="text-justify">Las suscripciones incluyen un período de prueba de 7 días. Puedes cancelar la suscripción en cualquier momento antes de los 7 días, sin que esto tenga ningún coste.</p>
+              <p class="text-justify">El ciclo de facturación de la suscripción mensual comienza siempre el día 1 de cada mes. El primer mes será prorrateado.</p>
+              <p class="text-justify">El período de prueba solo es válido la primera vez.</p>
+              <p class="text-justify">Lea los <a href="#">Términos y Condiciones del Servicio de Suscripciones</a>.</p>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6 offset-sm-1">
               {% include 'alertas/pricing_subscriptions_table.html' %}
             </div>
           </div>
 
+          <h1 class="title-section mt-4"><span>|</span>Planes contratados</h1>
+          <div class="row">
+              <div class="col-sm-9">
+                  {% if subscriptions %}
+                  {% include 'alertas/table_active_subscriptions.html' %}
+                  {% else %}
+                  <p>No tienes ningún plan contratado.</p>
+                  {% endif %}
+              </div>
+          </div>
 
-          <h1 class="title-section"><span>|</span>Lista de Suscripciones</h1>
-          {% if subscriptions %}
-            {% include 'alertas/table_active_subscriptions.html' %}
-          {% else %}
-          <p>No tienes ninguna suscripción</p>
-          {% endif %}
+          <h1 class="title-section mt-4"><span>|</span>Lista de Suscripciones</h1>
 
           <p>Debes suscribirte a algo primero.</p>
           <p><a href="#" data-toggle="modal" data-target="#alerta-acto-modal">Añade una alerta nueva</a>.</p>
