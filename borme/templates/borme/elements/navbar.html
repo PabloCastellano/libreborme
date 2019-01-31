@@ -60,7 +60,7 @@
                         {% if user.is_authenticated %}
                         <span>{{ user }}</span>
                         {% else %}
-                        <span>Mi perfil</span>
+                        <span>Mi cuenta</span>
                         {% endif %}
                     </a>
                 </li>
@@ -74,6 +74,11 @@
                     {% endif %}
                     <li class="nav-item menu-panel-user d-block d-md-none">
                         <a class="nav-link" href="{% url 'dashboard-index' %}">
+                            <span>Mi cuenta</span>
+                        </a>
+                    </li>
+                    <li class="nav-item menu-panel-user d-block d-md-none">
+                        <a class="nav-link" href="{% url 'alertas-profile' %}">
                             <span>Mi perfil</span>
                         </a>
                     </li>

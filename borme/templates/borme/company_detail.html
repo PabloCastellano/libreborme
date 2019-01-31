@@ -7,6 +7,29 @@
 {% block extrajs %}
   <script src="{% static "js/libreborme.js" %}"></script>
   <script src="{% static "static_jquery/js/jquery.min.js" %}"></script>
+{% endblock %}
+
+{% endcomment %}
+
+{% load actos %}
+{% load compress %}
+{% load staticfiles %}
+{% load utils %}
+
+{% block title %}{{ company.fullname }} | LibreBORME{% endblock %}
+
+{% block meta %}
+  <meta name="keywords" content="{{ company.fullname|upper }}, Empresas, Informe, CNAE, Registro, Mercantil, Actos, BOE, BORME, Open Data, Cargos, Directivos"/>
+  <meta name="description" content="{{ company.fullname|upper }}. Información mercantil de la empresa {{ company.fullname|upper }}. Cargos directivos de {{ company.fullname|upper }}. Actos publicados en el BORME de {{ company.fullname|upper }}."/>
+{% endblock %}
+
+{% block extrastyles %}
+{% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/details.scss' %}">
+{% endcompress %}
+{% endblock %}
+
+{% block extrajs %}
   <script src="{% static "follow.js" %}"></script>
   <script>
       $("#follow-button").click(function(ev) {
@@ -24,9 +47,10 @@
       })
       .always(function(xhr, textStatus) {
         var resp = $.parseJSON(xhr);
-        $("#alert-follow").html(resp.html);
-        $("#alert-follow").attr("class", "col-md-2 alert alert-follow alert-" + resp.tag);
-        $("#alert-follow").show();
+        var alert_follow = $("#alert-follow");
+        alert_follow.html(resp.html);
+        alert_follow.attr("class", "col-md-2 alert alert-follow alert-" + resp.tag);
+        alert_follow.show();
         $("#follow_spinner").toggle();
 
         if (typeof resp.following !== 'undefined') {
@@ -46,131 +70,11 @@
               .prepend(span);
           }
         }
-        $("#alert-follow").fadeOut(5000);
+        alert_follow.fadeOut(5000);
       });
 
     });
   </script>
-{% endblock %}
-
-
-
-
-
-<div class="col-md-10 col-md-offset-1">
-        <div class="row">
-          <div>
-          <p>
-          <button id="follow-button" type="button" class="btn btn-primary btn-xs" data="{{ company.slug }}">
-            {% if is_following %}
-              <i class="fas fa-eye-slash"></i> Dejar de seguir
-            {% else %}
-              <i class="fas fa-eye"></i> Seguir
-            {% endif %}
-          </button>
-          </p>
-          <p>
-          <div id="alert-follow" style="display: none;" class="col-md-2 alert alert-follow" role="alert"></div>
-          </p>
-          </div>
-          <img id="follow_spinner" style="display: none" src="{% static 'reload2.gif' %}" width=22>
-        </div>
-
-        <h2>Cargos directivos:</h2>
-        <div id="positions">
-        <div class="row">
-        <div class="col-md-10">
-        {% if company.get_cargos_actuales.0 %}
-            <a href="{% url 'borme-empresa-csv-actual' company.name|slug2 %}" rel="nofollow" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
-            <table class="table table-condensed">
-                <thead>
-                    <tr>
-                        <th>Cargo</th>
-                        <th>Persona física/jurídica</th>
-                        <th>Desde</th>
-                        <th>Hasta</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla_cargos_actuales">
-                {% for cargo in company.get_cargos_actuales.0 %}
-                    {% include "borme/tables/cargos_actuales.html" %}
-                {% endfor %}
-                {% if company.get_cargos_actuales.1 %}
-                    <tr id="vermascargos_actuales">
-                        <td class="text-center" colspan=4>
-                            <a href="#" onclick="javascript:moreData('{% url 'borme-ajax-empresa' company.slug %}?t=actuales','vermascargos_actuales','tabla_cargos_actuales');return false;" rel="nofollow">Ver más</a>
-                        </td>
-                    </tr>
-                {% endif %}
-                </tbody>
-            </table>
-        {% else %}
-            {% if company.is_active %}
-            <i>No hay datos</i> <a href="#" data-toggle="modal" data-target="#myModal">[?]</a>
-            {% else %}
-            <i>La sociedad está inactiva.</i>
-            {% endif %}
-        {% endif %}
-        </div>
-        </div>
-
-        {% if company.get_cargos_historial.0 %}
-        <a id="toggle_positions_on" href="#" onclick="toggle_positions();return false;" title="Mostrar cargos no vigentes"><i class="fas fa-chevron-right"></i> Mostrar cargos no vigentes</a>
-        <a id="toggle_positions_off" style="display:none" href="#" onclick="toggle_positions();return false;" title="Esconder cargos no vigentes"><i class="fas fa-chevron-down"></i> Esconder cargos no vigentes</a>
-
-        <div id="positions_history" style="display:none">
-        <div class="row">
-        <div class="col-md-10">
-            <a href="{% url 'borme-empresa-csv-historial' company.slug %}" rel="nofollow" title="Descargar CSV de historial de cargos"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
-            <table class="table table-condensed">
-                <thead>
-                    <tr>
-                        <th>Cargo</th>
-                        <th>Persona física/jurídica</th>
-                        <th>Desde</th>
-                        <th>Hasta</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla_cargos_historial">
-                {% for cargo in company.get_cargos_historial.0 %}
-                    {% include "borme/tables/cargos_historial.html" %}
-                {% endfor %}
-                {% if company.get_cargos_actuales.1 %}
-                    <tr id="vermascargos_historial">
-                        <td class="text-center" colspan=4>
-                            <a href="#" onclick="javascript:moreData('{% url 'borme-ajax-empresa' company.slug %}?t=historial','vermascargos_historial','tabla_cargos_historial');return false;" rel="nofollow">Ver más</a>
-                        </td>
-                    </tr>
-                {% endif %}
-                </tbody>
-            </table>
-        </div>
-        </div>
-        </div>
-        {% endif %}
-        </div>
-
-    </div>
-
-
-{% endcomment %}
-
-{% load compress %}
-{% load staticfiles %}
-{% load actos %}
-{% load utils %}
-
-{% block title %}{{ company.fullname }} | LibreBORME{% endblock %}
-
-{% block meta %}
-  <meta name="keywords" content="{{ company.fullname|upper }}, Empresas, Informe, CNAE, Registro, Mercantil, Actos, BOE, BORME, Open Data, Cargos, Directivos"/>
-  <meta name="description" content="{{ company.fullname|upper }}. Información mercantil de la empresa {{ company.fullname|upper }}. Cargos directivos de {{ company.fullname|upper }}. Actos publicados en el BORME de {{ company.fullname|upper }}."/>
-{% endblock %}
-
-{% block extrastyles %}
-{% compress css %}
-    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/details.scss' %}">
-{% endcompress %}
 {% endblock %}
 
 {% block content %}
@@ -184,7 +88,22 @@
                             <h1>{{ company.name|upper }}</h1>
                         </li>
                         <li class="list-inline-item">
-                            <button type="button" class="btn-secondary btn-details">Seguir</button>
+
+                              <div>
+                              <p>
+                              <button id="follow-button" type="button" class="btn-secondary btn-details" data="{{ company.slug }}">
+                                {% if is_following %}
+                                  <i class="fas fa-eye-slash"></i> Dejar de seguir
+                                {% else %}
+                                  <i class="fas fa-eye"></i> Seguir
+                                {% endif %}
+                              </button>
+                              </p>
+                              <p>
+                              <div id="alert-follow" style="display: none;" class="col-md-2 alert alert-follow" role="alert"></div>
+                              </p>
+                              </div>
+                              <img id="follow_spinner" style="display: none" src="{% static 'reload2.gif' %}" width=22>
                         </li>
                     </ul>
                 </div>

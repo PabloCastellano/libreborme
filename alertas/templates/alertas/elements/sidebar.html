@@ -4,6 +4,12 @@
         <li class="nav-item">
             <a class="nav-link{% if active == 'dashboard' %} active{% endif %}" href="{% url 'dashboard-index' %}">
                 <img src="{% static 'assets/img/menu-panel/cuenta.svg' %}" alt="" class="feather feather-home">
+                Mi cuenta
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if active == 'profile' %} active{% endif %}" href="{% url 'alertas-profile' %}">
+                <img src="{% static 'assets/img/menu-panel/cuenta.svg' %}" alt="" class="feather feather-home">
                 Mi perfil
             </a>
         </li>

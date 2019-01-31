@@ -52,3 +52,23 @@
     }
   }
 }
+
+table {
+  a {
+    color: $red-dark;
+  }
+}
+
+// TODO: refactor
+.input-group-prepend {
+  margin-left: -1px;
+  .input-group-text {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: $red-dark;
+    border: 1px solid $red-dark;
+    a {
+      color: white;
+    }
+  }
+}

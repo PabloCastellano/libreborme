@@ -8,9 +8,10 @@
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 
     {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+    <div class="alert alert-{{ message.tags }}" role="alert">{{ message | safe }}</div>
     {% endfor %}
 
+    {% if user_complete %}
         <h1 class="page-header">Cesta de la compra</h1>
 
         <p>
@@ -225,6 +226,7 @@
       </div>
 
     </section>
+    {% endif %}
     </main>
       {% endif %}
 

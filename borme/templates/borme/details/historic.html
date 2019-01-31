@@ -1,6 +1,6 @@
 {% load staticfiles %}
 {% comment %}
-- datos
+- csv
 {% endcomment %}
 
 <div class="tab-view-details">
@@ -18,7 +18,7 @@
         <div class="container">
             <div class="row mb-3 align-items-center">
                 <div class="offset-lg-2">
-                    <img src="{% static 'banners/banner2.png' %}">
+                    <img src="{% static 'banners/banner1.png' %}">
                     {# <img src="holder.js/720x90"> #}
                 </div>
             </div>
@@ -34,10 +34,6 @@
                         <div class="table-responsive">
                             <table class="table table-company-information">
                                 <thead>
-                                <tr class="d-none">
-                                    <th scope="col">#</th>
-                                    <th scope="col">First</th>
-                                </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
@@ -54,7 +50,7 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">Domicilio</th>
-                                    <td>{{ company.domicilio|default:"Desconocido" }}</td>
+                                    <td>{{ company.domicilio | title |default:"Desconocido" }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Objeto social </th>
@@ -96,71 +92,110 @@
                     <div class="card-header">
                         <img src="{% static 'assets/img/table/icon2.svg' %}" alt="">Cargos Directivos
                     </div>
+                    {% if company.get_cargos_actuales.0 %}
                     <div class="card-body">
+                        <a href="{% url 'borme-empresa-csv-actual' company.name|slug2 %}" rel="nofollow" title="Descargar CSV de cargos actuales"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
                         <div class="table-responsive">
                             <table class="table table-striped table-executive-positions">
                                 <thead>
                                 <tr>
                                     <th scope="col">Cargo</th>
-                                    <th scope="col">Persona</th>
+                                    <th scope="col">Persona física/jurídica</th>
                                     <th scope="col">Desde</th>
                                     <th scope="col">Hasta</th>
                                 </tr>
                                 </thead>
                                 <tbody>
+                                {% for cargo in company.get_cargos_actuales.0 %}
+
+                                {% url 'borme-fecha' cargo.date_from as url_from %}
+                                {% url 'borme-fecha' cargo.date_to as url_to %}
                                 <tr>
-                                    <td>Adm. Solid</td>
-                                    <td class="color-red-dark">Roberto Cano Díaz</td>
-                                    <td class="color-red-dark">2014-11-18</td>
-                                    <td>Actualidad</td>
+                                    <td>{{ cargo.title }}</td>
+                                    <td>{{ cargo | link_to_entity | safe }}</td>
+                                    <td><a href="{% url 'borme-fecha' cargo.date_from %}">{{ cargo.date_from }}</a></td>
+
+                                    {% if url_to %}
+                                        <td><a href="{{ url_to }}">{{ cargo.date_to }}</a></td>
+                                    {% else %}
+                                        <td>Actualidad</td>
+                                    {% endif %}
                                 </tr>
-                                <tr>
-                                    <td>Adm. Solid</td>
-                                    <td class="color-red-dark">Roberto Cano Díaz</td>
-                                    <td class="color-red-dark">2014-11-18</td>
-                                    <td>Actualidad</td>
+                                {% endfor %}
+                                {% if company.get_cargos_actuales.1 %}
+                                <tr id="vermascargos_actuales">
+                                    <td class="text-center" colspan=4>
+                                        <a href="#" onclick="javascript:moreData('{% url 'borme-ajax-empresa' company.slug %}?t=actuales','vermascargos_actuales','tabla_cargos_actuales');return false;" rel="nofollow">Ver más</a>
+                                    </td>
                                 </tr>
+                                {% endif %}
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                    {% else %}
+                        {% if company.is_active %}
+                        <i>No hay datos</i> <a href="#" data-toggle="modal" data-target="#myModal">[?]</a>
+                        {% else %}
+                        <i>La sociedad está inactiva.</i>
+                        {% endif %}
+                    {% endif %}
                 </div>
             </div>
         </div>
 
+        {% if company.get_cargos_historial.0 %}
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="bd-example">
                     <details>
-                        <summary>Cargos no vigentes</summary>
+                        <summary>Mostrar cargos no vigentes</summary>
                         <div class="card mt-4">
                             <div class="card-header">
                                 <img src="{% static 'assets/img/table/icon2.svg' %}" alt="">Cargos Directivos
                             </div>
                             <div class="card-body">
+                                <a href="{% url 'borme-empresa-csv-historial' company.slug %}" rel="nofollow" title="Descargar CSV de historial de cargos"><i class="glyphicon glyphicon-download-alt"></i> csv</a>
                                 <div class="table-responsive">
                                     <table class="table table-striped table-executive-positions">
                                         <thead>
                                         <tr>
                                             <th scope="col">Cargo</th>
-                                            <th scope="col">Persona</th>
+                                            <th scope="col">Persona física/jurídica</th>
                                             <th scope="col">Desde</th>
                                             <th scope="col">Hasta</th>
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        {% for cargo in company.get_cargos_historial.0 %}
+
+                                        {% url 'borme-fecha' cargo.date_from as url_from %}
+                                        {% url 'borme-fecha' cargo.date_to as url_to %}
                                         <tr>
-                                            <td>Adm. Solid</td>
-                                            <td class="color-red-dark">Roberto Cano Díaz</td>
-                                            <td class="color-red-dark">2014-11-18</td>
-                                            <td>Actualidad</td>
+                                            <td>{{ cargo.title }}</td>
+                                            {% if cargo.type == 'person' %}
+                                            <td class="color-red-dark"><a href="{% url 'borme-persona' cargo.name|slug %}">{{ cargo.name|title }}</a></td>
+                                            {% else %}
+                                            <td class="color-red-dark"><a href="{% url 'borme-empresa' cargo.name|slug2 %}">{{ cargo.name }}</a></td>
+                                            {% endif %}
+
+                                            {% if url_from %}
+                                            <td class="color-red-dark"><a href="{{ url_from }}">{{ cargo.date_from }}</a></td>
+                                            {% else %}
+                                            <td>Desconocido</td>
+                                            {% endif %}
+
+                                            <td><a href="{% url 'borme-fecha' cargo.date_to %}">{{ cargo.date_to }}</a></td>
                                         </tr>
-                                        <tr>
-                                            <td>Adm. Solid</td>
-                                            <td class="color-red-dark">Roberto Cano Díaz</td>
-                                            <td class="color-red-dark">2014-11-18</td>
-                                            <td>Actualidad</td>
-                                        </tr>
+                                        {% endfor %}
+
+                                        {% if company.get_cargos_actuales.1 %}
+                                            <tr id="vermascargos_historial">
+                                                <td class="text-center" colspan=4>
+                                                    <a href="#" onclick="javascript:moreData('{% url 'borme-ajax-empresa' company.slug %}?t=historial','vermascargos_historial','tabla_cargos_historial');return false;" rel="nofollow">Ver más</a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
                                         </tbody>
                                     </table>
                                 </div>
@@ -170,4 +205,6 @@
                 </div>
             </div>
         </div>
+        {% endif %}
+
     </div>

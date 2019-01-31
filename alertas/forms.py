@@ -24,8 +24,8 @@ class AlertaActoModelForm(forms.ModelForm):
 
 
 class PersonalDataForm(forms.Form):
-    date_joined = forms.CharField(label="Fecha de alta", required=False, widget=forms.TextInput(attrs={'disabled': True}))
-    email = forms.CharField(label="E-Mail", required=False, widget=forms.TextInput(attrs={'disabled': True}))
+    # date_joined = forms.CharField(label="Fecha de alta", required=False, widget=forms.TextInput(attrs={'disabled': True}))
+    # email = forms.CharField(label="E-Mail", required=False, widget=forms.TextInput(attrs={'disabled': True}))
     first_name = forms.CharField(label="Nombre", required=False)
     last_name = forms.CharField(label="Apellidos", required=False)
     home_phone = forms.CharField(label="Teléfono", required=False, widget=forms.TextInput(attrs={'placeholder': '+34xxxxxxxxx'}))
@@ -50,10 +50,10 @@ class ProfileDataForm(forms.ModelForm):
                   'post_code', 'poblacion', 'provincia', 'country']
         labels = {
             "account_type": "Tipo",
-            "razon_social": "Razón social",
+            "razon_social": "Razón social o nombre",
             "cif_nif": "CIF / NIF",
             "address": "Dirección",
-            "post_code": "C.P.",
+            "post_code": "Código postal",
             "poblacion": "Población",
             "provincia": "Provincia",
             "country": "País",

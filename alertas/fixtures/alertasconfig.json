@@ -31,7 +31,7 @@
     "model": "alertas.alertasconfig",
     "pk": "max_alertas_follower_paid",
     "fields": {
-        "value": "50"
+        "value": "100"
     }
 }
 ]

@@ -60,6 +60,13 @@ class Profile(m.Model):
     newsletter_promotions = m.BooleanField(default=False)
     newsletter_features = m.BooleanField(default=False)
 
+    def is_complete(self):
+        return all([self.user.first_name, self.user.last_name,
+                    self.user.email,
+                    self.razon_social, self.cif_nif, self.address,
+                    self.post_code, self.poblacion, self.provincia,
+                    self.country])
+
     def save(self, *args, **kwargs):
         if not self.notification_email:
             self.notification_email = self.user.email

@@ -87,10 +87,68 @@ class MyAccountView(CustomerMixin, TemplateView):
 
         aconfig = get_alertas_config()
 
-        # TODO: account_type
-        account_type = 'free'
-        context['limite_f'] = aconfig['max_alertas_follower_' + account_type]
-        context['limite_a'] = aconfig['max_alertas_actos_' + account_type]
+        context['free_follows'] = aconfig['max_alertas_follower_free']
+
+        """
+        try:
+            context['ip'] = self.request.META['HTTP_X_FORWARDED_FOR']
+        except KeyError:
+            context['ip'] = self.request.META['REMOTE_ADDR']
+        """
+        #import pdb; pdb.set_trace()
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class ProfileView(CustomerMixin, TemplateView):
+    template_name = 'alertas/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileView, self).get_context_data(**kwargs)
+
+        if context['customer'] is None:
+            business_vat_id = None
+        else:
+            business_vat_id = context['customer'].business_vat_id
+
+        # Prepare forms
+        user_profile = self.request.user.profile
+
+        # context["form_billing"] = forms.BillingSettingsForm(initial={
+        #     'business_vat_id': business_vat_id})
+
+        # context['form_notification'] = forms.NotificationSettingsForm(initial={
+        #     'notification_method': user_profile.notification_method,
+        #     'notification_email': user_profile.notification_email,
+        #     'notification_url': user_profile.notification_url})
+
+        context['form_personal'] = forms.PersonalDataForm(initial={
+            'first_name': self.request.user.first_name,
+            'last_name': self.request.user.last_name,
+            'email': self.request.user.email,
+            'home_phone': user_profile.home_phone,
+            'date_joined': self.request.user.date_joined.date()})
+
+        context['form_profile'] = forms.ProfileDataForm(initial={
+            'home_phone': user_profile.home_phone,
+            'razon_social': user_profile.razon_social,
+            'cif_nif': user_profile.cif_nif,
+            'address': user_profile.address,
+            'post_code': user_profile.post_code,
+            'poblacion': user_profile.poblacion,
+            'provincia': user_profile.provincia,
+            'country': user_profile.country})
+
+        context['form_newsletter'] = forms.NewsletterForm(initial={
+            'newsletter_promotions': user_profile.newsletter_promotions,
+            'newsletter_features': user_profile.newsletter_features})
+
+        context['active'] = 'profile'
+        context['count_a'] = AlertaActo.objects.filter(
+                                    user=self.request.user).count()
+        context['count_f'] = Follower.objects.filter(
+                                    user=self.request.user).count()
+        context['n_alertas'] = context['count_a'] + context['count_f']
 
         """
         try:
@@ -254,10 +312,10 @@ class ServiceAlertaView(CustomerMixin, StripeMixin, TemplateView):
 
         alertas_config = get_alertas_config()
 
-        # TODO: account_type
-        account_type = 'free'
-        context['limite_f'] = alertas_config['max_alertas_follower_' + account_type]
-        context['restantes_f'] = int(context['limite_f']) - context['count_f']
+        context['free_follows'] = int(alertas_config['max_alertas_follower_free'])
+        context['remaining_follows'] = int(context['free_follows']) - context['count_f']
+        context['current_follows'] = context['free_follows'] - context['remaining_follows']
+        context['max_alertas_follower_paid'] = int(alertas_config['max_alertas_follower_paid'])
 
         context["followers"] = Follower.objects.filter(user=self.request.user)
         context['form_f'] = forms.FollowerForm()
@@ -278,7 +336,13 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CartView, self).get_context_data(**kwargs)
 
-        if 'cart' in self.request.session:
+        context['user_complete'] = self.request.user.profile.is_complete()
+        if not context['user_complete']:
+            url = reverse('alertas-profile')
+            message = 'Necesitas completar <a href="{}">tu perfil</a> antes para poder contratar algún servicio.'.format(url)
+            messages.add_message(self.request, messages.WARNING, message)
+
+        elif 'cart' in self.request.session:
             plan_name = self.request.session['cart']['name']
             price = self.request.session['cart']['price']
 
