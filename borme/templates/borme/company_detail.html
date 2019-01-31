@@ -32,15 +32,15 @@
         if (typeof resp.following !== 'undefined') {
           if (resp.following) {
             var span = $("#follow-button")
-                         .find("span")
-                         .attr("class", "glyphicon glyphicon-eye-close");
+                         .find("i")
+                         .attr("class", "fas fa-eye-slash");
             $("#follow-button")
               .text(" Dejar de seguir")
               .prepend(span);
           } else {
             var span = $("#follow-button")
-                         .find("span")
-                         .attr("class", "glyphicon glyphicon-eye-open");
+                         .find("i")
+                         .attr("class", "fas fa-eye");
             $("#follow-button")
               .text(" Seguir")
               .prepend(span);
@@ -63,9 +63,9 @@
           <p>
           <button id="follow-button" type="button" class="btn btn-primary btn-xs" data="{{ company.slug }}">
             {% if is_following %}
-              <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span> Dejar de seguir
+              <i class="fas fa-eye-slash"></i> Dejar de seguir
             {% else %}
-              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Seguir
+              <i class="fas fa-eye"></i> Seguir
             {% endif %}
           </button>
           </p>
@@ -115,8 +115,8 @@
         </div>
 
         {% if company.get_cargos_historial.0 %}
-        <a id="toggle_positions_on" href="#" onclick="toggle_positions();return false;" title="Mostrar cargos no vigentes"><i class="glyphicon glyphicon-chevron-right"></i> Mostrar cargos no vigentes</a>
-        <a id="toggle_positions_off" style="display:none" href="#" onclick="toggle_positions();return false;" title="Esconder cargos no vigentes"><i class="glyphicon glyphicon-chevron-down"></i> Esconder cargos no vigentes</a>
+        <a id="toggle_positions_on" href="#" onclick="toggle_positions();return false;" title="Mostrar cargos no vigentes"><i class="fas fa-chevron-right"></i> Mostrar cargos no vigentes</a>
+        <a id="toggle_positions_off" style="display:none" href="#" onclick="toggle_positions();return false;" title="Esconder cargos no vigentes"><i class="fas fa-chevron-down"></i> Esconder cargos no vigentes</a>
 
         <div id="positions_history" style="display:none">
         <div class="row">

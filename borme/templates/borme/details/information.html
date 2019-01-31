@@ -129,7 +129,7 @@
                                         </table>
                                     </div>
                                     {% elif value|is_string %}
-                                    <p><i class="glyphicon glyphicon-ok"></i>{{ value }}</p>
+                                    <p><i class="fas fa-check"></i>{{ value }}</p>
                                     {% else %}
                                     <p>{% acto_as_text acto_name value anuncio.date %}</p>
                                     {% endif %}

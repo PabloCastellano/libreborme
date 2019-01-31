@@ -21,17 +21,19 @@
                 </li>
                 {% endcomment %}
 
-                {% if search_view %}
+                {% if hide_search_bar %}
                 <li class="nav-item search-navbar d-none">
                 {% else %}
                 <li class="nav-item search-navbar">
                 {% endif %}
-                    <form>
+                    <form role="search" action="{% url "borme-search" %}" method="get">
                         <div class="form-row">
                             <div class="col-12">
                                 <label class="sr-only" for="inlineFormInputGroup">Username</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Buscar...">
+                                    <input type="text" class="form-control" name="q" id="inlineFormInputGroup" placeholder="Buscar por nombre">
+                                    <input type="hidden" name="page" value="1">
+                                    <input type="hidden" name="type" value="all">
 
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">
@@ -58,7 +60,7 @@
                         {% if user.is_authenticated %}
                         <span>{{ user }}</span>
                         {% else %}
-                        <span>Tu cuenta</span>
+                        <span>Mi perfil</span>
                         {% endif %}
                     </a>
                 </li>
@@ -72,7 +74,7 @@
                     {% endif %}
                     <li class="nav-item menu-panel-user d-block d-md-none">
                         <a class="nav-link" href="{% url 'dashboard-index' %}">
-                            <span>Mi cuenta</span>
+                            <span>Mi perfil</span>
                         </a>
                     </li>
                     <li class="nav-item menu-panel-user d-block d-md-none">

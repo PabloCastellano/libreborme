@@ -138,6 +138,7 @@ class HomeView(CacheMixin, TemplateView):
         last_modified = Config.objects.first().last_modified.date()
         lb_calendar = LibreBormeCalendar().formatmonth(datetime.date.today())
 
+        context['hide_search_bar'] = True
         context.update({
             "total_companies": estimate_count_fast('borme_company'),
             "total_persons": estimate_count_fast('borme_person'),
@@ -164,7 +165,7 @@ class BusquedaView(TemplateView):
         form = LBSearchForm(self.request.GET)
         context['page'] = page
         context['form'] = form
-        context['search_view'] = 1
+        context['hide_search_bar'] = True
         context['page_companies'] = []
         context['page_persons'] = []
 

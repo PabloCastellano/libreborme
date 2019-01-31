@@ -8,9 +8,7 @@ check icon fa-plus
 {% block content %}
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
     {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}" role="alert">
-        {{ message }}
-      </div>
+    <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
     {% endfor %}
 
           <h1 class="page-header">Métodos de pago</h1>
@@ -45,7 +43,7 @@ check icon fa-plus
           {% if customer.can_charge %}
           <div class="row">
             <div class="col-sm-8">
-              <h2>Tarjetas de crédito</h2>
+              <h1 class="title-section"><span>|</span>Tarjetas de crédito</h1>
 
                 <div class="form-group">
 
@@ -122,11 +120,13 @@ check icon fa-plus
             {% endcomment %}
 
             <div class="row">
-              <p class="help-block">
-                <i class="fas fa-lock"></i> <strong>Pago seguro.</strong>
-                Usamos <a href="https://stripe.com/es" target="_blank">Stripe</a>
-                como pasarela de pago. LibreBORME no almacena los datos de su tarjeta.
-              </p>
+              <div class="col-sm-8">
+                <p class="help-block">
+                  <i class="fas fa-lock"></i> <strong>Pago seguro.</strong>
+                  Usamos <a href="https://stripe.com/es" target="_blank">Stripe</a>
+                  como pasarela de pago. LibreBORME no almacena los datos de su tarjeta.
+                </p>
+              </div>
             </div>
 
         </div>

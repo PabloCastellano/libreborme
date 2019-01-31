@@ -20,9 +20,9 @@
         <p>
           <button id="follow-button" type="button" class="btn btn-primary btn-xs" data="{{ person.slug }}">
             {% if is_following %}
-              <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span> Dejar de seguir
+              <i class="fas fa-eye-slash"></i> Dejar de seguir
             {% else %}
-              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Seguir
+              <i class="fas fa-eye"></i> Seguir
             {% endif %}
           </button>
         </p>
@@ -226,15 +226,15 @@
         if (typeof resp.following !== 'undefined') {
           if (resp.following) {
             var span = $("#follow-button")
-                         .find("span")
-                         .attr("class", "glyphicon glyphicon-eye-close");
+                         .find("i")
+                         .attr("class", "fas fa-eye-slash");
             $("#follow-button")
               .text(" Dejar de seguir")
               .prepend(span);
           } else {
             var span = $("#follow-button")
-                         .find("span")
-                         .attr("class", "glyphicon glyphicon-eye-open");
+                         .find("i")
+                         .attr("class", "fas fa-eye");
             $("#follow-button")
               .text(" Seguir")
               .prepend(span);

@@ -1,7 +1,8 @@
-{% extends "alertas/base_dashboard.html" %}
+{% extends "alertas/base.html" %}
 {% load bootstrap %}
 
 {% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Historial de Alertas</h1>
           <p>En esta sección puede encontrar archivadas las alertas que ya ha recibido.</p>
@@ -33,7 +34,7 @@
                   <td>
                     <a href="{% url 'alerta-history-download' alerta.id %}">
                     <button type="button" class="btn btn-primary btn-xs">
-                      <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Descargar CSV
+                      <i class="fas fa-file"></i> Descargar CSV
                     </button>
                     </a>
                   </td>
@@ -46,4 +47,5 @@
             <p>No hay alertas registradas todavía</p>
         {% endif %}
         </div>
+</main>
 {% endblock %}

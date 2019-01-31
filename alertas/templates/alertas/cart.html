@@ -7,11 +7,9 @@
 {% block content %}
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 
-        {% for message in messages %}
-          <div class="alert alert-{{ message.tags }}" role="alert">
-            {{ message }}
-          </div>
-        {% endfor %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+    {% endfor %}
 
         <h1 class="page-header">Cesta de la compra</h1>
 
@@ -24,6 +22,17 @@
         </p>
 
         {% if product %}
+        <div class="row">
+		  <div class="col-sm-10">
+            <p>
+              1) <i class="fas fa-shopping-cart fa-5x"></i>
+              <i class="fas fa-ellipsis-h fa-3x"></i>
+              2) <i class="far fa-credit-card fa-5x"></i>
+              <i class="fas fa-ellipsis-h fa-3x"></i>
+              3) <i class="fas fa-check-circle fa-5x"></i>
+            </p>
+          </div>
+        </div>
         <div class="row">
 		  <div class="col-sm-10">
             <div class="table-responsive">
@@ -68,14 +77,14 @@
                 <div class="col-sm-12 col-md-6 text-right">
                     <a href="{% url 'alertas-removecart' %}">
                       <button type="button" class="btn btn-danger btn-block">
-                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Vaciar cesta
+                        <i class="fas fa-trash-alt"></i> Vaciar cesta
                       </button>
                     </a>
                 </div>
                 <div class="col-sm-12 col-md-6 text-right">
                     <a href="#" onclick="toggle_hide('payment-div');return false;">
                       <button type="button" class="btn btn-success btn-block">
-                        <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Pagar ahora
+                        <i class="fas fa-shopping-cart"></i> Pagar ahora
                       </button>
                     </a>
                 </div>
@@ -111,7 +120,7 @@
                   </p>
                   {% if card.stripe_id == customer.default_source_id %}
                   <p>
-                    <span title="Predeterminada" class="glyphicon glyphicon-check" aria-hidden="true"></span> Predeterminada
+                    <i class="fas fa-check-square"></i> Predeterminada
                   </p>
                   {% endif %}
                 </td>

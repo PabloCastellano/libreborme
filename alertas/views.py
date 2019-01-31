@@ -670,8 +670,7 @@ def ajax_follow(request):
     # TODO:
     # request.user.follow(company)
 
-    html_message = ('<span class="glyphicon glyphicon-check" '
-                    'aria-hidden="true"></span>')
+    html_message = '<i class="fas fa-check"></i>'
     jsonr = json.dumps({"tag": "success",
                         "html": html_message,
                         "slug": slug,

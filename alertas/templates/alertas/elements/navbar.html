@@ -2,9 +2,6 @@
 {% comment %}
 - can be merged with navbar from borme, just needs to hide Area personal / servicios
 - dropdowns
-
-<li {% if active == 'cart' %}class="active"{% endif %}><a href="{% url 'old-alertas-cart' %}"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Cesta{% if num_cart > 0 %} <span class="badge">{{ num_cart }}</span>{% endif %}</a></li>
-<li {% if active == 'ayuda' %}class="active"{% endif %}><a href="{% url 'old-alertas-ayuda' %}">Soporte</a></li>
 {% endcomment %}
 
 <header>
@@ -18,10 +15,10 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav position-navbar">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'alertas-cart' %}">Cesta</a>
+                    <a class="nav-link{% if active == 'cart' %} active{% endif %}" href="{% url 'alertas-cart' %}"><i class="fas fa-shopping-cart"></i> Cesta{% if num_cart > 0 %} <span class="badge badge-pill badge-dark">{{ num_cart }}</span>{% endif %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'alertas-ayuda' %}">Soporte</a>
+                    <a class="nav-link{% if active == 'ayuda' %} active{% endif %}" href="{% url 'alertas-ayuda' %}">Soporte</a>
                 </li>
                 <li class="nav-item dropdown menu-panel-user">
                     <a class="nav-link" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -33,7 +30,7 @@
                         {% if user.is_staff %}
                         <a class="dropdown-item" href="/admin">Admin</a>
                         {% endif %}
-                        <a class="dropdown-item" href="{% url 'dashboard-index' %}">Mi cuenta</a>
+                        <a class="dropdown-item" href="{% url 'dashboard-index' %}">Mi perfil</a>
                         <a class="dropdown-item" href="#">Facturas</a>
                         <a class="dropdown-item" href="#">Métodos de pago</a>
                         <a class="dropdown-item" href="#">Seguimiento</a>

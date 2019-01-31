@@ -30,16 +30,14 @@ css
 {% block content %}
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
     {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}" role="alert">
-        {{ message }}
-      </div>
+    <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
     {% endfor %}
 
     <section style="padding: 20px 0;">
         <div class="row">
             <div class="col-md-12">
                 <h1 class="title-section">
-                    <span>|</span>Mi cuenta
+                    <span>|</span>Mi perfil
                 </h1>
             </div>
         </div>
@@ -66,7 +64,7 @@ css
                 </thead>
                 <tbody>
                   {% for subscription in customer.subscriptions.all %}
-                  <tr {% if subscription.status != 'trialing' %}class="table-success"{% else %}class="table-warning"{% endif %}>
+                  <tr>
                     <td>{{ subscription.plan.product.name }}</td>
                     <td>{{ subscription.start.date }}</td>
                     <td>{{ subscription.current_period_end.date }}</td>
@@ -120,7 +118,7 @@ css
             </div>
         </div>
         <div class="row mt-3">
-            <div class="col-md-6 mt-4">
+            <div class="col-md-6 mt-4 pr-5">
                 <h3 class="subtitle-panel">Datos Personales</h3>
                 <form class="mt-4" action="{% url "old-alertas-settings-billing" %}" role="form" method="post">
                     {% csrf_token %}
@@ -130,7 +128,7 @@ css
                 <a class="change-pass" href="{% url 'password_change' %}">Cambiar contraseña</a>
 
             </div>
-            <div class="col-md-6 mt-4">
+            <div class="col-md-6 mt-4 pr-5">
                 <h3 class="subtitle-panel">Datos de Facturación</h3>
                 <form class="mt-4">
                     {% csrf_token %}
@@ -146,10 +144,10 @@ css
                 </form>
                 <div class="row mt-5">
                     <div class="col-md-12">
-                        <a class="btn btn-primary btn-transparent" href="#" role="button">Actualizar</a>
+                        <a class="btn btn2 btn-primary2 btn-transparent" href="#" role="button">Actualizar</a>
                     </div>
                     <div class="col-md-12 mt-5">
-                        <a class="btn-primary btn-transparent" href="#" role="button"><i class="far fa-trash-alt"></i> Cerrar mi cuenta</a>
+                        <a class="" href="#" role="button"><i class="far fa-trash-alt"></i> Cerrar mi cuenta</a>
                     </div>
                 </div>
             </div>

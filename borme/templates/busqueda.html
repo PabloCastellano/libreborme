@@ -147,14 +147,15 @@
               <div class="col-md-7 col-12">
                   <label class="sr-only" for="inlineFormInputGroup">Nombre</label>
                   <div class="input-group mb-2">
-                      <div class="input-group-prepend">
-                          <div class="input-group-text">
-                              <a href="#"><i class="fas fa-search"></i></a>
-                          </div>
-                      </div>
                       <input type="hidden" name="page" value="1">
                       <input type="hidden" name="type" value="all">
                       <input type="text" class="form-control" name="q" id="inlineFormInputGroup" placeholder="Buscar por nombre de empresa o persona" value="{{ query }}">
+                      <div class="input-group-prepend">
+                          <div class="input-group-text">
+                              <a href="#"><i class="fas fa-search"></i></a>
+                        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"> Buscar</i></button>
+                          </div>
+                      </div>
                   </div>
               </div>
           </div>

@@ -14,6 +14,9 @@
               No tienes ninguna factura próximamente
               {% endif %}
             </div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+            {% endfor %}
           <h1 class="page-header">Listado de facturas</h1>
 
           {% comment %}
