@@ -99,13 +99,13 @@ Modal registro
 
 
 <!-- Modal -->
-<div class="modal fade modal-login" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade modal-login" id="signInModal" tabindex="-1" role="dialog" aria-labelledby="signInModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="row justify-content-center w-100">
                     <div class="col-md-12 text-center">
-                         <p class="text-header">Entrar en <img src="{% static 'assets/img/logo.svg' %}" alt="" style="width: 163px;"></p>
+                        <p class="text-header">Entrar en <img src="{% static 'assets/img/logo.svg' %}" alt="" style="width: 163px;"></p>
                     </div>
                 </div>
 
@@ -120,10 +120,10 @@ Modal registro
                             <form method="POST" action="{% url 'login' %}">
                                 {% csrf_token %}
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="id_username" maxlength="254" name="username" placeholder="Nombre de usuario">
+                                    <input type="email" class="form-control" id="id_email" maxlength="254" name="email" placeholder="Correo electrónico" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" class="form-control" id="id_password" name="password" placeholder="Contraseña">
+                                    <input type="password" class="form-control" id="id_password" name="password" placeholder="Contraseña" required>
                                 </div>
                                 <input type="hidden" name="next" value="" />
                                 <div class="row">
@@ -146,7 +146,7 @@ Modal registro
                         <div class="col-md-10 text-center">
                             <ul class="list-inline">
                                 <li class="list-inline-item no-user"><p>¿Aún no eres usuario? </p></li>
-                                <li class="list-inline-item"><button type="button" class="btn btn2 btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#ModalRegistro">Registrarme</button></li>
+                                <li class="list-inline-item"><button type="button" class="btn btn2 btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#signUpModal">Registrarme</button></li>
 
                             </ul>
                         </div>
@@ -159,13 +159,13 @@ Modal registro
 </div>
 
 <!-- Modal -->
-<div class="modal fade modal-login" id="ModalRegistro" tabindex="-1" role="dialog" aria-labelledby="ModalRegistro" aria-hidden="true">
+<div class="modal fade modal-login" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="signUpModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="row justify-content-center w-100">
                     <div class="col-md-12 text-center">
-                        <p class="text-header">Entrar en <img src="{% static 'assets/img/logo.svg' %}" alt="" style="width: 163px;"></p>
+                        <p class="text-header">Registro en <img src="{% static 'assets/img/logo.svg' %}" alt="" style="width: 163px;"></p>
                     </div>
                 </div>
 
@@ -177,28 +177,32 @@ Modal registro
                 <div class="container">
                     <div class="row justify-content-md-center">
                         <div class="col-md-10">
-                            <form>
+                            <form method="post" action="{% url 'django_registration_register' %}">
+                                {% csrf_token %}
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Nombre de usuario">
+                                    <input type="email" class="form-control" id="id_email" maxlength="254" name="email" aria-describedBy="emailHelp" placeholder="Correo electrónico" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="E-Mail">
+                                    <input type="password" class="form-control" id="id_password1" maxlength="254" name="password1" placeholder="Contaseña" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Contaseña">
+                                    <input type="password" class="form-control" id="id_password2" maxlength="254" name="password2" placeholder="Repetir contraseña" required>
                                 </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Repetir Contraseña">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="accept_tos" id="accept_tos" required />
+                                    <label class="form-check-label" for="accept_tos">
+                                      Acepto las <a target="_blank" href="{% url 'aviso_legal' %}">Condiciones de Uso, Política de Privacidad y el Uso de Cookies (review)</a>.
+                                    </label>
                                 </div>
-                            </form>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <button type="button" class="btn btn-secondary w-100 mb-2" data-dismiss="modal">Cancelar</button>
+                                    <input type="submit" name="submit" class="btn btn2 btn-primary2 btn-transparent w-100 mb-2" value="Registrarme" />
                                 </div>
                                 <div class="col-md-6">
-                                    <button type="button" class="btn btn-primary btn-transparent w-100 mb-2">Registrarse</button>
+                                    <button type="button" class="btn btn2 btn-secondary w-100 mb-2" data-dismiss="modal">Cancelar</button>
                                 </div>
                             </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -209,7 +213,7 @@ Modal registro
                         <div class="col-md-10 text-center">
                             <ul class="list-inline">
                                 <li class="list-inline-item no-user"><p>¿Ya eres usuario? </p></li>
-                                <li class="list-inline-item"><button type="button" class="btn btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#exampleModalCenter">Registrar</button></li>
+                                <li class="list-inline-item"><button type="button" class="btn btn2 btn-secondary" data-dismiss="modal" data-toggle="modal" data-target="#signInModal">Entrar</button></li>
                             </ul>
                         </div>
                     </div>

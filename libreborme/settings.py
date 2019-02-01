@@ -12,8 +12,7 @@ DEBUG = True
 SITE_NAME = 'LibreBORME'
 ALLOWED_HOSTS = ['libreborme.net']
 
-# Application definition
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -21,14 +20,13 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
+]
+
+EXTERNAL_APPS = [
     'django_static_jquery',
     'tastypie',
     'maintenance_mode',
     'django_elasticsearch_dsl',
-    'borme',
-    'libreborme',
-    'alertas',
-    'dataremoval',
     'bootstrap',
     'fontawesome',
     'bootstrapform',
@@ -38,6 +36,15 @@ INSTALLED_APPS = [
     'compressor',
 ]
 
+SITE_APPS = [
+    'borme',
+    'libreborme',
+    'alertas',
+    'dataremoval',
+]
+
+# Application definition
+INSTALLED_APPS = DJANGO_APPS + EXTERNAL_APPS + SITE_APPS
 
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
