@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import models as m
 from django.dispatch import receiver
 from django.db.models.signals import post_save
@@ -27,7 +27,7 @@ COUNTRY_CHOICE = (
 )
 
 class Profile(m.Model):
-    user = m.OneToOneField(User, on_delete=m.CASCADE, related_name='profile')
+    user = m.OneToOneField(get_user_model(), on_delete=m.CASCADE, related_name='profile')
 
     language = m.CharField(max_length=3,
                            choices=LANGUAGE_CHOICES,
@@ -79,7 +79,7 @@ class Profile(m.Model):
             self.user.save()
             insert_libreborme_log("subscription",
                                   "User subscription has expired.",
-                                  self.user.username)
+                                  self.user.email)
             if send_email:
                 send_expiration_email(self.user)
             return True
@@ -96,7 +96,7 @@ class MailTemplate(m.Model):
     html_text = m.TextField()
 
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=get_user_model())
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)

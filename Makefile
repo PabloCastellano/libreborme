@@ -22,7 +22,7 @@ recreate_db:
 		./manage.py loaddata ./libreborme/fixtures/config.json
 		./manage.py loaddata ./alertas/fixtures/alertasconfig.json
 		# ./manage.py createsuperuser --username admin --email pablo@anche.no
-		./manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'pablo@anche.no', '000000')"
+		./manage.py shell -c "from django.contrib.auth import get_user_model; get_user_model().objects.create_superuser('pablo@anche.no', '000000')"
 
 recreate_db2:
 		# pg_dump -c -C -h localhost -U libreborme > clean_dump.sql

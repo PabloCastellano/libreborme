@@ -7,13 +7,14 @@ from django.conf import settings
 from borme.models import Anuncio, Borme, Config, Company, Person
 from django.test import TestCase
 
-#from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 import datetime
-today = datetime.date.today()
-
 import os
+
+today = datetime.date.today()
+User = get_user_model()
 
 
 # TODO: Fixtures
@@ -34,8 +35,8 @@ class TestBasicHttp(TestCase):
         c.anuncios = [{"year": 1800, "id": a.id}]
         c.save()
         Config.objects.create(version='test', last_modified=timezone.now())
-        # self.user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
-        # self.user = User.create_user(username='john', email='lennon@thebeatles.com', password='johnpassword')
+        # self.user = User.objects.create_user('lennon@thebeatles.com', 'johnpassword')
+        # self.user = User.create_user(email='lennon@thebeatles.com', password='johnpassword')
 
     # TODO:
     # Do proper testing with real data.
@@ -141,14 +142,14 @@ class TestCommands(TestCase):
         self.assertRedirects(response, '/login')
 
     def test_get_method(self):
-        self.client.login(username='john', password='johnpassword')
+        self.client.login(email='john', password='johnpassword')
         response = self.client.get(reverse('process_all'))
         self.assertRedirects(response, '/reports/messages')
 
         # assert no messages were sent
 
     def test_post_method(self):
-        self.client.login(username='john', password='johnpassword')
+        self.client.login(email='john', password='johnpassword')
 
         # add pending messages, mock sms sending?
 

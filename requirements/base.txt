@@ -1,5 +1,5 @@
 bormeparser==0.3.4
-Django==2.0.3
+Django==2.0.10
 django-bootstrap-form==3.2.1
 django-bootstrap-static==3.3.7.2
 django-compressor==2.2

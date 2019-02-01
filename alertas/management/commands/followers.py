@@ -66,7 +66,7 @@ class Command(BaseCommand):
 
         show_warning_date(periodo)
 
-        alertas = busca_subscriptores(periodo, evento, options["username"])
+        alertas = busca_subscriptores(periodo, evento, options["email"])
         if len(alertas) == 0:
             LOG.info("0 alertas. END")
             return
@@ -134,7 +134,7 @@ def list_notified_day(day):
 
     print("Notifications")
     for user, entities in notifications.items():
-        print("User {} will be notified about {} entities:".format(user.username, len(entities)))
+        print("User {} will be notified about {} entities:".format(user.email, len(entities)))
         for e in entities:
             print("* " + e.name + " (" + e.slug + ")")
     print("Total: {} notifications".format(len(notifications)))

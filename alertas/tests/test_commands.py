@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
@@ -11,6 +11,7 @@ from libreborme.models import Profile
 import os.path
 
 THIS_PATH = os.path.dirname(os.path.abspath(__file__))
+User = get_user_model()
 
 
 class TestCommandCreateAlertasUser(TestCase):
@@ -21,7 +22,7 @@ class TestCommandCreateAlertasUser(TestCase):
         profiles = Profile.objects.all()
         self.assertEqual(len(profiles), 0)
 
-        call_command('create_alertas_user', username="fred",
+        call_command('create_alertas_user',
                      email="fred@localhost", first_name='Fred',
                      last_name="Foo", password="secret")
 
@@ -31,7 +32,6 @@ class TestCommandCreateAlertasUser(TestCase):
         self.assertEqual(len(profiles), 1)
 
         user = User.objects.first()
-        self.assertEqual(user.username, "fred")
         self.assertEqual(user.email, "fred@localhost")
         self.assertEqual(user.first_name, "Fred")
         self.assertEqual(user.last_name, "Foo")
@@ -64,7 +64,7 @@ class TestCommandExpireTest(TestCase):
         users = User.objects.filter(is_active=True)
         self.assertEqual(len(users), 1)
 
-        john = User.objects.get(username="john")
+        john = User.objects.get(email="john@localhost")
         self.assertEqual(john.is_active, False)
 
 

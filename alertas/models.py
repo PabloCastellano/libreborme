@@ -3,9 +3,11 @@ The Follower table stores subscriptions to companies and people.
 The AlertActo table stored subscriptions to events.
 """
 from django.db import models as m
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.conf import settings
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 from borme.models import Company, Person
 
@@ -100,14 +102,62 @@ FOLLOW_CHOICES = (
     ('person', "Persona"),
 )
 
-# TODO: WHAT?
-User._meta.get_field('email').blank = False
+
+# Reference:
+# https://www.fomfus.com/articles/how-to-use-email-as-username-for-django-authentication-removing-the-username
+class UserManager(BaseUserManager):
+    """Define a model manager for User model with no username field."""
+
+    use_in_migrations = True
+
+    def _create_user(self, email, password, **extra_fields):
+        """Create and save a User with the given email and password."""
+        if not email:
+            raise ValueError('The given email must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password=None, **extra_fields):
+        """Create and save a regular User with the given email and password."""
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(email, password, **extra_fields)
+
+    def create_superuser(self, email, password, **extra_fields):
+        """Create and save a SuperUser with the given email and password."""
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self._create_user(email, password, **extra_fields)
+
+
+class User(AbstractUser):
+    """User model."""
+
+    username = None
+    email = m.EmailField(_('email address'), unique=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    objects = UserManager()
+
+    def __str__(self):
+        return self.email
 
 
 class AlertaActo(m.Model):
     """ This table stores event subscriptions by users
     """
-    user = m.ForeignKey(User, on_delete=m.PROTECT)
+    user = m.ForeignKey(get_user_model(), on_delete=m.PROTECT)
     evento = m.CharField(max_length=3, choices=EVENTOS_CHOICES)
     provincia = m.CharField(max_length=100, choices=PROVINCIAS_CHOICES)
     is_enabled = m.BooleanField(default=True)
@@ -123,7 +173,7 @@ class AlertaActo(m.Model):
 class LBInvoice(m.Model):
     """ This table stores event subscriptions by users
     """
-    user = m.ForeignKey(User, on_delete=m.PROTECT)
+    user = m.ForeignKey(get_user_model(), on_delete=m.PROTECT)
     start_date = m.DateTimeField()
     end_date = m.DateTimeField()
     amount = m.FloatField()
@@ -161,7 +211,7 @@ class AlertasConfig(m.Model):
 class AlertaHistory(m.Model):
     """ This table stores the history of alerts sent to users
     """
-    user = m.ForeignKey(User, on_delete=m.PROTECT)
+    user = m.ForeignKey(get_user_model(), on_delete=m.PROTECT)
     type = m.CharField(max_length=10, choices=ALERTAS_CHOICES)
     date = m.DateField()
     provincia = m.CharField(max_length=100, choices=PROVINCIAS_CHOICES, blank=True, null=True)
@@ -199,7 +249,7 @@ class Follower(m.Model):
 
     Users follow companies and people to receive alerts when they are updated
     """
-    user = m.ForeignKey(User, on_delete=m.PROTECT)
+    user = m.ForeignKey(get_user_model(), on_delete=m.PROTECT)
     slug = m.SlugField(max_length=200)
     type = m.CharField(max_length=10, choices=FOLLOW_CHOICES)
     date_created = m.DateField(auto_now_add=True)

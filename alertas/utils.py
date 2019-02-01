@@ -1,5 +1,7 @@
 from django.apps import apps
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 def get_alertas_config(key=None):
@@ -14,10 +16,9 @@ def get_alertas_config(key=None):
         return alertas
 
 
-def create_alertas_user(username, email, password,
+def create_alertas_user(email, password,
                         first_name, last_name):
-    new_user = User.objects.create_user(username=username,
-                                        email=email,
+    new_user = User.objects.create_user(email=email,
                                         password=password,
                                         first_name=first_name,
                                         last_name=last_name)

@@ -40,7 +40,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("periodo")
         parser.add_argument("evento")
-        parser.add_argument("--username", help="Notifications will be sent only to this user", default=None)
+        parser.add_argument("--email", help="Notifications will be sent only to this user", default=None)
         parser.add_argument("--dry-run", action="store_true", default=False, help="Notifications are printed to stdout but not sent")
 
     def handle(self, *args, **options):
@@ -72,7 +72,7 @@ class Command(BaseCommand):
 
         show_warning_date(periodo)
 
-        alertas = busca_subscriptores(periodo, evento, options["username"])
+        alertas = busca_subscriptores(periodo, evento, options["email"])
         if len(alertas) == 0:
             LOG.info("0 alertas. END")
             return
@@ -216,10 +216,10 @@ def busca_empresas(periodo, evento):
     return companies
 
 
-def busca_subscriptores(periodo, evento, username=None):
+def busca_subscriptores(periodo, evento, email=None):
     alertas = AlertaActo.objects.filter(evento=evento, periodicidad=periodo, is_enabled=True, user__is_active=True)
-    if username:
-        alertas = alertas.filter(user__username=username)
+    if email:
+        alertas = alertas.filter(user__email=email)
     LOG.info("Total {} subscribers for event '{}' (use -v 3 for more information).".format(len(alertas), evento))
     for alerta in alertas:
         LOG.debug("#{0}: {1} <{2}>".format(alerta.id, alerta.user.get_full_name(), alerta.user.email))

@@ -14,9 +14,9 @@ class TestAlertasHttp(TestCase):
 
     def setUp(self):
         super(TestAlertasHttp, self).setUp()
-        self.user = create_alertas_user("fred", "fred@localhost", "secret", "Fred", "Foo")
+        self.user = create_alertas_user("fred@localhost", "secret", "Fred", "Foo")
         self.client = Client()
-        self.client.login(username='fred', password='secret')
+        self.client.login(email='fred@localhost', password='secret')
 
     def test_index(self):
         url = reverse('dashboard-index')

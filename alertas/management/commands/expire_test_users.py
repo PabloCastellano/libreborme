@@ -4,11 +4,11 @@
 # 	./manage.py expire_test_users
 #
 # Expire a specific user without having into account date
-# 	./manage.py expire_test_users --username user
+# 	./manage.py expire_test_users --email user@example.com
 #
 from django.core.management.base import BaseCommand, CommandError
 from django.core.mail import send_mail
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
@@ -23,13 +23,15 @@ import logging
 LOG = logging.getLogger(__file__)
 LOG.setLevel(logging.INFO)
 
+User = get_user_model()
+
 
 class Command(BaseCommand):
     help = 'Expire test accounts after X days from creation'
     fixtures = ['alertasconfig.json']
 
     def add_arguments(self, parser):
-        parser.add_argument("--username")
+        parser.add_argument("--email")
         parser.add_argument("--silent", action='store_true', default=False,
                             help="Do not send email to the user")
         parser.add_argument("--dry-run", action='store_true', default=False,
@@ -45,8 +47,8 @@ class Command(BaseCommand):
             ch.setLevel(logging.INFO)
         LOG.addHandler(ch)
 
-        if options['username']:
-            user = User.objects.get(username=options["username"])
+        if options['email']:
+            user = User.objects.get(email=options["email"])
             if user.is_active:
                 self.expire_user(user)
             else:
@@ -65,7 +67,7 @@ class Command(BaseCommand):
 
     def expire_user(self, user):
         LOG.info(
-            "Expiring test user: {0} ({1})".format(user.username, user.email))
+            "Expiring test user: {0} ({1})".format(user.email, user.get_full_name()))
         if not self.options["dry_run"]:
             do_send = not self.options["silent"]
             user.profile.expire_subscription(do_send)

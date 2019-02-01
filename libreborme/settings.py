@@ -188,3 +188,6 @@ MEDIA_ROOT = os.path.join(SITE_ROOT, 'media')
 MAINTENANCE_MODE = False  # Set to True to enable maintenance mode
 MAINTENANCE_MODE_IGNORE_STAFF = True
 MAINTENANCE_MODE_IGNORE_SUPERUSER = True
+
+# user
+AUTH_USER_MODEL = 'alertas.User'

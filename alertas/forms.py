@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from . import models
 from djstripe.models import Customer
 
@@ -33,7 +34,7 @@ class PersonalDataForm(forms.Form):
 
 class PersonalSettingsForm(forms.ModelForm):
     class Meta:
-        model = models.User
+        model = get_user_model()
         fields = ['first_name', 'last_name', 'email']
         labels = {
             "email": "E-Mail",

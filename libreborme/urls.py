@@ -2,7 +2,10 @@ from django.urls import include, path
 from django.views.generic.base import TemplateView
 from django.views.generic import RedirectView
 
+from django_registration.backends.activation.views import RegistrationView
+
 from . import views
+from .forms import LBUserCreationForm
 from .settings import DEBUG
 
 t = TemplateView.as_view
@@ -29,6 +32,7 @@ urlpatterns = [
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
 
     # django-registration
+    path('accounts/register/', RegistrationView.as_view(form_class=LBUserCreationForm), name='django_registration_register'),
     path('accounts/', include('django_registration.backends.activation.urls')),
 
     # Django site authentication urls (login, logout, password management...)

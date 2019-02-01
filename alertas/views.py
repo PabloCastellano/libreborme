@@ -1,6 +1,6 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
@@ -31,6 +31,7 @@ from .utils import get_alertas_config
 
 
 MAX_RESULTS_AJAX = 15
+User = get_user_model()
 
 
 @method_decorator(login_required, name='dispatch')

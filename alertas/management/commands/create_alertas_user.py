@@ -22,7 +22,6 @@ class Command(BaseCommand):
     help = 'Create a new customer account for alertas'
 
     def add_arguments(self, parser):
-        parser.add_argument("--username")
         parser.add_argument("--email")
         parser.add_argument("--first_name")
         parser.add_argument("--last_name")
@@ -36,11 +35,6 @@ class Command(BaseCommand):
         else:
             ch.setLevel(logging.INFO)
         LOG.addHandler(ch)
-
-        if not options['username']:
-            username = input("Please enter username: ")
-        else:
-            username = options["username"]
 
         if not options['email']:
             email = input("Please enter email: ")
@@ -62,4 +56,4 @@ class Command(BaseCommand):
         else:
             password = options["password"]
 
-        create_alertas_user(username, email, password, first_name, last_name)
+        create_alertas_user(email, password, first_name, last_name)

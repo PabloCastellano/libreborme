@@ -1,7 +1,6 @@
 [
 {
     "fields": {
-        "username": "admin",
         "first_name": "",
         "last_name": "",
         "is_active": true,

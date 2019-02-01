@@ -22,7 +22,7 @@ def send_expiration_email(user):
     try:
         validate_email(user.email)
     except ValidationError:
-        LOG.error("User {0} has an invalid email: {1}, no email sent.".format(user.username, user.email))
+        LOG.error("User has an invalid email: {}, no email sent.".format(user.email))
         return
 
     template_name = os.path.join(settings.BASE_DIR, EMAIL_TEMPLATES_PATH, "user_expired_{lang}.txt".format(lang=user.profile.language))
@@ -85,7 +85,7 @@ def send_email_notification(alerta, evento, periodo, companies, today):
                                 [email],
                                 html_message=html_message)
         log_line = "{0} e-mail(s) sent to {1}".format(sent_emails, email)
-        insert_libreborme_log("email", log_line, alerta.user.username)
+        insert_libreborme_log("email", log_line, alerta.user.email)
     except ValidationError:
         LOG.error("User {0} has an invalid notification email: {1}. Nothing was sent to him!".format(alerta.user.get_full_name(), email))
         # Notify user about it. Add to history anyways

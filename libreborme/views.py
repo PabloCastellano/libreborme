@@ -78,18 +78,3 @@ def create_new_invoice(request, customer, subscription, plan, user_input):
     new_invoice.nif = customer.business_vat_id or "TODO"
     return new_invoice
 """
-
-
-# XXX: UNUSED
-def register(request):
-    if request.method == 'POST':
-        form = LBUserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Account created successfully')
-            return redirect('login')
-
-    else:
-        form = LBUserCreationForm()
-
-    return render(request, 'registration/register.html', {'form': form})
