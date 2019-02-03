@@ -1,41 +1,36 @@
+<div class="row">
+    <div class="col-sm-9">
             <div class="table-responsive">
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th>Suscripción</th>
-                    <th>Final del período</th>
-                    <th>Cantidad</th>
+                    <th>Concepto</th>
+                    <th>Comienzo</th>
                     <th>Estado</th>
-                    <th>Período de prueba</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for subscription in subscriptions %}
-                  <tr {% if subscription.status != 'trialing' %}class="table-success"{% else %}class="table-warning"{% endif %}>
+                  <tr>
                     <td>{{ subscription.plan.product.name }}</td>
-                    <td>{{ subscription.current_period_end.date }}</td>
-                    <td>{{ subscription.quantity }}</td>
+                    <td>{{ subscription.start.date }}</td>
                     <td>
                       {% if subscription.status == 'trialing' %}
                       <span class="badge badge-warning">Periodo de prueba</span>
+                      <br/><span style="font-size: 12px;">Hasta el {{ subscription.trial_end.date }}</span>
                       {% elif subscription.status == 'active' %}
                       <span class="badge badge-success">Activo</span>
                       {% else %}
                       <span class="badge badge-danger">{{ subscription.status }}</span>
                       {% endif %}
                     </td>
-                    <td>{% if subscription.trial_end %}
-                            Hasta el {{ subscription.trial_end.date }}
-                        {% else %}
-                            <i class="fas fa-times"></i>
-                        {% endif %}</td>
                     <td>
                       {% if subscription.cancel_at_period_end %}
                       Cancelada el {{ subscription.canceled_at.date }}
                       {% else %}
                         <a href="#">
-                        <button type="button" class="btn btn-primary btn-xs">
+                        <button type="button" class="btn btn-danger btn-xs">
                            <i class="fas fa-trash-alt"></i> Cancelar
                         </button>
                         </a>
@@ -46,3 +41,5 @@
                 </tbody>
               </table>
             </div>
+    </div>
+</div>

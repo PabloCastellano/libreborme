@@ -23,12 +23,8 @@
     {% endif %}
 
     {% if subscriptions %}
-    <h1 class="title-section mt-4">Planes contratados</h1>
-    <div class="row">
-        <div class="col-sm-9">
-            {% include 'alertas/table_active_subscriptions.html' %}
-        </div>
-    </div>
+    <h1 class="title-section mt-4"><span>|</span>Planes contratados</h1>
+    {% include 'alertas/table_active_subscriptions.html' %}
     {% endif %}
 
     <h1 class="title-section mt-4">Lista de Seguimiento</h1>

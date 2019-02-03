@@ -14,6 +14,7 @@
           <h1 class="page-header">API</h1>
 
           {% if subscriptions %}
+            <h1 class="title-section mt-4"><span>|</span>Planes contratados</h1>
             {% include 'alertas/table_active_subscriptions.html' %}
           {% else %}
             <p>Este producto se encuentra en fase Beta. Si quieres probarlo, <a href="#" data-toggle="modal" data-target="#requestAPIKeyModal">solicita una API Key</a>.</p>

@@ -12,16 +12,11 @@
           <h1 class="page-header">Suscripciones</h1>
 
           <p>Mediante el Servicio de Suscripciones recibirás un email cada día con la información mercantil solicitada</p>
+
+          {% if subscriptions %}
           <h1 class="title-section mt-4"><span>|</span>Planes contratados</h1>
-          <div class="row">
-              <div class="col-sm-9">
-                  {% if subscriptions %}
-                  {% include 'alertas/table_active_subscriptions.html' %}
-                  {% else %}
-                  <p>No tienes ningún plan contratado.</p>
-                  {% endif %}
-              </div>
-          </div>
+          {% include 'alertas/table_active_subscriptions.html' %}
+          {% endif %}
 
           <h1 class="title-section mt-4"><span>|</span>Lista de Suscripciones</h1>
 
