@@ -15,7 +15,7 @@ import datetime
 import json
 import stripe
 
-from djstripe.models import Customer, Event, Plan, Subscription
+from djstripe.models import Customer, Event, Plan, Product, Subscription
 from borme.models import Company, Person
 from borme.templatetags.utils import slug, slug2
 from libreborme.models import Profile
@@ -193,6 +193,19 @@ class DashboardHistoryView(TemplateView):
         context = super(DashboardHistoryView, self).get_context_data(**kwargs)
         context['alertas'] = AlertaHistory.objects.filter(user=self.request.user)
         context['active'] = 'history'
+        return context
+
+
+class StripeView(TemplateView):
+    template_name = 'alertas/stripe.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(StripeView, self).get_context_data(**kwargs)
+        context['customers'] = Customer.objects.all()
+        context['plans'] = Plan.objects.all()
+        context['products'] = Product.objects.all()
+        context['subscriptions'] = Subscription.objects.all()
+        context['active'] = 'stripe'
         return context
 
 

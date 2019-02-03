@@ -1,0 +1,140 @@
+{% extends "alertas/base.html" %}
+{% load staticfiles %}
+{% load prettyjson %}
+
+{% block extrastyles %}
+    <link href="{% static "css/dashboard_form.css" %}" rel="stylesheet">
+    {% prettyjson_setup %}
+{% endblock %}
+
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+          <h1 class="page-header">Stripe</h1>
+
+          <h3 class="subtitle-panel">Subscriptions</h3>
+          <div class="row">
+              <div class="col-sm-8">
+          {% if subscriptions %}
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Created</th>
+                          <th>Name</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for sub in subscriptions %}
+                        <tr>
+                          <td>{{ sub.stripe_id }}</td>
+                          <td>{{ sub.created }}</td>
+                          <td>{{ sub.name }}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+          {% else %}
+                  <p>No data</p>
+          {% endif %}
+              </div>
+          </div>
+
+          <h3 class="subtitle-panel">Customers</h3>
+          <div class="row">
+              <div class="col-sm-8">
+          {% if customers %}
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Created</th>
+                          <th>Name</th>
+                          <th>Email</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for cus in customers %}
+                        <tr>
+                          <td>{{ cus.stripe_id }}</td>
+                          <td>{{ cus.created }}</td>
+                          <td>{{ cus.name }}</td>
+                          <td>{{ cus.email }}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+          {% else %}
+                  <p>No data</p>
+          {% endif %}
+              </div>
+          </div>
+
+          <h3 class="subtitle-panel">Plans</h3>
+          <div class="row">
+              <div class="col-sm-8">
+          {% if plans %}
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Created</th>
+                          <th>Nickname</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for plan in plans %}
+                        <tr>
+                          <td>{{ plan.stripe_id }}</td>
+                          <td>{{ plan.created }}</td>
+                          <td>{{ plan.nickname }}</td>
+                          <td>{{ plan.amount }} €</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+          {% else %}
+                  <p>No data</p>
+          {% endif %}
+              </div>
+          </div>
+
+          <h3 class="subtitle-panel">Products</h3>
+          <div class="row">
+              <div class="col-sm-8">
+          {% if products %}
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Created</th>
+                          <th>Name</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for product in products %}
+                        <tr>
+                          <td>{{ product.stripe_id }}</td>
+                          <td>{{ product.created }}</td>
+                          <td>{{ product.name }}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+          {% else %}
+                  <p>No data</p>
+          {% endif %}
+              </div>
+          </div>
+
+</main>
+{% endblock %}

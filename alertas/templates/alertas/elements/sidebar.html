@@ -60,9 +60,15 @@
             </a>
         </li>
         <li class="nav-item">
-                <a class="nav-link{% if active == 'events' %} active{% endif %}" href="{% url 'alertas-events' %}" style="color: #B9021D">
+            <a class="nav-link{% if active == 'events' %} active{% endif %}" href="{% url 'alertas-events' %}" style="color: #B9021D">
                 <img src="{% static 'assets/img/menu-panel/subscripciones.svg' %}" alt="" class="feather feather-home">
                 Eventos
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if active == 'stripe' %} active{% endif %}" href="{% url 'alertas-stripe' %}" style="color: #B9021D">
+                <img src="{% static 'assets/img/menu-panel/subscripciones.svg' %}" alt="" class="feather feather-home">
+                Stripe
             </a>
         </li>
     </ul>

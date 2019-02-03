@@ -62,12 +62,10 @@
                                     <img src="{% static 'assets/img/table/icon2.svg' %}" alt="">
                                 </li>
                                 <li class="list-inline-item">
-                                    <p class="mb-0">
-                                         <a href="{% url "borme-persona" person.slug %}">{{ person.name }}</a>
-                                    </p>
+                                    <a class="mb-0" href="{% url "borme-persona" person.slug %}">{{ person.name }}</a>
                                 </li>
                                 <li class="list-inline-item">
-                                    <button type="button" class="btn btn-secondary">Seguir</button>
+                                    <button type="button" class="btn btn-secondary btn-following ml-3">Seguir</button>
                                 </li>
                             </ul>
                         </div>

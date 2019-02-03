@@ -6,6 +6,7 @@ urlpatterns = [
     path('alertas/', views.MyAccountView.as_view(), name='dashboard-index'),
     path('alertas/profile/', views.ProfileView.as_view(), name='alertas-profile'),
     path('alertas/events/', views.AlertaEventsView.as_view(), name='alertas-events'),
+    path('alertas/stripe/', views.StripeView.as_view(), name='alertas-stripe'),
     path('alertas/service/follow/', views.ServiceAlertaView.as_view(), name='service-follow'),
     path('alertas/service/api/', views.ServiceAPIView.as_view(), name='service-api'),
     path('alertas/service/subscriptions/', views.ServiceSubscriptionView.as_view(), name='service-subscriptions'),
