@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.conf import settings
+from django.core.mail import mail_admins
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.shortcuts import redirect
@@ -32,6 +33,16 @@ from .utils import get_alertas_config
 
 MAX_RESULTS_AJAX = 15
 User = get_user_model()
+
+# http://calculadoraigic.onlinegratis.tv/
+# IVA: 21%
+# IGIC (Canarias): 6,5%
+# IPSI (Ceuta): 8%
+# IPSI (Melilla): 4%
+TAXES = ('IVA', 21.0,
+         'IGIC', 6.5,
+         'IPSI-Ceuta', 8.0,
+         'IPSI-Melilla', 4.0)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -369,6 +380,7 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
             messages.add_message(self.request, messages.WARNING, message)
 
         elif 'cart' in self.request.session:
+            taxname = 'IVA'  # TODO
             plan_name = self.request.session['cart']['name']
             price = self.request.session['cart']['price']
 
@@ -376,9 +388,9 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
             product_text = "{0} ({1})".format(plan.product.name, plan_name)
             context['product'] = {'name': product_text, 'price': price}
             context['total_with_tax'] = price
-            context['total_price'] = round(price / 1.21, 2)
+            context['total_price'] = round(price / (1 + TAXES['taxname']), 2)
             context['tax_amount'] = round(context['total_with_tax'] - context['total_price'], 2)
-            context['tax_percentage'] = 21
+            context['tax_percentage'] = TAXES['taxname']
 
             if context["customer"]:
                 cards = context['customer'].sources.order_by('-exp_year', '-exp_month')
@@ -517,6 +529,14 @@ def add_card(request):
     return redirect(reverse('alertas-payment'))
 
 
+def send_email_new_subscription(user):
+    full_name = user.get_full_name()
+    today = now = datetime.datetime.now()
+    now = datetime.datetime.now()
+    mail_admins('Nueva suscripción ({})'.format(full_name),
+                'Stripe ha suscrito al usuario {}'.format(user.get_full_name()))
+
+
 @login_required
 def checkout_existing_card(request):
     if request.method == "POST":
@@ -537,6 +557,7 @@ def checkout_existing_card(request):
         # tax_percent se suma al precio
         messages.add_message(request, messages.SUCCESS,
                              'Pago realizado con éxito. Tenga en cuenta que la activación del servicio puede tardar unos minutos.')
+        send_email_new_subscription(request.user)
         del request.session['cart']
         return redirect("dashboard-index")
 
@@ -560,7 +581,8 @@ def checkout(request):
 
         nickname = request.session['cart']['name']
         plan = Plan.objects.get(nickname=nickname)
-        tax_percent = 21.0  # TODO: tax per province - limited to Spain
+        taxname = 'IVA'  # TODO: tax per province - limited to Spain
+        tax_percent = TAXES['taxname']
         # next_first_timestamp = utils.date_next_first(timestamp=True)
 
         token = request.POST.get("stripeToken")
@@ -601,7 +623,8 @@ def checkout(request):
             # TODO
             # new_invoice.save()
             messages.add_message(request, messages.SUCCESS,
-                                 'Pago realizado con éxito')
+                                 'Pago realizado con éxito. Tenga en cuenta que la activación del servicio puede tardar unos minutos.')
+            send_email_new_subscription(request.user)
             del request.session['cart']
             return redirect("dashboard-index")
 

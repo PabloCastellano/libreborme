@@ -29,7 +29,7 @@
       {% endcomment %}
 
         {% if invoices %}
-          <p>Tienes {{ invoices | length }} facturas.</p>
+          <p>Tienes {{ invoices | length }} factura{{ invoices|length|pluralize }}.</p>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
