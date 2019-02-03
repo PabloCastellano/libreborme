@@ -471,10 +471,8 @@ def add_to_cart(request, product):
             plan__nickname=product, customer=customer)
 
     if existing_subscriptions:
-        # TODO: return to correct page
         messages.add_message(request, messages.WARNING,
                              'Ya tienes una suscripción activa')
-        return redirect(reverse('alertas-cart'))
 
     price = float(plan.amount)  # Decimal
     product = {'name': product, 'price': price}
