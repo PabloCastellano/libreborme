@@ -2,25 +2,25 @@
 <div class="sidebar-sticky">
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link{% if active == 'dashboard' %} active{% endif %}" href="{% url 'dashboard-index' %}">
+            <a class="nav-link{% if active == 'dashboard' %} active font-weight-bold{% endif %}" href="{% url 'dashboard-index' %}">
                 <img src="{% static 'assets/img/menu-panel/cuenta.svg' %}" alt="" class="feather feather-home">
                 Mi cuenta
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{% if active == 'profile' %} active{% endif %}" href="{% url 'alertas-profile' %}">
+            <a class="nav-link{% if active == 'profile' %} active font-weight-bold{% endif %}" href="{% url 'alertas-profile' %}">
                 <img src="{% static 'assets/img/menu-panel/cuenta.svg' %}" alt="" class="feather feather-home">
                 Mi perfil
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{% if active == 'billing' %} active{% endif %}" href="{% url 'alertas-billing' %}">
+            <a class="nav-link{% if active == 'billing' %} active font-weight-bold{% endif %}" href="{% url 'alertas-billing' %}">
                 <img src="{% static 'assets/img/menu-panel/facturas.svg' %}" alt="" class="feather feather-home">
                 Facturas
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{% if active == 'payment' %} active{% endif %}" href="{% url 'alertas-payment' %}">
+            <a class="nav-link{% if active == 'payment' %} active font-weight-bold{% endif %}" href="{% url 'alertas-payment' %}">
                 <img src="{% static 'assets/img/menu-panel/metodo_pago.svg' %}" alt="" class="feather feather-home">
                 Métodos de pago
             </a>
@@ -32,19 +32,19 @@
     </h6>
     <ul class="nav flex-column mb-2">
         <li class="nav-item">
-            <a class="nav-link{% if active == 'alertas' %} active{% endif %}" href="{% url 'service-follow' %}">
+            <a class="nav-link{% if active == 'alertas' %} active font-weight-bold{% endif %}" href="{% url 'service-follow' %}">
                 <img src="{% static 'assets/img/menu-panel/seguimiento.svg' %}" alt="" class="feather feather-home">
                 Seguimiento
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{% if active == 'subscriptions' %} active{% endif %}" href="{% url 'service-subscriptions' %}">
+            <a class="nav-link{% if active == 'subscriptions' %} active font-weight-bold{% endif %}" href="{% url 'service-subscriptions' %}">
                 <img src="{% static 'assets/img/menu-panel/subscripciones.svg' %}" alt="" class="feather feather-home">
                 Subscripciones
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{% if active == 'api' %} active{% endif %}" href="{% url 'service-api' %}">
+            <a class="nav-link{% if active == 'api' %} active font-weight-bold{% endif %}" href="{% url 'service-api' %}">
                 <img src="{% static 'assets/img/menu-panel/api.svg' %}" alt="" class="feather feather-home">
                 API
             </a>
@@ -54,19 +54,19 @@
     {% if user.is_staff %}
     <ul class="nav flex-column mb-2">
         <li class="nav-item">
-            <a class="nav-link{% if active == 'history' %} active{% endif %}" href="{% url 'alertas-history' %}" style="color: #B9021D">
+            <a class="nav-link{% if active == 'history' %} active font-weight-bold{% endif %}" href="{% url 'alertas-history' %}" style="color: #B9021D">
                 <img src="{% static 'assets/img/menu-panel/seguimiento.svg' %}" alt="" class="feather feather-home">
                 Historial de alertas
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{% if active == 'events' %} active{% endif %}" href="{% url 'alertas-events' %}" style="color: #B9021D">
+            <a class="nav-link{% if active == 'events' %} active font-weight-bold{% endif %}" href="{% url 'alertas-events' %}" style="color: #B9021D">
                 <img src="{% static 'assets/img/menu-panel/subscripciones.svg' %}" alt="" class="feather feather-home">
                 Eventos
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link{% if active == 'stripe' %} active{% endif %}" href="{% url 'alertas-stripe' %}" style="color: #B9021D">
+            <a class="nav-link{% if active == 'stripe' %} active font-weight-bold{% endif %}" href="{% url 'alertas-stripe' %}" style="color: #B9021D">
                 <img src="{% static 'assets/img/menu-panel/subscripciones.svg' %}" alt="" class="feather feather-home">
                 Stripe
             </a>

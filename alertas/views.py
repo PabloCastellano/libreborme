@@ -556,7 +556,7 @@ def checkout(request):
     if request.method == "POST":
 
         # TODO: Log user created
-        customer = Customer.get_or_create(subscriber=request.user)
+        customer, _ = Customer.get_or_create(subscriber=request.user)
 
         nickname = request.session['cart']['name']
         plan = Plan.objects.get(nickname=nickname)
