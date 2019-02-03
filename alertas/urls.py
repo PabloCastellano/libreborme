@@ -23,6 +23,7 @@ urlpatterns = [
     path('alertas/cart/removecart/', views.remove_cart, name='alertas-removecart'),
     path('alertas/settings/update/billing/', views.settings_update_billing, name='alertas-settings-billing'),
     path('alertas/history/download/<id>/', views.download_alerta_history_csv, name='alerta-history-download'),
+    path('alertas/termsofservice/', views.TermsOfServiceView.as_view(), name='alertas-tos'),
     path('alertas/<id>/', views.AlertaDetailView.as_view(), name='alertas-detail'),
 
     path('old/alertas/', old_views.MyAccountView.as_view(), name='old-dashboard-index'),

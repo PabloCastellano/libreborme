@@ -15,11 +15,7 @@
 <img alt="cc by logo" class="footerlogo" src="{% static "by_compact.png" %}">
 
 aira-describedby="" ?
-<input id=id_username maxlength="254" name="username" class="form-control" aria-describedby="emailHelp" placeholder="Nombre de usuario">
 
-Registrarme:
-        <li class="list-inline-item"><a href="{% url 'django_registration_register' %}"><button type="button" class="btn btn-secondary">Registrarme</button></a></li>
-Modal registro
 {% endcomment %}
 
 <!-- FOOTER -->
@@ -120,7 +116,7 @@ Modal registro
                             <form method="POST" action="{% url 'login' %}">
                                 {% csrf_token %}
                                 <div class="form-group">
-                                    <input type="email" class="form-control" id="id_email" maxlength="254" name="email" placeholder="Correo electrónico" required>
+                                    <input type="email" class="form-control" id="id_username" maxlength="254" name="username" placeholder="Correo electrónico" required>
                                 </div>
                                 <div class="form-group">
                                     <input type="password" class="form-control" id="id_password" name="password" placeholder="Contraseña" required>
@@ -128,7 +124,7 @@ Modal registro
                                 <input type="hidden" name="next" value="" />
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <button type="submit" class="btn btn2 btn-primary2 btn-transparent w-100 mb-2">Entrar</button>
+                                        <input type="submit" class="btn btn2 btn-primary2 btn-transparent w-100 mb-2" name="login" value="Login">
                                     </div>
                                     <div class="col-md-6">
                                         <button type="button" class="btn btn2 btn-secondary w-100 mb-2" data-dismiss="modal">Cancelar</button>

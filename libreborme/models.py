@@ -34,7 +34,6 @@ class Profile(m.Model):
                            default='es')
 
     # Subscriptions service
-    has_tried_subscriptions = m.BooleanField(default=False)
     notification_method = m.CharField(max_length=10,
                                       choices=NOTIFICATION_CHOICES,
                                       default='email')
@@ -59,6 +58,11 @@ class Profile(m.Model):
     # Newsletter
     newsletter_promotions = m.BooleanField(default=False)
     newsletter_features = m.BooleanField(default=False)
+
+    # Servicios
+    # User has contacted support or paid for a plan
+    has_api_enabled = m.BooleanField(default=False)
+    has_tried_subscriptions = m.BooleanField(default=False)
 
     def is_complete(self):
         return all([self.user.first_name, self.user.last_name,

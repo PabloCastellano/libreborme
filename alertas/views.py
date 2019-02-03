@@ -87,7 +87,6 @@ class MyAccountView(CustomerMixin, TemplateView):
         context['n_alertas'] = context['count_a'] + context['count_f']
 
         aconfig = get_alertas_config()
-
         context['free_follows'] = aconfig['max_alertas_follower_free']
 
         """
@@ -171,6 +170,16 @@ class DashboardSupportView(TemplateView):
         n_alertas += Follower.objects.filter(user=self.request.user).count()
         context['n_alertas'] = n_alertas
         context['active'] = 'ayuda'
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class TermsOfServiceView(TemplateView):
+    template_name = 'alertas/terms_of_service.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TermsOfServiceView, self).get_context_data(**kwargs)
+        context['active'] = 'tos'
         return context
 
 
@@ -289,13 +298,15 @@ class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
 
         if context['customer']:
             context["subscriptions"] = Subscription.objects.filter(
-                    plan__nickname__in=(settings.SUBSCRIPTION_MONTH_PLAN, settings.SUBSCRIPTION_YEAR_PLAN),
+                    plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN),
                     customer=context["customer"])
 
-        plan_month = Plan.objects.get(nickname=settings.SUBSCRIPTION_MONTH_PLAN)
-        context["plan_month"] = plan_month
-        plan_year = Plan.objects.get(nickname=settings.SUBSCRIPTION_YEAR_PLAN)
-        context["plan_year"] = plan_year
+        plan_month_one = Plan.objects.get(nickname=settings.SUBSCRIPTION_MONTH_ONE_PLAN)
+        context["plan_month_one"] = plan_month_one
+        plan_month_full = Plan.objects.get(nickname=settings.SUBSCRIPTION_MONTH_FULL_PLAN)
+        context["plan_month_full"] = plan_month_full
+        # plan_year = Plan.objects.get(nickname=settings.SUBSCRIPTION_YEAR_PLAN)
+        # context["plan_year"] = plan_year
 
         return context
 
@@ -326,7 +337,7 @@ class ServiceAlertaView(CustomerMixin, StripeMixin, TemplateView):
                     plan__nickname=settings.ALERTS_YEAR_PLAN,
                     customer=context["customer"])
 
-        context["plan_year"] = Plan.objects.get(nickname=settings.ALERTS_YEAR_PLAN)
+        # context["plan_year"] = Plan.objects.get(nickname=settings.ALERTS_YEAR_PLAN)
         return context
 
 
@@ -337,7 +348,8 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CartView, self).get_context_data(**kwargs)
 
-        context['user_complete'] = self.request.user.profile.is_complete()
+        profile = self.request.user.profile
+        context['user_complete'] = profile.is_complete()
         if not context['user_complete']:
             url = reverse('alertas-profile')
             message = 'Necesitas completar <a href="{}">tu perfil</a> antes para poder contratar algún servicio.'.format(url)
@@ -347,9 +359,9 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
             plan_name = self.request.session['cart']['name']
             price = self.request.session['cart']['price']
 
-            # TODO: Get product from plan
-
-            context['product'] = {'name': plan_name, 'price': price}
+            plan = Plan.objects.get(nickname=plan_name)
+            product_text = "{0} ({1})".format(plan.product.name, plan_name)
+            context['product'] = {'name': product_text, 'price': price}
             context['total_with_tax'] = price
             context['total_price'] = round(price / 1.21, 2)
             context['tax_amount'] = round(context['total_with_tax'] - context['total_price'], 2)
@@ -360,6 +372,12 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
             else:
                 cards = None
             context["cards"] = cards
+
+            if plan_name in ('subscription_month_one', 'subscription_month_full', 'subscription_year') and not profile.has_tried_subscriptions:
+                context['show_subscription_trial'] = True
+
+            aconfig = get_alertas_config()
+            context['service_subscription_trial_day'] = aconfig['service_subscription_trial_day']
 
         context['active'] = 'cart'
         return context
@@ -374,15 +392,18 @@ class ServiceAPIView(CustomerMixin, TemplateView):
         context['active'] = 'api'
 
         context["plan_month"] = Plan.objects.get(nickname=settings.API_MONTH_PLAN)
-        context["plan_year"] = Plan.objects.get(nickname=settings.API_YEAR_PLAN)
+        # context["plan_year"] = Plan.objects.get(nickname=settings.API_YEAR_PLAN)
 
         if context["customer"]:
             context["subscriptions"] = Subscription.objects.filter(
                     plan__nickname__in=(settings.API_MONTH_PLAN, settings.API_YEAR_PLAN),
                     customer=context["customer"])
 
-        # TODO: api enabled if contated support or paid
-        context["api_enabled"] = "yes"
+        aconfig = get_alertas_config()
+        context['service_api_free_req_day'] = aconfig['service_api_free_req_day']
+        context['service_api_advanced_req_day'] = aconfig['service_api_advanced_req_day']
+
+        context["api_enabled"] = self.request.user.profile.has_api_enabled
         return context
 
 
@@ -424,11 +445,6 @@ def add_to_cart(request, product):
     existing_subscriptions = Subscription.objects.filter(
             plan__nickname=product, customer=customer)
 
-    # TODO: En vez de message de una vez, mostrar permanentemente en el cart
-    if product in ('subscription_month', 'subscription_year') and not profile.has_tried_subscriptions:
-        messages.add_message(request, messages.WARNING,
-                             'Tienes un periodo de prueba de 7 días para este servicio')
-
     if existing_subscriptions:
         # TODO: return to correct page
         messages.add_message(request, messages.WARNING,
@@ -441,17 +457,16 @@ def add_to_cart(request, product):
     return redirect(reverse('alertas-cart'))
 
 
-# Salvar en Profile ne vez de Customer?
 @login_required
 def settings_update_billing(request):
     if request.method == 'POST':
-        customer = Customer.objects.get(subscriber=request.user)
         user = User.objects.get(pk=request.user.id)
         profile = user.profile
 
         # Process forms
 
         # TODO: Update business_vat_id in Customer model
+        # TODO: Salvar en Profile ne vez de Customer?
 
         form = forms.PersonalDataForm(request.POST)
         if form.is_valid():
@@ -587,14 +602,16 @@ def set_default_card(request):
     if request.method == 'POST':
         card_id = request.GET.get("cardId")
 
-        # TODO: create customer if doesn't exist
-        customer = Customer.objects.get(subscriber=request.user)
-        customer.default_source_id = card_id
         try:
+            customer = Customer.objects.get(subscriber=request.user)
+            customer.default_source_id = card_id
             customer.save()
             messages.add_message(request, messages.SUCCESS,
                                  'Tarjeta modificada correctamente')
             return HttpResponse("Success", status=200)
+        except Customer.DoesNotExist:
+            # TODO: create customer if doesn't exist
+            pass
         except Exception:
             print("Could not set default card " + card_id + " for customer " + customer.stripe_id)
             return HttpResponse("Fail", status=400)

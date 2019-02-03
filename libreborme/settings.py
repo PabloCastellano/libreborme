@@ -176,7 +176,8 @@ STRIPE_TEST_SECRET_KEY = STRIPE_SECRET_KEY
 STRIPE_LIVE_MODE = False  # Change to True in production
 
 ALERTS_YEAR_PLAN = "follow100"
-SUBSCRIPTION_MONTH_PLAN = "subscription_month"
+SUBSCRIPTION_MONTH_ONE_PLAN = "subscription_month_one"
+SUBSCRIPTION_MONTH_FULL_PLAN = "subscription_month_full"
 SUBSCRIPTION_YEAR_PLAN = "subscription_year"
 API_MONTH_PLAN = "api_month"
 API_YEAR_PLAN = "api_year"

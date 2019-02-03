@@ -18,21 +18,10 @@
           {% else %}
             <p>Este producto se encuentra en fase Beta. Si quieres probarlo, <a href="#" data-toggle="modal" data-target="#requestAPIKeyModal">solicita una API Key</a>.</p>
             <h1 class="title-section"><span>|</span>Suscripciones</h1>
-            <p>Tienes 30 consultas gratis al mes para probar la API de LibreBORME</p>
+            <p>Tienes {{ service_api_free_req_day }} consultas gratis al mes para probar la API de LibreBORME</p>
 
             {% include 'alertas/pricing_api_table.html' %}
 
-            <h1 class="title-section"><span>|</span>¿Existe un periodo de prueba para los planes de pago?</h1>
-            <p>Al actualizar tu plan para Alertas de Actos Mercantiles, tu cuenta tiene un período de prueba gratuito de 7 días. Si cancelas el plan antes del período de prueba, no tendrá ningún coste para ti.</p>
-
-            <p>¿Trabajas en la investigación o en un proyecto sin ánimo de lucro? Contáctanos</p>
-            <p>¿Necesitas que integremos la API con tu propio sistema? Contáctanos</p>
-
-            <h1 class="title-section"><span>|</span>When will you be billed?</h1>
-            <p>You will be billed immediately when you subscribe a plan. Subsequently you will be billed every 30 days.</p>
-
-            <h1 class="title-section"><span>|</span>What do I get when I upgrade?</h1>
-            <p>Your API key is authorized to access the API functions and credits as per your chosen plan are deposited in your credit balance.</p>
 
           {% endif %}
 

@@ -33,7 +33,7 @@ css
     <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
     {% endfor %}
 
-    <section style="padding: 20px 0;">
+    <section class="panel">
         <div class="row">
             <div class="col-md-12">
                 <h1 class="title-section">
@@ -103,9 +103,12 @@ css
 
           {% else %}
             <p class="description mt-4">No tienes ningún servicio contratado actualmente.</p>
-            <p class="description">Sin embargo, puedes probar el servicio de <a href="{% url 'service-follow' %}">Seguimiento</a> de forma gratuita (limitado a 3? alertas).</p>
+            <p class="description">Sin embargo, puedes probar el servicio de <a href="{% url 'service-follow' %}">Seguimiento</a> de forma gratuita (limitado a {{ free_follows }} alertas).</p>
             <p class="description">Puedes obtener más información sobre los servicios que ofrecemos en la página de <a href="{% url 'services' %}" target="_blank">servicios</a>.</p>
           {% endif %}
+          <div class="mt-5">
+              <a class="color-red-dark" href="#" role="button"><i class="far fa-trash-alt"></i> Cerrar mi cuenta</a>
+          </div>
             </div>
         </div>
     </section>

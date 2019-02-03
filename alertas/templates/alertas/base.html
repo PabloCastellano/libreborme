@@ -69,7 +69,6 @@
 
     {# <script>window.jQuery || document.write('<script src="{% static 'assets/js/vendor/jquery-slim.min.js' %}"><\/script>')</script> #}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="{% static 'assets/js/vendor/popper.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
     <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
     <script src="{% static 'assets/js/vendor/holder.min.js' %}"></script>
@@ -77,6 +76,7 @@
     <script src="https://js.stripe.com/v3/"></script>
 
     <script>
+        {% if not debug %}
         $(document).ready(function() {
             var advice = $("#headerCookies");
             var closeButton = advice.find(".cookies-header-close");
@@ -85,6 +85,7 @@
             if (cookie === undefined) {
                 advice.show();
                 closeButton.click(function(e){
+                    console.log('a');
                     var date = new Date();
                     date.setTime(date.getTime() + (60 * 60 * 24 * 365 * 10 * 1000));
                     Cookies.set("accept", "yes", { expires: date, path: "/", domain: ".{{DOMAIN}}" });
@@ -94,6 +95,7 @@
                 });
             }
         });
+        {% endif %}
     </script>
     {% block extrajs %}{% endblock %}
 

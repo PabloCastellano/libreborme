@@ -17,12 +17,13 @@
                     <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Un tipo de notificación</p>
                     <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Una provincia</p>
                 </div>
-                <a href="{% url 'buy-product' product=plan_month.nickname %}">
+                <a href="{% url 'buy-product' product=plan_month_one.nickname %}">
                     <div class="card-footer text-center">
                         <p>Suscribirme</p>
                     </div>
                 </a>
             </div>
+            {% comment %}
             <div class="card">
                 <div class="card-body">
                     <h4>Suscripción anual</h4>
@@ -39,6 +40,7 @@
                     </div>
                 </a>
             </div>
+            {% endcomment %}
             <div class="card">
                 <div class="card-body">
                     <h4>Suscripción mensual</h4>
@@ -48,7 +50,7 @@
                     <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Un tipo de notificación</p>
                     <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Todas las provincia</p>
                 </div>
-                <a href="{% url 'buy-product' product=plan_month.nickname %}">
+                <a href="{% url 'buy-product' product=plan_month_full.nickname %}">
                     <div class="card-footer text-center">
                         <p>Suscribirme</p>
                     </div>

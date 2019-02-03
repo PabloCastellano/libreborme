@@ -20,10 +20,14 @@
                 <li class="nav-item">
                     <a class="nav-link{% if active == 'ayuda' %} active{% endif %}" href="{% url 'alertas-ayuda' %}">Soporte</a>
                 </li>
-                <li class="nav-item dropdown menu-panel-user">
+                <li class="nav-item dropdown menu-panel-user d-none d-md-block">
                     <a class="nav-link" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         <img src="{% static 'assets/img/menu-panel/cuenta.svg' %}" alt="" class="img-navbar-account">
-                        <span>{{ user }}</span>
+                        {% if user.get_full_name %}
+                        <span>{{ user.get_full_name }}</span>
+                        {% else %}
+                        <span>{{ user.email }}</span>
+                        {% endif %}
                     </a>
                     {% if user.is_authenticated %}
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">

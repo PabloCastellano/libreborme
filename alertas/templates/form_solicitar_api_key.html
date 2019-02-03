@@ -1,22 +1,42 @@
-        <div class="modal fade" id="requestAPIKeyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Solicitar API Key</h4>
+<div class="modal fade" id="requestAPIKeyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Solicitar API Key</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="container">
+              <div class="row justify-content-md-center">
+                  <div class="col-md-10">
+                      <form method="post" action="#">
+                          {% csrf_token %}
+                          <p>Por favor complete los siguientes campos</p>
+                          <div class="form-group">
+                              <input type="text" class="form-control" id="id_reason" maxlength="254" name="reason" placeholder="Motivo" required>
+                          </div>
+                          <div class="form-group">
+                              <input type="text" class="form-control" id="id_sector" maxlength="254" name="sector" placeholder="Sector" required>
+                          </div>
+                          <div class="form-group">
+                              <input type="text" class="form-control" id="id_requests" maxlength="254" name="requests" placeholder="Número estimado de consultas diarias" required>
+                          </div>
+                          <div class="form-check mb-3">
+                              <input class="form-check-input" type="checkbox" name="accept_tos" id="accept_tos" required />
+                              <label class="form-check-label" for="accept_tos">
+                                Acepto las <a target="_blank" href="{% url 'alertas-tos' %}">Condiciones de Uso (review)</a>.
+                              </label>
+                          </div>
+                      </form>
+                  </div>
               </div>
-              <div class="modal-body">
-                <p>Por favor complete los siguientes campos</p>
-                <ul>
-                  <li>Nombre</li>
-                  <li>Motivo</li>
-                  <li>Sector</li>
-                  <li>Número de consultas diaras estimadas</li>
-                </ul>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Solicitar API Key</button>
-              </div>
-            </div>
           </div>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Solicitar API Key</button>
+      </div>
+    </div>
+  </div>
+</div>

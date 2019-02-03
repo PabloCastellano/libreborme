@@ -3,16 +3,17 @@ import os
 
 import stripe
 
-stripe.log = 'debug'
+# stripe.log = 'debug'
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY",
                            "sk_test_eVEoxiTuoWOlSw104llgXvcs")
 
-# Definition: 20181015
+# Definition: 20190103
 ALERTS_YEAR_PLAN = "follow100"
-SUBSCRIPTION_MONTH_PLAN = "subscription_month"
-SUBSCRIPTION_YEAR_PLAN = "subscription_year"
+SUBSCRIPTION_MONTH_ONE_PLAN = "subscription_month_one"
+SUBSCRIPTION_MONTH_FULL_PLAN = "subscription_month_full"
+# SUBSCRIPTION_YEAR_PLAN = "subscription_year"
 API_MONTH_PLAN = "api_month"
-API_YEAR_PLAN = "api_year"
+# API_YEAR_PLAN = "api_year"
 TRIAL_PERIOD_DAYS = 7
 
 
@@ -25,6 +26,7 @@ def create_follow100_product_and_plan():
     product.save()
     print("Created product '{}' ({})".format(product.name, product.id))
 
+    """
     plan = stripe.Plan.create(
         nickname=ALERTS_YEAR_PLAN,
         product=product.id,
@@ -33,6 +35,7 @@ def create_follow100_product_and_plan():
         interval='year'
     )
     print("Created plan '{}' ({})".format(plan.nickname, plan.id))
+    """
 
 
 def create_subscription_product_and_plans():
@@ -47,15 +50,26 @@ def create_subscription_product_and_plans():
     print("Created product '{}' ({})".format(product.name, product.id))
 
     plan = stripe.Plan.create(
-        nickname=SUBSCRIPTION_MONTH_PLAN,
+        nickname=SUBSCRIPTION_MONTH_ONE_PLAN,
         product=product.id,
-        amount=3000,
+        amount=5999,
         currency='eur',
         interval='month',
         trial_period_days=TRIAL_PERIOD_DAYS
     )
     print("Created plan '{}' ({})".format(plan.nickname, plan.id))
 
+    plan = stripe.Plan.create(
+        nickname=SUBSCRIPTION_MONTH_FULL_PLAN,
+        product=product.id,
+        amount=17999,
+        currency='eur',
+        interval='month',
+        trial_period_days=TRIAL_PERIOD_DAYS
+    )
+    print("Created plan '{}' ({})".format(plan.nickname, plan.id))
+
+    """
     plan = stripe.Plan.create(
         nickname=SUBSCRIPTION_YEAR_PLAN,
         product=product.id,
@@ -65,6 +79,7 @@ def create_subscription_product_and_plans():
         trial_period_days=TRIAL_PERIOD_DAYS
     )
     print("Created plan '{}' ({})".format(plan.nickname, plan.id))
+    """
 
 
 def create_api_product_and_plans():
@@ -79,12 +94,13 @@ def create_api_product_and_plans():
     plan = stripe.Plan.create(
         nickname=API_MONTH_PLAN,
         product=product.id,
-        amount=8000,
+        amount=7999,
         currency='eur',
         interval='month',
     )
     print("Created plan '{}' ({})".format(plan.nickname, plan.id))
 
+    """
     plan = stripe.Plan.create(
         nickname=API_YEAR_PLAN,
         product=product.id,
@@ -93,6 +109,7 @@ def create_api_product_and_plans():
         interval='year'
     )
     print("Created plan '{}' ({})".format(plan.nickname, plan.id))
+    """
 
 
 # UNUSED

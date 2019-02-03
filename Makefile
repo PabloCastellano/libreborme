@@ -30,6 +30,7 @@ recreate_db2:
 		psql -h localhost -U libreborme < clean_dump.sql
 
 sync_stripe:
+		# Note: this creates Customers from existing Users in database
 		./manage.py djstripe_sync_customers
 		./manage.py djstripe_sync_plans_from_stripe
 		# from djstripe.models import Product; for product in Product.api_list(): Product.sync_from_stripe_data(product)

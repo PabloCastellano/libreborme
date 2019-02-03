@@ -25,11 +25,12 @@ class AlertaActoModelForm(forms.ModelForm):
 
 
 class PersonalDataForm(forms.Form):
+    # widget=forms.TextInput(attrs={'placeholder': '+34xxxxxxxxx'})
     # date_joined = forms.CharField(label="Fecha de alta", required=False, widget=forms.TextInput(attrs={'disabled': True}))
     # email = forms.CharField(label="E-Mail", required=False, widget=forms.TextInput(attrs={'disabled': True}))
     first_name = forms.CharField(label="Nombre", required=False)
     last_name = forms.CharField(label="Apellidos", required=False)
-    home_phone = forms.CharField(label="Teléfono", required=False, widget=forms.TextInput(attrs={'placeholder': '+34xxxxxxxxx'}))
+    home_phone = forms.CharField(label="Teléfono", required=False)
 
 
 class PersonalSettingsForm(forms.ModelForm):

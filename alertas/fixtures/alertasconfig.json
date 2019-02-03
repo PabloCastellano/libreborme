@@ -33,5 +33,26 @@
     "fields": {
         "value": "100"
     }
+},
+{
+    "model": "alertas.alertasconfig",
+    "pk": "service_api_free_req_day",
+    "fields": {
+        "value": "100"
+    }
+},
+{
+    "model": "alertas.alertasconfig",
+    "pk": "service_api_advanced_req_day",
+    "fields": {
+        "value": "1000"
+    }
+},
+{
+    "model": "alertas.alertasconfig",
+    "pk": "service_subscription_trial_day",
+    "fields": {
+        "value": "7"
+    }
 }
 ]
