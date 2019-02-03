@@ -39,10 +39,12 @@ User = get_user_model()
 # IGIC (Canarias): 6,5%
 # IPSI (Ceuta): 8%
 # IPSI (Melilla): 4%
-TAXES = ('IVA', 21.0,
-         'IGIC', 6.5,
-         'IPSI-Ceuta', 8.0,
-         'IPSI-Melilla', 4.0)
+TAXES = {
+    'IVA': 21.0,
+    'IGIC': 6.5,
+    'IPSI-Ceuta': 8.0,
+    'IPSI-Melilla': 4.0
+}
 
 
 @method_decorator(login_required, name='dispatch')
@@ -388,9 +390,9 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
             product_text = "{0} ({1})".format(plan.product.name, plan_name)
             context['product'] = {'name': product_text, 'price': price}
             context['total_with_tax'] = price
-            context['total_price'] = round(price / (1 + TAXES['taxname']), 2)
+            context['total_price'] = round(price / (1 + TAXES[taxname]), 2)
             context['tax_amount'] = round(context['total_with_tax'] - context['total_price'], 2)
-            context['tax_percentage'] = TAXES['taxname']
+            context['tax_percentage'] = TAXES[taxname]
 
             if context["customer"]:
                 cards = context['customer'].sources.order_by('-exp_year', '-exp_month')
@@ -580,7 +582,7 @@ def checkout(request):
         nickname = request.session['cart']['name']
         plan = Plan.objects.get(nickname=nickname)
         taxname = 'IVA'  # TODO: tax per province - limited to Spain
-        tax_percent = TAXES['taxname']
+        tax_percent = TAXES[taxname]
         # next_first_timestamp = utils.date_next_first(timestamp=True)
 
         token = request.POST.get("stripeToken")
