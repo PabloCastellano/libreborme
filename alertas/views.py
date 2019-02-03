@@ -531,10 +531,15 @@ def add_card(request):
 
 def send_email_new_subscription(user):
     full_name = user.get_full_name()
-    today = now = datetime.datetime.now()
     now = datetime.datetime.now()
     mail_admins('Nueva suscripción ({})'.format(full_name),
-                'Stripe ha suscrito al usuario {}'.format(user.get_full_name()))
+                'En {} Stripe ha suscrito al usuario {}'.format(now, full_name))
+
+
+def mark_user_has_tried_subscriptions(user):
+    if not user.profile.has_tried_subscriptions:
+        user.profile.has_tried_subscriptions = True
+        user.profile.save()
 
 
 @login_required
@@ -558,6 +563,10 @@ def checkout_existing_card(request):
         messages.add_message(request, messages.SUCCESS,
                              'Pago realizado con éxito. Tenga en cuenta que la activación del servicio puede tardar unos minutos.')
         send_email_new_subscription(request.user)
+
+        if nickname in (settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN):
+            mark_user_has_tried_subscriptions(request.user)
+
         del request.session['cart']
         return redirect("dashboard-index")
 
@@ -575,12 +584,11 @@ def checkout(request):
     # TODO: no salvar el metodo de pago si no se pide expresamente
     # TODO: Guardar si ya ha hecho el periodo de prueba
     if request.method == "POST":
-
+        nickname = request.session['cart']['name']
+        plan = Plan.objects.get(nickname=nickname)
         # TODO: Log user created
         customer, _ = Customer.get_or_create(subscriber=request.user)
 
-        nickname = request.session['cart']['name']
-        plan = Plan.objects.get(nickname=nickname)
         taxname = 'IVA'  # TODO: tax per province - limited to Spain
         tax_percent = TAXES[taxname]
         # next_first_timestamp = utils.date_next_first(timestamp=True)
@@ -625,6 +633,10 @@ def checkout(request):
             messages.add_message(request, messages.SUCCESS,
                                  'Pago realizado con éxito. Tenga en cuenta que la activación del servicio puede tardar unos minutos.')
             send_email_new_subscription(request.user)
+
+            if nickname in (settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN):
+                mark_user_has_tried_subscriptions(request.user)
+
             del request.session['cart']
             return redirect("dashboard-index")
 
