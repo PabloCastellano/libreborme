@@ -17,6 +17,8 @@ API_MONTH_PLAN = "api_month"
 TRIAL_PERIOD_DAYS = 7
 
 
+# TODO: Cupones (2 semanas gratis), 15% descuento
+
 def create_follow100_product_and_plan():
     """Plan anual para 100 followers"""
     product = stripe.Product.create(

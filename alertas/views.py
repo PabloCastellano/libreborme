@@ -542,6 +542,7 @@ def mark_user_has_tried_subscriptions(user):
         user.profile.save()
 
 
+# UNUSED
 @login_required
 def checkout_existing_card(request):
     if request.method == "POST":
@@ -579,6 +580,7 @@ def checkout(request):
     solo nos falta crear la suscripción
     """
     # TODO: make params
+    # TODO: Promotion code
     # TODO: Capture name when get token
     # TODO: description en el payment
     # TODO: no salvar el metodo de pago si no se pide expresamente
@@ -603,21 +605,14 @@ def checkout(request):
             #     subscription = customer.subscribe(plan)
             # else:
 
-            # TODO: Use djstripe.Subscription
-            stripe.Subscription.create(
-                customer=customer.stripe_id,
-                items=[
-                    {"plan": plan.stripe_id}
-                ],
-                # TODO: source here is deprecated
-                # Changes since API version 2018-05-21:
-                # The subscription endpoints no longer support the source parameter.
-                # If you want to change the default source for a customer, instead
-                # use the source creation API to add the new source and then
-                # the customer update API to set it as the default.
-                source=token,
-                tax_percent=tax_percent
-            )
+            # subscription = customer.subscribe(plan=plan, trial_from_plan=True)
+            # https://github.com/dj-stripe/dj-stripe/issues/809
+            trial_period_days = plan.trial_period_days
+            trial_end = datetime.datetime.now() + datetime.timedelta(days=trial_period_days)
+            # coupon=None, quantity=1
+            subscription = customer.subscribe(plan, trial_end=trial_end,
+                                              tax_percent=tax_percent)
+
             # billing_cycle_anchor=next_first_timestamp,
 
             # TODO: fix new invoice
