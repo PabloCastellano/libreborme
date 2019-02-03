@@ -14,6 +14,7 @@ urlpatterns = [
     path('', RedirectView.as_view(pattern_name='borme-home')),
     path('index_old', t(template_name="libreborme/index.html"), name='home'),
     path('borme/', include('borme.urls')),
+    path('dataremoval/', include('dataremoval.urls')),
     path('', include('alertas.urls')),
 
     path('robots.txt', views.robotstxt),
