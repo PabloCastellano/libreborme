@@ -536,7 +536,7 @@ def checkout_existing_card(request):
         # TODO: review parameters: tax_percent, trial_end, ...
         # tax_percent se suma al precio
         messages.add_message(request, messages.SUCCESS,
-                             'Pago realizado con éxito')
+                             'Pago realizado con éxito. Tenga en cuenta que la activación del servicio puede tardar unos minutos.')
         del request.session['cart']
         return redirect("dashboard-index")
 
