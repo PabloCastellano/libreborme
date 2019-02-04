@@ -593,8 +593,8 @@ def checkout(request):
 
         taxname = 'IVA'  # TODO: tax per province - limited to Spain
         tax_percent = TAXES[taxname]
-        # next_first_timestamp = utils.date_next_first(timestamp=True)
 
+        # TODO: use token
         token = request.POST.get("stripeToken")
         try:
             # TODO: if not saved/save card, use the token once, otherwise
@@ -605,15 +605,16 @@ def checkout(request):
             #     subscription = customer.subscribe(plan)
             # else:
 
-            # subscription = customer.subscribe(plan=plan, trial_from_plan=True)
-            # https://github.com/dj-stripe/dj-stripe/issues/809
+            # Pending issues:
+            # trial_from_plan: https://github.com/dj-stripe/dj-stripe/issues/809
+            # billing_cycle_anchor: https://github.com/dj-stripe/dj-stripe/issues/814
             trial_period_days = plan.trial_period_days
             trial_end = datetime.datetime.now() + datetime.timedelta(days=trial_period_days)
             # coupon=None, quantity=1
+            billing_cycle_anchor = utils.date_next_first(timestamp=True)
             subscription = customer.subscribe(plan, trial_end=trial_end,
-                                              tax_percent=tax_percent)
-
-            # billing_cycle_anchor=next_first_timestamp,
+                                              tax_percent=tax_percent,
+                                              billing_cycle_anchor=billing_cycle_anchor)
 
             # TODO: fix new invoice
             # new_invoice = create_new_invoice(request, customer, subscription, plan, user_input)
