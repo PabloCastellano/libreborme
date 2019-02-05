@@ -1,3 +1,6 @@
 include AUTHORS LICENSE README.md
 recursive-include libreborme *
+recursive-include alertas/templates *
+recursive-include borme/templates *
+recursive-include dataremoval/templates *
 recursive-exclude * *.pyc *.swp
