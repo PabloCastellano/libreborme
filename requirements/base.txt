@@ -1,7 +1,9 @@
 bormeparser==0.3.4
 Django==2.0.10
-django-bootstrap-form==3.2.1
-django-bootstrap-static==3.3.7.2
+#django-bootstrap-form==3.2.1
+-e git+https://github.com/PabloCastellano/django-bootstrap-form@custom#egg=django-bootstrap-form
+#django-bootstrap-static==3.3.7.2
+-e git+https://github.com/PabloCastellano/django-bootstrap-static@4.1.3#egg=django-bootstrap-static
 django-compressor==2.2
 django-debug-toolbar==1.11
 django-elasticsearch-debug-toolbar==1.2.0
@@ -13,7 +15,8 @@ django-prettyjson==0.4.0
 django-registration==3.0
 django-static-jquery==2.1.4
 django-tastypie==0.14.1
-dj-stripe==1.2.3
+#dj-stripe==1.2.3
+-e git+https://github.com/dj-stripe/dj-stripe@stable/1.2#egg=dj-stripe
 elasticsearch==5.5.2
 elasticsearch-dsl==5.4.0
 libsass==0.17.0
