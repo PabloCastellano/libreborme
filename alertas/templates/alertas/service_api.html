@@ -10,33 +10,34 @@
     <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
     {% endfor %}
 
-          <div id="messages"></div>
-          <h1 class="page-header">API</h1>
+    <div id="messages"></div>
+    <h1 class="page-header">API</h1>
 
-          {% if subscriptions %}
-            <h1 class="title-section mt-4"><span>|</span>Planes contratados</h1>
-            {% include 'alertas/table_active_subscriptions.html' %}
-          {% else %}
-            <p>Este producto se encuentra en fase Beta. Si quieres probarlo, <a href="#" data-toggle="modal" data-target="#requestAPIKeyModal">solicita una API Key</a>.</p>
-            <h1 class="title-section"><span>|</span>Suscripciones</h1>
-            <p>Tienes {{ service_api_free_req_day }} consultas gratis al mes para probar la API de LibreBORME</p>
+    {% if not subscriptions %}
+      <p>Este producto se encuentra en fase Beta. Si quieres probarlo, <a href="#" data-toggle="modal" data-target="#requestAPIKeyModal">solicita una API Key</a>.</p>
+      <h1 class="title-section"><span>|</span>Suscripciones</h1>
+      <p>Tienes {{ service_api_free_req_day }} consultas gratis al mes para probar la API de LibreBORME</p>
 
+    {% endif %}
+
+    {% if api_enabled %}
+    <h1 class="title-section"><span>|</span>Detalles de API</h1>
+    <ul>
+        <li>API Access ID: </li>
+        <li>API Access Key:</li>
+        <li>Periodo: </li>
+    </ul>
+    {% endif %}
+
+    {% include 'form_solicitar_api_key.html' %}
+    {% include 'form_contacto.html' %}
+
+    <h1 class="title-section mt-4"><span>|</span>¿Cómo funciona?</h1>
+    <div class="row">
+        <div class="col-sm-6">
+            <p class="text-justify">Lea los <a target="_blank" href="{% url 'alertas-tos' %}">Términos y Condiciones del Servicio de Suscripciones (TODO: review)</a>.</p>
             {% include 'alertas/pricing_api_table.html' %}
-
-
-          {% endif %}
-
-          {% if api_enabled %}
-          <h1 class="title-section"><span>|</span>Detalles de API</h1>
-          <ul>
-              <li>API Access ID: </li>
-              <li>API Access Key:</li>
-              <li>Periodo: </li>
-          </ul>
-          {% endif %}
         </div>
-
-        {% include 'form_solicitar_api_key.html' %}
-        {% include 'form_contacto.html' %}
+    </div>
 </main>
 {% endblock %}
