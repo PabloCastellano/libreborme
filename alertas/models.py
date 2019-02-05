@@ -73,7 +73,7 @@ PROVINCIAS_DICT = dict(PROVINCIAS_CHOICES)
 PERIODICIDAD_CHOICES = (
     ('weekly', 'Semanal'),
     ('monthly', 'Mensual'),
-    ('daily', 'Diario')
+    ('daily', 'Diaria')
 )
 PERIODICIDAD_DICT = dict(PERIODICIDAD_CHOICES)
 
@@ -87,6 +87,7 @@ EVENTOS_CHOICES = (
     # ('con', 'Concursos de acreedores'),
     ('liq', 'Liquidación de empresas'),
     ('new', 'Empresas de nueva creación'),
+    ('adm', 'Cambios de administrador'),
 )
 EVENTOS_DICT = dict(EVENTOS_CHOICES)
 
@@ -161,7 +162,6 @@ class AlertaActo(m.Model):
     evento = m.CharField(max_length=3, choices=EVENTOS_CHOICES)
     provincia = m.CharField(max_length=100, choices=PROVINCIAS_CHOICES)
     is_enabled = m.BooleanField(default=True)
-    send_html = m.BooleanField(default=True)
     periodicidad = m.CharField(max_length=10, choices=PERIODICIDAD_CHOICES)
 
     def __str__(self):

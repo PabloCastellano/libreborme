@@ -27,7 +27,8 @@ COUNTRY_CHOICE = (
 )
 
 class Profile(m.Model):
-    user = m.OneToOneField(get_user_model(), on_delete=m.CASCADE, related_name='profile')
+    user = m.OneToOneField(get_user_model(), on_delete=m.CASCADE,
+                           related_name='profile')
 
     language = m.CharField(max_length=3,
                            choices=LANGUAGE_CHOICES,
@@ -104,5 +105,4 @@ class MailTemplate(m.Model):
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-        # TODO: set currency="eur"
     instance.profile.save()

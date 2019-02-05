@@ -20,7 +20,7 @@ class FollowerForm(forms.Form):
 class AlertaActoModelForm(forms.ModelForm):
     class Meta:
         model = models.AlertaActo
-        fields = ['evento', 'provincia', 'periodicidad', 'send_html']
+        fields = ['evento', 'provincia', 'periodicidad']
         exclude = ('user', 'is_enabled')
 
 
@@ -63,13 +63,6 @@ class ProfileDataForm(forms.ModelForm):
         widgets = {
             'provincia': forms.Select(choices=PROVINCIAS_CHOICES),
         }
-
-
-# FIXME: It doesn't work: https://github.com/dj-stripe/dj-stripe/issues/753
-# class BillingSettingsForm(forms.ModelForm):
-#     class Meta:
-#         model = Customer
-#         fields = ['business_vat_id']
 
 
 class NotificationSettingsForm(forms.Form):

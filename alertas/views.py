@@ -54,44 +54,6 @@ class MyAccountView(CustomerMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(MyAccountView, self).get_context_data(**kwargs)
 
-        if context['customer'] is None:
-            business_vat_id = None
-        else:
-            business_vat_id = context['customer'].business_vat_id
-
-        # Prepare forms
-        user_profile = self.request.user.profile
-
-        # context["form_billing"] = forms.BillingSettingsForm(initial={
-        #     'business_vat_id': business_vat_id})
-
-        # context['form_notification'] = forms.NotificationSettingsForm(initial={
-        #     'notification_method': user_profile.notification_method,
-        #     'notification_email': user_profile.notification_email,
-        #     'notification_url': user_profile.notification_url})
-
-        context['form_personal'] = forms.PersonalDataForm(initial={
-            'first_name': self.request.user.first_name,
-            'last_name': self.request.user.last_name,
-            'email': self.request.user.email,
-            'home_phone': user_profile.home_phone,
-            'date_joined': self.request.user.date_joined.date()})
-
-        context['form_profile'] = forms.ProfileDataForm(initial={
-            'home_phone': user_profile.home_phone,
-            'account_type': user_profile.account_type,
-            'razon_social': user_profile.razon_social,
-            'cif_nif': user_profile.cif_nif,
-            'address': user_profile.address,
-            'post_code': user_profile.post_code,
-            'poblacion': user_profile.poblacion,
-            'provincia': user_profile.provincia,
-            'country': user_profile.country})
-
-        context['form_newsletter'] = forms.NewsletterForm(initial={
-            'newsletter_promotions': user_profile.newsletter_promotions,
-            'newsletter_features': user_profile.newsletter_features})
-
         context['active'] = 'dashboard'
         context['count_a'] = AlertaActo.objects.filter(
                                     user=self.request.user).count()
@@ -108,7 +70,6 @@ class MyAccountView(CustomerMixin, TemplateView):
         except KeyError:
             context['ip'] = self.request.META['REMOTE_ADDR']
         """
-        #import pdb; pdb.set_trace()
         return context
 
 
@@ -119,16 +80,8 @@ class ProfileView(CustomerMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ProfileView, self).get_context_data(**kwargs)
 
-        if context['customer'] is None:
-            business_vat_id = None
-        else:
-            business_vat_id = context['customer'].business_vat_id
-
         # Prepare forms
         user_profile = self.request.user.profile
-
-        # context["form_billing"] = forms.BillingSettingsForm(initial={
-        #     'business_vat_id': business_vat_id})
 
         # context['form_notification'] = forms.NotificationSettingsForm(initial={
         #     'notification_method': user_profile.notification_method,
@@ -157,11 +110,6 @@ class ProfileView(CustomerMixin, TemplateView):
             'newsletter_features': user_profile.newsletter_features})
 
         context['active'] = 'profile'
-        context['count_a'] = AlertaActo.objects.filter(
-                                    user=self.request.user).count()
-        context['count_f'] = Follower.objects.filter(
-                                    user=self.request.user).count()
-        context['n_alertas'] = context['count_a'] + context['count_f']
 
         """
         try:
@@ -313,11 +261,7 @@ class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ServiceSubscriptionView, self).get_context_data(**kwargs)
-        context['active'] = 'subscriptions'
-
-        context['alertas_a'] = AlertaActo.objects.filter(user=self.request.user)
-        context['form_a'] = forms.AlertaActoModelForm()
-        context['count_a'] = context['alertas_a'].count()
+        context['active'] = 'subscription'
 
         # TODO: Si tiene suscripciones pagadas y no ha definido qué quiere, mostrarle form
         # TODO: Solo una suscripción de prueba
@@ -326,6 +270,13 @@ class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
             context["subscriptions"] = Subscription.objects.filter(
                     plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN),
                     customer=context["customer"])
+
+        context['alertas_a'] = AlertaActo.objects.filter(user=self.request.user)
+        context['form_alertas'] = forms.AlertaActoModelForm(initial={'periodicidad': 'daily'})
+        context['current'] = context['alertas_a'].count()
+
+        context["total"] = len(context["subscriptions"])
+        context["remaining"] = context["total"] - context["current"]
 
         plan_month_one = Plan.objects.get(nickname=settings.SUBSCRIPTION_MONTH_ONE_PLAN)
         context["plan_month_one"] = plan_month_one
@@ -378,7 +329,7 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
         context['user_complete'] = profile.is_complete()
         if not context['user_complete']:
             url = reverse('alertas-profile')
-            message = 'Necesitas completar <a href="{}">tu perfil</a> antes para poder contratar algún servicio.'.format(url)
+            message = 'Necesitas completar <a href="{}">tu perfil</a> antes para poder contratar algún servicio'.format(url)
             messages.add_message(self.request, messages.WARNING, message)
 
         elif 'cart' in self.request.session:
@@ -453,7 +404,7 @@ def alerta_acto_create(request):
             alerta = form.save(commit=False)
             alerta.user = request.user
             alerta.save()
-    return redirect(reverse('service-follow'))
+    return redirect(reverse('service-subscription'))
 
 
 @login_required
@@ -491,7 +442,6 @@ def settings_update_billing(request):
         # Process forms
 
         # TODO: Update business_vat_id in Customer model
-        # TODO: Salvar en Profile ne vez de Customer?
 
         form = forms.PersonalDataForm(request.POST)
         if form.is_valid():
@@ -509,6 +459,31 @@ def settings_update_billing(request):
         form = forms.ProfileDataForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
+
+        # dj-stripe does not allow you to sync Customer saved attributes
+        # https://github.com/dj-stripe/dj-stripe/issues/753
+        user.refresh_from_db()
+        if user.profile.is_complete():
+            messages.add_message(request, messages.SUCCESS,
+                                 'Tu perfil está completo ahora')
+            customer, _ = Customer.get_or_create(subscriber=request.user)
+            customer_sdk = stripe.Customer.retrieve(customer.stripe_id)
+            customer_sdk.business_vat_id = user.profile.cif_nif
+            customer_sdk.description = "{} ({}) / {}".format(user.get_full_name(), user.profile.account_type, user.profile.provincia)
+            customer_sdk.shipping = {
+                'address': {
+                    'line1': user.profile.address,
+                    'line2': '',
+                    'postal_code': user.profile.post_code,
+                    'city': user.profile.poblacion,
+                    'state': user.profile.provincia,
+                    'country': user.profile.country,
+                },
+                'name': user.profile.razon_social,
+                'phone': user.profile.home_phone,
+            }
+            customer_sdk.save()
+
 
         messages.add_message(request, messages.SUCCESS,
                              'Se han guardado los cambios')
@@ -630,6 +605,8 @@ def checkout(request):
                                  'Pago realizado con éxito. Tenga en cuenta que la activación del servicio puede tardar unos minutos.')
             send_email_new_subscription(request.user)
 
+            # TODO: Update customer sdk?
+            #
             if nickname in (settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN):
                 mark_user_has_tried_subscriptions(request.user)
 
@@ -691,7 +668,7 @@ def remove_card(request):
 def alerta_remove_acto(request, id):
     alerta = AlertaActo.objects.get(user=request.user, pk=id)
     alerta.delete()
-    return redirect(reverse('service-follow'))
+    return redirect(reverse('service-subscription'))
 
 
 @login_required

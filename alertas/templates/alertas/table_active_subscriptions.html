@@ -13,7 +13,15 @@
                 <tbody>
                   {% for subscription in subscriptions %}
                   <tr>
-                    <td>{{ subscription.plan.product.name }}</td>
+                    <td>{{ subscription.plan.product.name }}
+                      {% if subscription.plan.interval == 'month' %}
+                      (mensual)
+                      {% elif subscription.plan.interval == 'year' %}
+                      (anual)
+                      {% else %}
+                      ({{ subscription.plan.interval }})
+                      {% endif %}
+                    </td>
                     <td>{{ subscription.start.date }}</td>
                     <td>
                       {% if subscription.status == 'trialing' %}

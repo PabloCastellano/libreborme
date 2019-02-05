@@ -9,30 +9,30 @@
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
     {% endfor %}
-          <h1 class="page-header">Suscripciones</h1>
+    <h1 class="page-header">Suscripciones</h1>
 
-          <p>Mediante el Servicio de Suscripciones recibirás un email cada día con la información mercantil solicitada</p>
+    <p>Mediante el Servicio de Suscripciones recibirás un email cada día con la información mercantil solicitada</p>
 
-          {% if subscriptions %}
-          <h1 class="title-section mt-4"><span>|</span>Planes contratados</h1>
-          {% include 'alertas/table_active_subscriptions.html' %}
-          {% endif %}
-
-          <h1 class="title-section mt-4"><span>|</span>Lista de Suscripciones</h1>
-
-          <p>Debes suscribirte a algo primero.</p>
-          <p><a href="#" data-toggle="modal" data-target="#alerta-acto-modal">Añade una alerta nueva</a>.</p>
-        {% if alertas_a %}
-        <div class="table-responsive">
-          <table class="table table-striped">
+    {% if subscriptions %}
+    {% comment %}
+    <h1 class="title-section mt-4"><span>|</span>Planes contratados</h1>
+    {% include 'alertas/table_active_subscriptions.html' %}
+    {% endcomment %}
+    <h1 class="title-section mt-4"><span>|</span>Lista de Suscripciones</h1>
+    <p>Tienes {{ current }} subscripciones activas.
+    {% if remaining > 0 %} Aún puedes añadir {{ remaining }} más.{% endif %}
+    </p>
+    {% endif %}
+    <div class="table-responsive">
+        <table class="table table-striped">
             <thead>
-              <tr>
-                <th>#</th>
-                <th>Tipo de evento</th>
-                <th>Provincia</th>
-                <th>Enviar HTML</th>
-                <th>Acciones</th>
-              </tr>
+                <tr>
+                    <th>#</th>
+                    <th>Tipo de evento</th>
+                    <th>Provincia</th>
+                    <th>Periodicidad</th>
+                    <th>Acciones</th>
+                </tr>
             </thead>
             <tbody>
             {% for alerta in alertas_a %}
@@ -40,70 +40,53 @@
                 <td>{{ forloop.counter }}</td>
                 <td>{{ alerta.get_evento_display }}</td>
                 <td>{{ alerta.get_provincia_display }}</td>
-                <td>{% if alerta.send_html %}
-                  <i class="fas fa-check"></i>
-                  {% else %}
-                  <i class="fas fa-times"></i>
-                  {% endif %}
-                </td>
+                <td>{{ alerta.get_periodicidad_display }}</td>
                 <td>
-                  {% comment %}
-                  <button type="button" class="btn btn-primary btn-xs">
-                    <i class="fas fa-pencil-alt"></i> Editar
-                  </button>
-                  {% endcomment %}
                   <a href="{% url 'alerta-remove-acto' alerta.id %}">
-                  <button type="button" class="btn btn-primary btn-xs">
+                  <button type="button" class="btn btn-danger btn-xs">
                     <i class="fas fa-trash-alt"></i> Eliminar
                   </button>
                   </a>
                 </td>
               </tr>
             {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        {% else %}
-          {% if restantes_a > 0 %}
-            <p>Aún no tienes configurada ninguna alerta. <a href="#" data-toggle="modal" data-target="#alerta-acto-modal">Añade una alerta nueva</a>.</p>
-          {% endif %}
-        {% endif %}
 
-          <h1 class="title-section mt-4"><span>|</span>¿Cómo funciona?</h1>
-          <div class="row">
-            <div class="col-sm-5 text-justify">
-              <p>Elige un tipo de suscripción entre las siguientes:</p>
-              <ul>
+            {% if remaining > 0 %}
+            <form class="" action="{% url "alertas-new-acto" %}" role="form" method="post">
+              {% csrf_token %}
+              <tr>
+                <td>{{ current|add:1 }}</td>
+                {% for field in form_alertas.visible_fields %}
+                <td>{{ field }}</td>
+                {% endfor %}
+                <td>
+                    <input type="submit" name="create" class="btn btn-primary btn-xs" value="Añadir">
+                </td>
+              </tr>
+            </form>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <h1 class="title-section mt-4"><span>|</span>¿Cómo funciona?</h1>
+    <div class="row">
+        <div class="col-sm-5 text-justify">
+            <p>Elige un tipo de suscripción entre las siguientes:</p>
+            <ul>
                 <li>Empresas de nueva creación</li>
                 <li>Empresas que cambian de administrador</li>
                 <li>Empresas en concurso de acreedores / liquidación</li>
-              </ul>
-              <p class="text-justify">Cada día recibirás en tu email la información que has elegido.</p>
-              <p class="text-justify">Las suscripciones incluyen un período de prueba de 7 días. Puedes cancelar la suscripción en cualquier momento antes de los 7 días, sin que esto tenga ningún coste.</p>
-              <p class="text-justify">El período de prueba solo es válido la primera vez.</p>
-              <p class="text-justify">Lea los <a target="_blank" href="{% url 'alertas-tos' %}">Términos y Condiciones del Servicio de Suscripciones (TODO: review)</a>.</p>
-            </div>
-            <div class="col-sm-6 offset-sm-1">
-              {% include 'alertas/pricing_subscriptions_table.html' %}
-            </div>
-          </div>
-
-
-
-<div class="modal fade" id="alerta-acto-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="loginmodal-container">
-      <form action="{% url "alertas-new-acto" %}" role="form" method="post">
-        <legend>Añadir una nueva Alerta</legend>
-          {% csrf_token %}
-          {{ form_a|bootstrap }}
-          <div class="form-group">
-            <input type="submit" name="create" class="login loginmodal-submit" value="Crear">
-          </div>
-      </form>
+            </ul>
+            <p class="text-justify">Cada día recibirás en tu email la información que has elegido.</p>
+            <p class="text-justify">Las suscripciones incluyen un período de prueba de 7 días. Puedes cancelar la suscripción en cualquier momento antes de los 7 días, sin que esto tenga ningún coste.</p>
+            <p class="text-justify">El período de prueba solo es válido la primera vez.</p>
+            <p class="text-justify">Lea los <a target="_blank" href="{% url 'alertas-tos' %}">Términos y Condiciones del Servicio de Suscripciones (TODO: review)</a>.</p>
+        </div>
+        <div class="col-sm-6 offset-sm-1">
+            {% include 'alertas/pricing_subscriptions_table.html' %}
+        </div>
     </div>
-  </div>
-</div>
 </main>
 
 {% endblock %}

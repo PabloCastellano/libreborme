@@ -11,8 +11,8 @@ from libreborme import models as lb_models
 
 @admin.register(m.AlertaActo)
 class AlertaActoAdmin(admin.ModelAdmin):
-    list_display = ('user', 'evento', 'periodicidad', 'provincia', 'send_html', 'is_enabled')
-    list_filter = ('evento', 'periodicidad', 'send_html', 'is_enabled')
+    list_display = ('user', 'evento', 'periodicidad', 'provincia', 'is_enabled')
+    list_filter = ('evento', 'periodicidad', 'is_enabled')
     search_fields = ['user__email', 'provincia']
     # TODO: get_provincia_display
 
