@@ -75,7 +75,7 @@ class Command(BaseCommand):
 
         # show_warning_date(periodo)
 
-        alertas = busca_subscriptores(periodo, evento, options["email"])
+        alertas = busca_subscriptores(evento, options["email"])
         if len(alertas) == 0:
             LOG.info("0 alertas. END")
             return
@@ -96,12 +96,12 @@ class Command(BaseCommand):
 
         for alerta in alertas:
             subject = "Tus subscripciones"
-            today = datetime.date.today()
-            month = '{:02d}'.format(today.month)
-            day = '{:02d}'.format(today.day)
+            month = '{:02d}'.format(TODAY.month)
+            day = '{:02d}'.format(TODAY.day)
             filename = "/home/libreborme/subscriptions/{year}/{month}/{day}/{provincia}.json".format(
-                    year=date.year, month=month, day=day, provincia=alerta.provincia)
+                    year=TODAY.year, month=month, day=day, provincia=alerta.provincia)
             if not os.path.exists(filename):
+                print("No file exists for this province today")
                 continue
             with open(filename) as fp:
                 content = json.load(fp)
