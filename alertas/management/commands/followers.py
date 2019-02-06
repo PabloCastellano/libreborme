@@ -4,7 +4,6 @@ from django.core.mail import send_mass_mail
 from django.core.management.base import BaseCommand, CommandError
 from django.template import Context, Template
 
-from alertas.email import send_email_notification
 from alertas.models import Follower
 
 from borme.models import Company, Person
@@ -56,40 +55,6 @@ class Command(BaseCommand):
         elif options["send"]:
             send(today)
 
-        """
-        # TODO: no es necesario, el backend puede ser EmailConsole
-        if settings.DEBUG:
-            LOG.info("forcing --dry-run since DEBUG=True\n")
-            dry_run = False
-        else:
-            dry_run = options["dry_run"]
-
-        show_warning_date(periodo)
-
-        alertas = busca_subscriptores(periodo, evento, options["email"])
-        if len(alertas) == 0:
-            LOG.info("0 alertas. END")
-            return
-
-        companies = busca_empresas(periodo, evento)
-        if len(companies) == 0:
-            LOG.info("0 companies. END")
-            return
-
-        # Generar los CSV
-        generar_csv(evento, periodo, companies)
-
-        if dry_run:
-            print("Notifications were not sent because --dry-run")
-            return
-
-        for alerta in alertas:
-            if alerta.user.profile.notification_method == "email":
-                send_email_notification(alerta, evento, periodo, companies, TODAY)
-            elif alerta.user.profile.notification_method == "url":
-                send_url_notification(alerta, evento, periodo, companies)
-
-        """
 
 def list_followers(output=False):
     followers = Follower.objects.all()

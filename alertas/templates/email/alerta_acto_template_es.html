@@ -4,7 +4,7 @@
 
 <img src="{{ SITE_URL }}{% static 'libreborme_logo.png' %}">
 
-<h1>Notificationes de {{ evento }}</h1>
+<h1>Suscripciones a {{ evento }}</h1>
 
 <p>Hola {{ name }}.</p>
 <p>A continuación te enviamos el listado de empresas que han generado una notificación en LibreBORME para tu suscripción <strong>{{ evento }}</strong> en <strong>{{ provincia }}</strong>:
@@ -15,10 +15,11 @@
 {% endfor %}
 </ul>
 
-<p>Recuerda que desde tu <a href="https://libreborme.net/alertas/">panel de usuario</a> puedes descargar el listado
-   de tus notificaciones en formato CSV.</p>
+<p>Recuerda que puedes modificar tus suscripciones desde el
+<a target="_blank" href="{% url 'service-subscription' %}">panel de usuario</a>.
+</p>
 
-{% include "alertas/email/footer.html" %}
+{% include "email/footer.html" %}
 
 </body>
 </html>

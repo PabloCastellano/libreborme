@@ -65,6 +65,7 @@ class ProfileDataForm(forms.ModelForm):
         }
 
 
+# UNUSED
 class NotificationSettingsForm(forms.Form):
     # notification_method = forms.ChoiceField(choices=NOTIFICATION_CHOICES, widget=forms.RadioSelect(attrs={'class': "radio-inline"}))
     notification_method = forms.ChoiceField(label="Método de notificación", choices=NOTIFICATION_CHOICES)

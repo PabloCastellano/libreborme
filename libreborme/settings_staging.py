@@ -66,6 +66,7 @@ BORME_XML_ROOT = os.path.join(BORME_ROOT, "xml")
 BORME_JSON_ROOT = os.path.join(BORME_ROOT, "json")
 # BORME_LOG_ROOT = os.path.join(BORME_ROOT, "logs")
 BORME_LOG_ROOT = "/opt/libreborme/logs"
+BORME_SUBSCRIPTIONS_ROOT = "/opt/libreborme/subscriptions"
 
 EMAIL_CONTACT = 'contacto@libreborme.net'
 

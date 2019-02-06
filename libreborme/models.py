@@ -38,7 +38,6 @@ class Profile(m.Model):
     notification_method = m.CharField(max_length=10,
                                       choices=NOTIFICATION_CHOICES,
                                       default='email')
-    notification_email = m.EmailField(blank=True)
     notification_url = m.URLField(blank=True)
     send_html = m.BooleanField(default=True)
 
@@ -71,11 +70,6 @@ class Profile(m.Model):
                     self.razon_social, self.cif_nif, self.address,
                     self.post_code, self.poblacion, self.provincia,
                     self.country])
-
-    def save(self, *args, **kwargs):
-        if not self.notification_email:
-            self.notification_email = self.user.email
-        super(Profile, self).save(*args, **kwargs)
 
     # TODO: review need
     def expire_subscription(self, send_email):

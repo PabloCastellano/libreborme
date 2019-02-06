@@ -1,5 +1,11 @@
 from django.apps import apps
+from django.conf import settings
 from django.contrib.auth import get_user_model
+
+from pathlib import Path
+
+import datetime
+import json
 
 User = get_user_model()
 
@@ -32,8 +38,7 @@ def insert_libreborme_log(component, log, user=None):
     log.save()
 
 
-def insert_alertas_history(user, type, date, entidad=None, provincia=None,
-                           periodicidad=None):
+def insert_alertas_history(user, type, date, entidad=None, provincia=None):
     """
         Insert new row in the AlertaHistory table
 
@@ -42,7 +47,6 @@ def insert_alertas_history(user, type, date, entidad=None, provincia=None,
         date: datetime.date
         provincia = str
         entidad = str
-        periodicidad = str
     """
     AlertaHistory = apps.get_model("alertas", "AlertaHistory")
     alerta_history = AlertaHistory(user=user, type=type, date=date)
@@ -52,7 +56,21 @@ def insert_alertas_history(user, type, date, entidad=None, provincia=None,
     else:
         # evento
         alerta_history.provincia = provincia
-        alerta_history.periodicidad = periodicidad
 
     alerta_history.save()
     return alerta_history
+
+
+def get_subscription_data(evento, provincia, date=None):
+    if not date:
+        date = datetime.date.today()
+
+    year = str(date.year)
+    month = '{:02d}'.format(date.month)
+    day = '{:02d}'.format(date.day)
+    # filename = provincia + ".json"
+    directory = Path(settings.BORME_SUBSCRIPTIONS_ROOT) / evento / year / month / day
+    filename = (directory / (provincia + ".json")).as_posix()
+    with open(filename) as fp:
+        content = json.load(fp)
+    return content

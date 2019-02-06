@@ -10,6 +10,7 @@ SECRET_KEY = '41+h()yq5-!*=)sh+_%4wal8=+*e)dlrau*81odpu7n&9^7d5h'
 DEBUG = True
 
 SITE_NAME = 'LibreBORME'
+SITE_URL = 'http://localhost:8000/'
 ALLOWED_HOSTS = ['libreborme.net']
 
 DJANGO_APPS = [
@@ -141,6 +142,7 @@ BORME_PDF_ROOT = os.path.join(BORME_ROOT, 'pdf')
 BORME_XML_ROOT = os.path.join(BORME_ROOT, 'xml')
 BORME_JSON_ROOT = os.path.join(BORME_ROOT, 'json')
 BORME_LOG_ROOT = os.path.join(BASE_DIR, '..', 'log')
+BORME_SUBSCRIPTIONS_ROOT = os.path.join(BORME_ROOT, 'subscriptions')
 
 EMAIL_CONTACT = 'contact@domain'
 EMAIL_SUBJECT_PREFIX = '[LIBREBORME] '

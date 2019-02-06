@@ -14,6 +14,8 @@ def check_permissions():
         raise ImproperlyConfigured("The directory does not exist: " + settings.BORME_XML_ROOT)
     if not os.path.isdir(settings.BORME_JSON_ROOT):
         raise ImproperlyConfigured("The directory does not exist: " + settings.BORME_JSON_ROOT)
+    if not os.path.isdir(settings.BORME_SUBSCRIPTIONS_ROOT):
+        raise ImproperlyConfigured("The directory does not exist: " + settings.BORME_SUBSCRIPTIONS_ROOT)
 
     # These are only defined in staging and produciton environments
     # If they are defined, they have to exist

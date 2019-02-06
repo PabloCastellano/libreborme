@@ -18,8 +18,6 @@ DEBUG = True
 DOMAIN = 'localhost'
 ALLOWED_HOSTS = [DOMAIN]
 
-SITE_URL = 'http://localhost/'
-
 # BORME
 BORME_ROOT = CONFIG['borme_root']
 BORME_PDF_ROOT = os.path.join(BORME_ROOT, 'pdf')
