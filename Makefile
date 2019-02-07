@@ -30,10 +30,10 @@ recreate_db2:
 		psql -h localhost -U libreborme < clean_dump.sql
 
 sync_stripe:
-		# Note: this creates Customers from existing Users in database
-		# ./manage.py djstripe_sync_customers
+		./manage.py djstripe_init_customers
 		./manage.py djstripe_sync_plans_from_stripe
-		# from djstripe.models import Product; for product in Product.api_list(): Product.sync_from_stripe_data(product)
+		# from djstripe.models import Product; for obj in Product.api_list(): Product.sync_from_stripe_data(obj)
+		# from djstripe.models import Subscription; for obj in Subscription.api_list(): Subscription.sync_from_stripe_data(obj)
 
 run:
 		docker-compose up -d

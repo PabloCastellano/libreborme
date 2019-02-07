@@ -1,25 +1,389 @@
 {% load staticfiles %}
-<html>
-<body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no">
+  <title>Suscripciones de LibreBORME</title>
 
-<img src="{{ SITE_URL }}{% static 'libreborme_logo.png' %}">
+  <style type="text/css">
+    body{ Margin: 0; padding: 0; }
+    img{ border: 0px; display: block; }
 
-<h1>Suscripciones a {{ evento }}</h1>
+    .socialLinks{ font-size: 6px; }
+    .socialLinks a{
+      display: inline-block;
+    }
+    .socialIcon{
+      display: inline-block;
+      vertical-align: top;
+      padding-bottom: 0px;
+      border-radius: 100%;
+    }
+    .oldwebkit{ max-width: 570px; }
+    td.vb-outer{ padding-left: 9px; padding-right: 9px; }
+    table.vb-container, table.vb-row, table.vb-content{
+      border-collapse: separate;
+    }
+    table.vb-row{
+      border-spacing: 9px;
+    }
+    table.vb-row.halfpad{
+      border-spacing: 0;
+      padding-left: 9px;
+      padding-right: 9px;
+    }
+    table.vb-row.fullwidth{
+      border-spacing: 0;
+      padding: 0;
+    }
+    table.vb-container{
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+    table.vb-container.fullpad{
+      border-spacing: 18px;
+      padding-left: 0;
+      padding-right: 0;
+    }
+    table.vb-container.halfpad{
+      border-spacing: 9px;
+      padding-left: 9px;
+      padding-right: 9px;
+    }
+    table.vb-container.fullwidth{
+      padding-left: 0;
+      padding-right: 0;
+    }
+  </style>
+  <style type="text/css">
+    /* yahoo, hotmail */
+    .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div{ line-height: 100%; }
+    .yshortcuts a{ border-bottom: none !important; }
+    .vb-outer{ min-width: 0 !important; }
+    .RMsgBdy, .ExternalClass{
+      width: 100%;
+      background-color: #3f3f3f;
+      background-color: #3f3f3f}
 
-<p>Hola {{ name }}.</p>
-<p>A continuación te enviamos el listado de empresas que han generado una notificación en LibreBORME para tu suscripción <strong>{{ evento }}</strong> en <strong>{{ provincia }}</strong>:
+    /* outlook */
+    table{ mso-table-rspace: 0pt; mso-table-lspace: 0pt; }
+    #outlook a{ padding: 0; }
+    img{ outline: none; text-decoration: none; border: none; -ms-interpolation-mode: bicubic; }
+    a img{ border: none; }
 
-<ul>
-{% for company in companies %}
-<li><a href="{{ SITE_URL }}/borme/empresa/{{ company.slug }}">{{ company.name }}</a></li>
-{% endfor %}
-</ul>
+    @media screen and (max-device-width: 600px), screen and (max-width: 600px) {
+      table.vb-container, table.vb-row{
+        width: 95% !important;
+      }
 
-<p>Recuerda que puedes modificar tus suscripciones desde el
-<a target="_blank" href="{% url 'service-subscription' %}">panel de usuario</a>.
-</p>
+      .mobile-hide{ display: none !important; }
+      .mobile-textcenter{ text-align: center !important; }
 
-{% include "email/footer.html" %}
+      .mobile-full{
+        float: none !important;
+        width: 100% !important;
+        max-width: none !important;
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+      }
+      img.mobile-full{
+        width: 100% !important;
+        max-width: none !important;
+        height: auto !important;
+      }
+    }
+  </style>
+  <style type="text/css">
 
-</body>
-</html>
+    #ko_textBlock_5 .links-color a, #ko_textBlock_5 .links-color a:link, #ko_textBlock_5 .links-color a:visited, #ko_textBlock_5 .links-color a:hover{
+      color: #3f3f3f;
+      color: #3f3f3f;
+      text-decoration: underline
+    }
+
+    #ko_textBlock_6 .links-color a, #ko_textBlock_6 .links-color a:link, #ko_textBlock_6 .links-color a:visited, #ko_textBlock_6 .links-color a:hover{
+      color: #3f3f3f;
+      color: #3f3f3f;
+      text-decoration: underline
+    }
+
+    #ko_textBlock_7 .links-color a, #ko_textBlock_7 .links-color a:link, #ko_textBlock_7 .links-color a:visited, #ko_textBlock_7 .links-color a:hover{
+      color: #3f3f3f;
+      color: #3f3f3f;
+      text-decoration: underline
+    }
+     #ko_textBlock_5 .long-text p{ Margin: 1em 0px }  #ko_textBlock_6 .long-text p{ Margin: 1em 0px }  #ko_textBlock_7 .long-text p{ Margin: 1em 0px }  #ko_textBlock_5 .long-text p:last-child{ Margin-bottom: 0px }  #ko_textBlock_6 .long-text p:last-child{ Margin-bottom: 0px }  #ko_textBlock_7 .long-text p:last-child{ Margin-bottom: 0px }  #ko_textBlock_5 .long-text p:first-child{ Margin-top: 0px }  #ko_textBlock_6 .long-text p:first-child{ Margin-top: 0px }  #ko_textBlock_7 .long-text p:first-child{ Margin-top: 0px }
+    #ko_sideArticleBlock_3 .links-color a, #ko_sideArticleBlock_3 .links-color a:link, #ko_sideArticleBlock_3 .links-color a:visited, #ko_sideArticleBlock_3 .links-color a:hover{
+      color: #3f3f3f;
+      color: #3f3f3f;
+      text-decoration: underline
+    }
+     #ko_sideArticleBlock_3 .long-text p{ Margin: 1em 0px }  #ko_sideArticleBlock_3 .long-text p:last-child{ Margin-bottom: 0px }  #ko_sideArticleBlock_3 .long-text p:first-child{ Margin-top: 0px }
+    #ko_socialBlock_8 .links-color a, #ko_socialBlock_8 .links-color a:link, #ko_socialBlock_8 .links-color a:visited, #ko_socialBlock_8 .links-color a:hover{
+      color: #cccccc;
+      color: #cccccc;
+      text-decoration: underline
+    }
+     #ko_socialBlock_8 .long-text p{ Margin: 1em 0px }  #ko_socialBlock_8 .long-text p:last-child{ Margin-bottom: 0px }  #ko_socialBlock_8 .long-text p:first-child{ Margin-top: 0px }
+    #ko_footerBlock_2 .links-color a, #ko_footerBlock_2 .links-color a:link, #ko_footerBlock_2 .links-color a:visited, #ko_footerBlock_2 .links-color a:hover{
+      color: #cccccc;
+      color: #cccccc;
+      text-decoration: underline
+    }
+     #ko_footerBlock_2 .long-text p{ Margin: 1em 0px }  #ko_footerBlock_2 .long-text p:last-child{ Margin-bottom: 0px }  #ko_footerBlock_2 .long-text p:first-child{ Margin-top: 0px }
+  </style>
+
+  <style type="text/css">
+      a.link {
+          display: inline-block;
+          color: #cccccc;
+          text-decoration: underline;
+      }
+      img.social2 {
+          border: 0px;
+          display: inline-block;
+          vertical-align: top;
+          padding-bottom: 0px;
+          border-radius: 100;
+      }
+      table.social1 {
+        border-collapse: separate;
+        border-spacing: 0;
+        padding-left: 9px;
+        padding-right: 9px;
+        width: 100%;
+        max-width: 570px;
+        background-color: #3f3f3f;
+      }
+      table.social2 {
+          border-collapse: separate;
+          width: 100%;
+      }
+
+  </a>
+  </style>
+</head>
+<body style="Margin: 0; padding: 0; background-color: #3f3f3f; color: #919191;" vlink="#cccccc" text="#919191" bgcolor="#3f3f3f" alink="#cccccc">
+
+  <center>
+
+  <!-- preheaderBlock -->
+
+
+  <table class="vb-outer" style="background-color: #3f3f3f;" id="ko_preheaderBlock_1" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#3f3f3f">
+    <tbody><tr>
+      <td class="vb-outer" style="padding-left: 9px; padding-right: 9px; background-color: #3f3f3f;" valign="top" bgcolor="#3f3f3f" align="center">
+        <div style="display: none; font-size: 1px; color: #333333; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"></div>
+
+<!--[if (gte mso 9)|(lte ie 8)]><table align="center" border="0" cellspacing="0" cellpadding="0" width="570"><tr><td align="center" valign="top"><![endif]-->
+        <div class="oldwebkit" style="max-width: 570px;">
+        <table class="vb-row halfpad social1" width="570" cellspacing="0" cellpadding="0" border="0" bgcolor="#3f3f3f">
+          <tbody><tr>
+            <td style="font-size: 0; background-color: #3f3f3f;" valign="top" bgcolor="#3f3f3f" align="center">
+
+<!--[if (gte mso 9)|(lte ie 8)]><table align="center" border="0" cellspacing="0" cellpadding="0" width="552"><tr><![endif]-->
+<!--[if (gte mso 9)|(lte ie 8)]><td align="left" valign="top" width="276"><![endif]-->
+<div style="display: inline-block; max-width: 276px; vertical-align: top; width: 100%;" class="mobile-full">
+                    <table class="vb-content social2" width="276" cellspacing="9" cellpadding="0" border="0" align="left">
+                      <tbody><tr>
+                        <td style="font-weight: normal; text-align: left; font-size: 13px; font-family: Arial, Helvetica, sans-serif; color: #ffffff;" width="100%" valign="top" align="left">
+                          <a style="text-decoration: underline; color: #ffffff;" target="_new" href="[LINK_PREFERENCES]"><br data-mce-bogus="1"></a>
+
+                        </td>
+                      </tr>
+                    </tbody></table>
+</div><!--[if (gte mso 9)|(lte ie 8)]>
+</td><td align="left" valign="top" width="276">
+<![endif]--><div style="display: inline-block; max-width: 276px; vertical-align: top; width: 100%;" class="mobile-full mobile-hide">
+
+                    <table class="vb-content" style="text-align: right;" width="276" cellspacing="9" cellpadding="0" border="0" align="left">
+                      <tbody><tr>
+                        <td style="font-weight: normal; font-size: 13px; font-family: Arial, Helvetica, sans-serif; color: #ffffff;" width="100%" valign="top">
+                      <span style="color: #ffffff; text-decoration: underline;">
+                          <a href="[LINK_BROWSER]" style="text-decoration: underline; color: #ffffff;" target="_new"><br data-mce-bogus="1"></a>
+                         </span>
+                       </td>
+                      </tr>
+                    </tbody></table>
+
+</div><!--[if (gte mso 9)|(lte ie 8)]>
+</td></tr></table><![endif]-->
+
+            </td>
+          </tr>
+        </tbody></table>
+        </div>
+<!--[if (gte mso 9)|(lte ie 8)]></td></tr></table><![endif]-->
+      </td>
+    </tr>
+  </tbody></table>
+
+
+  <!-- /preheaderBlock -->
+
+  <table class="vb-outer" style="background-color: #bfbfbf;" id="ko_sideArticleBlock_3" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#bfbfbf">
+    <tbody><tr>
+      <td class="vb-outer" style="padding-left: 9px; padding-right: 9px; background-color: #bfbfbf;" valign="top" bgcolor="#bfbfbf" align="center">
+
+<!--[if (gte mso 9)|(lte ie 8)]><table align="center" border="0" cellspacing="0" cellpadding="0" width="570"><tr><td align="center" valign="top"><![endif]-->
+        <div class="oldwebkit" style="max-width: 570px;">
+        <table class="vb-row fullpad" style="border-collapse: separate; border-spacing: 9px; width: 100%; max-width: 570px; background-color: #ffffff;" width="570" cellspacing="9" cellpadding="0" border="0" bgcolor="#ffffff">
+          <tbody><tr>
+            <td class="mobile-row" style="font-size: 0;" valign="top" align="center">
+
+<!--[if (gte mso 9)|(lte ie 8)]><table align="center" border="0" cellspacing="0" cellpadding="0" width="552"><tr><![endif]-->
+
+<!--[if (gte mso 9)|(lte ie 8)]><td align="left" valign="top" width="184"><![endif]-->
+<div class="mobile-full" style="display: inline-block; max-width: 184px; vertical-align: top; width: 100%;">
+
+                    <table class="vb-content" style="border-collapse: separate; width: 100%;" width="184" cellspacing="9" cellpadding="0" border="0" align="left">
+                      <tbody><tr>
+                        <td class="links-color" width="100%" valign="top" align="left">
+                          <a target="_new" href="https://libreborme.net/alertas/service/subscriptions/" style="color: #3f3f3f; color: #3f3f3f; text-decoration: underline;">
+                            <img class="mobile-full" alt="Logo" style="border: 0px; display: block; vertical-align: top; width: 100%; height: auto; max-width: 166px;" src="https://lists.libreborme.net/mosaico/uploads/static/964fa6ee58c98862fcd5d11d4eb70351.png" width="166" vspace="0" hspace="0" border="0">
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody></table>
+
+</div><!--[if (gte mso 9)|(lte ie 8)]></td>
+<![endif]--><!--[if (gte mso 9)|(lte ie 8)]>
+<td align="left" valign="top" width="368">
+<![endif]--><div class="mobile-full" style="display: inline-block; max-width: 368px; vertical-align: top; width: 100%;">
+
+                    <table class="vb-content" style="border-collapse: separate; width: 100%;" width="368" cellspacing="9" cellpadding="0" border="0" align="left">
+                      <tbody><tr>
+                        <td style="font-size: 18px; font-family: Arial, Helvetica, sans-serif; color: #3f3f3f; text-align: left;">
+                          <span style="color: #3f3f3f;">Suscripciones de Libreborme</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="long-text links-color" style="text-align: left; font-size: 13px; font-family: Arial, Helvetica, sans-serif; color: #3f3f3f;" align="left"><p style="Margin: 1em 0px; Margin-top: 0px;">Hola [USER].</p><p style="Margin: 1em 0px; Margin-bottom: 0px;">A continuación te enviamos el listado de empresas que han generado una notificación en LibreBORME para tu suscripción Cambios de administrador en Madrid.<br>Recuerda que puedes modificar tus suscripciones desde el panel de usuario.<br></p></td>
+                      </tr>
+                      <tr>
+                        <td valign="top">
+                          <table class="mobile-full" style="padding-top: 4px;" cellspacing="0" cellpadding="0" border="0" align="left">
+                            <tbody><tr>
+                              <td style="font-size: 13px; font-family: Arial, Helvetica, sans-serif; text-align: center; color: #3f3f3f; font-weight: normal; padding-left: 18px; padding-right: 18px; background-color: #bfbfbf; border-radius: 4px;" width="auto" valign="middle" height="26" bgcolor="#bfbfbf" align="center">
+                                <a style="text-decoration: none; color: #3f3f3f; font-weight: normal;" target="_new" href="https://libreborme.net/alertas/service/subscriptions/">Ir a Mis Suscripciones</a>
+                              </td>
+                            </tr>
+                          </tbody></table>
+                        </td>
+                      </tr>
+                    </tbody></table>
+</div><!--[if (gte mso 9)|(lte ie 8)]></td>
+<![endif]-->
+<!--[if (gte mso 9)|(lte ie 8)]></tr></table><![endif]-->
+
+            </td>
+          </tr>
+        </tbody></table>
+        </div>
+<!--[if (gte mso 9)|(lte ie 8)]></td></tr></table><![endif]-->
+      </td>
+    </tr>
+  </tbody></table>
+  <table class="vb-outer" style="background-color: #bfbfbf;" id="ko_textBlock_5" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#bfbfbf">
+    <tbody><tr>
+      <td class="vb-outer" style="padding-left: 9px; padding-right: 9px; background-color: #bfbfbf;" valign="top" bgcolor="#bfbfbf" align="center">
+
+<!--[if (gte mso 9)|(lte ie 8)]><table align="center" border="0" cellspacing="0" cellpadding="0" width="570"><tr><td align="center" valign="top"><![endif]-->
+        <div class="oldwebkit" style="max-width: 570px;">
+        <table class="vb-container fullpad" style="border-collapse: separate; border-spacing: 18px; padding-left: 0; padding-right: 0; width: 100%; max-width: 570px; background-color: #ffffff;" width="570" cellspacing="18" cellpadding="0" border="0" bgcolor="#ffffff">
+          <tbody><tr>
+            <td class="long-text links-color" style="text-align: left; font-size: 13px; font-family: Arial, Helvetica, sans-serif; color: #3f3f3f;" align="left">
+              <h2><strong>Cambios de administrador</strong><br data-mce-bogus="1"></h2>
+              <p style="Margin: 1em 0px;">Far far away, behind the word mountains, far from the countries <a href="" style="color: #3f3f3f; color: #3f3f3f; text-decoration: underline;">Vokalia and Consonantia</a>, there live the blind texts.</p>
+              <p style="Margin: 1em 0px; Margin-bottom: 0px;">Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+            </td>
+          </tr>
+        </tbody></table>
+        </div>
+<!--[if (gte mso 9)|(lte ie 8)]></td></tr></table><![endif]-->
+      </td>
+    </tr>
+  </tbody></table>
+        </div>
+<!--[if (gte mso 9)|(lte ie 8)]></td></tr></table><![endif]-->
+      </td>
+    </tr>
+  </tbody>
+  <table style="background-color: #3f3f3f;" id="ko_socialBlock_8" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#3f3f3f">
+    <tbody><tr>
+      <td style="background-color: #3f3f3f;" valign="top" bgcolor="#3f3f3f" align="center">
+<!--[if (gte mso 9)|(lte ie 8)]><table align="center" border="0" cellspacing="0" cellpadding="0" width="570"><tr><td align="center" valign="top"><![endif]-->
+        <div class="oldwebkit" style="max-width: 570px;">
+        <table style="border-collapse: separate; border-spacing: 9px; width: 100%; max-width: 570px;" class="vb-row fullpad" width="570" cellspacing="9" cellpadding="0" border="0" align="center">
+          <tbody><tr>
+            <td style="font-size: 0;" valign="top" align="center">
+<!--[if (gte mso 9)|(lte ie 8)]><table align="center" border="0" cellspacing="0" cellpadding="0" width="552"><tr><![endif]-->
+<!--[if (gte mso 9)|(lte ie 8)]><td align="left" valign="top" width="276"><![endif]-->
+<div style="display: inline-block; max-width: 276px; vertical-align: top; width: 100%;" class="mobile-full">
+
+                    <table class="vb-content" style="border-collapse: separate; width: 100%;" width="276" cellspacing="9" cellpadding="0" border="0" align="left">
+                      <tbody><tr>
+                        <td class="long-text links-color mobile-textcenter" style="font-size: 13px; font-family: Arial, Helvetica, sans-serif; color: #919191; text-align: left;" valign="middle" align="left">
+                          <p style="Margin: 1em 0px; Margin-bottom: 0px; Margin-top: 0px;">
+                            <a href="https://libreborme.net" target="_blank" style="color: #cccccc; color: #cccccc; text-decoration: underline;">LibreBORME</a>
+                            <br>Tu fuente de información empresarial en Internet<br data-mce-bogus="1">
+                          </p>
+                        </td>
+                      </tr>
+                    </tbody></table>
+</div><!--[if (gte mso 9)|(lte ie 8)]></td>
+<td align="left" valign="top" width="276">
+<![endif]--><div style="display: inline-block; max-width: 276px; vertical-align: top; width: 100%;" class="mobile-full">
+                    <table class="vb-content" style="border-collapse: separate; width: 100%;" width="276" cellspacing="9" cellpadding="0" border="0" align="right">
+                      <tbody><tr>
+                        <td class="links-color socialLinks mobile-textcenter" style="font-size: 6px;" valign="middle" align="right">
+                          &nbsp;
+                          <a class="link" target="_new" href="https://twitter.com/_pablog">
+                            <img src="https://lists.libreborme.net/mosaico/templates/versafix-1/./img/social_def/twitter_ok.png" alt="Twitter" class="socialIcon social2" border="0">
+                          </a>
+                          &nbsp;
+                          <a class="link" target="_new" href="https://libreborme.net">
+                            <img src="https://lists.libreborme.net/mosaico/templates/versafix-1/./img/social_def/web_ok.png" alt="Web" class="socialIcon social2" border="0">
+                          </a>
+                        </td>
+
+                      </tr>
+                    </tbody></table>
+</div>
+<!--[if (gte mso 9)|(lte ie 8)]></td><![endif]-->
+<!--[if (gte mso 9)|(lte ie 8)]></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody></table>
+        </div>
+<!--[if (gte mso 9)|(lte ie 8)]></td></tr></table><![endif]-->
+      </td>
+    </tr>
+  </tbody></table>
+  <!-- footerBlock -->
+  {% comment %}
+  <table style="background-color: #3f3f3f;" id="ko_footerBlock_2" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#3f3f3f">
+    <tbody><tr>
+      <td style="background-color: #3f3f3f;" valign="top" bgcolor="#3f3f3f" align="center">
+<!--[if (gte mso 9)|(lte ie 8)]><table align="center" border="0" cellspacing="0" cellpadding="0" width="570"><tr><td align="center" valign="top"><![endif]-->
+        <div class="oldwebkit" style="max-width: 570px;">
+        <table style="border-collapse: separate; border-spacing: 9px; padding-left: 9px; padding-right: 9px; width: 100%; max-width: 570px;" class="vb-container halfpad" width="570" cellspacing="9" cellpadding="0" border="0" align="center">
+          <tbody><tr>
+            <td class="long-text links-color" style="text-align: center; font-size: 13px; color: #919191; font-weight: normal; text-align: center; font-family: Arial, Helvetica, sans-serif;"><p style="Margin: 1em 0px; Margin-bottom: 0px; Margin-top: 0px;"><br data-mce-bogus="1"></p></td>
+          </tr>
+          <tr>
+            <td style="text-align: center;">
+              <a href="[LINK_UNSUBSCRIBE]" style="text-decoration: underline; color: #ffffff; text-align: center; font-size: 13px; font-weight: normal; font-family: Arial, Helvetica, sans-serif;" target="_new"><span><br data-mce-bogus="1"></span></a>
+            </td>
+          </tr>
+        </tbody></table>
+        </div>
+<!--[if (gte mso 9)|(lte ie 8)]></td></tr></table><![endif]-->
+      </td>
+    </tr>
+  </tbody></table>
+  {% endcomment %}
+  <!-- /footerBlock -->
+  </center>
+</body></html>

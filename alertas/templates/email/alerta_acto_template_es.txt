@@ -6,6 +6,6 @@ A continuación te enviamos el listado de empresas que han generado una notifica
 {% for company in companies %}* {{ company.name }}
 {% endfor %}
 
-Recuerda que puedes modificar tus suscripciones desde tu panel de usuario en {% url 'service-subscription' %}.
+Recuerda que puedes modificar tus suscripciones desde tu panel de usuario en {{ SITE_URL }}{% url 'service-subscription' %}.
 
 {% include "email/footer.txt" %}
