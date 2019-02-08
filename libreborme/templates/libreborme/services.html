@@ -50,35 +50,37 @@
                     <div class="row">
                         <div class="col-md-12 text-justify">
                             <h3 class="titulo-servicio">Suscríbete</h3>
-                            <p class="descripcion-servicio">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, </p>
+                            <p class="descripcion-servicio">Mediante el Servicio de Suscripciones recibirás un email cada día con la información mercantil solicitada.</p>
                         </div>
                     </div>
                     <div class="card-deck">
                         <div class="card">
                             <div class="card-body">
-                                <h4>Mensual</h4>
-                                <h3>4.99€</h3>
-                                <p class="card-text">At vero eos et accusamus</p>
+                                <h4>Suscripción mensual</h4>
+                                <h3>59,99€</h3>
+                                <p class="card-text">Pago mensual</p>
                                 <hr>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">At vero eos et accusamus</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Un tipo de notificación</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Una provincia</p>
                             </div>
                             <a href="#">
                                 <div class="card-footer text-center">
-                                    <p>Contratar</p>
+                                    <p>Suscribirme</p>
                                 </div>
                             </a>
                         </div>
                         <div class="card">
                             <div class="card-body">
-                                <h4>Anual</h4>
-                                <h3>20.99€</h3>
-                                <p class="card-text">At vero eos et accusamus</p>
+                                <h4>Suscripción mensual</h4>
+                                <h3>179,99€</h3>
+                                <p class="card-text">Pago mensual</p>
                                 <hr>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">At vero eos et accusamus</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Un tipo de notificación</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Todas las provincia</p>
                             </div>
                             <a href="#">
                                 <div class="card-footer text-center">
-                                    <p>Contratar</p>
+                                    <p>Suscribirme</p>
                                 </div>
                             </a>
                         </div>
@@ -96,35 +98,71 @@
                 </div>
                 <div class="col-md-10">
                     <div class="row">
-                        <h3 class="titulo-servicio">Implementar API</h3>
-                        <p class="descripcion-servicio">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, </p>
+                        <h3 class="titulo-servicio">Integración API</h3>
+                        <p class="descripcion-servicio">Con la API podrás hacer consultas personalizadas e integrar los datos de LibreBORME en tu sistema. Contáctanos para desarrollos a medida.
+                        </p>
                     </div>
                     <div class="card-deck">
                         <div class="card">
                             <div class="card-body">
-                                <h4>Mensual</h4>
-                                <h3>4.99€</h3>
-                                <p class="card-text">At vero eos et accusamus</p>
+                                <h4>Starter</h4>
+                                <h3>Gratis</h3>
+                                <p class="card-text"></p>
                                 <hr>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">At vero eos et accusamus</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">{{ service_api_free_req_day }} consultas al mes</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Sin soporte técnico</p>
                             </div>
                             <a href="#">
                                 <div class="card-footer text-center">
-                                    <p>Contratar</p>
+                                    <p>Solicitar API key</p>
                                 </div>
                             </a>
                         </div>
                         <div class="card">
                             <div class="card-body">
-                                <h4>Anual</h4>
-                                <h3>20.99€</h3>
-                                <p class="card-text">At vero eos et accusamus</p>
+                                <h4>Advanced</h4>
+                                <h3>79,99€ / mes</h3>
+                                <p class="card-text">Pago mensual</p>
                                 <hr>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">At vero eos et accusamus</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">{{ service_api_advanced_req_day }} consultas al día</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Sin soporte técnico</p>
                             </div>
                             <a href="#">
                                 <div class="card-footer text-center">
-                                    <p>Contratar</p>
+                                    <p>Suscribirme</p>
+                                </div>
+                            </a>
+                        </div>
+                        {% comment %}
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Advanced</h4>
+                                <h3>799,99€ / mes</h3>
+                                <p class="card-text">Pago anual</p>
+                                <hr>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">{{ service_api_free_advanced_day }} consultas al día</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Sin soporte técnico</p>
+                            </div>
+                            <a href="{% url 'buy-product' product=plan_year.nickname %}">
+                                <div class="card-footer text-center">
+                                    <p>Suscribirme (anual)</p>
+                                </div>
+                            </a>
+                        </div>
+                        {% endcomment %}
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Pro</h4>
+                                <h3>Contáctanos</h3>
+                                <p class="card-text"></p>
+                                <hr>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Más de {{ service_api_advanced_req_day }} consultas al día</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Soporte técnico 24x7</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">SLA</p>
+                            </div>
+                            <a href="#">
+                                <div class="card-footer text-center">
+                                    <p>Suscribirme</p>
                                 </div>
                             </a>
                         </div>
@@ -143,34 +181,21 @@
                 <div class="col-md-10">
                     <div class="row">
                         <h3 class="titulo-servicio">Activar alertas</h3>
-                        <p class="descripcion-servicio">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, </p>
+                        <p class="descripcion-servicio">Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa monitoreada aparezca en un Boletín Oficial</p>
+                        <p class="descripcion-servicio">Puedes probar el servicio de forma gratuita con 3 personas y empresas de tu elección.</p>
                     </div>
                     <div class="card-deck">
                         <div class="card">
                             <div class="card-body">
-                                <h4>Mensual</h4>
-                                <h3>4.99€</h3>
-                                <p class="card-text">At vero eos et accusamus</p>
+                                <h4>Bono de alertas</h4>
+                                <h3>2,99€ / mes</h3>
+                                <p class="card-text">Pago anual</p>
                                 <hr>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">At vero eos et accusamus</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Bono de {{ max_alertas_follower_paid }} alertas</p>
                             </div>
                             <a href="#">
                                 <div class="card-footer text-center">
-                                    <p>Contratar</p>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="card">
-                            <div class="card-body">
-                                <h4>Anual</h4>
-                                <h3>20.99€</h3>
-                                <p class="card-text">At vero eos et accusamus</p>
-                                <hr>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">At vero eos et accusamus</p>
-                            </div>
-                            <a href="#">
-                                <div class="card-footer text-center">
-                                    <p>Contratar</p>
+                                    <p>Suscribirme</p>
                                 </div>
                             </a>
                         </div>

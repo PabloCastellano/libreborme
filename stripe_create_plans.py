@@ -28,7 +28,6 @@ def create_follow100_product_and_plan():
     product.save()
     print("Created product '{}' ({})".format(product.name, product.id))
 
-    """
     plan = stripe.Plan.create(
         nickname=ALERTS_YEAR_PLAN,
         product=product.id,
@@ -37,7 +36,6 @@ def create_follow100_product_and_plan():
         interval='year'
     )
     print("Created plan '{}' ({})".format(plan.nickname, plan.id))
-    """
 
 
 def create_subscription_product_and_plans():

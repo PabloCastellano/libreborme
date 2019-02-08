@@ -25,7 +25,7 @@ urlpatterns = [
     path('contact/', t(template_name="libreborme/contact.html"), name='contact'),
     path('cookies/', t(template_name="libreborme/cookies.html"), name='cookies'),
     path('developers/', t(template_name="libreborme/developers.html"), name='developers'),
-    path('services/', t(template_name="libreborme/services.html"), name='services'),
+    path('services/', views.ServicesView.as_view(), name='services'),
     path('support/', t(template_name="libreborme/support.html"), name='support'),
     path('supporters/', t(template_name="libreborme/supporters.html"), name='supporters'),
 

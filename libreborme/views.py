@@ -8,6 +8,8 @@ from borme.mixins import CacheMixin
 
 from pathlib import Path
 
+from alertas.utils import get_alertas_config
+
 from . import utils
 
 import stripe
@@ -29,6 +31,19 @@ class AboutView(CacheMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(AboutView, self).get_context_data(**kwargs)
         context['HOST_BUCKET'] = settings.HOST_BUCKET
+        return context
+
+
+class ServicesView(CacheMixin, TemplateView):
+    template_name = "libreborme/services.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ServicesView, self).get_context_data(**kwargs)
+
+        aconfig = get_alertas_config()
+        context["service_api_free_req_day"] = aconfig["service_api_free_req_day"]
+        context["service_api_advanced_req_day"] = aconfig["service_api_advanced_req_day"]
+        context["max_alertas_follower_paid"] = aconfig["max_alertas_follower_paid"]
         return context
 
 

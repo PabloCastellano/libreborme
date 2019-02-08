@@ -29,6 +29,7 @@ recreate_db2:
 		psql -h localhost -U libreborme postgres -c "drop database libreborme;"
 		psql -h localhost -U libreborme postgres -c "create database libreborme;"
 		psql -h localhost -U libreborme < clean_dump.sql
+		make reindex
 
 sync_stripe:
 		./manage.py djstripe_init_customers

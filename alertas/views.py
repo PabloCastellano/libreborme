@@ -313,7 +313,7 @@ class ServiceAlertaView(CustomerMixin, StripeMixin, TemplateView):
                     plan__nickname=settings.ALERTS_YEAR_PLAN,
                     customer=context["customer"])
 
-        # context["plan_year"] = Plan.objects.get(nickname=settings.ALERTS_YEAR_PLAN)
+        context["plan_year"] = Plan.objects.get(nickname=settings.ALERTS_YEAR_PLAN)
         return context
 
 
