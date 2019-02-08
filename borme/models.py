@@ -324,6 +324,14 @@ class Company(m.Model):
     def get_absolute_url(self):
         return reverse('borme-empresa', args=[str(self.slug)])
 
+    @staticmethod
+    def get_from_name(name):
+        _, _, slug_company = parse_empresa(name)
+        return Company.objects.get(slug=slug_company)
+
+    def __lt__(self, other):
+        return self.name < other.name
+
     def __str__(self):
         return self.fullname
 

@@ -2,12 +2,15 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
+from django.utils.text import slugify
 from django.template.loader import render_to_string
 
 from .utils import (
     get_alertas_config, insert_alertas_history, insert_libreborme_log,
     get_subscription_data
 )
+
+from borme.models import Company
 
 import logging
 import os.path
@@ -67,7 +70,14 @@ def send_email_to_subscriber(alerta, evento, date):
     subject = "Tus subscripciones en LibreBORME"
     message = str(results)
 
-    context = {"companies": results,
+    companies = results['results'].items()
+    companies2 = {}
+
+    for company, roles in sorted(companies):
+        instance = Company.get_from_name(company)
+        companies2[instance] = roles
+
+    context = {"companies": sorted(companies2.items()),
                "name": alerta.user.first_name,
                "provincia": provincia,
                "evento": evento_display,
@@ -76,13 +86,13 @@ def send_email_to_subscriber(alerta, evento, date):
     template_name = "email/alerta_acto_template_{0}.txt".format(language)
     message = render_to_string(template_name, context)
 
-    # TODO: Añadir SITE_URL
     if alerta.user.profile.send_html:
         template_name = "email/alerta_acto_template_{0}.html".format(language)
         html_message = render_to_string(template_name, context)
     else:
         html_message = None
 
+    # TODO: Enviar todos de una y no componer el email y luego mandarlo a cada uno (eficiencia)
     # TODO: [LIBREBORME]
     # TODO: Capture Smtp error
     alerta.user.email_user(subject, message, html_message=html_message)

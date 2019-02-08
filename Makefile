@@ -26,7 +26,8 @@ recreate_db:
 
 recreate_db2:
 		# pg_dump -c -C -h localhost -U libreborme > clean_dump.sql
-		# no va
+		psql -h localhost -U libreborme postgres -c "drop database libreborme;"
+		psql -h localhost -U libreborme postgres -c "create database libreborme;"
 		psql -h localhost -U libreborme < clean_dump.sql
 
 sync_stripe:

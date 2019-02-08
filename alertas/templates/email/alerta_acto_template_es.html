@@ -160,6 +160,13 @@
           border-collapse: separate;
           width: 100%;
       }
+      table.infocompany {
+          font-size: 12px;
+      }
+      table.roles {
+          color: #3f3f3f;
+          font-size: 12px;
+      }
 
   </a>
   </style>
@@ -259,7 +266,7 @@
                         </td>
                       </tr>
                       <tr>
-                        <td class="long-text links-color" style="text-align: left; font-size: 13px; font-family: Arial, Helvetica, sans-serif; color: #3f3f3f;" align="left"><p style="Margin: 1em 0px; Margin-top: 0px;">Hola [USER].</p><p style="Margin: 1em 0px; Margin-bottom: 0px;">A continuación te enviamos el listado de empresas que han generado una notificación en LibreBORME para tu suscripción Cambios de administrador en Madrid.<br>Recuerda que puedes modificar tus suscripciones desde el panel de usuario.<br></p></td>
+                        <td class="long-text links-color" style="text-align: left; font-size: 13px; font-family: Arial, Helvetica, sans-serif; color: #3f3f3f;" align="left"><p style="Margin: 1em 0px; Margin-top: 0px;">Hola {{ name }}.</p><p style="Margin: 1em 0px; Margin-bottom: 0px;">A continuación te enviamos el listado de empresas que han generado una notificación en LibreBORME para tu suscripción Cambios de administrador en Madrid.<br>Recuerda que puedes modificar tus suscripciones desde el panel de usuario.<br></p></td>
                       </tr>
                       <tr>
                         <td valign="top">
@@ -295,8 +302,47 @@
           <tbody><tr>
             <td class="long-text links-color" style="text-align: left; font-size: 13px; font-family: Arial, Helvetica, sans-serif; color: #3f3f3f;" align="left">
               <h2><strong>Cambios de administrador</strong><br data-mce-bogus="1"></h2>
-              <p style="Margin: 1em 0px;">Far far away, behind the word mountains, far from the countries <a href="" style="color: #3f3f3f; color: #3f3f3f; text-decoration: underline;">Vokalia and Consonantia</a>, there live the blind texts.</p>
-              <p style="Margin: 1em 0px; Margin-bottom: 0px;">Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean. A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+              {% for company, roles in companies %}
+              <h3><strong>{{ company }}</strong><br data-mce-bogus="1"></h3>
+              <table class="infocompany">
+                  {% if company.address %}
+                  <tr>
+                    <td>
+                        {{ company.address }}
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% if company.date_created %}
+                  <tr>
+                    <td>
+                      Constituída el {{ company.date_created }}
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% if company.nif %}
+                  <tr>
+                    <td>
+                      {{ company.nif }}
+                    </td>
+                  </tr>
+                  {% endif %}
+                <tbody>
+                </tbody>
+              </table>
+              <table class="roles">
+                <tbody>
+                  {% for role in roles %}
+                  <tr>
+                    <td></td>
+                    <td>
+                      <strong>{{ role.1 }} ({{ role.0 }})<strong>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              {% endfor %}
+              <p style="Margin: 1em 0px; Margin-bottom: 0px; font-size: 11px; Margin-top: 60px;">Cambios de administrador a día {{ date }}.</p>
             </td>
           </tr>
         </tbody></table>
@@ -361,29 +407,5 @@
       </td>
     </tr>
   </tbody></table>
-  <!-- footerBlock -->
-  {% comment %}
-  <table style="background-color: #3f3f3f;" id="ko_footerBlock_2" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#3f3f3f">
-    <tbody><tr>
-      <td style="background-color: #3f3f3f;" valign="top" bgcolor="#3f3f3f" align="center">
-<!--[if (gte mso 9)|(lte ie 8)]><table align="center" border="0" cellspacing="0" cellpadding="0" width="570"><tr><td align="center" valign="top"><![endif]-->
-        <div class="oldwebkit" style="max-width: 570px;">
-        <table style="border-collapse: separate; border-spacing: 9px; padding-left: 9px; padding-right: 9px; width: 100%; max-width: 570px;" class="vb-container halfpad" width="570" cellspacing="9" cellpadding="0" border="0" align="center">
-          <tbody><tr>
-            <td class="long-text links-color" style="text-align: center; font-size: 13px; color: #919191; font-weight: normal; text-align: center; font-family: Arial, Helvetica, sans-serif;"><p style="Margin: 1em 0px; Margin-bottom: 0px; Margin-top: 0px;"><br data-mce-bogus="1"></p></td>
-          </tr>
-          <tr>
-            <td style="text-align: center;">
-              <a href="[LINK_UNSUBSCRIBE]" style="text-decoration: underline; color: #ffffff; text-align: center; font-size: 13px; font-weight: normal; font-family: Arial, Helvetica, sans-serif;" target="_new"><span><br data-mce-bogus="1"></span></a>
-            </td>
-          </tr>
-        </tbody></table>
-        </div>
-<!--[if (gte mso 9)|(lte ie 8)]></td></tr></table><![endif]-->
-      </td>
-    </tr>
-  </tbody></table>
-  {% endcomment %}
-  <!-- /footerBlock -->
   </center>
 </body></html>
