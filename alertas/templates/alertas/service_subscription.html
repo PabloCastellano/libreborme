@@ -9,10 +9,12 @@
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
     {% endfor %}
+    {% if not user.profile.has_tried_subscriptions %}
     <div class="alert alert-primary" role="alert">
         Tu primera suscripción incluye un periodo de prueba de {{ service_subscription_trial_day }} días que puedes cancelar en este periodo
         sin que esto tenga ningún coste.
     </div>
+    {% endif %}
     <h1 class="page-header">Mis suscripciones</h1>
 
     <h3 class="subtitle-panel mt-4">¿Cómo funciona?</h3>
@@ -78,6 +80,7 @@
                         <td>{{ field }}</td>
                         {% endfor %}
                         <td>
+                            <i class="fas fa-plus-circle"></i>
                             <input type="submit" name="create" class="btn btn-primary btn-xs" value="Añadir">
                         </td>
                       </tr>
@@ -94,7 +97,7 @@
 
     <div class="row">
         <div class="col-sm-6">
-            <form class="" action="{% url "buy-product-new" %}" role="form" method="post">
+            <form id="buy_form" class="" action="{% url "buy-product-new" %}" role="form" method="post">
             {% csrf_token %}
             <h3 class="subtitle-panel mb-4 mt-4">Formulario de suscripción</h3>
             <div class="form-group row">
@@ -115,7 +118,7 @@
                     <p class="font-weight-bold"><span id="price">59,99</span>€ / mes</p>
                 </div>
             </div>
-            <input type="hidden" name="product" value="{{ plan_month_one.nickname }}">
+            <input id="buy_field_product" type="hidden" name="product" value="{{ plan_month_one.nickname }}">
             <input type="hidden" name="periodicidad" value="daily">
             <input type="submit" name="addtocart" class="btn btn-outline-danger btn-outline-danger2 btn-sm" value="Añadir a la cesta">
             </form>
@@ -195,8 +198,10 @@
         var value = $("#id_buy_provincia").val();
         if (value == 'all') {
             $("#price").text("{{ plan_month_full.amount }}");
+            $("#buy_field_product").val("subscription_month_full")
         } else {
             $("#price").text("{{ plan_month_one.amount }}");
+            $("#buy_field_product").val("subscription_month_one")
         }
     });
 </script>

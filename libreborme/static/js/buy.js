@@ -1,21 +1,10 @@
 'use strict';
 
-function toggle_hide(elementId) {
-    var e = document.getElementById(elementId);
-    if (e.style.display == 'none'){
-        e.style.display = 'block';
-    } else {
-        e.style.display = 'none';
-    }
-    return true;
-}
-
-function registerElements(elements, exampleName) {
-  var formClass = '.' + exampleName;
+function registerElements(elements, baseName) {
+  var formClass = '.' + baseName;
   var example = document.querySelector(formClass);
 
   var form = example.querySelector('form');
-  var resetButton = example.querySelector('a.reset');
   var error = form.querySelector('.error');
   var errorMessage = error.querySelector('.message');
 
@@ -51,7 +40,6 @@ function registerElements(elements, exampleName) {
     submit.click();
     submit.remove();
   }
-
 
   function stripeTokenHandler(token) {
     // Insert the token ID into the form so it gets submitted to the server
@@ -122,15 +110,17 @@ function registerElements(elements, exampleName) {
     disableInputs();
 
     // Gather additional customer data we may have collected in our form.
-    var name = form.querySelector('#' + exampleName + '-name');
-    var address1 = form.querySelector('#' + exampleName + '-address');
-    var city = form.querySelector('#' + exampleName + '-city');
-    var zip = form.querySelector('#' + exampleName + '-zip');
-    var country = form.querySelector('#' + exampleName + '-country');
+    var name = form.querySelector('#' + baseName + '-name');
+    var address1 = form.querySelector('#' + baseName + '-address');
+    var city = form.querySelector('#' + baseName + '-city');
+    var state = form.querySelector('#' + baseName + '-state');
+    var zip = form.querySelector('#' + baseName + '-zip');
+    var country = form.querySelector('#' + baseName + '-country');
     var additionalData = {
       name: name ? name.value : undefined,
       address_line1: address1 ? address1.value : undefined,
       address_city: city ? city.value : undefined,
+      address_state: state ? state.value : undefined,
       address_zip: zip ? zip.value : undefined,
       address_country: country ? country.value : undefined,
     };
@@ -143,8 +133,6 @@ function registerElements(elements, exampleName) {
       example.classList.remove('submitting');
 
       if (result.token) {
-        // If we received a token, show the token ID.
-        example.querySelector('.token').innerText = result.token.id;
         example.classList.add('submitted');
         // Send the token to your server.
         stripeTokenHandler(result.token);
@@ -153,25 +141,6 @@ function registerElements(elements, exampleName) {
         enableInputs();
       }
     });
-  });
-
-  resetButton.addEventListener('click', function(e) {
-    e.preventDefault();
-    // Resetting the form (instead of setting the value to `''` for each input)
-    // helps us clear webkit autofill styles.
-    form.reset();
-
-    // Clear each Element.
-    elements.forEach(function(element) {
-      element.clear();
-    });
-
-    // Reset error state as well.
-    error.classList.remove('visible');
-
-    // Resetting the form does not un-disable inputs, so we need to do it separately:
-    enableInputs();
-    example.classList.remove('submitted');
   });
 }
 

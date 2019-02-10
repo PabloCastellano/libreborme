@@ -17,7 +17,7 @@ class MailTemplateAdmin(admin.ModelAdmin):
 
 @admin.register(m.Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('profile', 'user_link', 'user_customer', 'user_email', 'user_first_name', 'user_last_name', 'provincia', 'newsletter_promotions', 'newsletter_features')
+    list_display = ('profile', 'user_link', 'user_customer', 'user_email', 'user_first_name', 'user_last_name', 'provincia', 'newsletter_promotions', 'newsletter_features', 'has_tried_subscriptions')
     list_filter = ('provincia', 'has_api_enabled', 'has_tried_subscriptions')
     search_fields = ['user__email', 'notification_url']
 

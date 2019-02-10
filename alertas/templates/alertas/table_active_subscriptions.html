@@ -29,6 +29,9 @@
                       <br/><span style="font-size: 12px;">Hasta el {{ subscription.trial_end.date }}</span>
                       {% elif subscription.status == 'active' %}
                       <span class="badge badge-success">Activo</span>
+                      {% elif subscription.status == 'canceled' %}
+                      <span class="badge badge-danger">Cancelada</span>
+                      <br/><span style="font-size: 12px;">{{ subscription.canceled_at.date }}</span>
                       {% else %}
                       <span class="badge badge-danger">{{ subscription.status }}</span>
                       {% endif %}
@@ -36,7 +39,7 @@
                     <td>
                       {% if subscription.cancel_at_period_end %}
                       Cancelada el {{ subscription.canceled_at.date }}
-                      {% else %}
+                      {% elif subscription.status != 'canceled' %}
                         <a href="#">
                         <button type="button" class="btn btn-danger btn-xs">
                            <i class="fas fa-trash-alt"></i> Cancelar

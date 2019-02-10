@@ -29,9 +29,9 @@
             <div class="col-md-12">
                 <h3 class="subtitle-panel">Servicios contratados</h3>
 
-                {% if customer.has_any_active_subscription %}
+                {% if subscriptions %}
                 <p>Tiene las siguientes suscripciones activas</p>
-                {% include 'alertas/table_active_subscriptions.html' with subscriptions=customer.subscriptions.all %}
+                {% include 'alertas/table_active_subscriptions.html' %}
                 {% else %}
                 <p class="description mt-4">No tienes ningún servicio contratado actualmente.</p>
                 <p class="description">Sin embargo, puedes probar el servicio de <a href="{% url 'service-follow' %}">Seguimiento</a> de forma gratuita (limitado a {{ free_follows }} alertas).</p>

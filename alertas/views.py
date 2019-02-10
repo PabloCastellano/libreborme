@@ -25,7 +25,7 @@ from libreborme import utils
 from . import forms
 from .models import (
     AlertaActo, AlertaHistory,
-    Follower, EVENTOS_DICT, PROVINCIAS_DICT
+    Follower, EVENTOS_DICT, PROVINCIAS_DICT, PROVINCIAS_DICT_ALL
 )
 from .mixin import CustomerMixin, StripeMixin
 from .utils import get_alertas_config
@@ -47,6 +47,7 @@ TAXES = {
 }
 
 
+# TODO: Pagination
 @method_decorator(login_required, name='dispatch')
 class MyAccountView(CustomerMixin, TemplateView):
     template_name = 'alertas/myaccount.html'
@@ -64,8 +65,10 @@ class MyAccountView(CustomerMixin, TemplateView):
         aconfig = get_alertas_config()
         context['free_follows'] = aconfig['max_alertas_follower_free']
 
-        """
-        try:
+        if 'customer' in context:
+            context['subscriptions'] = context["customer"].subscriptions.all().order_by('-start')
+
+        """:
             context['ip'] = self.request.META['HTTP_X_FORWARDED_FOR']
         except KeyError:
             context['ip'] = self.request.META['REMOTE_ADDR']
@@ -185,6 +188,7 @@ class PaymentView(StripeMixin, CustomerMixin, TemplateView):
         context["cards"] = cards
         # context["form"] = forms.CreditCardForm()
 
+        # import pdb; pdb.set_trace()
         return context
 
 
@@ -266,10 +270,7 @@ class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
         # TODO: Solo una suscripción de prueba
 
         if context['customer']:
-            context["subscriptions"] = Subscription.objects.filter(
-                    plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN),
-                    customer=context["customer"])
-            context["subscriptions"] = context["customer"].active_subscriptions.filter(plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN))
+            context["subscriptions"] = context["customer"].valid_subscriptions.filter(plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN))
 
         context['alertas_a'] = AlertaActo.objects.filter(user=self.request.user)
         context['current'] = context['alertas_a'].count()
@@ -319,6 +320,7 @@ class ServiceAlertaView(CustomerMixin, StripeMixin, TemplateView):
         context["followers"] = Follower.objects.filter(user=self.request.user)
         context['form_f'] = forms.FollowerForm()
 
+        # TODO: self.request.user.djstripe_customers.get().subscriptions.filter()
         if context["customer"]:
             context["subscriptions"] = Subscription.objects.filter(
                     plan__nickname=settings.ALERTS_YEAR_PLAN,
@@ -336,27 +338,26 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
         context = super(CartView, self).get_context_data(**kwargs)
 
         profile = self.request.user.profile
-        context['user_complete'] = profile.is_complete()
-        if not context['user_complete']:
-            url = reverse('alertas-profile')
-            message = 'Necesitas completar <a href="{}">tu perfil</a> antes para poder contratar algún servicio'.format(url)
-            messages.add_message(self.request, messages.WARNING, message)
 
-        elif 'cart' in self.request.session:
+        if profile.is_complete() and 'cart' in self.request.session:
             taxname = 'IVA'  # TODO
             plan_name = self.request.session['cart']['name']
             price = self.request.session['cart']['price']
 
             # session
             context["evento"] = EVENTOS_DICT[self.request.session["cart"]["evento"]]
-            context["provincia"] = PROVINCIAS_DICT[self.request.session["cart"]["provincia"]]
+            context["provincia"] = PROVINCIAS_DICT_ALL[self.request.session["cart"]["provincia"]]
 
             plan = Plan.objects.get(nickname=plan_name)
-            product_text = "{0} ({1})".format(plan.product.name, context["evento"])
+            if context["provincia"] == "all":
+                provincia_text = "Todas las provincias"
+            else:
+                provincia_text = "Una provincia"
+            product_text = "{0}\n({1}, {2})".format(plan.product.name, context["evento"], provincia_text)
             context['product'] = {'name': product_text, 'price': price}
             context['total_with_tax'] = price
-            context['total_price'] = round(price / (1 + TAXES[taxname]), 2)
-            context['tax_amount'] = round(context['total_with_tax'] - context['total_price'], 2)
+            context['tax_amount'] = round(price / (1 + TAXES[taxname]), 2)
+            context['total_price'] = round(context['total_with_tax'] - context['tax_amount'], 2)
             context['tax_percentage'] = TAXES[taxname]
 
             if context["customer"]:
@@ -371,6 +372,22 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
             aconfig = get_alertas_config()
             context['service_subscription_trial_day'] = aconfig['service_subscription_trial_day']
             context["has_tried_subscriptions"] = profile.has_tried_subscriptions
+
+            # Prepare forms
+            # TODO: Falta población
+            user_profile = self.request.user.profile
+            context['form_payment'] = forms.PaymentForm(
+                initial={
+                    'name': user_profile.razon_social,
+                    'address': user_profile.address,
+                    'city': user_profile.poblacion,
+                    'state': user_profile.provincia,
+                    'zip': user_profile.post_code,
+                    'country': user_profile.country,
+                    'nif': user_profile.cif_nif,
+                },
+                auto_id="example2-%s",
+            )
 
             # TODO: test when Customer doesn't exist
             # TODO: No solo plan.nickname sino las del mismo tipo
@@ -417,12 +434,22 @@ def alerta_person_create(request):
 
 @login_required
 def alerta_acto_create(request):
+    """ Comprueba que el form es válido y que el usuario tiene suscripciones suficientes """
     if request.method == 'POST':
         form = forms.SubscriptionModelForm(request.POST)
         if form.is_valid():
-            alerta = form.save(commit=False)
-            alerta.user = request.user
-            alerta.save()
+
+            # customer = Customer.objects.get(subscriber=request.user)
+            customer = request.user.djstripe_customers.get()
+            # TODO: hacer un metodo en Manager: user.has_remaining_subscriptions o algo asi
+            subscriptions = customer.valid_subscriptions.filter(plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN))
+            alertas_a = AlertaActo.objects.filter(user=request.user)
+            remaining = len(subscriptions) - alertas_a.count()
+
+            if remaining > 0:
+                alerta = form.save(commit=False)
+                alerta.user = request.user
+                alerta.save()
     return redirect(reverse('service-subscription'))
 
 
@@ -596,7 +623,7 @@ def checkout_existing_card(request):
 
 
 @login_required
-def checkout(request):
+def checkout_page(request):
     """Checkout
 
     Llegados a este punto, la compra ya está aceptada y tenemos el token,
@@ -604,7 +631,6 @@ def checkout(request):
     """
     # TODO: make params
     # TODO: Promotion code
-    # TODO: Capture name when get token
     # TODO: description en el payment
     # TODO: no salvar el metodo de pago si no se pide expresamente
     # TODO: Guardar si ya ha hecho el periodo de prueba
@@ -617,8 +643,8 @@ def checkout(request):
         taxname = 'IVA'  # TODO: tax per province - limited to Spain
         tax_percent = TAXES[taxname]
 
-        # TODO: use token
         token = request.POST.get("stripeToken")
+        save_card = request.POST.get("save-card", False)
         try:
             # TODO: if not saved/save card, use the token once, otherwise
             # attach to customer
@@ -628,11 +654,23 @@ def checkout(request):
             #     subscription = customer.subscribe(plan)
             # else:
 
+            # Save card
+            if save_card:
+                customer.add_card(token)
+
             # Pending issues:
             # trial_from_plan: https://github.com/dj-stripe/dj-stripe/issues/809
             # billing_cycle_anchor: https://github.com/dj-stripe/dj-stripe/issues/814
-            trial_period_days = plan.trial_period_days
-            trial_end = datetime.datetime.now() + datetime.timedelta(days=trial_period_days)
+            if request.user.profile.has_tried_subscriptions:
+                trial_end = None
+            else:
+                trial_period_days = plan.trial_period_days
+                trial_end = datetime.datetime.now() + datetime.timedelta(days=trial_period_days)
+
+            # No hay que pasarle source si va a empezar trial
+            # Request req_oYnIY9ArQufGwu: This customer has no attached payment source
+            # How to specify source in customer.subscribe?!
+
             # coupon=None, quantity=1
             billing_cycle_anchor = utils.date_next_first(timestamp=True)
             subscription = customer.subscribe(plan, trial_end=trial_end,
@@ -654,11 +692,19 @@ def checkout(request):
             send_email_new_subscription(request.user)
 
             # TODO: Update customer sdk?
-            #
+            # TODO: Duplicado
             if nickname in (settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN):
                 mark_user_has_tried_subscriptions(request.user)
 
+            AlertaActo.objects.create(
+                user=request.user,
+                evento=request.session['cart']['evento'],
+                provincia=request.session['cart']['provincia'],
+                periodicidad='daily',
+            )
+
             del request.session['cart']
+
             return redirect("dashboard-index")
 
     return HttpResponse("", status=400)
@@ -789,7 +835,8 @@ def download_alerta_history_csv(request, id):
 
 @login_required
 def remove_cart(request):
-    del request.session['cart']
+    if 'cart' in request.session:
+        del request.session['cart']
     return redirect(reverse('alertas-cart'))
 
 

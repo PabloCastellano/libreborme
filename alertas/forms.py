@@ -7,6 +7,7 @@ from unidecode import unidecode
 
 from libreborme.models import NOTIFICATION_CHOICES, Profile
 from libreborme.provincias import PROVINCIAS_CHOICES
+from alertas.models import PROVINCIAS_CHOICES_ALL
 
 
 class FollowerModelForm(forms.ModelForm):
@@ -37,14 +38,18 @@ class SubscriptionModelForm(forms.ModelForm):
 
 
 class SubscriptionPlusModelForm(SubscriptionModelForm):
+
+    provincia = forms.ChoiceField(label="Provincia", choices=PROVINCIAS_CHOICES_ALL)
+
     class Meta:
         model = models.AlertaActo
-        fields = ['evento', 'provincia', 'periodicidad']
+        fields = ['evento', 'periodicidad']
         exclude = ('user', 'is_enabled')
 
     def __init__(self, *args, **kwargs):
         super(SubscriptionPlusModelForm, self).__init__(*args, **kwargs)
-        self.fields['provincia'].widget.choices.insert(1, ('all', 'Todas las provincias'))
+        self.fields['provincia'].widget.choices.remove(('all', 'Todas las provincias'))
+        self.fields['provincia'].widget.choices.insert(0, ('all', 'Todas las provincias'))
 
 
 class PersonalDataForm(forms.Form):
@@ -54,6 +59,16 @@ class PersonalDataForm(forms.Form):
     first_name = forms.CharField(label="Nombre", required=False)
     last_name = forms.CharField(label="Apellidos", required=False)
     home_phone = forms.CharField(label="Teléfono", required=False)
+
+
+class PaymentForm(forms.Form):
+    name = forms.CharField(label="Nombre")
+    nif = forms.CharField(label="NIF")
+    address = forms.CharField(label="Domicilio")
+    city = forms.CharField(label="Población")
+    state = forms.CharField(label="Provincia")
+    zip = forms.CharField(label="Código postal")
+    country = forms.CharField(label="País")
 
 
 class PersonalSettingsForm(forms.ModelForm):
