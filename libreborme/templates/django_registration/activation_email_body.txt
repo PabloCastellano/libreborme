@@ -1,5 +1,8 @@
-Hello {{ user }}.
+¡Hola!
 
-You must enable your account before {{ expiration_days }} days.
+Estás a un solo paso de completar tu registro en LibreBORME.
 
-Follow the link: http://{{ site }}/accounts/activate/{{ activation_key }}
+Para ello solo tienes que seguir el siguiente enlace:
+http://{{ site }}/accounts/activate/{{ activation_key }}
+
+El enlace de verificación tiene una validez de {{ expiration_days }} días.

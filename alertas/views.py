@@ -25,7 +25,7 @@ from libreborme import utils
 from . import forms
 from .models import (
     AlertaActo, AlertaHistory,
-    Follower
+    Follower, EVENTOS_DICT, PROVINCIAS_DICT
 )
 from .mixin import CustomerMixin, StripeMixin
 from .utils import get_alertas_config
@@ -269,14 +269,25 @@ class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
             context["subscriptions"] = Subscription.objects.filter(
                     plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN),
                     customer=context["customer"])
+            context["subscriptions"] = context["customer"].active_subscriptions.filter(plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN))
 
         context['alertas_a'] = AlertaActo.objects.filter(user=self.request.user)
-        context['form_alertas'] = forms.AlertaActoModelForm(initial={'periodicidad': 'daily'})
         context['current'] = context['alertas_a'].count()
+        context['form_alertas'] = forms.SubscriptionModelForm(initial={'periodicidad': 'daily'})
 
-        context["total"] = len(context["subscriptions"])
+        if 'subscriptions' in context:
+            context["total"] = len(context["subscriptions"])
+        else:
+            context["total"] = 0
+
+        context['form_subscription_buy'] = forms.SubscriptionPlusModelForm(
+                initial={'evento': 'adm', 'periodicidad': 'daily', 'provincia': 1},
+                auto_id="id_buy_%s",
+        )
         context["remaining"] = context["total"] - context["current"]
 
+        aconfig = get_alertas_config()
+        context["service_subscription_trial_day"] = aconfig["service_subscription_trial_day"]
         plan_month_one = Plan.objects.get(nickname=settings.SUBSCRIPTION_MONTH_ONE_PLAN)
         context["plan_month_one"] = plan_month_one
         plan_month_full = Plan.objects.get(nickname=settings.SUBSCRIPTION_MONTH_FULL_PLAN)
@@ -336,8 +347,12 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
             plan_name = self.request.session['cart']['name']
             price = self.request.session['cart']['price']
 
+            # session
+            context["evento"] = EVENTOS_DICT[self.request.session["cart"]["evento"]]
+            context["provincia"] = PROVINCIAS_DICT[self.request.session["cart"]["provincia"]]
+
             plan = Plan.objects.get(nickname=plan_name)
-            product_text = "{0} ({1})".format(plan.product.name, plan_name)
+            product_text = "{0} ({1})".format(plan.product.name, context["evento"])
             context['product'] = {'name': product_text, 'price': price}
             context['total_with_tax'] = price
             context['total_price'] = round(price / (1 + TAXES[taxname]), 2)
@@ -355,6 +370,11 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
 
             aconfig = get_alertas_config()
             context['service_subscription_trial_day'] = aconfig['service_subscription_trial_day']
+            context["has_tried_subscriptions"] = profile.has_tried_subscriptions
+
+            # TODO: test when Customer doesn't exist
+            # TODO: No solo plan.nickname sino las del mismo tipo
+            context["active_subscriptions"] = context["customer"].active_subscriptions.filter(plan__nickname=plan.nickname).count()
 
         context['active'] = 'cart'
         return context
@@ -398,7 +418,7 @@ def alerta_person_create(request):
 @login_required
 def alerta_acto_create(request):
     if request.method == 'POST':
-        form = forms.AlertaActoModelForm(request.POST)
+        form = forms.SubscriptionModelForm(request.POST)
         if form.is_valid():
             alerta = form.save(commit=False)
             alerta.user = request.user
@@ -433,13 +453,36 @@ def add_to_cart(request, product):
 
 
 @login_required
+def add_to_cart_new(request):
+    if request.method == 'POST':
+        form = forms.SubscriptionPlusModelForm(request.POST)
+        if form.is_valid():
+            product = request.POST['product']
+            try:
+                plan = Plan.objects.get(nickname=product)
+            except Plan.DoesNotExist:
+                return redirect(reverse('dashboard-index'))
+
+            price = float(plan.amount)  # Decimal
+            cart = {
+                'name': product,
+                'price': price,
+                'provincia': form.cleaned_data['provincia'],
+                'evento': form.cleaned_data['evento'],
+            }
+            request.session['cart'] = cart
+    return redirect(reverse('alertas-cart'))
+
+
+@login_required
 def settings_update_billing(request):
     if request.method == 'POST':
         user = User.objects.get(pk=request.user.id)
         profile = user.profile
 
-        # Process forms
+        profile_was_complete = user.profile.is_complete()
 
+        # Process forms
         # TODO: Update business_vat_id in Customer model
 
         form = forms.PersonalDataForm(request.POST)
@@ -463,8 +506,7 @@ def settings_update_billing(request):
         # https://github.com/dj-stripe/dj-stripe/issues/753
         user.refresh_from_db()
         if user.profile.is_complete():
-            messages.add_message(request, messages.SUCCESS,
-                                 'Tu perfil está completo ahora')
+            # TODO: Do only if some field has changed
             customer, _ = Customer.get_or_create(subscriber=request.user)
             customer_sdk = stripe.Customer.retrieve(customer.stripe_id)
             customer_sdk.business_vat_id = user.profile.cif_nif
@@ -482,9 +524,14 @@ def settings_update_billing(request):
                 'phone': user.profile.home_phone,
             }
             customer_sdk.save()
-
-
-        messages.add_message(request, messages.SUCCESS,
+            if profile_was_complete:
+                messages.add_message(request, messages.SUCCESS,
+                                     'Se han guardado los cambios')
+            else:
+                messages.add_message(request, messages.SUCCESS,
+                                     'Tu perfil está completo ahora')
+        else:
+            messages.add_message(request, messages.SUCCESS,
                              'Se han guardado los cambios')
     return redirect(reverse('alertas-profile'))
 
@@ -506,8 +553,10 @@ def add_card(request):
 def send_email_new_subscription(user):
     full_name = user.get_full_name()
     now = datetime.datetime.now()
-    mail_admins('Nueva suscripción ({})'.format(full_name),
-                'En {} Stripe ha suscrito al usuario {}'.format(now, full_name))
+    subject = 'Nueva suscripción ({})'.format(full_name)
+    message = 'En {} Stripe ha suscrito al usuario {}'.format(
+        now.strftime("%c"), full_name)
+    mail_admins(subject, message)
 
 
 def mark_user_has_tried_subscriptions(user):

@@ -130,5 +130,16 @@
 }
 
 section.panel {
-  padding: 20px 0 ;
+  padding: 20px 0;
+}
+
+.btn-outline-danger2 {
+    font-weight: bold;
+    color: #B9021D;
+}
+
+.btn-outline-danger2:hover {
+    color: white;
+    background-color: #B9021D !important;
+    border-color: #B9021D;
 }

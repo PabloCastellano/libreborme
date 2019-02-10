@@ -2,10 +2,6 @@
 {% load staticfiles %}
 {% block content %}
 
-{% for key, value in form.errors.items %}
-<p>{{ value }}</p>
-{% endfor %}
-
 {% if next %}
     {% if user.is_authenticated %}
     <p>Your account doesn't have access to this page. To proceed,
@@ -18,16 +14,22 @@
     <img src="{% static 'libreborme_logo.png' %}"><br>
   </div><br>
 
+  <div style="color: red">
+  {% for key, value in form.errors.items %}
+  {{ value }}
+  {% endfor %}
+  </div>
+
   <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
-    <input id="id_username" maxlength="254" name="username" placeholder="Username" type="text" />
-    <input id="id_password" name="password" type="password" placeholder="Password"/>
+    <input type="email" class="form-control" id="id_username" maxlength="254" name="username" placeholder="Correo electrónico" required>
+    <input id="id_password" name="password" type="password" placeholder="Contraseña"/>
     <input type="hidden" name="next" value="" />
-    <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+    <input type="submit" name="login" class="login loginmodal-submit" value="Entrar">
   </form>
 
   <div class="login-help">
-    <a href="{% url 'django_registration_register' %}">Register</a> - <a href="{% url 'password_reset' %}">Forgot password</a>
+    <a href="{% url 'django_registration_register' %}">Registrarme</a> - <a href="{% url 'password_reset' %}">Olvidé mi contraseña</a>
   </div>
 </div>
 

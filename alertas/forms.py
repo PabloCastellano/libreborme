@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from . import models
 from djstripe.models import Customer
 
+from unidecode import unidecode
+
 from libreborme.models import NOTIFICATION_CHOICES, Profile
 from libreborme.provincias import PROVINCIAS_CHOICES
 
@@ -17,11 +19,32 @@ class FollowerForm(forms.Form):
     slug = forms.CharField()
 
 
-class AlertaActoModelForm(forms.ModelForm):
+class SubscriptionModelForm(forms.ModelForm):
     class Meta:
         model = models.AlertaActo
         fields = ['evento', 'provincia', 'periodicidad']
         exclude = ('user', 'is_enabled')
+
+    def __init__(self, *args, **kwargs):
+        super(SubscriptionModelForm, self).__init__(*args, **kwargs)
+        self.fields['evento'].widget.attrs.update({'class': 'form-control form-control-sm'})
+        self.fields['provincia'].widget.attrs.update({'class': 'form-control form-control-sm'})
+        self.fields['periodicidad'].widget.attrs.update({'class': 'form-control form-control-sm'})
+
+        # Sort <option>s for <select>
+        self.fields['provincia'].widget.choices = sorted(self.fields['provincia'].widget.choices, key=lambda k: unidecode(k[1]))
+        self.fields['evento'].widget.choices = sorted(self.fields['evento'].widget.choices, key=lambda k: unidecode(k[1]))
+
+
+class SubscriptionPlusModelForm(SubscriptionModelForm):
+    class Meta:
+        model = models.AlertaActo
+        fields = ['evento', 'provincia', 'periodicidad']
+        exclude = ('user', 'is_enabled')
+
+    def __init__(self, *args, **kwargs):
+        super(SubscriptionPlusModelForm, self).__init__(*args, **kwargs)
+        self.fields['provincia'].widget.choices.insert(1, ('all', 'Todas las provincias'))
 
 
 class PersonalDataForm(forms.Form):

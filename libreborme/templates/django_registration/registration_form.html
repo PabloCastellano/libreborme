@@ -2,6 +2,10 @@
 {% load i18n %}
 {% load staticfiles %}
 
+{% block title %}
+    Registro | LibreBORME
+{% endblock %}
+
 {% block content %}
 
 <div class="loginmodal-container">
@@ -13,7 +17,7 @@
     <form method="post" action=".">
       {% csrf_token %}
       {{ form.as_p }}
-      <input class='btn btn-primary' type="submit" value="{% trans 'Register' %}" />
+      <input class='btn btn-primary' type="submit" value="Registrarme" />
     </form>
   </div>
 

@@ -96,6 +96,7 @@
             </div>
             <div class="row section-roadmap mt-3">
                 <div class="col-md-12">
+                   {% if anuncio %}
                     <div class="line-roadmap">
                         {% for anuncio in anuncios %}
                         {% for acto_name, value in anuncio.actos %}
@@ -138,10 +139,11 @@
                             </div>
                         </div>
                         {% endfor %}
-                        {% empty %}
-                            <i>No hay anuncios registrados.</i>
                         {% endfor %}
                     </div>
+                   {% else %}
+                        <i>No hay anuncios registrados.</i>
+                   {% endif %}
                 </div>
             </div>
         </div>

@@ -1,4 +1,7 @@
 {% extends "base_generic.html" %}
+{% comment %}
+molaría poner el {{ user.email }} pero user es AnonymousUSer
+{% endcomment %}
 {% load i18n %}
 {% load staticfiles %}
 
@@ -9,13 +12,12 @@
     <img src="{% static 'libreborme_logo.png' %}"><br>
   </div><br>
 
-  <h3>Registration complete!</h3>
+  <h3>Ya casi estamos...</h3>
 
-  <p>
-  This template should inform the user that an email containing account-activation information has been sent.
-  </p>
+  <p>Necesitamos verificar que la dirección de correo electrónico que has usado existe. Revisa tu cuenta, allí tendrás un enlace para confirmar la verificación</p>
+  <p>No te olvides de comprobar si ha ido a la carpeta de spam, a veces pasa.</p>
 
-  <p>Go back to the <a href="{% url 'borme-home' %}">Main Page</a>.</p>
+  <p>Volver a la <a href="{% url 'borme-home' %}">página principal</a>.</p>
 </div>
 
 {% endblock %}

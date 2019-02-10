@@ -173,7 +173,7 @@ aira-describedby="" ?
                 <div class="container">
                     <div class="row justify-content-md-center">
                         <div class="col-md-10">
-                            <form method="post" action="{% url 'django_registration_register' %}">
+                            <form method="POST" action="{% url 'django_registration_register' %}">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <input type="email" class="form-control" id="id_email" maxlength="254" name="email" aria-describedBy="emailHelp" placeholder="Correo electrónico" required>
@@ -187,7 +187,7 @@ aira-describedby="" ?
                                 <div class="form-check mb-3">
                                     <input class="form-check-input" type="checkbox" name="accept_tos" id="accept_tos" required />
                                     <label class="form-check-label" for="accept_tos">
-                                      Acepto las <a target="_blank" href="{% url 'aviso_legal' %}">Condiciones de Uso, Política de Privacidad y el Uso de Cookies (review)</a>.
+                                      He leído y acepto las <a target="_blank" href="{% url 'aviso_legal' %}">Condiciones de Uso, Política de Privacidad y el Uso de Cookies (review)</a>.
                                     </label>
                                 </div>
                             <div class="row">

@@ -9,84 +9,195 @@
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
     {% endfor %}
+    <div class="alert alert-primary" role="alert">
+        Tu primera suscripción incluye un periodo de prueba de {{ service_subscription_trial_day }} días que puedes cancelar en este periodo
+        sin que esto tenga ningún coste.
+    </div>
     <h1 class="page-header">Mis suscripciones</h1>
 
-    <p>Mediante el Servicio de Suscripciones recibirás un email cada día con la información mercantil solicitada</p>
+    <h3 class="subtitle-panel mt-4">¿Cómo funciona?</h3>
+    <div class="row">
+        <div class="col-sm-6">
+            <p>Mediante el Servicio de Suscripciones recibirás información mercantil de determinados tipos de eventos.
+               Por ejemplo:</p>
+            <ul>
+                <li>Constitución de <strong>nuevas empresas</strong> e información sobre sus administradores</li>
+                <li>Empresas que <strong>cambian de administrador</strong></li>
+                <li>Empresas que han entrado en <strong>concurso de acreedores</strong> o liquidación</li>
+            </ul>
+            <p>Una vez suscrito recibirás cada día en tu email la información seleccionada.</p>
+        </div>
+    </div>
 
     {% if subscriptions %}
     {% comment %}
     <h1 class="title-section mt-4"><span>|</span>Planes contratados</h1>
     {% include 'alertas/table_active_subscriptions.html' %}
     {% endcomment %}
-    <h1 class="title-section mt-4"><span>|</span>Lista de Suscripciones</h1>
+    <h1 class="title-section mt-3"><span>|</span>Lista de Suscripciones</h1>
     <p>Tienes {{ current }} subscripciones activas.
-    {% if remaining > 0 %} Aún puedes añadir {{ remaining }} más.{% endif %}
-    </p>
-    {% endif %}
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Tipo de evento</th>
-                    <th>Provincia</th>
-                    <th>Periodicidad</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for alerta in alertas_a %}
-              <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ alerta.get_evento_display }}</td>
-                <td>{{ alerta.get_provincia_display }}</td>
-                <td>{{ alerta.get_periodicidad_display }}</td>
-                <td>
-                  <a href="{% url 'alerta-remove-acto' alerta.id %}">
-                  <button type="button" class="btn btn-danger btn-xs">
-                    <i class="fas fa-trash-alt"></i> Eliminar
-                  </button>
-                  </a>
-                </td>
-              </tr>
-            {% endfor %}
+        {% if remaining > 0 %} Aún puedes añadir {{ remaining }} más.{% endif %}
+        </p>
 
-            {% if remaining > 0 %}
-            <form class="" action="{% url "alertas-new-acto" %}" role="form" method="post">
-              {% csrf_token %}
-              <tr>
-                <td>{{ current|add:1 }}</td>
-                {% for field in form_alertas.visible_fields %}
-                <td>{{ field }}</td>
-                {% endfor %}
-                <td>
-                    <input type="submit" name="create" class="btn btn-primary btn-xs" value="Añadir">
-                </td>
-              </tr>
-            </form>
-            {% endif %}
-            </tbody>
-        </table>
-    </div>
-
-    <h1 class="title-section mt-4"><span>|</span>¿Cómo funciona?</h1>
     <div class="row">
-        <div class="col-sm-5 text-justify">
-            <p>Elige un tipo de suscripción entre las siguientes:</p>
-            <ul>
-                <li>Empresas de nueva creación</li>
-                <li>Empresas que cambian de administrador</li>
-                <li>Empresas en concurso de acreedores / liquidación</li>
-            </ul>
-            <p class="text-justify">Cada día recibirás en tu email la información que has elegido.</p>
-            <p class="text-justify">Las suscripciones incluyen un período de prueba de 7 días. Puedes cancelar la suscripción en cualquier momento antes de los 7 días, sin que esto tenga ningún coste.</p>
-            <p class="text-justify">El período de prueba solo es válido la primera vez.</p>
-            <p class="text-justify">Lea los <a target="_blank" href="{% url 'alertas-tos' %}">Términos y Condiciones del Servicio de Suscripciones (TODO: review)</a>.</p>
+        <div class="col-sm-6">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tipo de evento</th>
+                            <th>Provincia</th>
+                            <th>Periodicidad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for alerta in alertas_a %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ alerta.get_evento_display }}</td>
+                        <td>{{ alerta.get_provincia_display }}</td>
+                        <td>{{ alerta.get_periodicidad_display }}</td>
+                        <td>
+                          <a href="{% url 'alerta-remove-acto' alerta.id %}">
+                          <button type="button" class="btn btn-danger btn-xs">
+                            <i class="fas fa-trash-alt"></i> Eliminar
+                          </button>
+                          </a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+
+                    {% if remaining > 0 %}
+                    <form class="" action="{% url "alertas-new-acto" %}" role="form" method="post">
+                      {% csrf_token %}
+                      <tr>
+                        <td>{{ current|add:1 }}</td>
+                        {% for field in form_alertas.visible_fields %}
+                        <td>{{ field }}</td>
+                        {% endfor %}
+                        <td>
+                            <input type="submit" name="create" class="btn btn-primary btn-xs" value="Añadir">
+                        </td>
+                      </tr>
+                    </form>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="col-sm-6 offset-sm-1">
+    </div>
+	<a href="#" class="list-inline-item" data-dismiss="modal" data-toggle="modal" data-target="#infoSubscriptions">Contratar otra suscripción</a>
+    {% else %}
+    <h1 class="title-section mt-3"><span>|</span>Contratar</h1>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <form class="" action="{% url "buy-product-new" %}" role="form" method="post">
+            {% csrf_token %}
+            <h3 class="subtitle-panel mb-4 mt-4">Formulario de suscripción</h3>
+            <div class="form-group row">
+                <label class="control-label col-sm-3" for="id_buy_evento">Tipo de evento</label>
+                <div class="col-sm-5">
+                    {{ form_subscription_buy.evento}}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="control-label col-sm-3" for="id_buy_provincia">Provincia</label>
+                <div class="col-sm-5">
+                    {{ form_subscription_buy.provincia}}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="control-label col-sm-3">Precio</label>
+                <div class="col-sm-5">
+                    <p class="font-weight-bold"><span id="price">59,99</span>€ / mes</p>
+                </div>
+            </div>
+            <input type="hidden" name="product" value="{{ plan_month_one.nickname }}">
+            <input type="hidden" name="periodicidad" value="daily">
+            <input type="submit" name="addtocart" class="btn btn-outline-danger btn-outline-danger2 btn-sm" value="Añadir a la cesta">
+            </form>
+        </div>
+        <div class="col-sm-5 offset-sm-1" style="-webkit-filter: grayscale(100%); filter: grayscale(100%);">
             {% include 'alertas/pricing_subscriptions_table.html' %}
         </div>
     </div>
+    {% endif %}
+
 </main>
 
+
+<!-- Modal -->
+<div class="modal fade modal-login" id="infoSubscriptions" tabindex="-1" role="dialog" aria-labelledby="infoSubscriptions" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="row justify-content-center w-100">
+                    <div class="col-md-12">
+                        <p class="text-header">Cómo funcionan las Suscripciones</p>
+                    </div>
+                </div>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+					<h3 class="subtitle-panel mb-4">Planes y precios</h3>
+				    {% include 'alertas/pricing_subscriptions_table.html' %}
+                    <div class="row justify-content-md-center">
+                        <div class="col-12">
+							<form class="" action="{% url "buy-product-new" %}" role="form" method="post">
+							{% csrf_token %}
+							<h3 class="subtitle-panel mb-4">Formulario de suscripción</h3>
+							<div class="form-group row">
+								<label class="control-label col-sm-3" for="id_buy_evento">Tipo de evento</label>
+								<div class="col-sm-7">
+									{{ form_subscription_buy.evento}}
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="control-label col-sm-3" for="id_buy_provincia">Provincia</label>
+								<div class="col-sm-7">
+									{{ form_subscription_buy.provincia}}
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="control-label col-sm-3">Precio</label>
+								<div class="col-sm-7">
+									<p class="font-weight-bold"><span id="price">59,99</span>€ / mes</p>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-12">
+                                    <p>Lea los <a target="_blank" href="{% url 'alertas-tos' %}">Términos y Condiciones del Servicio de Suscripciones (TODO: review)</a>.</p>
+								</div>
+							</div>
+							<input type="hidden" name="product" value="{{ plan_month_one.nickname }}">
+							<input type="hidden" name="periodicidad" value="daily">
+							<input type="submit" name="addtocart" class="btn btn-outline-danger btn-outline-danger2 btn-sm" value="Añadir a la cesta">
+							</form>
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $("#id_buy_provincia").change(function() {
+        var value = $("#id_buy_provincia").val();
+        if (value == 'all') {
+            $("#price").text("{{ plan_month_full.amount }}");
+        } else {
+            $("#price").text("{{ plan_month_one.amount }}");
+        }
+    });
+</script>
 {% endblock %}

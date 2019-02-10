@@ -7,23 +7,17 @@
     <img src="{% static 'libreborme_logo.png' %}"><br>
   </div><br>
 
-  <h3>Activation complete!</h3>
+  <h3>Registro completado</h3>
 
-  <p>
-  Used after successful account activation. This template has no context variables of its own, and should inform the user that their account is now active.
-  </p>
+  <p>Hemos verificado tu correo electrónico. Ahora puedes entrar a tu panel de usuario.</p>
 
   <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
-    <input id="id_username" maxlength="254" name="username" placeholder="Username" type="text" />
-    <input id="id_password" name="password" type="password" placeholder="Password"/>
+    <input type="email" class="form-control" id="id_username" maxlength="254" name="username" placeholder="Correo electrónico" required>
+    <input id="id_password" name="password" type="password" placeholder="Contraseña"/>
     <input type="hidden" name="next" value="" />
-    <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+    <input type="submit" name="login" class="login loginmodal-submit" value="Entrar">
   </form>
-
-  <div class="login-help">
-    <a href="{% url 'django_registration_register' %}">Register</a> - <a href="{% url 'password_reset' %}">Forgot password</a>
-  </div>
 </div>
 
 {% endblock %}

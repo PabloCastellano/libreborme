@@ -71,9 +71,8 @@ PROVINCIAS_CHOICES = (
 PROVINCIAS_DICT = dict(PROVINCIAS_CHOICES)
 
 PERIODICIDAD_CHOICES = (
+    ('daily', 'Diaria'),
     ('weekly', 'Semanal'),
-    ('monthly', 'Mensual'),
-    ('daily', 'Diaria')
 )
 PERIODICIDAD_DICT = dict(PERIODICIDAD_CHOICES)
 

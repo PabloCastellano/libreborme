@@ -1,18 +1,25 @@
 from django.contrib.auth import get_user_model
-from django.forms import BooleanField, EmailField
+from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from django_registration.forms import RegistrationForm
+from django_registration.forms import RegistrationFormUniqueEmail
 
 
-class LBUserCreationForm(RegistrationForm):
+# TODO: Mejroar el form, poner errores en rojo y alineados, la cuenta ya existe...
+class LBUserCreationForm(RegistrationFormUniqueEmail):
 
     # email is already required in RegistrationForm but it doesn't hurt
     # to make sure again
-    email = EmailField(label=_("Email address"), required=True,
-                       help_text=_("Required."))
-    accept_tos = BooleanField(label=_("Accept terms of service"),
+    email = forms.EmailField(label=_("Email address"), required=True)
+    accept_tos = forms.BooleanField(label=_("He leído y acepto las Condiciones de Uso, Política de Privacidad y el Uso de Cookies."),
                               required=True)
+    # Remove help_text in password2
+    password2 = forms.CharField(
+        label=_("Password confirmation"),
+        widget=forms.PasswordInput,
+        strip=False,
+    )
+
 
     class Meta:
         model = get_user_model()

@@ -22,3 +22,4 @@ elasticsearch-dsl==5.4.0
 libsass==0.17.0
 psycopg2-binary==2.7.4
 stripe==2.11.0
+unidecode==1.0.23
