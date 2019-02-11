@@ -39,6 +39,7 @@ sync_stripe:
 		# OJO: No tenemos los AlertaActo configurados
 
 run:
+		pip install -r requirements/development.txt
 		docker-compose up -d
 		./manage.py migrate --settings $(settings)
 		@echo "\n\n\n#################################################################"
