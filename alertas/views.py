@@ -179,7 +179,8 @@ class PaymentView(StripeMixin, CustomerMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PaymentView, self).get_context_data(**kwargs)
         context['active'] = 'payment'
-        context['card'] = context["customer"].default_source.resolve()
+        if context["customer"].has_valid_source():
+            context['card'] = context["customer"].default_source.resolve()
 
         # context["form"] = forms.CreditCardForm()
 
@@ -713,48 +714,19 @@ def checkout_page(request):
 
 
 @login_required
-def set_default_card(request):
-
-    # FIXME: weird, mixed POST + GET
-    if request.method == 'POST':
-        card_id = request.GET.get("cardId")
-
-        try:
-            customer = Customer.objects.get(subscriber=request.user)
-            customer.default_source_id = card_id
-            customer.save()
-            messages.add_message(request, messages.SUCCESS,
-                                 'Tarjeta modificada correctamente')
-            return HttpResponse("Success", status=200)
-        except Customer.DoesNotExist:
-            # TODO: create customer if doesn't exist
-            pass
-        except Exception:
-            print("Could not set default card " + card_id + " for customer " + customer.stripe_id)
-            return HttpResponse("Fail", status=400)
-
-    return HttpResponse("Fail", status=400)
-
-
-@login_required
 def remove_card(request):
 
-    # TODO: if customer doesn't exist, ignore, shouldn't be called
+    # TODO: customer does not exist (if customer doesn't exist, ignore, shouldn't be called?)
+    # TODO: Create customer by default?
     if request.method == 'GET':
         card_id = request.GET.get("cardId")
 
-        # Check self.request.user.customer
-        # or .djstripe_customers
-        customer = Customer.objects.get(subscriber=request.user)
-        cards = customer.sources.all()
-        for card in cards:
-            if card.stripe_id == card_id:
-                card.remove()
-                messages.add_message(request, messages.SUCCESS,
-                                     'Tarjeta eliminada correctamente')
-                return HttpResponse("Success", status=200)
-
-        print("Could not delete card " + card_id + " for customer " + customer.stripe_id)
+        customer = request.user.djstripe_customers.get()
+        customer.default_source = None
+        customer.save()
+        messages.add_message(request, messages.SUCCESS,
+                             'Tarjeta modificada correctamente')
+        return HttpResponse("Success", status=200)
 
     return HttpResponse("Fail", status=400)
 

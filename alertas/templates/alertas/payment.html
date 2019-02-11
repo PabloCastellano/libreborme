@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% comment %}
-check icon fa-plus
+TODO: Poner bonito el estilo de la Tarjeta con un Card o algo
 {% endcomment %}
 
 {% block content %}
@@ -19,7 +19,7 @@ check icon fa-plus
 
           <div class="row">
             <div class="col-sm-12">
-              <p>Configura tu tarjeta para que pagar sea más cómodo.</p>
+              <p>Configura tu tarjeta para ahorrar tiempo en las próximas compras.</p>
             </div>
           </div>
 
@@ -62,15 +62,6 @@ check icon fa-plus
                                 <i class="fas fa-trash-alt"></i> Eliminar
                             </button>
                           </a>
-                          {% if card.stripe_id != customer.default_source_id %}
-                            <a class="set_default_card" id="{{ card.stripe_id }}">
-                              <button type="button" class="btn btn-primary btn-xs">
-                                <i class="fas fa-plus"></i> Predeterminada
-                              </button>
-                            </a>
-                          {% else %}
-                            <i class="fas fa-check-square"></i> Predeterminada
-                          {% endif %}
                         </td>
                       </tr>
                     </tbody>
@@ -78,6 +69,8 @@ check icon fa-plus
                 </div>
               </div>
             </div>
+
+          {% endif %}
 
           <div class="row">
             <div class="col-sm-12">
@@ -102,7 +95,6 @@ check icon fa-plus
             </div>
           </div>
 
-          {% endif %}
 
 
             {% comment %}
@@ -156,19 +148,9 @@ check icon fa-plus
       }, "get", null);
     }
 
-    function set_default_card(cardId) {
-      AjaxRequest("{% url 'set_default_card' %}?cardId=" + cardId, function (res) {
-        setTimeout(location.reload(), 3000);
-      }, "post", null);
-    }
-
     $("a.remove_card").click(function(ev) {
       var cardid = $(ev.currentTarget).attr("id");
       remove_card(cardid);
-    });
-    $("a.set_default_card").click(function(ev) {
-      var cardid = $(ev.currentTarget).attr("id");
-      set_default_card(cardid);
     });
 
   </script>

@@ -68,6 +68,7 @@ def get_subscription_data(evento, provincia, date=None):
     year = str(date.year)
     month = '{:02d}'.format(date.month)
     day = '{:02d}'.format(date.day)
+    provincia = '{:02d}'.format(provincia)
     # filename = provincia + ".json"
     directory = Path(settings.BORME_SUBSCRIPTIONS_ROOT) / evento / year / month / day
     filename = (directory / (provincia + ".json")).as_posix()
