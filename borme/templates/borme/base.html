@@ -136,20 +136,21 @@
   {% block extrajs %}{% endblock %}
   <script src="{% static 'static_jquery/js/jquery.min.js' %}"></script>
   <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
-  <script src="{% static "jquery.cookie.js" %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+
 
   {% if not debug %}
   <script type="text/javascript">
       var advice = $("#headerCookies");
       var closeButton = advice.find(".cookies-header-close");
-      var cookie = $.cookie('cookies');
+      var cookie = Cookies.get('cookies');
 
       if (cookie == null) {
           advice.show();
           closeButton.click(function(e){
           var date = new Date();
               date.setTime(date.getTime() + (60 * 60 * 24 * 365 * 10 * 1000));
-              $.cookie("cookies", "accept", { expires: date, path: "/", domain: ".{{DOMAIN}}" });
+              Cookies.set("cookies", "accept", { expires: date, path: "/", domain: ".{{DOMAIN}}" });
           e.preventDefault();
           e.stopPropagation();
           advice.slideUp("fast");

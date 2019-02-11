@@ -13,45 +13,21 @@ check icon fa-plus
     <section class="panel">
         <div class="row">
             <div class="col-md-12">
-                <h1 class="title-section">
-                    <span>|</span>Métodos de pago
-                </h1>
+              <h1 class="title-section"><span>|</span>Tarjetas de crédito</h1>
             </div>
         </div>
 
           <div class="row">
             <div class="col-sm-12">
-              <p>Almacena y gestiona tus métodos de pago para pagar más rápido.</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12">
-
-              <form action="{% url 'alertas-payment-add-card' %}" method="POST">
-                {% csrf_token %}
-                <script
-                  src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                  data-key="{{ STRIPE_PUBLIC_KEY }}"
-                  data-email="{{ user.email }}"
-                  data-zip-code="true"
-                  data-billing-address="true"
-                  data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-                  data-name="Libreborme"
-                  data-panel-label="Añadir"
-                  data-label="Añadir tarjeta de crédito"
-                  data-allow-remember-me=false
-                  data-currency="eur"
-                  data-locale="auto">
-                </script>
-              </form>
+              <p>Configura tu tarjeta para que pagar sea más cómodo.</p>
             </div>
           </div>
 
-          {% if customer.can_charge %}
+          {% if card %}
           <div class="row">
             <div class="col-sm-8">
-              <h1 class="title-section"><span>|</span>Tarjetas de crédito</h1>
 
+              <p>Su tarjeta por defecto es la siguiente</p>
                 <div class="form-group">
 
                   <table class="table table-hover">
@@ -64,7 +40,6 @@ check icon fa-plus
                       </tr>
                     </thead>
                     <tbody>
-                    {% for card in cards %}
                       <tr>
                         <td>
                           <p>
@@ -98,12 +73,35 @@ check icon fa-plus
                           {% endif %}
                         </td>
                       </tr>
-                    {% endfor %}
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+
+              <form action="{% url 'alertas-payment-add-card' %}" method="POST">
+                {% csrf_token %}
+                <script
+                  src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                  data-key="{{ STRIPE_PUBLIC_KEY }}"
+                  data-email="{{ user.email }}"
+                  data-zip-code="true"
+                  data-billing-address="true"
+                  data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                  data-name="Libreborme"
+                  data-panel-label="Actualizar"
+                  data-label="Actualizar tarjeta de crédito"
+                  data-allow-remember-me=false
+                  data-currency="eur"
+                  data-locale="auto">
+                </script>
+              </form>
+            </div>
+          </div>
+
           {% endif %}
 
 
@@ -129,7 +127,7 @@ check icon fa-plus
             <div class="row">
               <div class="col-sm-8">
                 <p class="help-block">
-                  <i class="fas fa-lock"></i> <strong>Pago seguro.</strong>
+                  <i class="fas fa-lock mt-3"></i> <strong>Pago seguro.</strong>
                   Usamos <a href="https://stripe.com/es" target="_blank">Stripe</a>
                   como pasarela de pago. LibreBORME no almacena los datos de su tarjeta.
                 </p>
@@ -148,14 +146,14 @@ check icon fa-plus
 
 {% block extrajs %}
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha384-Dziy8F2VlJQLMShA6FHWNul/veM9bCkRUaLqr199K94ntO5QUrLJBEbYegdSkkqX" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
   <script src="{% static "js/libreborme.js" %}"></script>
-  <script src="{% static "jquery.cookie.js" %}"></script>
 
   <script>
     function remove_card(cardId) {
       AjaxRequest("{% url 'remove_card' %}?cardId=" + cardId, function (res) {
         setTimeout(location.reload(), 3000);
-      }, "post", null);
+      }, "get", null);
     }
 
     function set_default_card(cardId) {

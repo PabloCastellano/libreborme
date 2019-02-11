@@ -179,16 +179,10 @@ class PaymentView(StripeMixin, CustomerMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PaymentView, self).get_context_data(**kwargs)
         context['active'] = 'payment'
+        context['card'] = context["customer"].default_source.resolve()
 
-        # TODO: get or 500
-        if context["customer"] is None:
-            cards = None
-        else:
-            cards = context['customer'].sources.order_by('-exp_year', '-exp_month')
-        context["cards"] = cards
         # context["form"] = forms.CreditCardForm()
 
-        # import pdb; pdb.set_trace()
         return context
 
 
@@ -632,8 +626,8 @@ def checkout_page(request):
     # TODO: make params
     # TODO: Promotion code
     # TODO: description en el payment
-    # TODO: no salvar el metodo de pago si no se pide expresamente
     # TODO: Guardar si ya ha hecho el periodo de prueba
+    # Para acelerar la carga, se puede dejar corriendo subscribe() que automáticamente luego
     if request.method == "POST":
         nickname = request.session['cart']['name']
         plan = Plan.objects.get(nickname=nickname)
@@ -644,19 +638,19 @@ def checkout_page(request):
         tax_percent = TAXES[taxname]
 
         token = request.POST.get("stripeToken")
-        save_card = request.POST.get("save-card", False)
+        save_card = 'save-card' in request.POST
+
+        # TODO: default source
+        use_default_source = 'use-default-source' in request.POST
+
         try:
-            # TODO: if not saved/save card, use the token once, otherwise
-            # attach to customer
-            # If the customer has already a source, use it
-            # TODO: cuanto hay un source, se puede sacar tambien un token?
+
             # if customer.has_valid_source():
             #     subscription = customer.subscribe(plan)
             # else:
 
             # Save card
-            if save_card:
-                customer.add_card(token)
+            card = customer.add_card(token, set_default=save_card)
 
             # Pending issues:
             # trial_from_plan: https://github.com/dj-stripe/dj-stripe/issues/809
@@ -667,16 +661,23 @@ def checkout_page(request):
                 trial_period_days = plan.trial_period_days
                 trial_end = datetime.datetime.now() + datetime.timedelta(days=trial_period_days)
 
-            # No hay que pasarle source si va a empezar trial
-            # Request req_oYnIY9ArQufGwu: This customer has no attached payment source
-            # How to specify source in customer.subscribe?!
+            description = "Suscripcion a {evento} de la {provincia}".format(**request.session['cart'])
+            metadata = {
+                "description": description,
+                "evento": request.session['cart']["evento"],
+                "provincia": request.session['cart']["provincia"]
+            }
 
             # coupon=None, quantity=1
             billing_cycle_anchor = utils.date_next_first(timestamp=True)
+
             subscription = customer.subscribe(plan, trial_end=trial_end,
                                               tax_percent=tax_percent,
+                                              metadata=metadata,
                                               billing_cycle_anchor=billing_cycle_anchor)
 
+            if not save_card:
+                card.remove()
             # TODO: fix new invoice
             # new_invoice = create_new_invoice(request, customer, subscription, plan, user_input)
 
@@ -701,6 +702,7 @@ def checkout_page(request):
                 evento=request.session['cart']['evento'],
                 provincia=request.session['cart']['provincia'],
                 periodicidad='daily',
+                stripe_subscription=subscription,
             )
 
             del request.session['cart']
@@ -738,8 +740,7 @@ def set_default_card(request):
 def remove_card(request):
 
     # TODO: if customer doesn't exist, ignore, shouldn't be called
-    # FIXME: weird, mixed POST + GET
-    if request.method == 'POST':
+    if request.method == 'GET':
         card_id = request.GET.get("cardId")
 
         # Check self.request.user.customer

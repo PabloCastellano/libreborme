@@ -26,7 +26,6 @@ urlpatterns = [
     path('alertas/settings/update/billing/', views.settings_update_billing, name='alertas-settings-billing'),
     path('alertas/history/download/<id>/', views.download_alerta_history_csv, name='alerta-history-download'),
     path('alertas/termsofservice/', views.TermsOfServiceView.as_view(), name='alertas-tos'),
-    path('alertas/<id>/', views.AlertaDetailView.as_view(), name='alertas-detail'),
 #    url(r'^(?P<id>\d+)/$', views.alertas_view, name='alertas-detail'),
 
     # AJAX
@@ -36,4 +35,7 @@ urlpatterns = [
     path('alertas/set_default_card/', views.set_default_card, name='set_default_card'),
 
     path('ajax/follow/', views.ajax_follow, name='borme-ajax-follow'),
+
+    # UNUSED?
+    path('alertas/<id>/', views.AlertaDetailView.as_view(), name='alertas-detail'),
 ]

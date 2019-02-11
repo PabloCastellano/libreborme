@@ -11,7 +11,7 @@
         {% endfor %}
         {% if upcoming_invoice %}
         <div class="alert alert-info" role="alert">
-          Tu próxima factura será emitida el <strong>{{ upcoming_invoice.date.date }}</strong>
+            Tu próxima factura de {{ upcoming_invoice.amount_due }}€ será emitida el <strong>{{ upcoming_invoice.date.date }}</strong>
         </div>
         {% endif %}
 

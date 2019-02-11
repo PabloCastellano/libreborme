@@ -23,6 +23,7 @@ recreate_db:
 		./manage.py loaddata ./alertas/fixtures/alertasconfig.json
 		# ./manage.py createsuperuser --username admin --email pablo@anche.no
 		./manage.py shell -c "from django.contrib.auth import get_user_model; get_user_model().objects.create_superuser('pablo@anche.no', '000000')"
+		echo "Maybe you want to run now 'make sync_stripe'"
 
 recreate_db2:
 		# pg_dump -c -C -h localhost -U libreborme > clean_dump.sql
@@ -34,8 +35,8 @@ recreate_db2:
 sync_stripe:
 		./manage.py djstripe_init_customers
 		./manage.py djstripe_sync_plans_from_stripe
-		# from djstripe.models import Product; for obj in Product.api_list(): Product.sync_from_stripe_data(obj)
 		# from djstripe.models import Subscription; for obj in Subscription.api_list(): Subscription.sync_from_stripe_data(obj)
+		# OJO: No tenemos los AlertaActo configurados
 
 run:
 		docker-compose up -d

@@ -36,7 +36,7 @@ function AjaxRequest(url, callback, method, params) {
         callback(req);
     }
     req.open(method, url, true);
-    var csrftoken = $.cookie('csrftoken');
+    var csrftoken = Cookies.get('csrftoken');
     if (csrftoken) req.setRequestHeader("X-CSRFToken", csrftoken);
     req.send(params);
 }

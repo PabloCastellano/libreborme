@@ -3,13 +3,14 @@ The Follower table stores subscriptions to companies and people.
 The AlertActo table stored subscriptions to events.
 """
 from django.db import models as m
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.conf import settings
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from borme.models import Company, Person
+from djstripe.models import Subscription
 
 import os.path
 
@@ -162,9 +163,12 @@ class AlertaActo(m.Model):
     """
     user = m.ForeignKey(get_user_model(), on_delete=m.PROTECT)
     evento = m.CharField(max_length=3, choices=EVENTOS_CHOICES)
-    provincia = m.CharField(max_length=100, choices=PROVINCIAS_CHOICES)
+    provincia = m.CharField(max_length=100, choices=PROVINCIAS_CHOICES_ALL)
     is_enabled = m.BooleanField(default=True)
     periodicidad = m.CharField(max_length=10, choices=PERIODICIDAD_CHOICES)
+    stripe_subscription = m.ForeignKey(Subscription, on_delete=m.PROTECT)
+    periodicidad = m.CharField(max_length=10, choices=PERIODICIDAD_CHOICES)
+    created_at = m.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         enabled = "activada" if self.is_enabled else "desactivada"
