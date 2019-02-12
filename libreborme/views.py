@@ -43,6 +43,7 @@ class ServicesView(CacheMixin, TemplateView):
         aconfig = get_alertas_config()
         context["service_api_free_req_day"] = aconfig["service_api_free_req_day"]
         context["service_api_advanced_req_day"] = aconfig["service_api_advanced_req_day"]
+        context["max_alertas_follower_free"] = aconfig["max_alertas_follower_free"]
         context["max_alertas_follower_paid"] = aconfig["max_alertas_follower_paid"]
         return context
 

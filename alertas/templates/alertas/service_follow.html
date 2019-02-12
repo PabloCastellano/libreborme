@@ -16,8 +16,42 @@
 
     <h1 class="page-header">Mi lista de Seguimiento</h1>
 
-    <p>Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa monitoreada aparezca en un Boletín Oficial</p>
-    <p>Puedes probar el servicio de forma gratuita con 3 personas y empresas de tu elección.</p>
+    <h3 class="subtitle-panel mt-4">¿Cómo funciona?</h3>
+    <p>Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa aparezca en un Boletín Oficial.</p>
+    <p>Prueba el servicio de forma gratuita con {{ max_alertas_follower_free }} personas o empresas de tu elección. Y si necesitas más, contrata tantos bonos como necesites.
+
+    <p>Para añadir a una empresa o persona a tu lista de seguimiento, localízala usando el buscador y haz click en el botón
+
+       <button id="follow-button" type="button" class="btn-secondary btn-details""">
+         <i class="fas fa-eye"></i> Seguir
+       </button>
+       que verás en su página.
+    </p>
+
+    {% comment %}
+    <form class="mx-4 col-sm-4" target="_blank" role="search" action="{% url "borme-search" %}" method="get">
+        <div class="form-row">
+            <div class="col-12">
+                <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="q" id="inlineFormInputGroup" placeholder="Buscar por nombre de persona o empresa">
+                    <input type="hidden" name="page" value="1">
+                    <input type="hidden" name="type" value="all">
+
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <a href="#"><i class="fas fa-search"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="col-sm-6">
+      <img src="{% static 'img/como_seguir.png' %}" style="border:1px solid black">
+    </div>
+    {% endcomment %}
+
     {% if current_follows == 0 %}
     {# #}
     {% endif %}
@@ -29,7 +63,13 @@
 
     <h1 class="title-section mt-4">Lista de Seguimiento</h1>
     <div class="row">
+
         <div class="col-sm-9">
+            {% if remaining_follows > 0 %}
+            <p>Dispones aún de {{ remaining_follows }} alertas.</p>
+            {% else %}
+            <p>Has agotado todas tus alertas</p>
+            {% endif %}
             {% if followers %}
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -58,14 +98,11 @@
                  </table>
             </div>
 
-            {% if remaining_follows > 0 %}
-            <p>Dispones aún de {{ remaining_follows }} alertas.</p>
-            {% else %}
-            <p>Has agotado todas tus alertas</p>
-            {% endif %}
-
         </div>
         <div class="col-sm-3">
+        {% else %}
+        </div>
+        <div class="col-sm-3 offset-sm-9">
             <p><strong>¿Necesitas seguir a más empresas?</strong></p>
 
             <div class="view-servicios mt-4">
@@ -73,7 +110,7 @@
                     <div class="card-deck">
                         <div class="card">
                             <div class="card-body">
-                                <h4>Bono de alertas</h4>
+                                <h4>Bono de notificaciones</h4>
                                 <h3>2,99€ / mes</h3>
                                 <p class="card-text">Pago anual</p>
                                 <hr>
@@ -89,42 +126,9 @@
                  </section>
             </div>
         </div>
-            {% else %}
-            <p>Dispones aún de {{ remaining_follows }} alertas.
-            {% endif %}
+        {% endif %}
     </div>
     </div>
-
-    <h1 class="title-section mt-4">¿Cómo funciona?</h1>
-    <div class="row">
-        <div class="col-sm-12">
-            <p>Ve a la página de la empresa o persona que quieras monitorear y pulsa en el botón "Seguir" o utilizar el siguiente buscador.</p>
-            <form class="mx-4 col-sm-4" target="_blank" role="search" action="{% url "borme-search" %}" method="get">
-                <div class="form-row">
-                    <div class="col-12">
-                        <label class="sr-only" for="inlineFormInputGroup">Username</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="q" id="inlineFormInputGroup" placeholder="Buscar por nombre de persona o empresa">
-                            <input type="hidden" name="page" value="1">
-                            <input type="hidden" name="type" value="all">
-
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">
-                                    <a href="#"><i class="fas fa-search"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <p class="mt-3">Recibirás una alerta por e-mail cuando ésta haya aparecido en un Boletín Oficial.</p>
-        </div>
-    </div>
-    {% comment %}
-    <div class="col-sm-6">
-      <img src="{% static 'img/como_seguir.png' %}" style="border:1px solid black">
-    </div>
-    {% endcomment %}
 
 </main>
 

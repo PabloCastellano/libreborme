@@ -45,24 +45,14 @@
                         </div>
                     </form>
                 </li>
-                <li class="nav-item">
+
+                <!-- Menu resoluciones hasta md -->
+                <li class="nav-item menu-panel-user d-block d-md-none">
                     {% if user.is_authenticated %}
                     <a class="btn btn2 btn-primary2 btn-transparent btn-panel" href="{% url 'dashboard-index' %}">Área personal</a>
                     {% else %}
                     <a class="btn btn2 btn-primary2 btn-transparent btn-panel" href="#" role="button" data-toggle="modal" data-target="#signInModal">Área personal</a>
                     {% endif %}
-                </li>
-
-                <!-- Menu resoluciones hasta md -->
-                <li class="nav-item menu-panel-user d-block d-md-none">
-                    <a class="nav-link" href="#">
-                        <img src="{% static 'assets/img/menu-panel/cuenta.svg' %}" alt="" class="img-navbar-account">
-                        {% if user.is_authenticated %}
-                        <span>{{ user }}</span>
-                        {% else %}
-                        <span>Mi cuenta</span>
-                        {% endif %}
-                    </a>
                 </li>
                 {% if user.is_authenticated %}
                     {% if user.is_staff %}
@@ -83,27 +73,27 @@
                         </a>
                     </li>
                     <li class="nav-item menu-panel-user d-block d-md-none">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{% url 'alertas-billing' %}">
                             <span>Facturas</span>
                         </a>
                     </li>
                     <li class="nav-item menu-panel-user d-block d-md-none">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{% url 'alertas-payment' %}">
                             <span>Métodos de pago</span>
                         </a>
                     </li>
                     <li class="nav-item menu-panel-user d-block d-md-none">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{% url 'service-follow' %}">
                             <span>Seguimiento</span>
                         </a>
                     </li>
                     <li class="nav-item menu-panel-user d-block d-md-none">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{% url 'service-subscription' %}">
                             <span>Subscripciones</span>
                         </a>
                     </li>
                     <li class="nav-item menu-panel-user d-block d-md-none">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{% url 'service-api' %}">
                             <span>API</span>
                         </a>
                     </li>
@@ -117,10 +107,9 @@
                 <!-- Menu resoluciones md -->
                 <li class="nav-item dropdown menu-panel-user d-none d-md-block">
                     {% if user.is_authenticated %}
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="{% static 'assets/img/menu-panel/cuenta.svg' %}" alt="" class="img-navbar-account">
-                            <span>{{ user }}</span>
-                    </a>
+                    <a class="btn btn2 btn-primary2 btn-transparent btn-panel" href="#" role="button" data-toggle="dropdown">Área personal</a>
+                    {% else %}
+                    <a class="btn btn2 btn-primary2 btn-transparent btn-panel" href="#" role="button" data-toggle="modal" data-target="#signInModal">Área personal</a>
                     {% endif %}
 
                     {% if user.is_authenticated %}
@@ -130,11 +119,11 @@
                         {% endif %}
                         <a class="dropdown-item" href="{% url 'dashboard-index' %}">Mi cuenta</a>
                         <a class="dropdown-item" href="{% url 'alertas-profile' %}">Mi perfil</a>
-                        <a class="dropdown-item" href="#">Facturas</a>
-                        <a class="dropdown-item" href="#">Métodos de pago</a>
-                        <a class="dropdown-item" href="#">Seguimiento</a>
-                        <a class="dropdown-item" href="#">Subscripciones</a>
-                        <a class="dropdown-item" href="#">Api</a>
+                        <a class="dropdown-item" href="{% url 'alertas-billing' %}">Facturas</a>
+                        <a class="dropdown-item" href="{% url 'alertas-payment' %}">Métodos de pago</a>
+                        <a class="dropdown-item" href="{% url 'service-follow' %}">Seguimiento</a>
+                        <a class="dropdown-item" href="{% url 'service-subscription' %}">Subscripciones</a>
+                        <a class="dropdown-item" href="{% url 'service-api' %}">API</a>
                         <a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a>
                     </div>
                     {% endif %}

@@ -39,23 +39,27 @@
   }
 }
 
-.sidebar .nav-link {
-  font-weight: 500;
-  color: #333;
-}
+.sidebar {
+  .nav-link {
+    font-weight: 500;
+    color: #333;
+  }
 
-.sidebar .nav-link .feather {
-  margin-right: 4px;
-  color: #999;
-}
+  .nav-link .feather {
+    margin-right: 4px;
+    color: #999;
+  }
 
-.sidebar .nav-link.active {
-  color: $red-dark;
-}
+  .nav-link.active {
+    color: $red-dark;
+    pointer-events: none;
+  }
 
-.sidebar .nav-link:hover .feather,
-.sidebar .nav-link.active .feather {
-  color: inherit;
+  .nav-link:hover .feather,
+  .nav-link.active .feather {
+    color: inherit;
+  }
+
 }
 
 .sidebar-heading {

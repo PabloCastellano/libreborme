@@ -295,11 +295,11 @@ class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class ServiceAlertaView(CustomerMixin, StripeMixin, TemplateView):
+class ServiceFollowView(CustomerMixin, StripeMixin, TemplateView):
     template_name = "alertas/service_follow.html"
 
     def get_context_data(self, **kwargs):
-        context = super(ServiceAlertaView, self).get_context_data(**kwargs)
+        context = super(ServiceFollowView, self).get_context_data(**kwargs)
         context['active'] = 'alertas'
 
         context['alertas_f'] = Follower.objects.filter(user=self.request.user)
@@ -310,6 +310,7 @@ class ServiceAlertaView(CustomerMixin, StripeMixin, TemplateView):
         context['free_follows'] = int(alertas_config['max_alertas_follower_free'])
         context['remaining_follows'] = int(context['free_follows']) - context['count_f']
         context['current_follows'] = context['free_follows'] - context['remaining_follows']
+        context['max_alertas_follower_free'] = int(alertas_config['max_alertas_follower_free'])
         context['max_alertas_follower_paid'] = int(alertas_config['max_alertas_follower_paid'])
 
         context["followers"] = Follower.objects.filter(user=self.request.user)

@@ -35,6 +35,8 @@
                     <h1 class="title-section">
                         <span>|</span>servicios
                     </h1>
+                    <p>
+                    A continuación puedes encontrar una descripción de cada uno de los servicios derivados del procesamiento de datos de fuente de acceso público.</p>
                 </div>
             </div>
         </div>
@@ -44,41 +46,32 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-2 text-center mb-4">
-                    <img src="{% static 'assets/img/servicios/suscribete.png' %}" alt="">
+                    <img src="{% static 'assets/img/servicios/alert.png' %}" alt="">
                 </div>
                 <div class="col-md-10">
                     <div class="row">
-                        <div class="col-md-12 text-justify">
-                            <h3 class="titulo-servicio">Suscríbete</h3>
-                            <p class="descripcion-servicio">Mediante el Servicio de Suscripciones recibirás un email cada día con la información mercantil solicitada.</p>
-                        </div>
+                        <h3 class="titulo-servicio">Seguimiento</h3>
+                        <p class="">Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa aparezca en un Boletín Oficial.</p>
+                        <p>Regístrate y prueba el servicio de forma gratuita con {{ max_alertas_follower_free }} personas o empresas de tu elección. Y si necesitas más, contrata tantos bonos como necesites.</p>
+
+                        <p>Para añadir a una empresa o persona a tu lista de seguimiento, localízala usando el buscador y haz click en el botón
+
+                           <button id="follow-button" type="button" class="btn-secondary btn-details""">
+                             <i class="fas fa-eye"></i> Seguir
+                           </button>
+                           que verás su página.
+                        </p>
                     </div>
                     <div class="card-deck">
                         <div class="card">
                             <div class="card-body">
-                                <h4>Suscripción mensual</h4>
-                                <h3>59,99€</h3>
-                                <p class="card-text">Pago mensual</p>
+                                <h4>Bono de notificaciones</h4>
+                                <h3>2,99€ / mes</h3>
+                                <p class="card-text">Pago anual</p>
                                 <hr>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Un tipo de notificación</p>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Una provincia</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Bono de {{ max_alertas_follower_paid }} alertas</p>
                             </div>
-                            <a href="#">
-                                <div class="card-footer text-center">
-                                    <p>Suscribirme</p>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="card">
-                            <div class="card-body">
-                                <h4>Suscripción mensual</h4>
-                                <h3>179,99€</h3>
-                                <p class="card-text">Pago mensual</p>
-                                <hr>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Un tipo de notificación</p>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Todas las provincia</p>
-                            </div>
-                            <a href="#">
+                            <a href="#" class="btn_service_follow">
                                 <div class="card-footer text-center">
                                     <p>Suscribirme</p>
                                 </div>
@@ -98,21 +91,22 @@
                 </div>
                 <div class="col-md-10">
                     <div class="row">
-                        <h3 class="titulo-servicio">Integración API</h3>
-                        <p class="descripcion-servicio">Con la API podrás hacer consultas personalizadas e integrar los datos de LibreBORME en tu sistema. Contáctanos para desarrollos a medida y consultoría.
-                        </p>
+                        <h3 class="titulo-servicio">Integración de datos</h3>
+                        <p>Permitimos la integración de datos disponibles en LibreBORME con terceros a través de nuestra <strong>API</strong>.</p>
+                        <p>Accede a los datos publicados en la web de forma estructurada y sin restricciones.</p>
+                        <p>También ofrecemos <strong>servicios de desarrollo</strong> e integración a medida.</p>
                     </div>
                     <div class="card-deck">
                         <div class="card">
                             <div class="card-body">
                                 <h4>Starter</h4>
-                                <h3>Gratis</h3>
+                                <h3>0€</h3>
                                 <p class="card-text"></p>
                                 <hr>
                                 <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">{{ service_api_free_req_day }} consultas al mes</p>
                                 <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Sin soporte técnico</p>
                             </div>
-                            <a href="#">
+                            <a href="#" class="btn_service_api">
                                 <div class="card-footer text-center">
                                     <p>Solicitar API key</p>
                                 </div>
@@ -122,12 +116,12 @@
                             <div class="card-body">
                                 <h4>Advanced</h4>
                                 <h3>79,99€ / mes</h3>
-                                <p class="card-text">Pago mensual</p>
+                                <p class="card-text"></p>
                                 <hr>
                                 <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">{{ service_api_advanced_req_day }} consultas al día</p>
                                 <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Sin soporte técnico</p>
                             </div>
-                            <a href="#">
+                            <a href="#" class="btn_service_api">
                                 <div class="card-footer text-center">
                                     <p>Suscribirme</p>
                                 </div>
@@ -156,11 +150,11 @@
                                 <h3>Contáctanos</h3>
                                 <p class="card-text"></p>
                                 <hr>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Más de {{ service_api_advanced_req_day }} consultas al día</p>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Soporte técnico 24x7</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">{{ service_api_advanced_req_day }}+ consultas al día</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Soporte técnico</p>
                                 <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">SLA</p>
                             </div>
-                            <a href="#">
+                            <a href="#" class="btn_service">
                                 <div class="card-footer text-center">
                                     <p>Suscribirme</p>
                                 </div>
@@ -176,24 +170,48 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-2 text-center mb-4">
-                    <img src="{% static 'assets/img/servicios/alert.png' %}" alt="">
+                    <img src="{% static 'assets/img/servicios/suscribete.png' %}" alt="">
                 </div>
                 <div class="col-md-10">
                     <div class="row">
-                        <h3 class="titulo-servicio">Activar alertas</h3>
-                        <p class="descripcion-servicio">Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa monitoreada aparezca en un Boletín Oficial</p>
-                        <p class="descripcion-servicio">Puedes probar el servicio de forma gratuita con 3 personas y empresas de tu elección.</p>
+                        <div class="col-md-12 text-justify">
+                            <h3 class="titulo-servicio">Suscripciones</h3>
+                            <p class="">Mediante el Servicio de Suscripciones recibirás información mercantil de determinados eventos.
+                            <br>Puedes elegir entre los siguientes tipos de eventos:</p>
+                            <ul>
+                              <li>Constitución de <strong>nuevas empresas</strong> e información sobre sus administradores</li>
+                              <li>Empresas que <strong>cambian de administrador</strong></li>
+                              <li>Empresas que han entrado en <strong>concurso de acreedores</strong> o liquidación</li>
+                            </ul>
+                            <p>Una vez suscrito recibirás cada día en tu email la información seleccionada.</p>
+                        </div>
                     </div>
                     <div class="card-deck">
                         <div class="card">
                             <div class="card-body">
-                                <h4>Bono de alertas</h4>
-                                <h3>2,99€ / mes</h3>
-                                <p class="card-text">Pago anual</p>
+                                <h4>Suscripción mensual</h4>
+                                <h3>59,99€</h3>
+                                <p class="card-text">Pago mensual</p>
                                 <hr>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Bono de {{ max_alertas_follower_paid }} alertas</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Un tipo de notificación</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Una provincia</p>
                             </div>
-                            <a href="#">
+                            <a href="#" class="btn_service_subscription">
+                                <div class="card-footer text-center">
+                                    <p>Suscribirme</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>Suscripción mensual</h4>
+                                <h3>179,99€</h3>
+                                <p class="card-text">Pago mensual</p>
+                                <hr>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Un tipo de notificación</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Todas las provincia</p>
+                            </div>
+                            <a href="#" class="btn_service_subscription">
                                 <div class="card-footer text-center">
                                     <p>Suscribirme</p>
                                 </div>
@@ -206,4 +224,36 @@
     </section>
 
 </div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $(".btn_service_follow").click(function(event) {
+        event.preventDefault();
+        {% if user.is_authenticated %}
+        window.location.href = "{% url 'service-follow' %}";
+        {% else %}
+        $("#signUpModal").modal('show');
+        {% endif %}
+    });
+
+    $(".btn_service_subscription").click(function(event) {
+        event.preventDefault();
+        {% if user.is_authenticated %}
+        window.location.href = "{% url 'service-subscription' %}";
+        {% else %}
+        $("#signUpModal").modal('show');
+        {% endif %}
+    });
+
+    $(".btn_service_api").click(function(event) {
+        event.preventDefault();
+        {% if user.is_authenticated %}
+        window.location.href = "{% url 'service-api' %}";
+        {% else %}
+        $("#signUpModal").modal('show');
+        {% endif %}
+    });
+
+</script>
 {% endblock %}
