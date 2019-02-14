@@ -61,6 +61,7 @@ def insert_alertas_history(user, type, date, entidad=None, provincia=None):
     return alerta_history
 
 
+# UNUSED
 def get_subscription_data(evento, provincia, date=None):
     if not date:
         date = datetime.date.today()
