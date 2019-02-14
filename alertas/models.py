@@ -176,6 +176,7 @@ class UserSubscription(m.Model):
 
 
 class SubscriptionEvent(m.Model):
+    # TODO: Should be Integer
     province = m.CharField(max_length=2, choices=PROVINCIAS_CHOICES_ALL)
     event = m.CharField(max_length=3, choices=EVENTOS_CHOICES)
     event_date = m.DateField()
