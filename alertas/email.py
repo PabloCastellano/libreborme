@@ -108,7 +108,7 @@ def _compose_and_send_notification(subscription, evento, date):
     subject = "Tus subscripciones en LibreBORME"
     message = str(results)
 
-    companies = results['results'].items()
+    companies = results.items()
     companies2 = {}
 
     for company, roles in sorted(companies):

@@ -17,3 +17,8 @@ E importarlo directamente
 E importarlo desde los archivos generados antes:
 
 ./manage.py import_subscription /home/pablo2/yabormep/2018/03/13/*_adm.json
+
+Una vez están en la DB podemos enviarlas:
+
+./manage.py send_subscriptions adm --email pablo@anche.no -v 3
+./manage.py send_subscriptions
