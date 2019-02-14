@@ -1,10 +1,9 @@
 import json
 
-from alertas.models import EVENTOS_DICT, PROVINCIAS_DICT, SubscriptionEvent
+from alertas.models import EVENTOS_DICT, SubscriptionEvent
+from libreborme.provincias import PROVINCIAS_CODE_DICT as PROVINCIA
 
-PROVINCIA = {v.upper(): k for k, v in PROVINCIAS_DICT.items()}
-
-LAST_SUPPORTED_VERSION = 1
+LAST_SUPPORTED_VERSION = "1"
 
 
 def from_json_file(filename):
