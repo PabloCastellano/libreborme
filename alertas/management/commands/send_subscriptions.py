@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 
 from alertas.email import send_email_to_subscriber
-from alertas.models import AlertaActo, EVENTOS_DICT
+from alertas.models import UserSubscription, EVENTOS_DICT
 
 import datetime
 import json
@@ -22,7 +22,7 @@ LOG.setLevel(logging.INFO)
 
 
 class Command(BaseCommand):
-    help = 'Send periodic email subscriptions (AlertaActo)'
+    help = 'Send periodic email subscriptions (UserSubscription)'
 
     def add_arguments(self, parser):
         parser.add_argument("evento")
@@ -64,7 +64,7 @@ class Command(BaseCommand):
 
 
 def busca_suscriptores(evento, email=None):
-    alertas = AlertaActo.objects.filter(evento=evento, is_enabled=True,
+    alertas = UserSubscription.objects.filter(evento=evento, is_enabled=True,
                                         user__is_active=True)
     if email:
         alertas = alertas.filter(user__email=email)

@@ -6,6 +6,7 @@ from django.db import models as m
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.postgres.fields import JSONField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -158,7 +159,7 @@ class User(AbstractUser):
         return self.email
 
 
-class AlertaActo(m.Model):
+class UserSubscription(m.Model):
     """ This table stores event subscriptions by users
     """
     user = m.ForeignKey(get_user_model(), on_delete=m.PROTECT)
@@ -167,12 +168,21 @@ class AlertaActo(m.Model):
     is_enabled = m.BooleanField(default=True)
     periodicidad = m.CharField(max_length=10, choices=PERIODICIDAD_CHOICES)
     stripe_subscription = m.ForeignKey(Subscription, on_delete=m.PROTECT)
-    periodicidad = m.CharField(max_length=10, choices=PERIODICIDAD_CHOICES)
     created_at = m.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        enabled = "activada" if self.is_enabled else "desactivada"
-        return "Alerta {} para evento {}".format(enabled, EVENTOS_DICT[self.evento])
+        return "Suscripción de {} para evento {}".format(
+            self.user, EVENTOS_DICT[self.evento])
+
+
+class SubscriptionEvent(m.Model):
+    province = m.CharField(max_length=2, choices=PROVINCIAS_CHOICES_ALL)
+    event = m.CharField(max_length=3, choices=EVENTOS_CHOICES)
+    event_date = m.DateField()
+    data_json = JSONField(default=dict)
+
+    class Meta:
+        unique_together = (('province', 'event', 'event_date'),)
 
 
 # UNUSED: should be removed at some time if proven useless

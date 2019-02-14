@@ -22,7 +22,7 @@ class FollowerForm(forms.Form):
 
 class SubscriptionModelForm(forms.ModelForm):
     class Meta:
-        model = models.AlertaActo
+        model = models.UserSubscription
         fields = ['evento', 'provincia', 'periodicidad']
         exclude = ('user', 'is_enabled')
 
@@ -42,7 +42,7 @@ class SubscriptionPlusModelForm(SubscriptionModelForm):
     provincia = forms.ChoiceField(label="Provincia", choices=PROVINCIAS_CHOICES_ALL)
 
     class Meta:
-        model = models.AlertaActo
+        model = models.UserSubscription
         fields = ['evento', 'periodicidad']
         exclude = ('user', 'is_enabled')
 

@@ -3,7 +3,7 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
 
-from alertas.models import AlertaActo, AlertaHistory
+from alertas.models import UserSubscription, AlertaHistory
 from alertas.utils import create_alertas_user, get_alertas_config
 from bormeparser.config import CONFIG as borme_config
 from libreborme.models import Profile
@@ -84,13 +84,13 @@ class TestCommandNotifications(TestCase):
     def setUp(self):
         self.john = create_alertas_user("john", "john@localhost", "secret",
                                         "John", "Foo")
-        AlertaActo.objects.create(user=self.john, evento="liq",
+        UserSubscription.objects.create(user=self.john, evento="liq",
                                   provincia="Lugo", periodicidad="daily")
-        AlertaActo.objects.create(user=self.john, evento="liq",
+        UserSubscription.objects.create(user=self.john, evento="liq",
                                   provincia="Lugo", periodicidad="weekly")
-        AlertaActo.objects.create(user=self.john, evento="new",
+        UserSubscription.objects.create(user=self.john, evento="new",
                                   provincia="Lugo", periodicidad="weekly")
-        AlertaActo.objects.create(user=self.john, evento="new",
+        UserSubscription.objects.create(user=self.john, evento="new",
                                   provincia="Lugo", periodicidad="monthly")
         borme_config["borme_root"] = os.path.join(THIS_PATH, 'files',
                                                   'BORME-A-2017-76-03.json')

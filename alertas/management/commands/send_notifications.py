@@ -16,7 +16,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
 from alertas.email import send_email_notification
-from alertas.models import AlertaActo, EVENTOS_DICT, PERIODICIDAD_DICT
+from alertas.models import UserSubscription, EVENTOS_DICT, PERIODICIDAD_DICT
 
 from borme.templatetags.utils import slug2
 from bormeparser import Borme
@@ -35,7 +35,7 @@ LOG.setLevel(logging.INFO)
 
 
 class Command(BaseCommand):
-    help = 'Send periodic email subscriptions (AlertaActo only)'
+    help = 'Send periodic email subscriptions (UserSubscription only)'
 
     def add_arguments(self, parser):
         parser.add_argument("periodo")
@@ -217,7 +217,7 @@ def busca_empresas(periodo, evento):
 
 
 def busca_subscriptores(periodo, evento, email=None):
-    alertas = AlertaActo.objects.filter(evento=evento, periodicidad=periodo, is_enabled=True, user__is_active=True)
+    alertas = UserSubscription.objects.filter(evento=evento, periodicidad=periodo, is_enabled=True, user__is_active=True)
     if email:
         alertas = alertas.filter(user__email=email)
     LOG.info("Total {} subscribers for event '{}' (use -v 3 for more information).".format(len(alertas), evento))

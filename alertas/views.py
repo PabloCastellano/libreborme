@@ -24,7 +24,7 @@ from libreborme import utils
 
 from . import forms
 from .models import (
-    AlertaActo, AlertaHistory,
+    UserSubscription, AlertaHistory,
     Follower, EVENTOS_DICT, PROVINCIAS_DICT, PROVINCIAS_DICT_ALL
 )
 from .mixin import CustomerMixin, StripeMixin
@@ -56,7 +56,7 @@ class MyAccountView(CustomerMixin, TemplateView):
         context = super(MyAccountView, self).get_context_data(**kwargs)
 
         context['active'] = 'dashboard'
-        context['count_a'] = AlertaActo.objects.filter(
+        context['count_a'] = UserSubscription.objects.filter(
                                     user=self.request.user).count()
         context['count_f'] = Follower.objects.filter(
                                     user=self.request.user).count()
@@ -129,7 +129,7 @@ class DashboardSupportView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardSupportView, self).get_context_data(**kwargs)
-        n_alertas = AlertaActo.objects.filter(user=self.request.user).count()
+        n_alertas = UserSubscription.objects.filter(user=self.request.user).count()
         n_alertas += Follower.objects.filter(user=self.request.user).count()
         context['n_alertas'] = n_alertas
         context['active'] = 'ayuda'
@@ -225,11 +225,11 @@ class BillingDetailView(DetailView):
 
 @method_decorator(login_required, name='dispatch')
 class AlertaDetailView(DetailView):
-    model = AlertaActo
+    model = UserSubscription
     context_object_name = 'alerta'
 
     def get_object(self):
-        self.alerta = AlertaActo.objects.get(pk=self.kwargs['id'])
+        self.alerta = UserSubscription.objects.get(pk=self.kwargs['id'])
         return self.alerta
 
 
@@ -267,7 +267,7 @@ class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
         if context['customer']:
             context["subscriptions"] = context["customer"].valid_subscriptions.filter(plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN))
 
-        context['alertas_a'] = AlertaActo.objects.filter(user=self.request.user)
+        context['alertas_a'] = UserSubscription.objects.filter(user=self.request.user)
         context['current'] = context['alertas_a'].count()
         context['form_alertas'] = forms.SubscriptionModelForm(initial={'periodicidad': 'daily'})
 
@@ -439,7 +439,7 @@ def alerta_acto_create(request):
             customer = request.user.djstripe_customers.get()
             # TODO: hacer un metodo en Manager: user.has_remaining_subscriptions o algo asi
             subscriptions = customer.valid_subscriptions.filter(plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN))
-            alertas_a = AlertaActo.objects.filter(user=request.user)
+            alertas_a = UserSubscription.objects.filter(user=request.user)
             remaining = len(subscriptions) - alertas_a.count()
 
             if remaining > 0:
@@ -699,7 +699,7 @@ def checkout_page(request):
             if nickname in (settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN):
                 mark_user_has_tried_subscriptions(request.user)
 
-            AlertaActo.objects.create(
+            UserSubscription.objects.create(
                 user=request.user,
                 evento=request.session['cart']['evento'],
                 provincia=request.session['cart']['provincia'],
@@ -734,7 +734,7 @@ def remove_card(request):
 
 @login_required
 def alerta_remove_acto(request, id):
-    alerta = AlertaActo.objects.get(user=request.user, pk=id)
+    alerta = UserSubscription.objects.get(user=request.user, pk=id)
     alerta.delete()
     return redirect(reverse('service-subscription'))
 
@@ -746,10 +746,13 @@ def alerta_remove_person(request, id):
     return redirect(reverse('service-follow'))
 
 
+"""
+# UNUSED
 @method_decorator(login_required, name='dispatch')
-class AlertaActoCreateView(CreateView):
-    model = AlertaActo
+class UserSubscriptionCreateView(CreateView):
+    model = UserSubscription
     fields = ("company", "send_html")
+"""
 
 
 # TODO: CSRF con POST

@@ -9,8 +9,8 @@ from libreborme import models as lb_models
 # from djstripe.models import Subscription
 
 
-@admin.register(m.AlertaActo)
-class AlertaActoAdmin(admin.ModelAdmin):
+@admin.register(m.UserSubscription)
+class UserSubscriptionAdmin(admin.ModelAdmin):
     list_display = ('user', 'evento', 'periodicidad', 'provincia', 'is_enabled', 'stripe_subscription', 'created_at')
     list_filter = ('evento', 'periodicidad', 'is_enabled')
     search_fields = ['user__email', 'provincia']

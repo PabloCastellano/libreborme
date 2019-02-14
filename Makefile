@@ -36,7 +36,7 @@ sync_stripe:
 		./manage.py djstripe_init_customers
 		./manage.py djstripe_sync_plans_from_stripe
 		# from djstripe.models import Subscription; for obj in Subscription.api_list(): Subscription.sync_from_stripe_data(obj)
-		# OJO: No tenemos los AlertaActo configurados
+		# OJO: No tenemos los UserSubscription configurados
 
 run:
 		pip install -r requirements/development.txt
