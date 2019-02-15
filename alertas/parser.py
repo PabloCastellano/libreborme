@@ -7,11 +7,11 @@ logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-FILE_VERSION = "1"
+FILE_VERSION = "2"
 
 
 def _parse_subscription_adm(content):
-    results = {}
+    results = []
     for page in content['pages']:
         for announcement in page:
             new_admin = False
@@ -19,15 +19,19 @@ def _parse_subscription_adm(content):
             for act in announcement['announcements']:
                 if act['label'] == 'Nombramientos':
                     for role in act['roles']:
-                        # Hacky
+                        # FIXME: Hacky
                         if 'adm' in role[0].lower():
                             new_admin = True
                             admins.append(role)
             if new_admin:
+                company = {
+                    "name": announcement['company'],
+                    "new_roles": [],
+                }
                 for role in admins:
                     # print("{} tiene nombramiento de {}: {}".format(announcement['company'], role[0], role[1]))
-                    results.setdefault(announcement['company'], [])
-                    results[announcement['company']].append([role[0], role[1]])
+                    company["new_roles"].append([role[0], role[1]])
+                results.append(company)
     return results
 
 

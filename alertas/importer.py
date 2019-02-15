@@ -3,12 +3,12 @@ import json
 from alertas.models import EVENTOS_DICT, SubscriptionEvent
 from libreborme.provincias import PROVINCIAS_CODE_DICT as PROVINCIA
 
-SUPPORTED_VERSION = "1"
+SUPPORTED_VERSION = "2"
 
 
 def from_dict(content):
-    if content["version"] > SUPPORTED_VERSION:
-        raise ValueError("Version {} > {}".format(
+    if content["version"] != SUPPORTED_VERSION:
+        raise ValueError("Version {} != {}".format(
             content["version"], SUPPORTED_VERSION)
         )
 
