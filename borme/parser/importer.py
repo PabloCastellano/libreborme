@@ -45,10 +45,6 @@ from .path import (
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-ch = logging.StreamHandler()
-logger.addHandler(ch)
-logger.setLevel(logging.INFO)
-
 
 def _importar_cargos(nombres, nombre_cargo, borme, borme_embed, anuncio, acto,
                      company, lista_cargos, results):

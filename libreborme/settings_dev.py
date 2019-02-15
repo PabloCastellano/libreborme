@@ -51,13 +51,16 @@ EMAIL_PORT = 1025
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER  # used for error reporting
 
-# PARSER = 'borme.parser.backend.yabormeparser'
+PARSER = 'borme.parser.backend.yabormeparser'
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'simple': {
+            'format': '%(levelname)-8s %(name)s.%(funcName)s:%(lineno)s- %(message)s'
+        },
+        'simple_time': {
             'format': '%(levelname)-8s %(asctime)s %(name)s.%(funcName)s:%(lineno)s- %(message)s'
         },
     },
