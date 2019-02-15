@@ -14,7 +14,7 @@ from alertas.utils import create_alertas_user
 
 import logging
 
-LOG = logging.getLogger(__file__)
+LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.INFO)
 
 

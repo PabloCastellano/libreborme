@@ -29,6 +29,7 @@ def load_borme_from_gzipped_json(filename):
     return ret
 
 
+# TODO: Use a lighter one, this BORME takes too long for a simple test (several minutes)
 class TestImportAnuncios_BORME_A_2012_197_28(TestCase):
 
     def test_nombramientos_ceses(self):

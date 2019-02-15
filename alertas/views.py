@@ -65,7 +65,7 @@ class MyAccountView(CustomerMixin, TemplateView):
         aconfig = get_alertas_config()
         context['free_follows'] = aconfig['max_alertas_follower_free']
 
-        if 'customer' in context:
+        if context['customer']:
             context['subscriptions'] = context["customer"].subscriptions.all().order_by('-start')
 
         """:

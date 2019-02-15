@@ -36,7 +36,6 @@ class TestCommandCreateAlertasUser(TestCase):
         self.assertEqual(user.first_name, "Fred")
         self.assertEqual(user.last_name, "Foo")
         self.assertEqual(user.profile.notification_method, "email")
-        self.assertEqual(user.profile.notification_email, "fred@localhost")
 
 
 class TestCommandExpireTest(TestCase):
@@ -47,9 +46,8 @@ class TestCommandExpireTest(TestCase):
     def setUpClass(cls):
         super(TestCommandExpireTest, cls).setUpClass()
 
-        create_alertas_user("fred", "fred@localhost", "secret", "Fred",
-                            "Foo")
-        john = create_alertas_user("john", "john@localhost", "secret",
+        create_alertas_user("fred@localhost", "secret", "Fred", "Foo")
+        john = create_alertas_user("john@localhost", "secret",
                                    "John", "Foo")
         days = int(get_alertas_config("days_test_subscription_expire"))
         john.date_joined = timezone.now() - timezone.timedelta(days=days)
@@ -82,7 +80,7 @@ class TestCommandNotifications(TestCase):
     # el historial
 
     def setUp(self):
-        self.john = create_alertas_user("john", "john@localhost", "secret",
+        self.john = create_alertas_user("john@localhost", "secret",
                                         "John", "Foo")
         UserSubscription.objects.create(user=self.john, evento="liq",
                                   provincia="Lugo", periodicidad="daily")

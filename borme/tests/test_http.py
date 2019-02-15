@@ -64,26 +64,6 @@ class TestBasicHttp(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
-    def test_anuncio(self):
-        anuncio = Anuncio.objects.get(id_anuncio=1, year=1800)
-        url = reverse('borme-anuncio', args=[anuncio.year, anuncio.id_anuncio])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-
-        url = reverse('borme-anuncio', args=[1700, 1])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
-
-    def test_borme(self):
-        borme = Borme.objects.get(cve='BORME-Z-1111')
-        url = reverse('borme-borme', args=[borme.cve])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-
-        url = reverse('borme-borme', args=['BORME-Z-DOESNTEXIST'])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
-
     def test_index(self):
         url = reverse('home')
         response = self.client.get(url)
@@ -116,6 +96,44 @@ class TestBasicHttp(TestCase):
     'borme-persona-csv-actual'
     'borme-persona-csv-historial'
     API
+    """
+
+"""
+class TestDeprecatedBasicHttp(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestBasicHttp, cls).setUpClass()
+        b = Borme.objects.create(cve='BORME-Z-1111', date=today, url='http://localhost', from_reg=1, until_reg=10, province='Nowhere', section='A')
+        c = Company(name='EMPRESA RANDOM', type='SL', date_updated=today)
+        c.save()
+        Person.objects.create(name='PERSONA RANDOM', date_updated=today)
+        a = Anuncio.objects.create(id_anuncio=1, year=1800, borme=b, company=c)
+        c.anuncios = [{"year": 1800, "id": a.id}]
+        c.save()
+        Config.objects.create(version='test', last_modified=timezone.now())
+        # self.user = User.objects.create_user('lennon@thebeatles.com', 'johnpassword')
+        # self.user = User.create_user(email='lennon@thebeatles.com', password='johnpassword')
+
+    def test_anuncio(self):
+        anuncio = Anuncio.objects.get(id_anuncio=1, year=1800)
+        url = reverse('borme-anuncio', args=[anuncio.year, anuncio.id_anuncio])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        url = reverse('borme-anuncio', args=[1700, 1])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_borme(self):
+        borme = Borme.objects.get(cve='BORME-Z-1111')
+        url = reverse('borme-borme', args=[borme.cve])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        url = reverse('borme-borme', args=['BORME-Z-DOESNTEXIST'])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
     """
 
 

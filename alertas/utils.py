@@ -22,8 +22,8 @@ def get_alertas_config(key=None):
         return alertas
 
 
-def create_alertas_user(email, password,
-                        first_name, last_name):
+# USEFUL?
+def create_alertas_user(email, password, first_name, last_name):
     new_user = User.objects.create_user(email=email,
                                         password=password,
                                         first_name=first_name,

@@ -20,7 +20,7 @@ from alertas.utils import get_alertas_config
 from django.utils import timezone
 import logging
 
-LOG = logging.getLogger(__file__)
+LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.INFO)
 
 User = get_user_model()
@@ -39,13 +39,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.options = options
-        ch = logging.StreamHandler()
         if options["verbosity"] > 1:
             LOG.setLevel(logging.DEBUG)
-            ch.setLevel(logging.DEBUG)
-        else:
-            ch.setLevel(logging.INFO)
-        LOG.addHandler(ch)
 
         if options['email']:
             user = User.objects.get(email=options["email"])

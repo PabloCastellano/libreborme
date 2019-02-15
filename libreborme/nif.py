@@ -11,7 +11,7 @@ from borme.models import Company
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.ERROR)
 
 
 PROVIDERS = ('empresia', 'infocif', 'infoempresa')
@@ -52,6 +52,8 @@ class NIFProvider(object):
         elif (provider == 'infocif' and 'Informacion Financiera' in title):
             found = True
         elif (provider == 'infocif' and 'Informe comercial' in title):
+            found = True
+        elif (provider == 'infoempresa'):
             found = True
 
         if not found:

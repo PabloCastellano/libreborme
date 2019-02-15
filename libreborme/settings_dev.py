@@ -50,3 +50,49 @@ EMAIL_PORT = 1025
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER  # used for error reporting
+
+# PARSER = 'borme.parser.backend.yabormeparser'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)-8s %(asctime)s %(name)s.%(funcName)s:%(lineno)s- %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'alertas.management.commands.expire_test_users.expire_user': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        # Elasticsearch module is quite noisy
+        'elasticsearch': {
+            'level': 'WARNING',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+    }
+}

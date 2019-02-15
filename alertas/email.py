@@ -18,7 +18,7 @@ import os.path
 
 EMAIL_FROM = "noreply@libreborme.net"
 
-LOG = logging.getLogger(__file__)
+LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.INFO)
 
 
@@ -46,9 +46,9 @@ def send_expiration_email(user):
                             [user.email],
                             html_message=html_message)
     if sent_emails == 1:
-        print("Email sent successfully to {0}".format(user.email))
+        LOG.info("Email sent successfully to {0}".format(user.email))
     else:
-        print("It looks like there was an error while sending the email to {0}".format(user.email))
+        LOG.error("Error sending the email to {0}".format(user.email))
 
 
 def _busca_suscriptores(evento, email=None):

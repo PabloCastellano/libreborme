@@ -119,6 +119,7 @@ test:
     # - docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
     # - docker run $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=$ELASTICSEARCH_URI DB_HOST=$DB_HOST make test_k8s_ci"
     # FIXME: Estos dos comandos ejecutarlos en el container
+    - pip install -r requirements/development.txt
     - coverage run --source='.' manage.py test --noinput -v 3
     - coverage report
   coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'

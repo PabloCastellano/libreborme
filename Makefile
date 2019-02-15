@@ -74,7 +74,7 @@ test:
 		DJANGO_SETTINGS_MODULE=libreborme.settings_ci DB_HOST=localhost ./manage.py test --noinput -v 3
 
 test1:
-		DJANGO_SETTINGS_MODULE=libreborme.settings_ci DB_HOST=localhost ./manage.py test --noinput -v 3 borme.tests.test_import.TestImport2.test_nombramientos_ceses
+		DJANGO_SETTINGS_MODULE=libreborme.settings_ci DB_HOST=localhost ./manage.py test --noinput -v 3 borme.tests.test_import.TestImportAnuncios_BORME_A_2012_197_28.test_nombramientos_ceses
 
 test2:
 		./setup.py test

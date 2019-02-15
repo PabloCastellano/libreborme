@@ -9,7 +9,7 @@ class TestProfile(TestCase):
     fixtures = ['alertasconfig.json']
 
     def setUp(self):
-        self.user = create_alertas_user("john", "john@localhost", "secret", "John", "Foo")
+        self.user = create_alertas_user("john@localhost", "secret", "John", "Foo")
 
     def test_expire_subscription(self):
         logs = LibrebormeLogs.objects.all()
