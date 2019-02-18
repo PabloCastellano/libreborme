@@ -144,7 +144,7 @@ BORME_JSON_ROOT = os.path.join(BORME_ROOT, 'json')
 BORME_LOG_ROOT = os.path.join(BASE_DIR, '..', 'log')
 BORME_SUBSCRIPTIONS_ROOT = os.path.join(BORME_ROOT, 'subscriptions')
 
-EMAIL_CONTACT = 'contact@domain'
+EMAIL_CONTACT = 'contacto@libreborme.net'
 EMAIL_SUBJECT_PREFIX = '[LIBREBORME] '
 
 LOPD = {'provider': 'Some real name',

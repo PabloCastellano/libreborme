@@ -16,6 +16,8 @@ import datetime
 import json
 import stripe
 
+from collections import OrderedDict
+
 from djstripe.models import Customer, Event, Plan, Product, Subscription
 from borme.models import Company, Person
 from borme.templatetags.utils import slug, slug2
@@ -233,6 +235,7 @@ class AlertaDetailView(DetailView):
         return self.alerta
 
 
+# TODO: Use |dictsort in template instead
 @method_decorator(staff_member_required, name='dispatch')
 @method_decorator(login_required, name='dispatch')
 class AlertaEventsView(TemplateView):
@@ -249,7 +252,8 @@ class AlertaEventsView(TemplateView):
             date = e.created.date()
             events_by_date.setdefault(date, [])
             events_by_date[date].append(e)
-        context['events_by_date'] = events_by_date
+        context['events_by_date'] = OrderedDict(sorted(events_by_date.items(), reverse=True))
+        context["events_list"] = sorted(events_by_date.keys(), reverse=True)
         return context
 
 

@@ -12,10 +12,10 @@
 
         <div class="">
           <h1 class="page-header">Listado de eventos</h1>
-          {% if events_by_date.keys %}
+          {% if events_list %}
             <p>Ir a fecha:</p>
             <ul>
-            {% for date in events_by_date.keys %}
+            {% for date in events_list %}
             <li><a href="#{{ date.isoformat }}">{{ date }}</a></li>
             {% endfor %}
             </ul>
@@ -72,6 +72,7 @@
       var div = $("#data_" + eventid);
       div.toggle();
       $(ev.target).text("Ocultar detalles");
+      ev.preventDefault();
     });
 
     $("a.show_meta").click(function(ev) {
@@ -79,6 +80,7 @@
       var div = $("#meta_" + eventid);
       div.toggle();
       $(ev.target).text("Ocultar detalles");
+      ev.preventDefault();
     });
 
     </script>
