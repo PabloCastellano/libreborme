@@ -4,7 +4,7 @@ from django.core.exceptions import ImproperlyConfigured
 import os
 
 
-def check_permissions():
+def _check_permissions():
     # Borme files directories
     if not os.path.isdir(settings.BORME_ROOT):
         raise ImproperlyConfigured("The directory does not exist: " + settings.BORME_ROOT)
@@ -31,3 +31,16 @@ def check_permissions():
             raise ImproperlyConfigured("The log file is not writable: " + log_file)
     except KeyError:
         pass
+
+
+def check_permissions():
+
+    try:
+        _check_permissions()
+    except ImproperlyConfigured as e:
+        if settings.DEBUG == False:
+            raise
+        print("\n\n")
+        print("!!!!!!!!!!!!!!! Sanity check failed !!!!!!!!!!!!!!")
+        print(e)
+        print("\n\n")

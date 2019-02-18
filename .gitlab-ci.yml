@@ -117,9 +117,8 @@ test_docker:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker pull $CONTAINER_TEST_IMAGE
     # - docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
-    # - docker run --rm $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=$ELASTICSEARCH_URI DB_HOST=$DB_HOST make test_k8s_ci"
-    - docker run --rm $CONTAINER_TEST_IMAGE bash -c "coverage run --source='.' manage.py test --noinput -v 3"
-    # - coverage report
+    # - docker run --rm $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=$ELASTICSEARCH_URI DB_HOST=$DB_HOST make coverage_k8s_ci"
+    - docker run --rm $CONTAINER_TEST_IMAGE bash -c "make coverage"
   coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'
 
 test:

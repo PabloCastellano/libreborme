@@ -39,7 +39,7 @@ sync_stripe:
 		# OJO: No tenemos los UserSubscription configurados
 
 run:
-		pip install -r requirements/development.txt
+		# pip install -r requirements/development.txt
 		docker-compose up -d
 		./manage.py migrate --settings $(settings)
 		@echo "\n\n\n#################################################################"
@@ -82,14 +82,18 @@ test2:
 test3:
 		./runtests.py
 
-test_ci:
+coverage_ci:
 		./scripts/wait-for-it.sh elasticsearch:9200 --timeout=30
 		coverage run --source='.' manage.py test --noinput -v 3
 		coverage report
 
-test_k8s_ci:
+coverage_k8s_ci:
 		./scripts/wait-for-it.sh elasticsearch.libreborme-6554539.svc.cluster.local:9200 --timeout=30
 		DJANGO_SETTINGS_MODULE=libreborme.settings_ci coverage run --source='.' manage.py test --noinput -v 3
+		coverage report
+
+coverage:
+		coverage run --source='.' manage.py test --noinput -v 3
 		coverage report
 
 test_docker:

@@ -5,7 +5,7 @@ services:
 
   app:
     image: ${CONTAINER_IMAGE}:${CI_BUILD_REF_NAME}
-    command: bash -c "make test_ci"
+    command: bash -c "make coverage_ci"
     # coverage vs coveralls?
     depends_on:
       - postgres
