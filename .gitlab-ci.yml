@@ -116,11 +116,10 @@ test_docker:
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker pull $CONTAINER_TEST_IMAGE
-    - docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
-    # - docker run $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=$ELASTICSEARCH_URI DB_HOST=$DB_HOST make test_k8s_ci"
-    # FIXME: Estos dos comandos ejecutarlos en el container
-    - coverage run --source='.' manage.py test --noinput -v 3
-    - coverage report
+    # - docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
+    # - docker run --rm $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=$ELASTICSEARCH_URI DB_HOST=$DB_HOST make test_k8s_ci"
+    - docker run --rm $CONTAINER_TEST_IMAGE bash -c "coverage run --source='.' manage.py test --noinput -v 3"
+    # - coverage report
   coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'
 
 test:
@@ -128,7 +127,7 @@ test:
   stage: test
   script:
     - apk add --no-cache build-base bash musl-dev libjpeg-turbo-dev libpng libpq postgresql-dev uwsgi uwsgi-python3 git libxml2-dev libxslt-dev zlib-dev libffi-dev libmagic
-    - pip install -r requirements/development.txt
+    - pip install -r requirements/production.txt
     - coverage run --source='.' manage.py test --noinput -v 3
     - coverage report
   coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'
