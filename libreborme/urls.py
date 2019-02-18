@@ -15,7 +15,7 @@ urlpatterns = [
     path('index_old', t(template_name="libreborme/index.html"), name='home'),
     path('borme/', include('borme.urls')),
     path('dataremoval/', include('dataremoval.urls')),
-    path('', include('alertas.urls')),
+    path('panel/', include('alertas.urls')),
 
     path('robots.txt', views.robotstxt),
     path('humans.txt', t(template_name='humans.txt', content_type='text/plain')),

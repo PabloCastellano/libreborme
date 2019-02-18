@@ -115,7 +115,7 @@
             <div class="form-group row">
                 <label class="control-label col-sm-3">Precio</label>
                 <div class="col-sm-5">
-                    <p class="font-weight-bold"><span id="price">59,99</span>€ / mes</p>
+                    <p class="font-weight-bold"><span id="price">{{ plan_month_one.amount }}</span>€ / mes + IVA</p>
                 </div>
             </div>
             <input id="buy_field_product" type="hidden" name="product" value="{{ plan_month_one.nickname }}">

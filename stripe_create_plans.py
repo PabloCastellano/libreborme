@@ -31,7 +31,7 @@ def create_follow100_product_and_plan():
     plan = stripe.Plan.create(
         nickname=ALERTS_YEAR_PLAN,
         product=product.id,
-        amount=3600,
+        amount=2999,
         currency='eur',
         interval='year'
     )
@@ -52,7 +52,7 @@ def create_subscription_product_and_plans():
     plan = stripe.Plan.create(
         nickname=SUBSCRIPTION_MONTH_ONE_PLAN,
         product=product.id,
-        amount=5999,
+        amount=4999,
         currency='eur',
         interval='month',
         trial_period_days=TRIAL_PERIOD_DAYS
@@ -62,7 +62,7 @@ def create_subscription_product_and_plans():
     plan = stripe.Plan.create(
         nickname=SUBSCRIPTION_MONTH_FULL_PLAN,
         product=product.id,
-        amount=17999,
+        amount=14999,
         currency='eur',
         interval='month',
         trial_period_days=TRIAL_PERIOD_DAYS

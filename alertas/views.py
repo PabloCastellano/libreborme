@@ -340,14 +340,17 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
 
             plan = Plan.objects.get(nickname=plan_name)
             if context["provincia"] == "all":
-                provincia_text = "Todas las provincias"
+                provincia_text = "todas las provincias"
             else:
-                provincia_text = "Una provincia"
-            product_text = "{0}\n({1}, {2})".format(plan.product.name, context["evento"], provincia_text)
+                provincia_text = "una provincia"
+            if plan.interval == "month":
+                pago_text = "Pago mensual"
+            elif plan.interval == "year":
+                pago_text = "Pago anual"
+            product_text = "<strong>{0} ({1})</strong>\n{2}, {3}".format(plan.product.name, pago_text, context["evento"], provincia_text)
             context['product'] = {'name': product_text, 'price': price}
-            context['total_with_tax'] = price
-            context['tax_amount'] = round(price / (1 + TAXES[taxname]), 2)
-            context['total_price'] = round(context['total_with_tax'] - context['tax_amount'], 2)
+            context['tax_amount'] = round(price * (TAXES[taxname] / 100), 2)
+            context['total_with_tax'] = round(price * (1 + TAXES[taxname] / 100), 2)
             context['tax_percentage'] = TAXES[taxname]
 
             if context["customer"]:

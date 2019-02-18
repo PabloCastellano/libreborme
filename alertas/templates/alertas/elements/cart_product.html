@@ -42,7 +42,7 @@
                   </thead>
                   <tbody>
                       <tr>
-                          <td>{{ product.name | linebreaks }}</td>
+                          <td>{{ product.name | safe | linebreaks }}</td>
                           <td class="text-center">1</td>
                           <td class="text-center">{{ product.price|floatformat:2 }} €</td>
                           <td></td>
@@ -51,7 +51,7 @@
                           <td></td>
                           <td></td>
                           <td class="text-right">Subtotal</td>
-                          <td class="text-center">{{ total_price|floatformat:2 }} €</td>
+                          <td class="text-center">{{ product.price |floatformat:2 }} €</td>
                       </tr>
                       <tr>
                           <td></td>
