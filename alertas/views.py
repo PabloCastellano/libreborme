@@ -58,17 +58,12 @@ class MyAccountView(CustomerMixin, TemplateView):
         context = super(MyAccountView, self).get_context_data(**kwargs)
 
         context['active'] = 'dashboard'
-        context['count_a'] = UserSubscription.objects.filter(
-                                    user=self.request.user).count()
-        context['count_f'] = Follower.objects.filter(
-                                    user=self.request.user).count()
-        context['n_alertas'] = context['count_a'] + context['count_f']
 
         aconfig = get_alertas_config()
         context['free_follows'] = aconfig['max_alertas_follower_free']
 
         if context['customer']:
-            context['subscriptions'] = context["customer"].subscriptions.all().order_by('-start')
+            context['subscriptions'] = context["customer"].active_subscriptions.order_by('-start')
 
         """:
             context['ip'] = self.request.META['HTTP_X_FORWARDED_FOR']
@@ -131,9 +126,6 @@ class DashboardSupportView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardSupportView, self).get_context_data(**kwargs)
-        n_alertas = UserSubscription.objects.filter(user=self.request.user).count()
-        n_alertas += Follower.objects.filter(user=self.request.user).count()
-        context['n_alertas'] = n_alertas
         context['active'] = 'ayuda'
         return context
 
@@ -269,7 +261,7 @@ class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
         # TODO: Solo una suscripción de prueba
 
         if context['customer']:
-            context["subscriptions"] = context["customer"].valid_subscriptions.filter(plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN))
+            context["subscriptions"] = context["customer"].active_subscriptions.filter(plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN))
 
         context['alertas_a'] = UserSubscription.objects.filter(user=self.request.user)
         context['current'] = context['alertas_a'].count()
@@ -322,9 +314,7 @@ class ServiceFollowView(CustomerMixin, StripeMixin, TemplateView):
 
         # TODO: self.request.user.djstripe_customers.get().subscriptions.filter()
         if context["customer"]:
-            context["subscriptions"] = Subscription.objects.filter(
-                    plan__nickname=settings.ALERTS_YEAR_PLAN,
-                    customer=context["customer"])
+            context["subscriptions"] = context["customer"].active_subscriptions.filter(plan__nickname__in=(settings.ALERTS_YEAR_PLAN))
 
         context["plan_year"] = Plan.objects.get(nickname=settings.ALERTS_YEAR_PLAN)
         return context
@@ -409,9 +399,8 @@ class ServiceAPIView(CustomerMixin, TemplateView):
         # context["plan_year"] = Plan.objects.get(nickname=settings.API_YEAR_PLAN)
 
         if context["customer"]:
-            context["subscriptions"] = Subscription.objects.filter(
-                    plan__nickname__in=(settings.API_MONTH_PLAN, settings.API_YEAR_PLAN),
-                    customer=context["customer"])
+            context["subscriptions"] = context["customer"].active_subscriptions.filter(
+                    plan__nickname__in=(settings.API_MONTH_PLAN, settings.API_YEAR_PLAN))
 
         aconfig = get_alertas_config()
         context['service_api_free_req_day'] = aconfig['service_api_free_req_day']
@@ -442,7 +431,7 @@ def alerta_acto_create(request):
             # customer = Customer.objects.get(subscriber=request.user)
             customer = request.user.djstripe_customers.get()
             # TODO: hacer un metodo en Manager: user.has_remaining_subscriptions o algo asi
-            subscriptions = customer.valid_subscriptions.filter(plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN))
+            subscriptions = customer.active_subscriptions.filter(plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN))
             alertas_a = UserSubscription.objects.filter(user=request.user)
             remaining = len(subscriptions) - alertas_a.count()
 
@@ -655,7 +644,7 @@ def checkout_page(request):
             #     subscription = customer.subscribe(plan)
             # else:
 
-            # Save card
+            # TODO: Save card
             card = customer.add_card(token, set_default=save_card)
 
             # Pending issues:

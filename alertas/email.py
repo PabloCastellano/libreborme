@@ -57,6 +57,7 @@ def _busca_suscriptores(evento, email=None):
         is_enabled=True,
         user__is_active=True
     )
+    subscriptions = subscriptions.exclude(periodicidad='disabled')
     if email:
         subscriptions = subscriptions.filter(user__email=email)
     LOG.info("Total {} subscribers for event '{}' (use -v 3 for more information).".format(

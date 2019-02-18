@@ -62,6 +62,8 @@ class Profile(m.Model):
     # Servicios
     # User has contacted support or paid for a plan
     has_api_enabled = m.BooleanField(default=False)
+
+    # TODO: use a property to search if customer.valid_subscriptions.filter(status='Trialing', plan__nickname_in=()) exists
     has_tried_subscriptions = m.BooleanField(default=False)
 
     def is_complete(self):

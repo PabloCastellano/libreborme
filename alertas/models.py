@@ -76,8 +76,9 @@ PROVINCIAS_CHOICES_ALL = PROVINCIAS_CHOICES + (('all', 'Todas las provincias'),)
 PROVINCIAS_DICT_ALL = dict(PROVINCIAS_CHOICES_ALL)
 
 PERIODICIDAD_CHOICES = (
-    ('daily', 'Diaria'),
-    ('weekly', 'Semanal'),
+    ('disabled', 'Desactivado'),
+    ('daily', 'Diariamente'),
+    ('weekly', 'Semanalmente'),
 )
 PERIODICIDAD_DICT = dict(PERIODICIDAD_CHOICES)
 
