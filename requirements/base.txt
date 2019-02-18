@@ -1,4 +1,4 @@
-bormeparser==0.3.4
+bormeparser==0.3.5
 Django==2.0.10
 #django-bootstrap-form==3.2.1
 -e git+https://github.com/PabloCastellano/django-bootstrap-form@custom#egg=django-bootstrap-form
