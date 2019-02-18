@@ -2,11 +2,11 @@ FROM python:3-alpine3.6
 
 ENV PYTHONUNBUFFERED=1
 
-RUN apk add --no-cache linux-headers bash gcc \
+RUN apk add --no-cache build-base bash \
     musl-dev libjpeg-turbo-dev libpng libpq \
     postgresql-dev uwsgi uwsgi-python3 git \
     libxml2-dev libxslt-dev zlib-dev libffi-dev \
-    libmagic make
+    libmagic
 
 ADD requirements /requirements
 RUN pip install -U -r /requirements/production.txt
