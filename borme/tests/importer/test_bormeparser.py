@@ -9,9 +9,10 @@ import logging
 import os
 
 from django.test import TestCase
+from django.test.utils import override_settings
 
 THIS_PATH = os.path.dirname(os.path.abspath(__file__))
-FILES_PATH = os.path.join(THIS_PATH, 'files')
+FILES_PATH = os.path.join(THIS_PATH, '../files')
 
 # Disable loggers
 borme.utils.strings.logger.setLevel(logging.ERROR)
@@ -19,11 +20,9 @@ borme.parser.importer.logger.setLevel(logging.ERROR)
 borme.parser.logger.logger.setLevel(logging.ERROR)
 
 
-# TODO: with settings.PARSER = 'borme.parser.backend.yabormeparser'
-# TODO: yabormeparser json files
-
+@override_settings(PARSER='borme.parser.backend.bormeparser')
 def load_borme_from_gzipped_json(filename):
-    fp = gzip.open(os.path.join(FILES_PATH, filename))
+    fp = gzip.open(os.path.join(FILES_PATH, 'bormeparser', filename))
     ret = borme.parser.importer.from_json_file(fp)
     fp.close()
     return ret

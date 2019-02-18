@@ -22,11 +22,11 @@ def convertir_iniciales(name):
     return '. '.join(iniciales) + '.'
 
 
-def slug2(val):
+def slug2(nombre):
     """ Dado el nombre completo de la sociedad, incluyendo el tipo (SL, SA, ...),
         devuelve el slug de la sociedad.
     """
-    empresa, _ = regex_empresa_tipo(val)
+    empresa, _ = regex_empresa_tipo(nombre)
     return slugify(empresa)
 
 

@@ -41,6 +41,7 @@ class Command(BaseCommand):
         print('\nElapsed time: %.2f seconds' % elapsed_time)
 
     def set_verbosity(self, verbosity):
+        logging.getLogger("urllib3").setLevel(logging.WARNING)
         if verbosity == 0:
             borme.parser.importer.logger.setLevel(logging.ERROR)
         elif verbosity == 1:  # default

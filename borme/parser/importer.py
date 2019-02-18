@@ -21,7 +21,6 @@ from borme.models import (
         company_get_or_create,
         person_get_or_create,
 )
-from borme.utils.strings import parse_empresa
 
 from . import actos
 from .logger import (
@@ -75,7 +74,8 @@ def _importar_cargos(nombres, nombre_cargo, borme, borme_embed, anuncio, acto,
         lista_cargos.append(cargo)
 
 
-def _from_instance(borme):
+# TODO: retrieve_url offline
+def _from_instance(borme, set_url=True):
     """Importa en la BD una instancia borme.parser.backend.BormeBase
 
     Importa en la BD todos los datos de la instancia BORME (personas, empresas,
@@ -107,10 +107,17 @@ def _from_instance(borme):
 
     nuevo_borme, created = borme_get_or_create(borme)
 
-    if nuevo_borme.url is None:
-        xml_path = get_borme_xml_filepath(borme.date)
-        bxml = BormeXML.from_file(xml_path)
-        nuevo_borme.url = bxml.get_url_cve(borme.cve)
+    # Returns IOError for yabormeparser if xml doesn't exist
+    try:
+        if nuevo_borme.url is None:
+            xml_path = get_borme_xml_filepath(borme.date)
+            bxml = BormeXML.from_file(xml_path)
+            nuevo_borme.url = bxml.get_url_cve(borme.cve)
+    except IOError as e:
+        logger.exception("Could not locate BORME-XML")
+        if set_url:
+            raise
+        nuevo_borme.url = ""
 
     if created:
         logger_borme_create(borme.cve)
@@ -492,7 +499,7 @@ def _import_borme_download_range(begin, end, seccion, local_only,
     return True, total_results
 
 
-def from_json_file(filename):
+def from_json_file(filename, set_url=True):
     """Importa un archivo BORME-JSON en la BD.
 
     :param filename: Archivo a importar
@@ -511,7 +518,7 @@ def from_json_file(filename):
 
     try:
         borme = parse_func(filename)
-        results = _from_instance(borme)
+        results = _from_instance(borme, set_url)
     except Exception as e:
         logger.exception("Parsing {}".format(filename))
 

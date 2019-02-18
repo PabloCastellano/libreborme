@@ -267,8 +267,7 @@ class Company(m.Model):
     # number of visits
 
     def save(self, *args, **kwargs):
-        empresa, tipo, _ = parse_empresa(self.name)
-        self.slug = slugify(empresa)
+        _, tipo, self.slug = parse_empresa(self.name)
         self.type = tipo
         super(Company, self).save(*args, **kwargs)
 
