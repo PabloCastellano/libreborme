@@ -62,9 +62,13 @@
                         <td>{{ alerta.get_provincia_display }}</td>
                         <td>{{ alerta.get_periodicidad_display }}</td>
                         <td>
+                          {% comment %}
+                          TODO: editar suscripcion
                           <a href="{% url 'alerta-remove-acto' alerta.id %}">
-                          <button type="button" class="btn btn-danger btn-xs">
-                            <i class="fas fa-trash-alt"></i> Eliminar
+                          {% endcomment %}
+                          <a href="#">
+                          <button type="button" class="btn btn-warning btn-xs">
+                            <i class="fas fa-pencil-alt"></i> Editar
                           </button>
                           </a>
                         </td>
@@ -115,10 +119,10 @@
             <div class="form-group row">
                 <label class="control-label col-sm-3">Precio</label>
                 <div class="col-sm-5">
-                    <p class="font-weight-bold"><span id="price">{{ plan_month_one.amount }}</span>€ / mes + IVA</p>
+                    <p class="font-weight-bold"><span class="price">{{ plan_month_one.amount }}</span>€ / mes + IVA</p>
                 </div>
             </div>
-            <input id="buy_field_product" type="hidden" name="product" value="{{ plan_month_one.nickname }}">
+            <input type="hidden" name="product" class="buy_field_product" value="{{ plan_month_one.nickname }}">
             <input type="hidden" name="periodicidad" value="daily">
             <input type="submit" name="addtocart" class="btn btn-outline-danger btn-outline-danger2 btn-sm" value="Añadir a la cesta">
             </form>
@@ -171,15 +175,15 @@
 							<div class="form-group row">
 								<label class="control-label col-sm-3">Precio</label>
 								<div class="col-sm-7">
-									<p class="font-weight-bold"><span id="price">59,99</span>€ / mes</p>
+                                    <p class="font-weight-bold"><span class="price">{{ plan_month_one.amount }}</span>€ / mes</p>
 								</div>
 							</div>
 							<div class="form-group row">
 								<div class="col-sm-12">
-                                    <p>Lea los <a target="_blank" href="{% url 'alertas-tos' %}">Términos y Condiciones del Servicio de Suscripciones (TODO: review)</a>.</p>
+                                    <p>Lea los <a target="_blank" href="{% url 'alertas-tos' %}">Términos y Condiciones del Servicio de Suscripciones</a>.</p>
 								</div>
 							</div>
-							<input type="hidden" name="product" value="{{ plan_month_one.nickname }}">
+                            <input type="hidden" name="product" class="buy_field_product" value="{{ plan_month_one.nickname }}">
 							<input type="hidden" name="periodicidad" value="daily">
 							<input type="submit" name="addtocart" class="btn btn-outline-danger btn-outline-danger2 btn-sm" value="Añadir a la cesta">
 							</form>
@@ -197,11 +201,11 @@
     $("#id_buy_provincia").change(function() {
         var value = $("#id_buy_provincia").val();
         if (value == 'all') {
-            $("#price").text("{{ plan_month_full.amount }}");
-            $("#buy_field_product").val("subscription_month_full")
+            $(".price").text("{{ plan_month_full.amount }}");
+            $(".buy_field_product").val("subscription_month_full")
         } else {
-            $("#price").text("{{ plan_month_one.amount }}");
-            $("#buy_field_product").val("subscription_month_one")
+            $(".price").text("{{ plan_month_one.amount }}");
+            $(".buy_field_product").val("subscription_month_one")
         }
     });
 </script>

@@ -77,11 +77,13 @@
                             <span>Facturas</span>
                         </a>
                     </li>
+                    {% comment %}
                     <li class="nav-item menu-panel-user d-block d-md-none">
                         <a class="nav-link" href="{% url 'alertas-payment' %}">
                             <span>Métodos de pago</span>
                         </a>
                     </li>
+                    {% endcomment %}
                     <li class="nav-item menu-panel-user d-block d-md-none">
                         <a class="nav-link" href="{% url 'service-follow' %}">
                             <span>Seguimiento</span>
@@ -120,7 +122,9 @@
                         <a class="dropdown-item" href="{% url 'dashboard-index' %}">Mi cuenta</a>
                         <a class="dropdown-item" href="{% url 'alertas-profile' %}">Mi perfil</a>
                         <a class="dropdown-item" href="{% url 'alertas-billing' %}">Facturas</a>
+                        {% comment %}
                         <a class="dropdown-item" href="{% url 'alertas-payment' %}">Métodos de pago</a>
+                        {% endcomment %}
                         <a class="dropdown-item" href="{% url 'service-follow' %}">Seguimiento</a>
                         <a class="dropdown-item" href="{% url 'service-subscription' %}">Subscripciones</a>
                         <a class="dropdown-item" href="{% url 'service-api' %}">API</a>

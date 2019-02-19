@@ -137,6 +137,10 @@ class TermsOfServiceView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(TermsOfServiceView, self).get_context_data(**kwargs)
         context['active'] = 'tos'
+
+        aconfig = get_alertas_config()
+        context['free_follows'] = aconfig['max_alertas_follower_free']
+        context["service_subscription_trial_day"] = aconfig["service_subscription_trial_day"]
         return context
 
 

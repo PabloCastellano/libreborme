@@ -4,28 +4,45 @@
 
 {% block content %}
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-          <h1 class="page-header">Términos y condiciones del servicio</h1>
 
-          <h1 class="title-section mt-4"><span>|</span>General</h1>
-          <h3 class="subtitle-panel">¿Existe un periodo de prueba para los planes de pago?</h3>
-          <p>Al actualizar tu plan para Alertas de Actos Mercantiles, tu cuenta tiene un período de prueba gratuito de 7 días. Si cancelas el plan antes del período de prueba, no tendrá ningún coste para ti.</p>
+  <div class="col-8">
+    <h1 class="page-header">Términos y condiciones del servicio</h1>
 
-          <p>¿Trabajas en la investigación o en un proyecto sin ánimo de lucro? Contáctanos</p>
-          <p>¿Necesitas que integremos la API con tu propio sistema? Contáctanos</p>
+    <h1 class="title-section mt-4"><span>|</span>General</h1>
 
-          <p class="text-justify">Cada día recibirás en tu email la información que has elegido.</p>
-          <p class="text-justify">Las suscripciones incluyen un período de prueba de 7 días. Puedes cancelar la suscripción en cualquier momento antes de los 7 días, sin que esto tenga ningún coste.</p>
-          <p class="text-justify">El ciclo de facturación de la suscripción mensual comienza siempre el día 1 de cada mes. El primer mes será prorrateado.</p>
-          <p class="text-justify">El período de prueba solo es válido la primera vez.</p>
+    <h3 class="subtitle-panel">Limitación de responsabilidad</h3>
 
-          <h3 class="subtitle-panel">¿Cuánto recibiré mi factura?</h3>
-          <p>You will be billed immediately when you subscribe a plan. Subsequently you will be billed every 30 days.</p>
+    <p>La información que muestra LibreBORME se ha obtenido de fuentes accesibles al público y cuyos datos se presumen correctos. Debido a que la recopilación de los datos es un proceso informático automatizado y a que la enorme cantidad de datos hace imposible su completa verificación, LibreBORME no asume responsabilidad alguna por errores, inexactitudes u omisiones de la información facilitada.</p>
+    <p>El USUARIO no podrá exigir responsabilidad alguna por los daños y perjuicios derivados de errores y/o incorrección y/o inexactitud en la información suministrada y acepta que la información suministrada en la PAGINA WEB se ofrece con carácter orientativo.</p>
+    <p>El USUARIO es el único responsable de las infracciones en las que pueda incurrir o de los perjuicios que pueda causar o causarse por la utilización de la PAGINA WEB, quedando LibreBORME, exonerado de cualquier clase de responsabilidad que se pudiera derivar por las acciones del USUARIO.</p>
+    </p>
 
-          <h3 class="subtitle-panel">What do I get when I upgrade?</h3>
-          <p>Your API key is authorized to access the API functions and credits as per your chosen plan are deposited in your credit balance.</p>
+    <h3 class="subtitle-panel">Facturación</h3>
 
-          <h1 class="title-section mt-4"><span>|</span>Servicio de seguimiento</h1>
-          <h1 class="title-section mt-4"><span>|</span>Servicio de suscripciones</h1>
-          <h1 class="title-section mt-4"><span>|</span>Servicio de API</h1>
+    <p class="text-justify">El ciclo de facturación siempre comienza siempre el día 1 de cada mes. Si contratas un servicio a mitad de mes, el coste será prorrateado entre los días restantes.</p>
+
+    <h3 class="subtitle-panel">Periodo de prueba</h3>
+    <p>Algunos servicios incluyen un periodo de prueba. Consulta los detalles de cada uno para más información.</p>
+    <p>¿Necesitas probar algún servicio durante más tiempo? Contáctanos.</p>
+
+    <h1 class="title-section mt-4"><span>|</span>Servicio de Seguimiento</h1>
+
+    <h3 class="subtitle-panel">Periodo de prueba</h3>
+    <p>El servicio de Seguimiento incluye {{ free_follows }} notificaciones gratis para usuarios registrados.</p>
+
+    <h1 class="title-section mt-4"><span>|</span>Servicio de Suscripciones</h1>
+
+    <h3 class="subtitle-panel">Periodo de prueba</h3>
+    <p>El servicio de Suscripciones incluye un periodo de prueba de {{ service_subscription_trial_day }} días la primera vez que se contrata. Durante este periodo se
+      puede cancelar la suscripción en cualquier momento y sin ningún coste.</p>
+
+    <h1 class="title-section mt-4"><span>|</span>Servicio de API</h1>
+
+    <p>El servicio de API se encuentra en fase de pruebas y solo está disponible bajo demanda.</p>
+    <p>Contáctanos para probarlo.</p>
+
+    {# TODO: periodo de prueba de la API #}
+
+  </div>
 </main>
 {% endblock %}

@@ -33,10 +33,22 @@
             <div class="row">
                 <div class="col-md-12">
                     <h1 class="title-section">
-                        <span>|</span>servicios
+                        <span>|</span>Servicios
                     </h1>
-                    <p>
-                    A continuación puedes encontrar una descripción de cada uno de los servicios derivados del procesamiento de datos de fuente de acceso público.</p>
+                    <p>A continuación puedes encontrar una descripción de cada uno de los servicios derivados del procesamiento de datos de fuente de acceso público.<br>
+                    Los precios mostrados en esta página no incluyen IVA.</p>
+
+                    <div class="row">
+                      <div class="col-6">
+                        <p>¿Trabajas en la investigación o en un proyecto sin ánimo de lucro?
+                        <br>¿Necesitas que integremos la API con tu propio sistema?
+                        </p>
+                      </div>
+                      <div class="col-2">
+                        <a class="btn btn-outline-danger ml-2" href="{% url 'contact' %}" role="button">Contáctanos</a>
+                      </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -52,14 +64,15 @@
                     <div class="row">
                         <h3 class="titulo-servicio">Seguimiento</h3>
                         <p class="">Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa aparezca en un Boletín Oficial.</p>
-                        <p>Regístrate y prueba el servicio de forma gratuita con {{ max_alertas_follower_free }} personas o empresas de tu elección. Y si necesitas más, contrata tantos bonos como necesites.</p>
+                        <p>Regístrate y prueba el servicio de forma gratuita con {{ max_alertas_follower_free }} personas o empresas de tu elección.
+                        <br>Si necesitas más, puedes contratar el bono anual de {{ max_alertas_follower_paid }} empresas.</p>
 
                         <p>Para añadir a una empresa o persona a tu lista de seguimiento, localízala usando el buscador y haz click en el botón
 
                            <button id="follow-button" type="button" class="btn-secondary btn-details""">
                              <i class="fas fa-eye"></i> Seguir
                            </button>
-                           que verás su página.
+                           que verás en su página.
                         </p>
                     </div>
                     <div class="card-deck">
@@ -91,10 +104,9 @@
                 </div>
                 <div class="col-md-10">
                     <div class="row">
-                        <h3 class="titulo-servicio">Integración de datos</h3>
-                        <p>Permitimos la integración de datos disponibles en LibreBORME con terceros a través de nuestra <strong>API</strong>.</p>
+                        <h3 class="titulo-servicio">API / Integración con terceros</h3>
+                        <p>A través de nuestra <strong>API</strong> te permitimos integrar los datos disponibles en LibreBORME en tu propia app, web o sistema ERP.</p>
                         <p>Accede a los datos publicados en la web de forma estructurada y sin restricciones.</p>
-                        <p>También ofrecemos <strong>servicios de desarrollo</strong> e integración a medida.</p>
                     </div>
                     <div class="card-deck">
                         <div class="card">
@@ -161,6 +173,10 @@
                             </a>
                         </div>
                     </div>
+                    <div class="row mt-4">
+                        <p>¿Necesitas un <strong>desarrollo a medida</strong>?
+                        <a class="btn btn-outline-danger ml-2" href="{% url 'contact' %}" role="button">Contáctanos</a></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -190,7 +206,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4>Suscripción mensual</h4>
-                                <h3>59,99€</h3>
+                                <h3>49,99€</h3>
                                 <p class="card-text">Pago mensual</p>
                                 <hr>
                                 <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Un tipo de notificación</p>
@@ -205,7 +221,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4>Suscripción mensual</h4>
-                                <h3>179,99€</h3>
+                                <h3>149,99€</h3>
                                 <p class="card-text">Pago mensual</p>
                                 <hr>
                                 <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Un tipo de notificación</p>
