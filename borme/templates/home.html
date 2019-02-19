@@ -38,6 +38,21 @@
           }
       });
   </script>
+
+   <script type="application/ld+json">
+   {
+     "@context": "http://schema.org",
+     "@type": "WebSite",
+     "url": "https://libreborme.net",
+     "logo": "https://libreborme.net{% static 'assets/img/logo.svg' %}",
+     "sameAs" : ["https://www.twitter.com/libreborme"],
+     "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://libreborme.net/borme/search/?q={search_term_string}&page=1&type=all",
+        "query-input": "required name=search_term_string"
+      }
+   }
+   </script>
 {% endblock %}
 
 {% block content %}
@@ -48,9 +63,9 @@
     <div class="carousel-inner">
         <div class="carousel-item active">
             <img class="first-slide" src="{% static 'assets/img/banner-home.png' %}" alt="First slide">
-            <div class="container">
+            <div class="container" itemscope itemtype="http://schema.org/Organization">
                 <div class="carousel-caption text-center">
-                    <img src="{% static 'assets/img/logo.svg' %}" alt="" class="logo-banner">
+                    <img itemprop="logo" src="{% static 'assets/img/logo.svg' %}" alt="Logo LibreBORME" class="logo-banner">
                     <h1>Tu fuente de información empresarial en Internet</h1>
                     <form role="search" action="{% url "borme-search" %}" method="get">
                         <div class="form-row justify-content-center mt-4">
