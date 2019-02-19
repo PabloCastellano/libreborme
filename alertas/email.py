@@ -106,7 +106,7 @@ def _compose_and_send_notification(subscription, evento, date):
     provincia = subscription.get_provincia_display()
     evento_display = subscription.get_evento_display()
 
-    subject = "Tus subscripciones en LibreBORME"
+    subject = "Tus suscripciones en LibreBORME"
     message = str(results)
 
     companies = results.items()

@@ -164,7 +164,7 @@ INTERNAL_IPS = ['127.0.0.1']
 LOGIN_URL = '/admin/login/'
 
 
-LOGIN_REDIRECT_URL = '/alertas/'
+LOGIN_REDIRECT_URL = '/panel/'
 LOGOUT_REDIRECT_URL = '/borme/'
 
 # stripe
