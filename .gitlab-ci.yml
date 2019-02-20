@@ -33,6 +33,9 @@ stages:
   - release
 #  - deploy
 
+cache:
+  paths:
+    - /root/.cache/pip
 
 # Define some helper functions
 #.common: &common
@@ -100,9 +103,6 @@ stages:
 
 build:
   stage: build
-  cache:
-    paths:
-    - /root/.cache
   #tags:
   #  - kubernetes
   script:
@@ -126,6 +126,7 @@ test_docker:
     - docker run --rm $CONTAINER_TEST_IMAGE bash -c "make coverage"
   coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'
 
+# TODO: speedup by installing python3-lxml from repo
 test:
   image: python:3.6-alpine
   stage: test
