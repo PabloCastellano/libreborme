@@ -3,7 +3,7 @@ import json
 from alertas.models import EVENTOS_DICT, SubscriptionEvent
 from libreborme.provincias import PROVINCIAS_CODE_DICT as PROVINCIA
 
-SUPPORTED_VERSION = "2"
+SUPPORTED_VERSION = "3"
 
 
 def from_dict(content):

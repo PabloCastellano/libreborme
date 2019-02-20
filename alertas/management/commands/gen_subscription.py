@@ -12,6 +12,10 @@ import alertas.parser
 logger = logging.getLogger(__name__)
 
 
+def dump_json(document, fp):
+    json.dump(document, fp, sort_keys=True, indent=4, ensure_ascii=False)
+
+
 # TODO: en vez de por filename por fecha de borme (y provincia)
 class Command(BaseCommand):
     help = 'Generate Subscription JSON from BORME-JSON file(s)'
@@ -32,17 +36,16 @@ class Command(BaseCommand):
         for filepath in options["files"]:
             results = alertas.parser.parse_borme_json(event, filepath)
             if options["output"] == "stdout":
-                json.dump(results, sys.stdout, sort_keys=True, indent=4)
+                dump_json(results, sys.stdout)
             elif options["output"]:
                 # From BORME-A-2018-117-03.json to BORME-A-2018-117-03_adm.json
-                # TODO: habia algo de ext
                 # TODO: output dir de verdad
                 filename = os.path.basename(filepath)
                 output_filename = os.path.splitext(filename)[0] + "_{}.json".format(event)
                 output_filepath = os.path.dirname(filepath) + "/" + output_filename
                 print(output_filepath)
                 with open(output_filepath, "w") as fp:
-                    json.dump(results, fp, sort_keys=True, indent=4)
+                    dump_json(results, fp)
                 logger.info("Written " + output_filepath)
 
             if options["import"]:

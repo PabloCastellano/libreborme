@@ -185,8 +185,8 @@ SUBSCRIPTION_YEAR_PLAN = "subscription_year"
 API_MONTH_PLAN = "api_month"
 API_YEAR_PLAN = "api_year"
 
-PARSER = 'borme.parser.backend.bormeparser'
-#PARSER = 'borme.parser.backend.yabormeparser'
+#PARSER = 'borme.parser.backend.bormeparser'
+PARSER = 'borme.parser.backend.yabormeparser'
 
 # django-registration
 ACCOUNT_ACTIVATION_DAYS = 7

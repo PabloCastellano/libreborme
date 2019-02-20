@@ -114,7 +114,7 @@ def _from_instance(borme, set_url=True):
             bxml = BormeXML.from_file(xml_path)
             nuevo_borme.url = bxml.get_url_cve(borme.cve)
     except IOError as e:
-        logger.exception("Could not locate BORME-XML")
+        logger.warn("Could not locate BORME-XML: " + xml_path)
         if set_url:
             raise
         nuevo_borme.url = ""
