@@ -5,6 +5,7 @@ ENV PYTHONUNBUFFERED=1
 RUN apt-get update && apt-get install -y \
     git \
     gcc \
+    make \
 && rm -rf /var/lib/apt/lists/*
 # RUN apt-get update && apt-get install -f python3-software-properties software-properties-common \
 #     python3-dev python3-venv python3-wheel \

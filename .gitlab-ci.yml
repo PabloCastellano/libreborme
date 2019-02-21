@@ -2,7 +2,7 @@ image: docker:18.09
 
 services:
   - docker:dind
-  - postgres:9.5
+  - postgres:10
   - name: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
     alias: elasticsearch
     command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
@@ -130,7 +130,7 @@ test_docker:
     - docker pull $CONTAINER_TEST_IMAGE
     # - docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
     # - docker run --rm $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=$ELASTICSEARCH_URI DB_HOST=$DB_HOST make coverage_k8s_ci"
-    - docker run --rm $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=$ELASTICSEARCH_URI DB_HOST=$POSTGRES_PORT_5432_TCP_ADDR make coverage"
+    - docker run --rm $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=http://$ELASTICSEARCH_PORT_9200_TCP_ADDR:9200 DB_HOST=$POSTGRES_PORT_5432_TCP_ADDR make coverage"
   coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'
 
 test:
