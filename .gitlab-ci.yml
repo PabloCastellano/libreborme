@@ -13,11 +13,12 @@ variables:
   DEPLOY_PATH: /opt/libreborme
 
   # https://gitlab.com/gitlab-org/gitlab-runner/issues/2691
-  DOCKER_HOST: tcp://localhost:2375
+  DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
 
   # Kubernetes
   KUBE_DOMAIN: ingress.libreborme.net
+  # DOCKER_HOST: tcp://localhost:2375
   # DB_HOST: postgres.libreborme-6554539.svc.cluster.local
   # DB_NAME: libreborme
   # DB_USER: postgres
