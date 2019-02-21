@@ -1,16 +1,19 @@
-FROM python:3.6-slim
+FROM python:3-alpine3.6
 
 ENV PYTHONUNBUFFERED=1
 
-RUN apt-get update && apt-get install -y \
-    git \
-&& rm -rf /var/lib/apt/lists/*
-# RUN apt-get update && apt-get install -f python3-software-properties software-properties-common \
-#     python3-dev python3-venv python3-wheel \
-#     python3-setuptools libxml2-dev libxslt1-dev libgmp-dev zlib1g-dev \
-#     wget git libpq-dev python-psycopg2 \
-#     openssl checkinstall
+RUN apk add --no-cache build-base bash \
+    musl-dev libjpeg-turbo-dev libpng libpq \
+    postgresql-dev uwsgi uwsgi-python3 git \
+    libxml2-dev libxslt-dev zlib-dev libffi-dev \
+    libmagic
 
+# A big drawback of using python-alpine is that pip wheel is not fully supported
+# causing it to build much slower because it needs to compile dependencies like lxml
+# https://bugs.alpinelinux.org/issues/9206
+# https://github.com/pypa/manylinux/issues/37
+# Moreover it is not possible to cache $HOME/.cache/pip during build
+# https://www.lutro.me/posts/python-docker-multi-stage-builds
 ADD requirements /requirements
 RUN pip install -U -r /requirements/production.txt \
     && rm -fr /root/.cache/pip
