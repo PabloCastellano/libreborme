@@ -123,25 +123,21 @@ test_docker:
   #tags:
   #  - kubernetes
   script:
-    - env | grep -i postgres
-    - env | grep POSTGRES_PORT_5432_TCP_ADDR
-    - env | grep -i elasticsearch
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker pull $CONTAINER_TEST_IMAGE
     # - docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
-    # - docker run --rm $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=$ELASTICSEARCH_URI DB_HOST=$DB_HOST make coverage_k8s_ci"
     - docker run --rm $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=http://$ELASTICSEARCH_PORT_9200_TCP_ADDR:9200 DB_HOST=$POSTGRES_PORT_5432_TCP_ADDR make coverage"
   coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'
 
-test:
-  image: python:3.6-slim
-  stage: test
-  script:
-    - pip install -r requirements/production.txt
-    - coverage run --source='.' manage.py test --noinput -v 3
-    - coverage report
-  coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'
-
+# test:
+#   image: python:3.6-stretch
+#   stage: test
+#   script:
+#     - pip install -r requirements/production.txt
+#     - coverage run --source='.' manage.py test --noinput -v 3
+#     - coverage report
+#   coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'
+#
 # Alpine
 # test_alpine:
 #   image: python:3.6-alpine

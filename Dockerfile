@@ -1,17 +1,8 @@
-FROM python:3.6-slim
+FROM python:3.6-stretch
+# While python:3.6-slim is lighter, it doesn't include tools such as git or gcc
+# which makes build be slower
 
 ENV PYTHONUNBUFFERED=1
-
-RUN apt-get update && apt-get install -y \
-    git \
-    gcc \
-    make \
-&& rm -rf /var/lib/apt/lists/*
-# RUN apt-get update && apt-get install -f python3-software-properties software-properties-common \
-#     python3-dev python3-venv python3-wheel \
-#     python3-setuptools libxml2-dev libxslt1-dev libgmp-dev zlib1g-dev \
-#     wget git libpq-dev python-psycopg2 \
-#     openssl checkinstall
 
 ADD requirements /requirements
 RUN pip install -U -r /requirements/production.txt \
