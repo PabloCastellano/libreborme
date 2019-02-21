@@ -11,7 +11,9 @@ DEBUG = True
 
 SITE_NAME = 'LibreBORME'
 SITE_URL = 'http://localhost:8000'
-ALLOWED_HOSTS = ['libreborme.net']
+
+DOMAIN = 'libreborme.net'
+ALLOWED_HOSTS = [DOMAIN]
 
 DJANGO_APPS = [
     'django.contrib.admin',

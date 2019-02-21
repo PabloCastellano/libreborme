@@ -27,6 +27,9 @@ variables:
   POSTGRES_USER: libreborme
   POSTGRES_PASSWORD: "password"
 
+  DB_HOST: postgres
+  ELASTICSEARCH_URI: http://elasticsearch:9200
+
 stages:
   - build
   - test
@@ -116,8 +119,6 @@ test_docker:
   stage: test
   #tags:
   #  - kubernetes
-  variables:
-    DB_HOST: postgres
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker pull $CONTAINER_TEST_IMAGE
@@ -130,8 +131,6 @@ test_docker:
 test:
   image: python:3.6-alpine
   stage: test
-  variables:
-    DB_HOST: postgres
   script:
     - apk add --no-cache build-base bash musl-dev libjpeg-turbo-dev libpng libpq postgresql-dev uwsgi uwsgi-python3 git libxml2-dev libxslt-dev zlib-dev libffi-dev libmagic
     - pip install -r requirements/production.txt
