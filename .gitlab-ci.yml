@@ -124,7 +124,7 @@ test_docker:
     - docker pull $CONTAINER_TEST_IMAGE
     # - docker-compose -f docker-compose.ci.yml -p ci up --abort-on-container-exit
     # - docker run --rm $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=$ELASTICSEARCH_URI DB_HOST=$DB_HOST make coverage_k8s_ci"
-    - docker run --rm $CONTAINER_TEST_IMAGE bash -c "make coverage"
+    - docker run --rm $CONTAINER_TEST_IMAGE bash -c "ELASTICSEARCH_URI=$ELASTICSEARCH_URI DB_HOST=$DB_HOST make coverage"
   coverage: '/TOTAL.*?(\d{1,2}.\d+%)/'
 
 # TODO: speedup by installing python3-lxml from repo
