@@ -52,7 +52,7 @@ class Command(BaseCommand):
             if options["import"]:
                 logger.debug("Importing to DB")
                 try:
-                    alertas.importer.from_dict(results)
+                    alertas.importer.import_subscription_event(results)
                 except ValueError:
                     logger.exception("Parsing file {}".format(filename))
 
