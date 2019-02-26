@@ -1,7 +1,7 @@
 import json
 
 from alertas.models import EVENTOS_DICT, SubscriptionEvent
-from libreborme.provincias import PROVINCIAS_CODE_DICT2 as PROVINCIA
+from libreborme.provincias import PROVINCIAS_CODE_DICT as PROVINCIA
 
 SUPPORTED_VERSION = "3"
 

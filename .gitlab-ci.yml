@@ -39,9 +39,9 @@ stages:
   - release
 #  - deploy
 
-cache:
-  paths:
-    - /root/.cache/pip
+#cache:
+#  paths:
+#    - /root/.cache/pip
 
 # Define some helper functions
 #.common: &common

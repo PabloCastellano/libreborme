@@ -144,6 +144,7 @@ class TestGenSubscription_BORME_A_2009_197_28(TestCase):
             self.borme_date
         )
         self.assertEqual(total_sent, 0)
+        self.assertEqual(len(mail.outbox), 0)
 
         alertas.subscriptions.create(self.user, 'adm', 28, self.subscription)
 
