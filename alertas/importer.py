@@ -1,39 +1,12 @@
 import json
 
 from alertas.models import EVENTOS_DICT, SubscriptionEvent
-from libreborme.provincias import PROVINCIAS_CODE_DICT as PROVINCIA
+from libreborme.provincias import PROVINCIAS_CODE_DICT2 as PROVINCIA
 
 SUPPORTED_VERSION = "3"
 
 
-def from_dict(content):
-    if content["version"] != SUPPORTED_VERSION:
-        raise ValueError("Version {} != {}".format(
-            content["version"], SUPPORTED_VERSION)
-        )
-
-    if content["event"] not in EVENTOS_DICT.keys():
-        raise ValueError("Unknown event: {}".format(content["event"]))
-
-    already_exists = SubscriptionEvent.objects.filter(
-        province=PROVINCIA[content["provincia"]],
-        event=content["event"],
-        event_date=content["date"],
-    ).exists()
-
-    if already_exists:
-        print("Already exists")
-    else:
-        SubscriptionEvent.objects.create(
-            province=PROVINCIA[content["provincia"]],
-            event=content["event"],
-            event_date=content["date"],
-            data_json=content["results"]
-        )
-        print("OK")
-
-
-def from_json_file(filename):
+def import_subscription_event(source):
     """Importa un archivo con resultados de SubscriptionEvent en la BD.
 
     :param filename: Archivo a importar
@@ -42,9 +15,34 @@ def from_json_file(filename):
     :type evento: str
     """
 
-    print("Importing " + filename)
+    if isinstance(source, dict):
+        content = source
+    else:
+        print("Importing " + source)
+        with open(source) as fp:
+            content = json.load(fp)
 
-    with open(filename) as fp:
-        content = json.load(fp)
+    if content["version"] != SUPPORTED_VERSION:
+        raise ValueError("Version {} != {}".format(
+            content["version"], SUPPORTED_VERSION)
+        )
 
-    from_dict(content)
+    if content["event"] not in EVENTOS_DICT.keys():
+        raise ValueError("Unknown event: {}".format(content["event"]))
+
+    try:
+        subscription_event = SubscriptionEvent.objects.get(
+            province=PROVINCIA[content["provincia"]],
+            event=content["event"],
+            event_date=content["date"],
+        )
+        subscription_event.delete()
+    except SubscriptionEvent.DoesNotExist:
+        pass
+    finally:
+        SubscriptionEvent.objects.create(
+            province=PROVINCIA[content["provincia"]],
+            event=content["event"],
+            event_date=content["date"],
+            data_json=content["results"]
+        )

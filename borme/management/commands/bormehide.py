@@ -3,7 +3,7 @@ from django.db import connection
 from borme.models import Anuncio, Company, Person
 from borme.parser.actos import is_acto_cargo
 from borme.utils.strings import convertir_iniciales
-from borme.templatetags.utils import slug2
+from borme.templatetags.utils import empresa_slug
 
 from datetime import datetime
 
@@ -34,7 +34,7 @@ class Command(BaseCommand):
 
         # Remove name from company positions
         for company_name in entity.in_companies:
-            c = Company.objects.get(slug=slug2(company_name))
+            c = Company.objects.get(slug=empresa_slug(company_name))
             cargos = c.cargos_actuales_p.copy()
             for p in cargos:
                 if p['name'] == entity.name:

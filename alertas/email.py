@@ -93,12 +93,16 @@ def send_email_to_subscriber(evento, date, email=None):
 
 def _compose_and_send_notification(subscription, evento, date):
 
-    subscription_event = SubscriptionEvent.objects.get(
-        province=subscription.provincia,
-        event=evento,
-        event_date=date
-    )
-    # TODO: DoesNotExist
+    try:
+        subscription_event = SubscriptionEvent.objects.get(
+            province=subscription.provincia,
+            event=evento,
+            event_date=date
+        )
+    except SubscriptionEvent.DoesNotExist:
+        # The user has a paid subscription but has not configured it properly
+        LOG.error("There are user subscriptions for {} and {}. However data has not been imported into the DB yet".format(subscription.provincia, evento))
+        return False
 
     results = subscription_event.data_json
 
@@ -109,14 +113,14 @@ def _compose_and_send_notification(subscription, evento, date):
     subject = "Tus suscripciones en LibreBORME"
     message = str(results)
 
-    companies = results.items()
-    companies2 = {}
+    companies = {}
 
-    for company, roles in sorted(companies):
-        instance = Company.get_from_name(company)
-        companies2[instance] = roles
+    for result in results:
+        company_name = result["company"]["name"]
+        instance = Company.get_from_name(company_name)
+        companies[instance] = result["new_roles"]
 
-    context = {"companies": sorted(companies2.items()),
+    context = {"companies": sorted(companies.items()),
                "name": subscription.user.first_name,
                "provincia": provincia,
                "evento": evento_display,

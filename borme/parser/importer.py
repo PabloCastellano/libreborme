@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.utils import timezone
+from django.utils.dateparse import parse_date
 
 import datetime
 import logging
@@ -277,14 +278,12 @@ def import_borme_download(date_from, date_to, seccion=bormeparser.SECCION.A,
     if date_from == 'init':
         date_from = FIRST_BORME[2009]
     else:
-        date = tuple(map(int, date_from.split('-')))  # TODO: exception
-        date_from = datetime.date(*date)
+        date_from = parse_date(date_from)
 
     if date_to == 'today':
         date_to = datetime.date.today()
     else:
-        date = tuple(map(int, date_to.split('-')))  # TODO: exception
-        date_to = datetime.date(*date)
+        date_to = parse_date(date_to)
 
     if date_from > date_to:
         raise ValueError('date_from > date_to')

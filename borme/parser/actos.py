@@ -1,5 +1,5 @@
 from borme.models import Company, Person
-from borme.utils.strings import slug2
+from borme.utils.strings import empresa_slug
 
 
 ACTOS_ENTRANTES = ["Nombramientos", "Reelecciones"]
@@ -87,14 +87,14 @@ def _resign_positions(company, date):
     for cargo in company.cargos_actuales_c:
         cargo['date_to'] = date.isoformat()
         company.cargos_historial_c.append(cargo)
-        c_cesada = Company.objects.get(slug=slug2(cargo['name']))
+        c_cesada = Company.objects.get(slug=empresa_slug(cargo['name']))
         c_cesada._cesar_cargo(company.fullname, date.isoformat())
         c_cesada.save()
 
     for cargo in company.cargos_actuales_p:
         cargo['date_to'] = date.isoformat()
         company.cargos_historial_p.append(cargo)
-        p_cesada = Person.objects.get(slug=slug2(cargo['name']))
+        p_cesada = Person.objects.get(slug=empresa_slug(cargo['name']))
         p_cesada._cesar_cargo(company.fullname, date.isoformat())
         p_cesada.save()
 

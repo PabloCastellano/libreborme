@@ -85,7 +85,7 @@ class BormeAnuncio(BormeAnuncioBase):
 class Borme(BormeBase):
     """yabormeparser Borme implementation"""
 
-    VERSION_REQUIRED = "9001"
+    VERSION_REQUIRED = "10001"
 
     @classmethod
     def from_json(cls, filename):

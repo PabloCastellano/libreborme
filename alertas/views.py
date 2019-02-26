@@ -5,8 +5,9 @@ from django.contrib import messages
 from django.conf import settings
 from django.core.mail import mail_admins
 from django.http import HttpResponse, HttpResponseRedirect
-from django.utils.decorators import method_decorator
 from django.shortcuts import redirect
+from django.utils.decorators import method_decorator
+from django.utils.text import slugify
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic import TemplateView
@@ -20,7 +21,7 @@ from collections import OrderedDict
 
 from djstripe.models import Customer, Event, Plan, Product, Subscription
 from borme.models import Company, Person
-from borme.templatetags.utils import slug, slug2
+from borme.utils.strings import empresa_slug
 from libreborme.models import Profile
 from libreborme import utils
 
@@ -699,7 +700,7 @@ def checkout_page(request):
             if nickname in (settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN):
                 mark_user_has_tried_subscriptions(request.user)
 
-            UserSubscription.objects.create(
+            alertas.subscriptions.create(
                 user=request.user,
                 evento=request.session['cart']['evento'],
                 provincia=request.session['cart']['provincia'],
@@ -767,7 +768,7 @@ def suggest_company(request):
             search_results = []
 
             for result in search_results:
-                results.append({"id": slug2(result.text), "value": result.text})
+                results.append({"id": empresa_slug(result.text), "value": result.text})
 
     return HttpResponse(json.dumps(results), content_type="application/json")
 
@@ -781,7 +782,7 @@ def suggest_person(request):
             search_results = SearchQuerySet().filter(content=term).models(Person)[:MAX_RESULTS_AJAX]
 
             for result in search_results:
-                results.append({"id": slug(result.text), "value": result.text})
+                results.append({"id": slugify(result.text), "value": result.text})
 
     return HttpResponse(json.dumps(results), content_type="application/json")
 

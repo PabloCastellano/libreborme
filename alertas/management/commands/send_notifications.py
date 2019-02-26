@@ -18,7 +18,7 @@ from django.conf import settings
 from alertas.email import send_email_notification
 from alertas.models import UserSubscription, EVENTOS_DICT, PERIODICIDAD_DICT
 
-from borme.templatetags.utils import slug2
+from borme.utils.strings import empresa_slug
 from bormeparser import Borme
 from bormeparser.config import CONFIG as borme_config
 
@@ -153,21 +153,21 @@ def busca_evento(begin_date, end_date, evento):
                     actos[borme.provincia.name] = []
                 for anuncio in borme.get_anuncios():
                     # En liquidación
+                    slug = empresa_slug(anuncio.empresa)
                     if evento == "liq":
                         if anuncio.liquidacion:
-                            actos[borme.provincia.name].append({"date": borme.date, "name": anuncio.empresa, "slug": slug2(anuncio.empresa)})
+                            actos[borme.provincia.name].append({"date": borme.date, "name": anuncio.empresa, "slug": slug})
                             total += 1
                     # Empresas de nueva creación
                     if evento == "new":
                         for acto in anuncio.actos:
                             if acto.name in ("Constitución", "Nueva sucursal"):
-                                actos[borme.provincia.name].append({"date": borme.date, "name": anuncio.empresa, "slug": slug2(anuncio.empresa)})
+                                actos[borme.provincia.name].append({"date": borme.date, "name": anuncio.empresa, "slug": slug})
                                 total += 1
                     # Concursos de acreedores
                     if evento == "con":
                         for acto in anuncio.actos:
                             if acto.name == "Situación concursal":
-                                slug = slug2(anuncio.empresa)
                                 if slug not in already_added:
                                     already_added.append(slug)
                                     actos[borme.provincia.name].append({"date": borme.date, "name": anuncio.empresa, "slug": slug})

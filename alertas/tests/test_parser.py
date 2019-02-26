@@ -1,7 +1,12 @@
-# from borme.models import Anuncio, Borme, BormeLog, Company, Person
+from django.contrib.auth import get_user_model
+from django.core import mail
+from djstripe.models import Subscription
+
 from alertas.models import SubscriptionEvent
-import alertas.parser
+import alertas.email
 import alertas.importer
+import alertas.parser
+import alertas.subscriptions
 import borme.parser.importer
 import borme.utils.strings
 
@@ -13,8 +18,10 @@ import os
 from django.test import TestCase
 from django.test.utils import override_settings
 
+User = get_user_model()
+
 THIS_PATH = os.path.dirname(os.path.abspath(__file__))
-FILES_PATH = os.path.join(THIS_PATH, '../../borme/tests/files')
+FILES_PATH = os.path.join(THIS_PATH, '../../borme/tests/files')  # FIXME: ugly
 
 # Disable loggers
 borme.parser.importer.logger.setLevel(logging.ERROR)
@@ -29,13 +36,21 @@ def load_borme_from_gzipped_json(filename):
     return fp
 
 
-# TODO: Update yabormeaprser gz to latest version 10001
-class TestGenSubscription_BORME_A_2012_197_28(TestCase):
+# TODO: fixture for User, Profile, Customer and Subscription
+class TestGenSubscription_BORME_A_2009_197_28(TestCase):
+
+    fixtures = ["test_subscription.json"]
 
     def setUp(self):
         # self.fp_borme1 = gzip.open(os.path.join(FILES_PATH, 'yabormeparser', 'BORME-A-2009-197-28.json.gz'))
         self.fp_borme1 = load_borme_from_gzipped_json('BORME-A-2009-197-28.json.gz')
         self.fp_borme1.seek(0)
+        self.borme_date = datetime.date(2009, 10, 15)
+        self.borme_isodate = "2009-10-15"
+
+        # self.user = User.objects.create_user('lennon@thebeatles.com', 'johnpassword')
+        self.user = User.objects.first()
+        self.subscription = Subscription.objects.first()
 
     def tearDown(self):
         self.fp_borme1.close()
@@ -45,21 +60,24 @@ class TestGenSubscription_BORME_A_2012_197_28(TestCase):
         # borme.parser.importer.from_json_file(self.fp_borme1, set_url=False)
         #
         # Generate subscriptions for day
-        results = alertas.parser.parse_borme_json('adm', self.fp_borme1)
+        results = alertas.parser.gen_subscription_event_from_borme('adm', self.fp_borme1)
 
         self.assertEqual(results['provincia'], "MADRID")
         self.assertEqual(results['cve'], "BORME-A-2009-197-28")
-        self.assertEqual(results['date'], "2009-10-15")
+        self.assertEqual(results['date'], self.borme_isodate)
+
+        n_subscriptions = SubscriptionEvent.objects.count()
+        self.assertEqual(n_subscriptions, 0)
 
         # Import subscriptions
-        alertas.importer.from_dict(results)
+        alertas.importer.import_subscription_event(results)
 
         # TODO: check results ?
 
-        subscriptions = SubscriptionEvent.objects.all()
-        self.assertEqual(len(subscriptions), 1)
+        n_subscriptions = SubscriptionEvent.objects.count()
+        self.assertEqual(n_subscriptions, 1)
 
-        subscription = subscriptions[0]
+        subscription = SubscriptionEvent.objects.first()
         self.assertEqual(subscription.province, "28")
         self.assertEqual(subscription.event, "adm")
         self.assertEqual(subscription.event_date, datetime.date(2009, 10, 15))
@@ -80,3 +98,59 @@ class TestGenSubscription_BORME_A_2012_197_28(TestCase):
                 self.assertEqual(len(event["new_roles"]), 2)
 
         # TODO: more checks
+
+    def test_import_adm_twice(self):
+        # TODO: Check that is is always run after the previous test
+
+        # Generate subscriptions for day
+        results = alertas.parser.gen_subscription_event_from_borme('adm', self.fp_borme1)
+
+        self.assertEqual(results['provincia'], "MADRID")
+        self.assertEqual(results['cve'], "BORME-A-2009-197-28")
+        self.assertEqual(results['date'], self.borme_isodate)
+
+        n_subscriptions = SubscriptionEvent.objects.count()
+        self.assertEqual(n_subscriptions, 0)
+
+        # Import subscriptions
+        alertas.importer.import_subscription_event(results)
+
+        n_subscriptions = SubscriptionEvent.objects.count()
+        self.assertEqual(n_subscriptions, 1)
+        subscription = SubscriptionEvent.objects.first()
+        self.assertEqual(len(subscription.data_json), 47)
+
+        # Import subscriptions again
+        alertas.importer.import_subscription_event(results)
+
+        n_subscriptions = SubscriptionEvent.objects.count()
+        self.assertEqual(n_subscriptions, 1)
+        subscription = SubscriptionEvent.objects.first()
+        self.assertEqual(len(subscription.data_json), 47)
+
+    def test_send_subscriptions(self):
+        results = alertas.parser.gen_subscription_event_from_borme('adm', self.fp_borme1)
+        alertas.importer.import_subscription_event(results)
+
+        # TODO: test email parameter
+        total_sent = alertas.email.send_email_to_subscriber(
+            'adm',
+            self.borme_date
+        )
+        self.assertEqual(total_sent, 0)
+
+        total_sent = alertas.email.send_email_to_subscriber(
+            'adm',
+            self.borme_date
+        )
+        self.assertEqual(total_sent, 0)
+
+        alertas.subscriptions.create(self.user, 'adm', 28, self.subscription)
+
+        total_sent = alertas.email.send_email_to_subscriber(
+            'adm',
+            self.borme_date
+        )
+        self.assertEqual(total_sent, 1)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, "Tus suscripciones en LibreBORME")

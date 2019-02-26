@@ -113,3 +113,62 @@ PROVINCIAS_NAME = (
 PROVINCIAS_NAME_DICT = dict(PROVINCIAS_NAME)
 
 PROVINCIAS_CODE_DICT = {v: k for k, v in PROVINCIAS_NAME_DICT.items()}
+
+# as they appear in yabormeparser JSON provincia field
+PROVINCIAS_NAME2 = (
+    ('1', 'ÁLAVA'),
+    ('2', 'ALBACETE'),
+    ('3', 'ALICANTE'),
+    ('4', 'ALMERÍA'),
+    ('5', 'ÁVILA'),
+    ('6', 'BADAJOZ'),
+    ('7', 'ILLES BALEARS'),
+    ('8', 'BARCELONA'),
+    ('9', 'BURGOS'),
+    ('10', 'CÁCERES'),
+    ('11', 'CÁDIZ'),
+    ('12', 'CASTELLÓN'),
+    ('13', 'CIUDAD REAL'),
+    ('14', 'CÓRDOBA'),
+    ('15', 'A CORUÑA'),
+    ('16', 'CUENCA'),
+    ('17', 'GIRONA'),
+    ('18', 'GRANADA'),
+    ('19', 'GUADALAJARA'),
+    ('20', 'GUIPÚZCOA'),
+    ('21', 'HUELVA'),
+    ('22', 'HUESCA'),
+    ('23', 'JAÉN'),
+    ('24', 'LEÓN'),
+    ('25', 'LLEIDA'),
+    ('26', 'LA RIOJA'),
+    ('27', 'LUGO'),
+    ('28', 'MADRID'),
+    ('29', 'MÁLAGA'),
+    ('30', 'MURCIA'),
+    ('31', 'NAVARRA'),
+    ('32', 'OURENSE'),
+    ('33', 'ASTURIAS'),
+    ('34', 'PALENCIA'),
+    ('35', 'LAS PALMAS'),
+    ('36', 'PONTEVEDRA'),
+    ('37', 'SALAMANCA'),
+    ('38', 'SANTA CRUZ DE TENERIFE'),
+    ('39', 'CANTABRIA'),
+    ('40', 'SEGOVIA'),
+    ('41', 'SEVILLA'),
+    ('42', 'SORIA'),
+    ('43', 'TARRAGONA'),
+    ('44', 'TERUEL'),
+    ('45', 'TOLEDO'),
+    ('46', 'VALENCIA'),
+    ('47', 'VALLADOLID'),
+    ('48', 'VIZCAYA'),
+    ('49', 'ZAMORA'),
+    ('50', 'ZARAGOZA'),
+    ('51', 'CEUTA'),
+    ('52', 'MELILLA')
+)
+PROVINCIAS_NAME_DICT2 = dict(PROVINCIAS_NAME2)
+
+PROVINCIAS_CODE_DICT2 = {v: k for k, v in PROVINCIAS_NAME_DICT2.items()}

@@ -34,7 +34,8 @@ class Command(BaseCommand):
         event = options["event"]
 
         for filepath in options["files"]:
-            results = alertas.parser.parse_borme_json(event, filepath)
+            print(filepath)
+            results = alertas.parser.gen_subscription_event_from_borme(event, filepath)
             if options["output"] == "stdout":
                 dump_json(results, sys.stdout)
             elif options["output"]:

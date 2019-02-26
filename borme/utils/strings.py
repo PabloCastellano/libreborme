@@ -22,7 +22,7 @@ def convertir_iniciales(name):
     return '. '.join(iniciales) + '.'
 
 
-def slug2(nombre):
+def empresa_slug(nombre):
     """ Dado el nombre completo de la sociedad, incluyendo el tipo (SL, SA, ...),
         devuelve el slug de la sociedad.
     """

@@ -5,6 +5,7 @@ import logging
 import sys
 
 from borme.models import Company
+from borme.utils.strings import empresa_slug
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -39,7 +40,8 @@ def _parse_subscription_adm(content):
             if new_admin and not constitucion:
                 logger.debug(announcement['company'])
                 try:
-                    company = Company.objects.get(name=announcement['company'])
+                    slug = empresa_slug(announcement['company'])
+                    company = Company.objects.get(slug=slug)
                     company_dict = {
                         "company": {
                             "name": company.name,
@@ -64,7 +66,7 @@ def _parse_subscription_adm(content):
     return results
 
 
-def parse_borme_json(event, filename):
+def gen_subscription_event_from_borme(event, filename):
     """
     event: EVENT_DICT
     filename: str or fp

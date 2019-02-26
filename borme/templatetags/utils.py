@@ -2,7 +2,7 @@ from django.template.defaulttags import register
 from django.urls import reverse as reverse_url
 from django.utils.text import slugify
 
-from borme.utils.strings import slug2 as borme_slug2
+from borme.utils.strings import empresa_slug
 
 import datetime
 
@@ -113,7 +113,7 @@ def slug(val):
 
 @register.filter
 def slug2(val):
-    return borme_slug2(val)
+    return empresa_slug(val)
 
 
 @register.filter
@@ -128,7 +128,7 @@ def link_to_entity(cargo):
         url = reverse_url('borme-persona', args=[slug])
         text = cargo['name'].title()
     else:
-        slug = borme_slug2(cargo['name'])
+        slug = empresa_slug(cargo['name'])
         url = reverse_url('borme-empresa', args=[slug])
         text = cargo['name']
     return a_tag.format(url, text)
