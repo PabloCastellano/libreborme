@@ -61,7 +61,11 @@
     {% include "alertas/elements/footer-panel.html" %}
     {% include "matomo.html" %}
 
+    {% if debug %}
+    <script src="{% static 'js/js.cookie.min.js' %}"></script>
+    {% else %}
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    {% endif %}
     {# <script>window.jQuery || document.write('<script src="{% static 'assets/js/vendor/jquery-slim.min.js' %}"><\/script>')</script> #}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
