@@ -310,6 +310,7 @@ def _load_and_append(files_list, strict, seccion=bormeparser.SECCION.A):
 
     # TODO: remove PDF support, just parse JSON
     # TODO: yabormeparser and pdf not supported at the moment
+    # TODO: Use django.utils.module_loading.import_string()
     if files_list[0].endswith("json"):
         file_format = "json"
         parse_func = import_module(settings.PARSER).Borme.from_json
@@ -513,6 +514,7 @@ def from_json_file(filename, set_url=True):
         'errors': 0
     }
 
+    # TODO: Use django.utils.module_loading.import_string()
     parse_func = import_module(settings.PARSER).Borme.from_json
 
     try:

@@ -101,7 +101,7 @@ def _compose_and_send_notification(subscription, evento, date):
         )
     except SubscriptionEvent.DoesNotExist:
         # The user has a paid subscription but has not configured it properly
-        LOG.error("There are user subscriptions for {} and {}. However data has not been imported into the DB yet".format(subscription.provincia, evento))
+        LOG.error("There are user subscriptions for {} and {} on {}. However data has not been imported into the DB yet".format(subscription.provincia, evento, date.isoformat()))
         return False
 
     results = subscription_event.data_json

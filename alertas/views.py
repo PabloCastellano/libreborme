@@ -20,6 +20,8 @@ import stripe
 from collections import OrderedDict
 
 from djstripe.models import Customer, Event, Plan, Product, Subscription
+
+import alertas.subscriptions
 from borme.models import Company, Person
 from borme.utils.strings import empresa_slug
 from libreborme.models import Profile
