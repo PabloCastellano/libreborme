@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 import libreborme
 import sys
 
-version = '20190205.dev0'
+version = libreborme.version
 
 
 if sys.version_info[0] == 3:

@@ -5,6 +5,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 from bormeparser.config import CONFIG
 
 from .settings import *
+from . import version
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '41+h()yq5-!*=)sh+_%4wal8=+*e)dlrau*81odpu7n&9^7d5h'
@@ -51,6 +52,8 @@ MIDDLEWARE += (
 
 sentry_sdk.init(
     dsn=os.environ['RAVEN_DSN'],
+    environment="staging",
+    release="libreborme@" + version,
     integrations=[DjangoIntegration()]
 )
 
