@@ -26,6 +26,7 @@ urlpatterns = [
     path('busqueda/', views.BusquedaView.as_view(), name='borme-search'),
     # path(r'^search/', views.LBSearchView.as_view(), name='borme-search'),
 
+    # Tastypie API
     path('api/', include(v1_api.urls)),
 
     path('ajax/empresa/<slug:slug>/more', views.ajax_empresa_more, name='borme-ajax-empresa'),

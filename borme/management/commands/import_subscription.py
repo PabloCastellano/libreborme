@@ -1,14 +1,9 @@
 from django.core.management.base import BaseCommand
-from django.utils import timezone
 
 import logging
 import time
 
-from borme.models import Config
-# from borme.parser.postgres import psql_update_documents
-import borme.parser.importer
-
-from libreborme.utils import get_git_revision_short_hash
+import alertas.importer
 
 
 class Command(BaseCommand):
@@ -23,30 +18,12 @@ class Command(BaseCommand):
 
         for filename in options["files"]:
             print(filename)
-            alertas.importer.from_json_file(filename)
-
-        config = Config.objects.first()
-        if config:
-            config.last_modified = timezone.now()
-        else:
-            config = Config(last_modified=timezone.now())
-        config.version = get_git_revision_short_hash()
-        config.save()
-
-        # Update Full Text Search
-        # psql_update_documents()
+            alertas.importer.import_subscription_event(filename)
 
         # Elapsed time
         elapsed_time = time.time() - start_time
         print('\nElapsed time: %.2f seconds' % elapsed_time)
 
     def set_verbosity(self, verbosity):
-        if verbosity == 0:
-            borme.parser.importer.logger.setLevel(logging.ERROR)
-        elif verbosity == 1:  # default
-            borme.parser.importer.logger.setLevel(logging.INFO)
-        elif verbosity == 2:
-            borme.parser.importer.logger.setLevel(logging.INFO)
-        elif verbosity > 2:
-            borme.parser.importer.logger.setLevel(logging.DEBUG)
+        if verbosity > 2:
             logging.getLogger().setLevel(logging.DEBUG)

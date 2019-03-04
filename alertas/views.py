@@ -165,10 +165,10 @@ class StripeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(StripeView, self).get_context_data(**kwargs)
-        context['customers'] = Customer.objects.all()
-        context['plans'] = Plan.objects.all()
-        context['products'] = Product.objects.all()
-        context['subscriptions'] = Subscription.objects.all()
+        context['customers'] = Customer.objects.all().order_by('created')
+        context['plans'] = Plan.objects.all().order_by('created')
+        context['products'] = Product.objects.all().order_by('created')
+        context['subscriptions'] = Subscription.objects.all().order_by('created')
         context['active'] = 'stripe'
         return context
 
