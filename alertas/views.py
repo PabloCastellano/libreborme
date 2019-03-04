@@ -695,8 +695,8 @@ def checkout_page(request):
                 user=request.user,
                 evento=request.session['cart']['evento'],
                 provincia=request.session['cart']['provincia'],
+                subscription=subscription,
                 periodicidad='daily',
-                stripe_subscription=subscription,
             )
 
             del request.session['cart']

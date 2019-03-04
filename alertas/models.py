@@ -168,7 +168,7 @@ class UserSubscription(m.Model):
     provincia = m.CharField(max_length=100, choices=PROVINCIAS_CHOICES_ALL)
     is_enabled = m.BooleanField(default=True)
     periodicidad = m.CharField(max_length=10, choices=PERIODICIDAD_CHOICES)
-    stripe_subscription = m.ForeignKey(Subscription, on_delete=m.PROTECT)
+    stripe_subscription = m.ForeignKey(Subscription, null=True, on_delete=m.SET_NULL)
     created_at = m.DateTimeField(auto_now_add=True)
 
     def __str__(self):
