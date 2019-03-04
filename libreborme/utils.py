@@ -44,7 +44,7 @@ def stripe_parse_input(request):
     # if user_input["country"] != "Spain":
     #     logger.warning("Customer {} has entered a billing address whose "
     #                    "country is not Spain: {}".format(
-    #                         customer.stripe_id, user_input["country"]))
+    #                         customer.id, user_input["country"]))
 
     return user_input
 

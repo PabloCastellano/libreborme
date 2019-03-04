@@ -534,7 +534,7 @@ def settings_update_billing(request):
         if user.profile.is_complete():
             # TODO: Do only if some field has changed
             customer, _ = Customer.get_or_create(subscriber=request.user)
-            customer_sdk = stripe.Customer.retrieve(customer.stripe_id)
+            customer_sdk = stripe.Customer.retrieve(customer.id)
             customer_sdk.business_vat_id = user.profile.cif_nif
             customer_sdk.description = "{} ({}) / {}".format(user.get_full_name(), user.profile.account_type, user.profile.provincia)
             customer_sdk.shipping = {

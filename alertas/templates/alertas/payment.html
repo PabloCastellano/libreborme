@@ -57,7 +57,7 @@ TODO: Poner bonito el estilo de la Tarjeta con un Card o algo
                                 <strong>{{ card.exp_month | stringformat:"02d" }}/{{ card.exp_year }}</strong>
                         </td>
                         <td>
-                          <a class="remove_card" id="{{ card.stripe_id }}">
+                          <a class="remove_card" id="{{ card.id }}">
                             <button type="button" class="btn btn-danger btn-xs">
                                 <i class="fas fa-trash-alt"></i> Eliminar
                             </button>

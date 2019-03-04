@@ -137,7 +137,7 @@
                       <img src="/static/card_{{ card.brand }}.png" width=42 height=26>
                       **** **** **** <strong>{{ card.last4 }}</strong>
                       </p>
-                      {% if card.stripe_id == customer.default_source_id %}
+                      {% if card.id == customer.default_source_id %}
                       <p>
                         <i class="fas fa-check-square"></i> Predeterminada
                       </p>

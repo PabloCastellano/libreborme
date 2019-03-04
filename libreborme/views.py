@@ -87,7 +87,7 @@ def create_new_invoice(request, customer, subscription, plan, user_input):
                                      user_input["country"]])
     new_invoice.ip = request.META.get('HTTP_X_FORWARDED_FOR',
                                       request.META['REMOTE_ADDR'])
-    new_invoice.subscription_id = subscription.stripe_id
+    new_invoice.subscription_id = subscription.id
     new_invoice.nif = customer.business_vat_id or "TODO"
     return new_invoice
 """

@@ -15,11 +15,10 @@ django-prettyjson==0.4.0
 django-registration==3.0
 django-static-jquery==2.1.4
 django-tastypie==0.14.1
-#dj-stripe==1.2.3
--e git+https://github.com/dj-stripe/dj-stripe@stable/1.2#egg=dj-stripe
+dj-stripe==2.0.0
 elasticsearch==5.5.2
 elasticsearch-dsl==5.4.0
 libsass==0.17.0
 psycopg2-binary==2.7.4
-stripe==2.11.0
+stripe==2.21.0
 unidecode==1.0.23

@@ -45,7 +45,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
     def user_customer(self, obj):
         admin_user_view = 'admin:djstripe_customer_change'
-        stripe_id = obj.user.djstripe_customers.get().stripe_id
+        stripe_id = obj.user.djstripe_customers.get().id
         customer_id = obj.user.djstripe_customers.get().id
         return mark_safe('<a href="{0}">{1}</a>'.format(reverse(admin_user_view, args=(customer_id,)), stripe_id))
     user_customer.short_description = 'Djstripe customer'

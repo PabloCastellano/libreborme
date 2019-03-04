@@ -38,17 +38,17 @@
               <tbody>
                 {% for event in events %}
                 <tr>
-                  <td>{{ event.stripe_id }}</td>
+                  <td>{{ event.id }}</td>
                   <td>{{ event.created|date:"H:i" }}</td>
                   <td>{{ event.description }}</td>
                   <td>{{ event.type }}</td>
                   <td>
-                    <a href="#" class="show_data" eventid="{{ event.stripe_id}}">Mostrar detalles</a>
-                    <div id="data_{{ event.stripe_id }}" class="show_data">{% prettyjson event.data_json %}</div>
+                    <a href="#" class="show_data" eventid="{{ event.id}}">Mostrar detalles</a>
+                    <div id="data_{{ event.id }}" class="show_data">{% prettyjson event.data_json %}</div>
                   </td>
                   <td>
-                    <a href="#" class="show_meta" eventid="{{ event.stripe_id}}">Mostrar detalles</a>
-                    <div id="meta_{{ event.stripe_id}}" class="show_meta">{% prettyjson event.metadata_json %}</div>
+                    <a href="#" class="show_meta" eventid="{{ event.id}}">Mostrar detalles</a>
+                    <div id="meta_{{ event.id}}" class="show_meta">{% prettyjson event.metadata_json %}</div>
                   </td>
                 </tr>
                 {% endfor %}

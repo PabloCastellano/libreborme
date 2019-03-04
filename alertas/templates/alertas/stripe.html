@@ -28,7 +28,7 @@
                       <tbody>
                         {% for sub in subscriptions %}
                         <tr>
-                          <td>{{ sub.stripe_id }}</td>
+                          <td>{{ sub.id }}</td>
                           <td>{{ sub.created }}</td>
                           <td>{{ sub.status }}</td>
                         </tr>
@@ -59,7 +59,7 @@
                       <tbody>
                         {% for cus in customers %}
                         <tr>
-                          <td>{{ cus.stripe_id }}</td>
+                          <td>{{ cus.id }}</td>
                           <td>{{ cus.created }}</td>
                           <td>{{ cus.subscriber.get_full_name }}</td>
                           <td>{{ cus.email }}</td>
@@ -91,7 +91,7 @@
                       <tbody>
                         {% for plan in plans %}
                         <tr>
-                          <td>{{ plan.stripe_id }}</td>
+                          <td>{{ plan.id }}</td>
                           <td>{{ plan.created }}</td>
                           <td>{{ plan.nickname }}</td>
                           <td>{{ plan.amount }} €</td>
@@ -122,7 +122,7 @@
                       <tbody>
                         {% for product in products %}
                         <tr>
-                          <td>{{ product.stripe_id }}</td>
+                          <td>{{ product.id }}</td>
                           <td>{{ product.created }}</td>
                           <td>{{ product.name }}</td>
                         </tr>

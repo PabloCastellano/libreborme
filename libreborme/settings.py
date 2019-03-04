@@ -174,11 +174,15 @@ STRIPE_PUBLIC_KEY = os.getenv("STRIPE_SECRET_KEY", "pk_test_0N38FeA9mW1so4zKyCyz
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "sk_test_eVEoxiTuoWOlSw104llgXvcs")
 
 # dj-stripe
+# https://dj-stripe.readthedocs.io/en/stable-2.0/reference/settings.html
 STRIPE_LIVE_PUBLIC_KEY = os.environ.get("STRIPE_LIVE_PUBLIC_KEY", "xxxx")
 STRIPE_LIVE_SECRET_KEY = os.environ.get("STRIPE_LIVE_SECRET_KEY", "xxxx")
 STRIPE_TEST_PUBLIC_KEY = STRIPE_PUBLIC_KEY
 STRIPE_TEST_SECRET_KEY = STRIPE_SECRET_KEY
 STRIPE_LIVE_MODE = False  # Change to True in production
+DJSTRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "whsec_0wS0HSb4exRA8mz8xr6ZBygNjAeDpHKm")
+DJSTRIPE_USE_NATIVE_JSONFIELD = True
+DJSTRIPE_PRORATION_POLICY = False  # TODO: review
 
 ALERTS_YEAR_PLAN = "follow100"
 SUBSCRIPTION_MONTH_ONE_PLAN = "subscription_month_one"
