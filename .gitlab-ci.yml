@@ -3,7 +3,7 @@ image: docker:18.09
 services:
   - docker:dind
   - postgres:10
-  - name: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
+  - name: docker.elastic.co/elasticsearch/elasticsearch:5.6.15
     alias: elasticsearch
     command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
 
