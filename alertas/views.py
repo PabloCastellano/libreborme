@@ -576,15 +576,6 @@ def add_card(request):
     return redirect(reverse('alertas-payment'))
 
 
-def send_email_new_subscription(user):
-    full_name = user.get_full_name()
-    now = datetime.datetime.now()
-    subject = 'Nueva suscripción ({})'.format(full_name)
-    message = 'En {} Stripe ha suscrito al usuario {}'.format(
-        now.strftime("%c"), full_name)
-    mail_admins(subject, message)
-
-
 def mark_user_has_tried_subscriptions(user):
     if not user.profile.has_tried_subscriptions:
         user.profile.has_tried_subscriptions = True
@@ -612,7 +603,6 @@ def checkout_existing_card(request):
         # tax_percent se suma al precio
         messages.add_message(request, messages.SUCCESS,
                              'Pago realizado con éxito. Tenga en cuenta que la activación del servicio puede tardar unos minutos.')
-        send_email_new_subscription(request.user)
 
         if nickname in (settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN):
             mark_user_has_tried_subscriptions(request.user)
@@ -695,7 +685,6 @@ def checkout_page(request):
             # new_invoice.save()
             messages.add_message(request, messages.SUCCESS,
                                  'Pago realizado con éxito. Tenga en cuenta que la activación del servicio puede tardar unos minutos.')
-            send_email_new_subscription(request.user)
 
             # TODO: Update customer sdk?
             # TODO: Duplicado
