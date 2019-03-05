@@ -32,6 +32,26 @@ El {} se ha suscrito al usuario {} ({})
     mail_admins(subject, message)
 
 
+@webhooks.handler("customer.subscription.updated")
+def customer_subscription_updated(event, **kwargs):
+    """
+    For example when user has cancelled his subscription.
+    Notify to admins
+    """
+    print("Webhook " + event.type)
+    now = datetime.datetime.now()
+    user = event.customer.subscriber
+    full_name = user.get_full_name()
+    subject = 'Libreborme webhook triggered: ' + event.type
+    message = """\
+Cambio en la suscripción
+
+El {} se ha producido un cambio en el suscriptor {} ({})
+""".format(
+        now.strftime("%c"), full_name, user.email)
+    mail_admins(subject, message)
+
+
 # https://stripe.com/docs/recipes/sending-emails-for-failed-payments
 @webhooks.handler("invoice.payment_failed")
 def invoice_payment_failed(event, **kwargs):
