@@ -279,6 +279,7 @@ class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
         else:
             context["total"] = 0
 
+        context['form_subscription_edit'] = forms.SubscriptionPlusModelForm(auto_id="id_edit_%s")
         context['form_subscription_buy'] = forms.SubscriptionPlusModelForm(
                 initial={'evento': 'adm', 'periodicidad': 'daily', 'provincia': 1},
                 auto_id="id_buy_%s",

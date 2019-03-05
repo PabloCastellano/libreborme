@@ -50,46 +50,39 @@
                             <th>#</th>
                             <th>Tipo de evento</th>
                             <th>Provincia</th>
-                            <th>E-mail</th>
+                            <th>Recibir E-mail</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for alerta in alertas_a %}
-                      <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ alerta.get_evento_display }}</td>
-                        <td>{{ alerta.get_provincia_display }}</td>
-                        <td>{{ alerta.get_periodicidad_display }}</td>
-                        <td>
-                          {% comment %}
-                          TODO: editar suscripcion
-                          <a href="{% url 'alerta-remove-acto' alerta.id %}">
-                          {% endcomment %}
-                          <a href="#">
-                          <button type="button" class="btn btn-warning btn-xs">
+                      <tr class="subs_row">
+                        <td class="subs_id">{{ forloop.counter }}</td>
+                        <td class="subs_evt">{{ alerta.get_evento_display }}</td>
+                        <td class="subs_prov">{{ alerta.get_provincia_display }}</td>
+                        <td class="subs_period">{{ alerta.get_periodicidad_display }}</td>
+                        <td class="subs_actions">
+                          <button type="button" id="btntest" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#editSubscription" data-id="{{ alerta.id }}" data-event="{{ alerta.get_evento_display }}" data-provincia="{{ alerta.get_provincia_display }}" data-periodicidad="{{ alerta.periodicidad }}">
                             <i class="fas fa-pencil-alt"></i> Editar
                           </button>
                           </a>
                         </td>
                       </tr>
                     {% endfor %}
-
-                    {% if remaining > 0 %}
+                    {% comment %}
                     <form class="" action="{% url "alertas-new-acto" %}" role="form" method="post">
                       {% csrf_token %}
-                      <tr>
+                      <tr class="">
                         <td>{{ current|add:1 }}</td>
                         {% for field in form_alertas.visible_fields %}
                         <td>{{ field }}</td>
                         {% endfor %}
                         <td>
-                            <i class="fas fa-plus-circle"></i>
-                            <input type="submit" name="create" class="btn btn-primary btn-xs" value="Añadir">
+                            <button type="submit" class="btn btn-danger btn-xs editSubscriptionBtn"><i class="fas fa-save"></i> Guardar</button>
                         </td>
                       </tr>
                     </form>
-                    {% endif %}
+                    {% endcomment %}
                     </tbody>
                 </table>
             </div>
@@ -136,8 +129,56 @@
 </main>
 
 
-<!-- Modal -->
-<div class="modal fade modal-login" id="infoSubscriptions" tabindex="-1" role="dialog" aria-labelledby="infoSubscriptions" aria-hidden="true">
+<!-- Modal editSubscription -->
+<div class="modal fade modal-login" id="editSubscription" tabindex="-1" role="dialog" aria-labelledby="editSubscriptionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="row justify-content-center w-100">
+                    <div class="col-md-12">
+                        <p class="text-header">Editar suscripción</p>
+                    </div>
+                </div>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row justify-content-md-center">
+                        <div class="col-12">
+							<form class="" action="{% url "edit-subscription" %}" role="form" method="post">
+							{% csrf_token %}
+							<div class="form-group row">
+								<label class="control-label col-sm-3" for="id_edit_evento">Tipo de evento</label>
+								<div class="col-sm-7 subs_event_type">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="control-label col-sm-3" for="id_edit_provincia">Provincia</label>
+								<div class="col-sm-7 subs_provincia">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="control-label col-sm-3">Recibir E-mail</label>
+								<div class="col-sm-7 subs_periodicidad">
+                                    {{ form_subscription_edit.periodicidad}}
+								</div>
+							</div>
+                            <input type="hidden" class="subs_id" name="subscription_id">
+							<input type="submit" class="btn btn-outline-danger btn-outline-danger2 btn-sm" value="Guardar">
+							</form>
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal infoSubscriptions -->
+<div class="modal fade modal-login" id="infoSubscriptions" tabindex="-1" role="dialog" aria-labelledby="infoSubscriptionsLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -208,5 +249,39 @@
             $(".buy_field_product").val("subscription_month_one")
         }
     });
+
+    {% comment %}
+    $(".editSubscriptionBtn").on('click', function(event) {
+        var row = $(event.target).parents(".subs_row");
+
+        //row.addClass("d-none");
+        var provincia = row.find(".subs_prov").text();
+        var periodicidad = row.find(".subs_period").text();
+        
+        editRow = row.parent().find('.editSubRow');
+        newRow = editRow.clone();
+        newRow.removeClass("d-none");
+        newRow.insertAfter(row);
+        console.log(newRow);
+    });
+    {% endcomment %}
+
+    $('#editSubscription').on('show.bs.modal', function (event) {
+        // Button that triggered the modal
+        var button = $(event.relatedTarget); 
+        // Extract info from data-* attributes
+        var sub_event = button.data('event');
+        var sub_provincia = button.data('provincia');
+        var sub_id = button.data('id');
+        var sub_periodicidad = button.data('periodicidad');
+        var modal = $(this);
+        modal.find('.subs_event_type').text(sub_event);
+        modal.find('.subs_provincia').text(sub_provincia);
+        modal.find('3id_edit_periodicidad').val(sub_periodicidad);
+        modal.find('.subs_id').val(sub_id);
+    });
+    
 </script>
+
+
 {% endblock %}

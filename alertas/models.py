@@ -186,6 +186,10 @@ class SubscriptionEvent(m.Model):
     class Meta:
         unique_together = (('province', 'event', 'event_date'),)
 
+    def __str__(self):
+        return "{} / {} / {}".format(
+            self.event_date, self.province, self.event)
+
 
 # UNUSED: should be removed at some time if proven useless
 class LBInvoice(m.Model):
