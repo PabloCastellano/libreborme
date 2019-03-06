@@ -12,7 +12,9 @@ https://stackoverflow.com/questions/19467287/stripe-how-to-handle-subscription-w
 from django.core.mail import mail_admins
 
 from djstripe import webhooks
+from djstripe.models import Subscription
 
+import stripe
 import datetime
 
 
@@ -56,16 +58,39 @@ Cambios:
 """.format(
         now.strftime("%c"), full_name, user.email, event.data['previous_attributes'])
     mail_admins(subject, message)
-    # TODO: Set UserSubscription.active = False
 
 
 @webhooks.handler("customer.subscription.deleted")
 def customer_subscription_deleted(event, **kwargs):
     """
-    For example when subscription is cancelled using the Stripe dashboard
-    TODO: Set UserSubscription.active = False
+    Workaround for issue: https://github.com/dj-stripe/dj-stripe/issues/855
+
+    When a subscription is finally canceled or 'right now' using the dashboard,
+    it is also removed from DB due to a nasty bug
+
+    Re-sync again and mark UserSubscription as disabled
     """
-    pass
+    print("Webhook " + event.type)
+    obj_id = event.data['object']['id']
+    stripe_subscription = stripe.Subscription.retrieve(obj_id)
+    djstripe_subscription = Subscription.sync_from_stripe_data(stripe_subscription)
+
+    # TODO: set is_enabled = False
+    # Since it was removed, there is no link to subscription
+    # subscription = djstripe_subscription.lb_subscription.get()
+    # subscription.is_enabled = False
+    # subscription.save()
+    now = datetime.datetime.now()
+    user = event.customer.subscriber
+    full_name = user.get_full_name()
+    subject = 'Libreborme webhook triggered: ' + event.type
+    message = """\
+Suscripción cancelada
+
+El {} se canceló la suscripción del usuario {} ({})
+""".format(
+        now.strftime("%c"), full_name, user.email)
+    mail_admins(subject, message)
 
 
 # https://stripe.com/docs/recipes/sending-emails-for-failed-payments

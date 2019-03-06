@@ -636,6 +636,8 @@ def checkout_page(request):
         # TODO: default source
         use_default_source = 'use-default-source' in request.POST
 
+        user_ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META['REMOTE_ADDR'])
+
         try:
 
             # if customer.has_valid_source():
@@ -647,7 +649,6 @@ def checkout_page(request):
 
             # Pending issues:
             # trial_from_plan: https://github.com/dj-stripe/dj-stripe/issues/809
-            # billing_cycle_anchor: https://github.com/dj-stripe/dj-stripe/issues/814
             if request.user.profile.has_tried_subscriptions:
                 trial_end = None
             else:
@@ -658,7 +659,8 @@ def checkout_page(request):
             metadata = {
                 "description": description,
                 "evento": request.session['cart']["evento"],
-                "provincia": request.session['cart']["provincia"]
+                "provincia": request.session['cart']["provincia"],
+                "ip": user_ip,
             }
 
             # coupon=None, quantity=1
@@ -693,7 +695,7 @@ def checkout_page(request):
                 provincia=request.session['cart']['provincia'],
                 subscription=subscription,
                 send_email='daily',
-                ip=request.META.get('HTTP_X_FORWARDED_FOR', request.META['REMOTE_ADDR']),
+                ip=user_ip,
             )
 
             del request.session['cart']

@@ -12,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 
 from borme.models import Company, Person
 from djstripe.models import Subscription
+from alertas import webhooks
 
 import os.path
 
