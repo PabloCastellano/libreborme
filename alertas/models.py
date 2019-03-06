@@ -174,6 +174,7 @@ class UserSubscription(m.Model):
     stripe_subscription = m.ForeignKey(Subscription, null=True, on_delete=m.SET_NULL, related_name='lb_subscription')
     updated_at = m.DateTimeField(auto_now=True)
     created_at = m.DateTimeField(auto_now_add=True)
+    ip = m.GenericIPAddressField(unpack_ipv4=True, null=True)
 
     def __str__(self):
         return "Suscripción de {} para evento {}".format(

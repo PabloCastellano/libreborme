@@ -687,13 +687,13 @@ def checkout_page(request):
             if nickname in (settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN):
                 request.user.mark_has_tried_subscriptions()
 
-
             alertas.subscriptions.create(
                 user=request.user,
                 evento=request.session['cart']['evento'],
                 provincia=request.session['cart']['provincia'],
                 subscription=subscription,
                 send_email='daily',
+                ip=request.META.get('HTTP_X_FORWARDED_FOR', request.META['REMOTE_ADDR']),
             )
 
             del request.session['cart']
