@@ -40,6 +40,7 @@ idx = Index('libreborme')
 # lb_analyzer, lb_filter = configure_index(idx)
 
 
+# TODO: NIF
 @idx.doc_type
 class CompanyDocument(DocType):
     name = fields.TextField(attr="fullname")

@@ -2,6 +2,8 @@ from django.urls import path
 
 from . import views
 
+# app_name = "panel"
+
 urlpatterns = [
     path('', views.MyAccountView.as_view(), name='dashboard-index'),
     path('profile/', views.ProfileView.as_view(), name='alertas-profile'),

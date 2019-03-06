@@ -23,6 +23,7 @@ class Command(BaseCommand):
 
         for filename in options["files"]:
             print(filename)
+            # Note: if settings.PARSER = yabormeparser you may need set_url=False
             borme.parser.importer.from_json_file(filename)
 
         config = Config.objects.first()
