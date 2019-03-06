@@ -630,35 +630,6 @@ def mark_user_has_tried_subscriptions(user):
         user.profile.save()
 
 
-# UNUSED
-@login_required
-def checkout_existing_card(request):
-    if request.method == "POST":
-        nickname = request.session['cart']['name']
-        plan = Plan.objects.get(nickname=nickname)
-        # Customer is cheargeable so he already exists
-        customer = Customer.objects.get(subscriber=request.user)
-        profile = request.user.profile
-
-        if not profile.has_tried_subscriptions:
-            do_trial = True
-            profile.has_tried_subscriptions = True
-        else:
-            do_trial = None
-        customer.subscribe(plan=plan, trial_from_plan=do_trial)
-        profile.save()
-        # TODO: review parameters: tax_percent, trial_end, ...
-        # tax_percent se suma al precio
-        messages.add_message(request, messages.SUCCESS,
-                             'Pago realizado con éxito. Tenga en cuenta que la activación del servicio puede tardar unos minutos.')
-
-        if nickname in (settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN):
-            mark_user_has_tried_subscriptions(request.user)
-
-        del request.session['cart']
-        return redirect("dashboard-index")
-
-
 @login_required
 def checkout_page(request):
     """Checkout

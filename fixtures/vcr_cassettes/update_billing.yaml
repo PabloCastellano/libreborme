@@ -1,0 +1,158 @@
+interactions:
+- request:
+    body: metadata[djstripe_subscriber]=1&email=john%40lennon.org
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Authorization: [Bearer sk_test_eVEoxiTuoWOlSw104llgXvcs]
+      Connection: [keep-alive]
+      Content-Length: ['55']
+      Content-Type: [application/x-www-form-urlencoded]
+      Idempotency-Key: [fcefb048-59c4-43f6-a1e1-d0071a54e1b5]
+      Stripe-Version: ['2018-05-21']
+      User-Agent: ['Stripe/v1 PythonBindings/2.21.0 dj-stripe/2.0.0 (https://github.com/dj-stripe/dj-stripe)']
+      X-Stripe-Client-User-Agent: ['{"publisher": "stripe", "platform": "Linux-4.4.0-142-generic-x86_64-with-LinuxMint-18.2-sonya",
+          "bindings_version": "2.21.0", "lang_version": "3.5.2", "uname": "Linux pablo-sch
+          4.4.0-142-generic #168-Ubuntu SMP Wed Jan 16 21:00:45 UTC 2019 x86_64 x86_64",
+          "lang": "python", "httplib": "requests", "application": {"partner_id": null,
+          "name": "dj-stripe", "url": "https://github.com/dj-stripe/dj-stripe", "version":
+          "2.0.0"}}']
+    method: POST
+    uri: https://api.stripe.com/v1/customers
+  response:
+    body: {string: "{\n  \"id\": \"cus_EeOqJEg7t5WZhK\",\n  \"object\": \"customer\",\n
+        \ \"account_balance\": 0,\n  \"created\": 1551902934,\n  \"currency\": null,\n
+        \ \"default_source\": null,\n  \"delinquent\": false,\n  \"description\":
+        null,\n  \"discount\": null,\n  \"email\": \"john@lennon.org\",\n  \"invoice_prefix\":
+        \"F150E29\",\n  \"invoice_settings\": {\n    \"custom_fields\": null,\n    \"footer\":
+        null\n  },\n  \"livemode\": false,\n  \"metadata\": {\n    \"djstripe_subscriber\":
+        \"1\"\n  },\n  \"shipping\": null,\n  \"sources\": {\n    \"object\": \"list\",\n
+        \   \"data\": [\n\n    ],\n    \"has_more\": false,\n    \"total_count\":
+        0,\n    \"url\": \"/v1/customers/cus_EeOqJEg7t5WZhK/sources\"\n  },\n  \"subscriptions\":
+        {\n    \"object\": \"list\",\n    \"data\": [\n\n    ],\n    \"has_more\":
+        false,\n    \"total_count\": 0,\n    \"url\": \"/v1/customers/cus_EeOqJEg7t5WZhK/subscriptions\"\n
+        \ },\n  \"tax_info\": null,\n  \"tax_info_verification\": null\n}\n"}
+    headers:
+      Access-Control-Allow-Credentials: ['true']
+      Access-Control-Allow-Methods: ['GET, POST, HEAD, OPTIONS, DELETE']
+      Access-Control-Allow-Origin: ['*']
+      Access-Control-Expose-Headers: ['Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required,
+          X-Stripe-Privileged-Session-Required']
+      Access-Control-Max-Age: ['300']
+      Cache-Control: ['no-cache, no-store']
+      Connection: [keep-alive]
+      Content-Length: ['838']
+      Content-Type: [application/json]
+      Date: ['Wed, 06 Mar 2019 20:08:54 GMT']
+      Idempotency-Key: [fcefb048-59c4-43f6-a1e1-d0071a54e1b5]
+      Original-Request: [req_DsqTa4tcQyCyIQ]
+      Request-Id: [req_DsqTa4tcQyCyIQ]
+      Server: [nginx]
+      Strict-Transport-Security: [max-age=31556926; includeSubDomains; preload]
+      Stripe-Version: ['2018-05-21']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Authorization: [Bearer sk_test_eVEoxiTuoWOlSw104llgXvcs]
+      Connection: [keep-alive]
+      Stripe-Version: ['2018-05-21']
+      User-Agent: ['Stripe/v1 PythonBindings/2.21.0 dj-stripe/2.0.0 (https://github.com/dj-stripe/dj-stripe)']
+      X-Stripe-Client-User-Agent: ['{"publisher": "stripe", "platform": "Linux-4.4.0-142-generic-x86_64-with-LinuxMint-18.2-sonya",
+          "bindings_version": "2.21.0", "lang_version": "3.5.2", "uname": "Linux pablo-sch
+          4.4.0-142-generic #168-Ubuntu SMP Wed Jan 16 21:00:45 UTC 2019 x86_64 x86_64",
+          "lang": "python", "httplib": "requests", "application": {"partner_id": null,
+          "name": "dj-stripe", "url": "https://github.com/dj-stripe/dj-stripe", "version":
+          "2.0.0"}}']
+    method: GET
+    uri: https://api.stripe.com/v1/customers/cus_EeOqJEg7t5WZhK
+  response:
+    body: {string: "{\n  \"id\": \"cus_EeOqJEg7t5WZhK\",\n  \"object\": \"customer\",\n
+        \ \"account_balance\": 0,\n  \"created\": 1551902934,\n  \"currency\": null,\n
+        \ \"default_source\": null,\n  \"delinquent\": false,\n  \"description\":
+        null,\n  \"discount\": null,\n  \"email\": \"john@lennon.org\",\n  \"invoice_prefix\":
+        \"F150E29\",\n  \"invoice_settings\": {\n    \"custom_fields\": null,\n    \"footer\":
+        null\n  },\n  \"livemode\": false,\n  \"metadata\": {\n    \"djstripe_subscriber\":
+        \"1\"\n  },\n  \"shipping\": null,\n  \"sources\": {\n    \"object\": \"list\",\n
+        \   \"data\": [\n\n    ],\n    \"has_more\": false,\n    \"total_count\":
+        0,\n    \"url\": \"/v1/customers/cus_EeOqJEg7t5WZhK/sources\"\n  },\n  \"subscriptions\":
+        {\n    \"object\": \"list\",\n    \"data\": [\n\n    ],\n    \"has_more\":
+        false,\n    \"total_count\": 0,\n    \"url\": \"/v1/customers/cus_EeOqJEg7t5WZhK/subscriptions\"\n
+        \ },\n  \"tax_info\": null,\n  \"tax_info_verification\": null\n}\n"}
+    headers:
+      Access-Control-Allow-Credentials: ['true']
+      Access-Control-Allow-Methods: ['GET, POST, HEAD, OPTIONS, DELETE']
+      Access-Control-Allow-Origin: ['*']
+      Access-Control-Expose-Headers: ['Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required,
+          X-Stripe-Privileged-Session-Required']
+      Access-Control-Max-Age: ['300']
+      Cache-Control: ['no-cache, no-store']
+      Connection: [keep-alive]
+      Content-Length: ['838']
+      Content-Type: [application/json]
+      Date: ['Wed, 06 Mar 2019 20:08:54 GMT']
+      Request-Id: [req_FtQMWzkpT4tqiv]
+      Server: [nginx]
+      Strict-Transport-Security: [max-age=31556926; includeSubDomains; preload]
+      Stripe-Version: ['2018-05-21']
+    status: {code: 200, message: OK}
+- request:
+    body: business_vat_id=00000014Z&description=John+Lennon+%28company%29+%2F+Barcelona&shipping[phone]=%2B34666666600&shipping[name]=The+Beatles+SL&shipping[address][line1]=Carrer+Abbey&shipping[address][line2]=&shipping[address][state]=Barcelona&shipping[address][postal_code]=08080&shipping[address][city]=Barcelona&shipping[address][country]=ES
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Authorization: [Bearer sk_test_eVEoxiTuoWOlSw104llgXvcs]
+      Connection: [keep-alive]
+      Content-Length: ['338']
+      Content-Type: [application/x-www-form-urlencoded]
+      Idempotency-Key: [59400180-14f1-4378-96bc-b9ae9b9a863c]
+      Stripe-Version: ['2018-05-21']
+      User-Agent: ['Stripe/v1 PythonBindings/2.21.0 dj-stripe/2.0.0 (https://github.com/dj-stripe/dj-stripe)']
+      X-Stripe-Client-User-Agent: ['{"publisher": "stripe", "platform": "Linux-4.4.0-142-generic-x86_64-with-LinuxMint-18.2-sonya",
+          "bindings_version": "2.21.0", "lang_version": "3.5.2", "uname": "Linux pablo-sch
+          4.4.0-142-generic #168-Ubuntu SMP Wed Jan 16 21:00:45 UTC 2019 x86_64 x86_64",
+          "lang": "python", "httplib": "requests", "application": {"partner_id": null,
+          "name": "dj-stripe", "url": "https://github.com/dj-stripe/dj-stripe", "version":
+          "2.0.0"}}']
+    method: POST
+    uri: https://api.stripe.com/v1/customers/cus_EeOqJEg7t5WZhK
+  response:
+    body: {string: "{\n  \"id\": \"cus_EeOqJEg7t5WZhK\",\n  \"object\": \"customer\",\n
+        \ \"account_balance\": 0,\n  \"business_vat_id\": \"00000014Z\",\n  \"created\":
+        1551902934,\n  \"currency\": null,\n  \"default_source\": null,\n  \"delinquent\":
+        false,\n  \"description\": \"John Lennon (company) / Barcelona\",\n  \"discount\":
+        null,\n  \"email\": \"john@lennon.org\",\n  \"invoice_prefix\": \"F150E29\",\n
+        \ \"invoice_settings\": {\n    \"custom_fields\": null,\n    \"footer\": null\n
+        \ },\n  \"livemode\": false,\n  \"metadata\": {\n    \"djstripe_subscriber\":
+        \"1\"\n  },\n  \"shipping\": {\n    \"address\": {\n      \"city\": \"Barcelona\",\n
+        \     \"country\": \"ES\",\n      \"line1\": \"Carrer Abbey\",\n      \"line2\":
+        \"\",\n      \"postal_code\": \"08080\",\n      \"state\": \"Barcelona\"\n
+        \   },\n    \"name\": \"The Beatles SL\",\n    \"phone\": \"+34666666600\"\n
+        \ },\n  \"sources\": {\n    \"object\": \"list\",\n    \"data\": [\n\n    ],\n
+        \   \"has_more\": false,\n    \"total_count\": 0,\n    \"url\": \"/v1/customers/cus_EeOqJEg7t5WZhK/sources\"\n
+        \ },\n  \"subscriptions\": {\n    \"object\": \"list\",\n    \"data\": [\n\n
+        \   ],\n    \"has_more\": false,\n    \"total_count\": 0,\n    \"url\": \"/v1/customers/cus_EeOqJEg7t5WZhK/subscriptions\"\n
+        \ },\n  \"tax_info\": {\n    \"tax_id\": \"00000014Z\",\n    \"type\": \"vat\"\n
+        \ },\n  \"tax_info_verification\": null\n}\n"}
+    headers:
+      Access-Control-Allow-Credentials: ['true']
+      Access-Control-Allow-Methods: ['GET, POST, HEAD, OPTIONS, DELETE']
+      Access-Control-Allow-Origin: ['*']
+      Access-Control-Expose-Headers: ['Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required,
+          X-Stripe-Privileged-Session-Required']
+      Access-Control-Max-Age: ['300']
+      Cache-Control: ['no-cache, no-store']
+      Connection: [keep-alive]
+      Content-Length: ['1189']
+      Content-Type: [application/json]
+      Date: ['Wed, 06 Mar 2019 20:08:55 GMT']
+      Idempotency-Key: [59400180-14f1-4378-96bc-b9ae9b9a863c]
+      Original-Request: [req_gatxJWTXumHrnq]
+      Request-Id: [req_gatxJWTXumHrnq]
+      Server: [nginx]
+      Strict-Transport-Security: [max-age=31556926; includeSubDomains; preload]
+      Stripe-Version: ['2018-05-21']
+    status: {code: 200, message: OK}
+version: 1

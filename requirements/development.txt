@@ -3,4 +3,5 @@
 bpython==0.17.1
 pdbpp==0.9.2
 responses==0.10.5
+vcrpy==2.0.1
 zest.releaser==6.15.0
