@@ -1,13 +1,13 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from . import models
-from djstripe.models import Customer
 
 from unidecode import unidecode
 
 from libreborme.models import NOTIFICATION_CHOICES, Profile
 from libreborme.provincias import PROVINCIAS_CHOICES
-from alertas.models import PROVINCIAS_CHOICES_ALL
+
+from . import models
+from .models import EVENTOS_CHOICES, PROVINCIAS_CHOICES_ALL
 
 
 class FollowerModelForm(forms.ModelForm):
@@ -50,6 +50,18 @@ class SubscriptionPlusModelForm(SubscriptionModelForm):
         super(SubscriptionPlusModelForm, self).__init__(*args, **kwargs)
         self.fields['provincia'].widget.choices.remove(('all', 'Todas las provincias'))
         self.fields['provincia'].widget.choices.insert(0, ('all', 'Todas las provincias'))
+
+
+class SubscriptionUpdateForm(forms.ModelForm):
+    class Meta:
+        model = models.UserSubscription
+        # fields = ['evento', 'provincia', 'periodicidad']
+        fields = ['periodicidad']
+        labels = {
+            "periodicidad": "Recibir E-Mail",
+        }
+    # evento = forms.ChoiceField(disabled=True, label="Tipo de evento", choices=EVENTOS_CHOICES)
+    # provincia = forms.ChoiceField(disabled=True, choices=PROVINCIAS_CHOICES_ALL)
 
 
 class PersonalDataForm(forms.Form):

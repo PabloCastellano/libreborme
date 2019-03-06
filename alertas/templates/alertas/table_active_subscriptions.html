@@ -22,7 +22,7 @@
                       ({{ subscription.plan.interval }})
                       {% endif %}
                     </td>
-                    <td>{{ subscription.start.date }}</td>
+                    <td>{{ subscription.created.date }}</td>
                     <td>
                       {% if subscription.status == 'trialing' %}
                       <span class="badge badge-warning">Periodo de prueba</span>

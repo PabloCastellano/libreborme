@@ -62,7 +62,7 @@
                         <td class="subs_prov">{{ alerta.get_provincia_display }}</td>
                         <td class="subs_period">{{ alerta.get_periodicidad_display }}</td>
                         <td class="subs_actions">
-                          <button type="button" id="btntest" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#editSubscription" data-id="{{ alerta.id }}" data-event="{{ alerta.get_evento_display }}" data-provincia="{{ alerta.get_provincia_display }}" data-periodicidad="{{ alerta.periodicidad }}">
+                          <button type="button" class="btn btn-warning btn-xs" onclick="return open_modal('{% url 'update-subscription' alerta.pk %}')">
                             <i class="fas fa-pencil-alt"></i> Editar
                           </button>
                           </a>
@@ -128,53 +128,7 @@
 
 </main>
 
-
-<!-- Modal editSubscription -->
-<div class="modal fade modal-login" id="editSubscription" tabindex="-1" role="dialog" aria-labelledby="editSubscriptionLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="row justify-content-center w-100">
-                    <div class="col-md-12">
-                        <p class="text-header">Editar suscripción</p>
-                    </div>
-                </div>
-
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="container">
-                    <div class="row justify-content-md-center">
-                        <div class="col-12">
-							<form class="" action="{% url "edit-subscription" %}" role="form" method="post">
-							{% csrf_token %}
-							<div class="form-group row">
-								<label class="control-label col-sm-3" for="id_edit_evento">Tipo de evento</label>
-								<div class="col-sm-7 subs_event_type">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="control-label col-sm-3" for="id_edit_provincia">Provincia</label>
-								<div class="col-sm-7 subs_provincia">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="control-label col-sm-3">Recibir E-mail</label>
-								<div class="col-sm-7 subs_periodicidad">
-                                    {{ form_subscription_edit.periodicidad}}
-								</div>
-							</div>
-                            <input type="hidden" class="subs_id" name="subscription_id">
-							<input type="submit" class="btn btn-outline-danger btn-outline-danger2 btn-sm" value="Guardar">
-							</form>
-						</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div id="popup" class="modal fade" role="dialog">
 </div>
 
 <!-- Modal infoSubscriptions -->
@@ -184,7 +138,7 @@
             <div class="modal-header">
                 <div class="row justify-content-center w-100">
                     <div class="col-md-12">
-                        <p class="text-header">Cómo funcionan las Suscripciones</p>
+                        <p class="text-header">Contratar suscripción</p>
                     </div>
                 </div>
 
@@ -250,37 +204,18 @@
         }
     });
 
-    {% comment %}
-    $(".editSubscriptionBtn").on('click', function(event) {
-        var row = $(event.target).parents(".subs_row");
 
-        //row.addClass("d-none");
-        var provincia = row.find(".subs_prov").text();
-        var periodicidad = row.find(".subs_period").text();
-        
-        editRow = row.parent().find('.editSubRow');
-        newRow = editRow.clone();
-        newRow.removeClass("d-none");
-        newRow.insertAfter(row);
-        console.log(newRow);
-    });
-    {% endcomment %}
+    function open_modal(url) {
+        $('#popup').load(url, function() {
+            $(this).modal('show');
+        });
+        return false;
+    }
 
-    $('#editSubscription').on('show.bs.modal', function (event) {
-        // Button that triggered the modal
-        var button = $(event.relatedTarget); 
-        // Extract info from data-* attributes
-        var sub_event = button.data('event');
-        var sub_provincia = button.data('provincia');
-        var sub_id = button.data('id');
-        var sub_periodicidad = button.data('periodicidad');
-        var modal = $(this);
-        modal.find('.subs_event_type').text(sub_event);
-        modal.find('.subs_provincia').text(sub_provincia);
-        modal.find('3id_edit_periodicidad').val(sub_periodicidad);
-        modal.find('.subs_id').val(sub_id);
-    });
-    
+    function close_modal() {
+        $('#popup').modal('hide');
+        return false;
+    }
 </script>
 
 

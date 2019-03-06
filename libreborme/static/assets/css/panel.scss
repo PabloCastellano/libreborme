@@ -94,6 +94,12 @@
   .form-control {
     background-color: #F5F5F5;
   }
+
+  .form-control:disabled, .form-control[readonly] {
+    background-color: #e9ecef;
+    opacity: 1;
+  }
+
   .custom-select {
     background-color: #F5F5F5 !important;
   }

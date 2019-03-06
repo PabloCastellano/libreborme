@@ -8,10 +8,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.text import slugify
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.views.generic import TemplateView
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 import datetime
 import json
@@ -50,6 +50,16 @@ TAXES = {
     'IPSI-Ceuta': 8.0,
     'IPSI-Melilla': 4.0
 }
+
+
+class SubscriptionUpdate(UpdateView):
+    """ Once a subscription is created, the user is allowed to change some only some fields """
+    model = UserSubscription
+    # fields = ["periodicidad"]
+    form_class = forms.SubscriptionUpdateForm
+    success_url = reverse_lazy('service-subscription')
+    template_name_suffix = '_update_form'
+
 
 
 # TODO: Pagination
@@ -160,6 +170,8 @@ class DashboardHistoryView(TemplateView):
         return context
 
 
+@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class StripeView(TemplateView):
     template_name = 'alertas/stripe.html'
 
@@ -279,7 +291,6 @@ class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
         else:
             context["total"] = 0
 
-        context['form_subscription_edit'] = forms.SubscriptionPlusModelForm(auto_id="id_edit_%s")
         context['form_subscription_buy'] = forms.SubscriptionPlusModelForm(
                 initial={'evento': 'adm', 'periodicidad': 'daily', 'provincia': 1},
                 auto_id="id_buy_%s",
@@ -723,13 +734,6 @@ def remove_card(request):
         return HttpResponse("Success", status=200)
 
     return HttpResponse("Fail", status=400)
-
-
-@login_required
-def alerta_remove_acto(request, id):
-    alerta = UserSubscription.objects.get(user=request.user, pk=id)
-    alerta.delete()
-    return redirect(reverse('service-subscription'))
 
 
 @login_required
