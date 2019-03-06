@@ -37,14 +37,14 @@
                       {% endif %}
                     </td>
                     <td>
-                      {% if subscription.cancel_at_period_end %}
-                      Cancelada el {{ subscription.canceled_at.date }}
+                      {% if subscription.ended_at %}
+                      Cancelada el {{ subscription.canceled_at }}
+                      {% elif subscription.cancel_at_period_end %}
+                      Esta suscripción ha sido cancelada y finalizará automáticamente el {{ subscription.current_period_end | date }}
                       {% elif subscription.status != 'canceled' %}
-                        <a href="#">
-                        <button type="button" class="btn btn-danger btn-xs">
-                           <i class="fas fa-trash-alt"></i> Cancelar
-                        </button>
-                        </a>
+                         <button type="button" class="btn btn-danger btn-xs" onclick="return open_modal('{% url 'cancel-subscription' subscription.lb_subscription.get.pk %}')">
+                           <i class="fas fa-pencil-alt"></i> Cancelar
+                         </button>
                       {% endif %}
                     </td>
                   </tr>

@@ -141,3 +141,11 @@ def reverse(val):
     """
     reverse_val = val[::-1]
     return '<span style="unicode-bidi:bidi-override; direction: rtl;">{}</span>'.format(reverse_val)
+
+
+@register.filter
+def plus_days(value, days):
+    """
+    https://stackoverflow.com/questions/19598213/generating-a-date-relative-to-another-date-in-django-template
+    """
+    return value + datetime.timedelta(days=days)

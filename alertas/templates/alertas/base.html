@@ -58,6 +58,9 @@
         </div>
     </div>
 
+    <div id="popup" class="modal fade" role="dialog">
+    </div>
+
     {% include "alertas/elements/footer-panel.html" %}
     {% include "matomo.html" %}
 
@@ -73,8 +76,8 @@
     <script src="{% static 'assets/js/vendor/holder.min.js' %}"></script>
     <script src="https://js.stripe.com/v3/"></script>
 
-    {% if not debug %}
     <script>
+    {% if not debug %}
         $(document).ready(function() {
             var advice = $("#headerCookies");
             var closeButton = advice.find(".cookies-header-close");
@@ -93,8 +96,20 @@
                 });
             }
         });
-    </script>
     {% endif %}
+
+        function open_modal(url) {
+            $('#popup').load(url, function() {
+                $(this).modal('show');
+            });
+            return false;
+        }
+
+        function close_modal() {
+            $('#popup').modal('hide');
+            return false;
+        }
+    </script>
 
     {% block extrajs %}{% endblock %}
 

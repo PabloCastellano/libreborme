@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.conf import settings
 from django.core.mail import mail_admins
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 from django.views.generic.edit import CreateView, UpdateView
@@ -236,6 +236,45 @@ class BillingDetailView(DetailView):
 """
 
 
+def cancel_subscription(request, pk):
+    """ Cancel djstripe.models.Subscription
+
+    :param pk: UserSubscription primary key
+    :type pk: int
+
+    Once it is cancelled:
+    subscription.cancel_at_period_end changes from False to True
+    subscription.canceled_at will be datetime.datetime.now()
+    subscription.status will be active until subscription.current_period_end
+    subscription.start is datetime.datetime.now(), is it a bug?? <https://github.com/dj-stripe/dj-stripe/issues/852>
+    """
+
+    try:
+        subscription = UserSubscription.objects.get(
+            pk=pk,
+            user=request.user,
+        )
+    except UserSubscription.DoesNotExist:
+        return redirect(reverse('dashboard-index'))
+
+    if request.method == "GET":
+        ctx = dict(object=subscription)
+        return render(request,
+                      template_name="alertas/usersubscription_cancel.html",
+                      context=ctx)
+    elif request.method == "POST":
+
+        if subscription:
+            subscription.stripe_subscription.cancel()
+            messages.add_message(request, messages.SUCCESS,
+                                 'Se ha cancelado la suscripción')
+        # CANCELLATION_AT_PERIOD_END == not DJSTRIPE_PRORATION_POLICY
+        # cancel(at_period_end=djstripe_settings.CANCELLATION_AT_PERIOD_END)
+        # Borrar UserSubscription también o poner active=False
+    # subscription.cancel(at_period_end=True)
+    return redirect(reverse('dashboard-index'))
+
+
 @method_decorator(login_required, name='dispatch')
 class AlertaDetailView(DetailView):
     model = UserSubscription
@@ -280,9 +319,11 @@ class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
         # TODO: Solo una suscripción de prueba
 
         if context['customer']:
-            context["subscriptions"] = context["customer"].active_subscriptions.filter(plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN))
+            context["subscriptions"] = context["customer"].active_subscriptions.filter(
+                    plan__nickname__in=(settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN),
+            )
 
-        context['alertas_a'] = UserSubscription.objects.filter(user=self.request.user)
+        context['alertas_a'] = UserSubscription.objects.filter(user=self.request.user, is_enabled=True)
         context['current'] = context['alertas_a'].count()
         context['form_alertas'] = forms.SubscriptionModelForm(initial={'periodicidad': 'daily'})
 
@@ -668,7 +709,7 @@ def checkout_page(request):
                 trial_period_days = plan.trial_period_days
                 trial_end = datetime.datetime.now() + datetime.timedelta(days=trial_period_days)
 
-            description = "Suscripcion a {evento} de la {provincia}".format(**request.session['cart'])
+            description = "Suscripcion a {evento} de la provincia {provincia}".format(**request.session['cart'])
             metadata = {
                 "description": description,
                 "evento": request.session['cart']["evento"],
