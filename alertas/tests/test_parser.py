@@ -29,6 +29,8 @@ borme.parser.logger.logger.setLevel(logging.ERROR)
 borme.utils.strings.logger.setLevel(logging.ERROR)
 
 
+# TODO: Instead of set_url=False, require xml always
+# override_settings(XML_ROOT=...')
 @override_settings(PARSER='borme.parser.backend.yabormeparser')
 def load_borme_from_gzipped_json(filename):
     fp = gzip.open(os.path.join(FILES_PATH, 'yabormeparser', filename))
@@ -100,8 +102,6 @@ class TestGenSubscription_BORME_A_2009_197_28(TestCase):
         # TODO: more checks
 
     def test_import_adm_twice(self):
-        # TODO: Check that is is always run after the previous test
-
         # Generate subscriptions for day
         results = alertas.parser.gen_subscription_event_from_borme('adm', self.fp_borme1)
 
@@ -146,7 +146,17 @@ class TestGenSubscription_BORME_A_2009_197_28(TestCase):
         self.assertEqual(total_sent, 0)
         self.assertEqual(len(mail.outbox), 0)
 
-        alertas.subscriptions.create(self.user, 'adm', 28, self.subscription)
+        subscriber = alertas.subscriptions.create(self.user, 'adm', 28, 'disabled', self.subscription)
+
+        total_sent = alertas.email.send_email_to_subscriber(
+            'adm',
+            self.borme_date
+        )
+        self.assertEqual(total_sent, 0)
+        self.assertEqual(len(mail.outbox), 0)
+
+        subscriber.periodicidad = 'daily'
+        subscriber.save()
 
         total_sent = alertas.email.send_email_to_subscriber(
             'adm',
