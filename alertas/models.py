@@ -75,12 +75,11 @@ PROVINCIAS_DICT = dict(PROVINCIAS_CHOICES)
 PROVINCIAS_CHOICES_ALL = PROVINCIAS_CHOICES + (('all', 'Todas las provincias'),)
 PROVINCIAS_DICT_ALL = dict(PROVINCIAS_CHOICES_ALL)
 
-PERIODICIDAD_CHOICES = (
-    ('disabled', 'Desactivado'),
+SEND_EMAIL_CHOICES = (
+    ('disabled', 'No'),
     ('daily', 'Diariamente'),
-    ('weekly', 'Semanalmente'),
 )
-PERIODICIDAD_DICT = dict(PERIODICIDAD_CHOICES)
+SEND_EMAIL_DICT = dict(SEND_EMAIL_CHOICES)
 
 PAYMENT_CHOICES = (
     ('stripe', "Stripe"),
@@ -167,7 +166,7 @@ class UserSubscription(m.Model):
     evento = m.CharField(max_length=3, choices=EVENTOS_CHOICES)
     provincia = m.CharField(max_length=100, choices=PROVINCIAS_CHOICES_ALL)
     is_enabled = m.BooleanField(default=True)
-    periodicidad = m.CharField(max_length=10, choices=PERIODICIDAD_CHOICES)
+    send_email = m.CharField(max_length=10, choices=SEND_EMAIL_CHOICES)
     stripe_subscription = m.ForeignKey(Subscription, null=True, on_delete=m.SET_NULL, related_name='lb_subscription')
     updated_at = m.DateTimeField(auto_now=True)
     created_at = m.DateTimeField(auto_now_add=True)
@@ -231,6 +230,7 @@ class AlertasConfig(m.Model):
         return "{}: {}".format(self.key, self.value)
 
 
+# REMOVE?
 class AlertaHistory(m.Model):
     """ This table stores the history of alerts sent to users
     """
@@ -239,16 +239,16 @@ class AlertaHistory(m.Model):
     date = m.DateField()
     provincia = m.CharField(max_length=100, choices=PROVINCIAS_CHOICES, blank=True, null=True)
     entidad = m.CharField(max_length=260, blank=True, null=True)
-    periodicidad = m.CharField(max_length=10, choices=PERIODICIDAD_CHOICES, blank=True, null=True)
+    send_email = m.CharField(max_length=10, choices=SEND_EMAIL_CHOICES, blank=True, null=True)
 
     def get_csv_path(self):
-        # TODO: provincia and periodicidad can be blank
+        # TODO: provincia and send_email can be blank
         year = str(self.date.year)
         month = "{:02d}".format(self.date.month)
         day = "{:02d}".format(self.date.day)
         provincia = PROVINCIAS_DICT[self.provincia].replace(" ", "_")
         path = os.path.join(settings.BORME_ROOT, "csv_alertas", provincia)
-        path = os.path.join(path, self.periodicidad, year, month, day + "_" + self.type + ".csv")
+        path = os.path.join(path, self.send_email, year, month, day + "_" + self.type + ".csv")
         return path
 
     def __str__(self):

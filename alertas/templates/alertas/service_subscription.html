@@ -60,7 +60,7 @@
                         <td class="subs_id">{{ forloop.counter }}</td>
                         <td class="subs_evt">{{ alerta.get_evento_display }}</td>
                         <td class="subs_prov">{{ alerta.get_provincia_display }}</td>
-                        <td class="subs_period">{{ alerta.get_periodicidad_display }}</td>
+                        <td class="subs_period">{{ alerta.get_send_email_display }}</td>
                         <td class="subs_actions">
                           <button type="button" class="btn btn-warning btn-xs" onclick="return open_modal('{% url 'update-subscription' alerta.pk %}')">
                             <i class="fas fa-pencil-alt"></i> Editar
@@ -115,7 +115,7 @@
                 </div>
             </div>
             <input type="hidden" name="product" class="buy_field_product" value="{{ plan_month_one.nickname }}">
-            <input type="hidden" name="periodicidad" value="daily">
+            <input type="hidden" name="send_email" value="daily">
             <input type="submit" name="addtocart" class="btn btn-outline-danger btn-outline-danger2 btn-sm" value="Añadir a la cesta">
             </form>
         </div>
@@ -175,7 +175,7 @@
 								</div>
 							</div>
                             <input type="hidden" name="product" class="buy_field_product" value="{{ plan_month_one.nickname }}">
-							<input type="hidden" name="periodicidad" value="daily">
+							<input type="hidden" name="send_email" value="daily">
 							<input type="submit" name="addtocart" class="btn btn-outline-danger btn-outline-danger2 btn-sm" value="Añadir a la cesta">
 							</form>
 						</div>

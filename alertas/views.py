@@ -55,7 +55,7 @@ TAXES = {
 class SubscriptionUpdate(UpdateView):
     """ Once a subscription is created, the user is allowed to change some only some fields """
     model = UserSubscription
-    # fields = ["periodicidad"]
+    # fields = ["send_email"]
     form_class = forms.SubscriptionUpdateForm
     success_url = reverse_lazy('service-subscription')
     template_name_suffix = '_update_form'
@@ -265,13 +265,9 @@ def cancel_subscription(request, pk):
     elif request.method == "POST":
 
         if subscription:
-            subscription.stripe_subscription.cancel()
+            subscription = subscription.stripe_subscription.cancel()
             messages.add_message(request, messages.SUCCESS,
                                  'Se ha cancelado la suscripción')
-        # CANCELLATION_AT_PERIOD_END == not DJSTRIPE_PRORATION_POLICY
-        # cancel(at_period_end=djstripe_settings.CANCELLATION_AT_PERIOD_END)
-        # Borrar UserSubscription también o poner active=False
-    # subscription.cancel(at_period_end=True)
     return redirect(reverse('dashboard-index'))
 
 
@@ -325,7 +321,7 @@ class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
 
         context['alertas_a'] = UserSubscription.objects.filter(user=self.request.user, is_enabled=True)
         context['current'] = context['alertas_a'].count()
-        context['form_alertas'] = forms.SubscriptionModelForm(initial={'periodicidad': 'daily'})
+        context['form_alertas'] = forms.SubscriptionModelForm(initial={'send_email': 'daily'})
 
         if 'subscriptions' in context:
             context["total"] = len(context["subscriptions"])
@@ -333,7 +329,7 @@ class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
             context["total"] = 0
 
         context['form_subscription_buy'] = forms.SubscriptionPlusModelForm(
-                initial={'evento': 'adm', 'periodicidad': 'daily', 'provincia': 1},
+                initial={'evento': 'adm', 'send_email': 'daily', 'provincia': 1},
                 auto_id="id_buy_%s",
         )
         context["remaining"] = context["total"] - context["current"]
@@ -749,7 +745,7 @@ def checkout_page(request):
                 evento=request.session['cart']['evento'],
                 provincia=request.session['cart']['provincia'],
                 subscription=subscription,
-                periodicidad='daily',
+                send_email='daily',
             )
 
             del request.session['cart']

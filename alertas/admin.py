@@ -11,8 +11,8 @@ from libreborme import models as lb_models
 
 @admin.register(m.UserSubscription)
 class UserSubscriptionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'evento', 'periodicidad', 'provincia', 'is_enabled', 'stripe_subscription', 'created_at')
-    list_filter = ('evento', 'periodicidad', 'is_enabled')
+    list_display = ('user', 'evento', 'send_email', 'provincia', 'is_enabled', 'stripe_subscription', 'created_at')
+    list_filter = ('evento', 'send_email', 'is_enabled')
     search_fields = ['user__email', 'provincia']
     # TODO: get_provincia_display
 
@@ -83,7 +83,7 @@ class AlertasConfigAdmin(admin.ModelAdmin):
 
 @admin.register(m.AlertaHistory)
 class AlertaHistoryAdmin(admin.ModelAdmin):
-    list_display = ('user', 'type', 'date', 'provincia', 'entidad', 'periodicidad')
+    list_display = ('user', 'type', 'date', 'provincia', 'entidad', 'send_email')
     search_fields = ['user', 'date']
 
 

@@ -23,14 +23,14 @@ class FollowerForm(forms.Form):
 class SubscriptionModelForm(forms.ModelForm):
     class Meta:
         model = models.UserSubscription
-        fields = ['evento', 'provincia', 'periodicidad']
+        fields = ['evento', 'provincia', 'send_email']
         exclude = ('user', 'is_enabled')
 
     def __init__(self, *args, **kwargs):
         super(SubscriptionModelForm, self).__init__(*args, **kwargs)
         self.fields['evento'].widget.attrs.update({'class': 'form-control form-control-sm'})
         self.fields['provincia'].widget.attrs.update({'class': 'form-control form-control-sm'})
-        self.fields['periodicidad'].widget.attrs.update({'class': 'form-control form-control-sm'})
+        self.fields['send_email'].widget.attrs.update({'class': 'form-control form-control-sm'})
 
         # Sort <option>s for <select>
         self.fields['provincia'].widget.choices = sorted(self.fields['provincia'].widget.choices, key=lambda k: unidecode(k[1]))
@@ -43,7 +43,7 @@ class SubscriptionPlusModelForm(SubscriptionModelForm):
 
     class Meta:
         model = models.UserSubscription
-        fields = ['evento', 'periodicidad']
+        fields = ['evento', 'send_email']
         exclude = ('user', 'is_enabled')
 
     def __init__(self, *args, **kwargs):
@@ -55,10 +55,10 @@ class SubscriptionPlusModelForm(SubscriptionModelForm):
 class SubscriptionUpdateForm(forms.ModelForm):
     class Meta:
         model = models.UserSubscription
-        # fields = ['evento', 'provincia', 'periodicidad']
-        fields = ['periodicidad']
+        # fields = ['evento', 'provincia', 'send_email']
+        fields = ['send_email']
         labels = {
-            "periodicidad": "Recibir E-Mail",
+            "send_email": "Recibir E-Mail",
         }
     # evento = forms.ChoiceField(disabled=True, label="Tipo de evento", choices=EVENTOS_CHOICES)
     # provincia = forms.ChoiceField(disabled=True, choices=PROVINCIAS_CHOICES_ALL)

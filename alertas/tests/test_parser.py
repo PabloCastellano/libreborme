@@ -155,7 +155,7 @@ class TestGenSubscription_BORME_A_2009_197_28(TestCase):
         self.assertEqual(total_sent, 0)
         self.assertEqual(len(mail.outbox), 0)
 
-        subscriber.periodicidad = 'daily'
+        subscriber.send_email = 'daily'
         subscriber.save()
 
         total_sent = alertas.email.send_email_to_subscriber(

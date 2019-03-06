@@ -83,13 +83,13 @@ class TestCommandNotifications(TestCase):
         self.john = create_alertas_user("john@localhost", "secret",
                                         "John", "Foo")
         UserSubscription.objects.create(user=self.john, evento="liq",
-                                  provincia="Lugo", periodicidad="daily")
+                                  provincia="Lugo", send_email="daily")
         UserSubscription.objects.create(user=self.john, evento="liq",
-                                  provincia="Lugo", periodicidad="weekly")
+                                  provincia="Lugo", send_email="weekly")
         UserSubscription.objects.create(user=self.john, evento="new",
-                                  provincia="Lugo", periodicidad="weekly")
+                                  provincia="Lugo", send_email="weekly")
         UserSubscription.objects.create(user=self.john, evento="new",
-                                  provincia="Lugo", periodicidad="monthly")
+                                  provincia="Lugo", send_email="monthly")
         borme_config["borme_root"] = os.path.join(THIS_PATH, 'files',
                                                   'BORME-A-2017-76-03.json')
 
@@ -102,19 +102,19 @@ class TestCommandNotifications(TestCase):
         call_command('send_notifications', "weekly", "new")
         call_command('send_notifications', "monthly", "new")
 
-        history = AlertaHistory.objects.filter(periodicidad="daily")
+        history = AlertaHistory.objects.filter(send_email="daily")
         self.assertEqual(len(history), 1)
         self.assertEqual(history[0].type, "liq")
         self.assertEqual(history[0].user, "john")
         #self.assertEqual(history[0].date, "TODO")
 
-        history = AlertaHistory.objects.filter(periodicidad="weekly")
+        history = AlertaHistory.objects.filter(send_email="weekly")
         self.assertEqual(len(history), 2)
         self.assertEqual((history[0].type, history[1].type), ("liq", "new"))
         self.assertEqual(history[0].user, "john")
         self.assertEqual(history[1].user, "john")
 
-        history = AlertaHistory.objects.filter(periodicidad="monthly")
+        history = AlertaHistory.objects.filter(send_email="monthly")
         self.assertEqual(len(history), 1)
         self.assertEqual(history[0].type, "new")
         self.assertEqual(history[0].user, "john")

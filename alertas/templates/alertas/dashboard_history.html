@@ -30,7 +30,7 @@
                   <td>{{ alerta.get_type_display }}</td>
                   <td>{{ alerta.entidad|default:"-" }}</td>
                   <td>{{ alerta.get_provincia_display|default:"-" }}</td>
-                  <td>{{ alerta.get_periodicidad_display|default:"-" }}</td>
+                  <td>{{ alerta.get_send_email_display|default:"-" }}</td>
                   <td>
                     <a href="{% url 'alerta-history-download' alerta.id %}">
                     <button type="button" class="btn btn-primary btn-xs">
