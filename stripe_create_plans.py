@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Los precios no deben incluir IVA. el IVA se añade a la hora de hacer la suscripción
 import os
 
 import stripe
@@ -8,7 +9,7 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY",
                            "sk_test_eVEoxiTuoWOlSw104llgXvcs")
 
 # Definition: 20190103
-ALERTS_YEAR_PLAN = "follow100"
+ALERTS_YEAR_PLAN = "follow50"
 SUBSCRIPTION_MONTH_ONE_PLAN = "subscription_month_one"
 SUBSCRIPTION_MONTH_FULL_PLAN = "subscription_month_full"
 # SUBSCRIPTION_YEAR_PLAN = "subscription_year"
@@ -19,10 +20,10 @@ TRIAL_PERIOD_DAYS = 7
 
 # TODO: Cupones (2 semanas gratis), 15% descuento
 
-def create_follow100_product_and_plan():
-    """Plan anual para 100 followers"""
+def create_follow50_product_and_plan():
+    """Plan anual para 50 followers"""
     product = stripe.Product.create(
-        name='Suscripción Seguimiento 100',
+        name='Suscripción Seguimiento 50',
         type='service',
     )
     product.save()
@@ -31,7 +32,7 @@ def create_follow100_product_and_plan():
     plan = stripe.Plan.create(
         nickname=ALERTS_YEAR_PLAN,
         product=product.id,
-        amount=2999,
+        amount=3588,
         currency='eur',
         interval='year'
     )
@@ -171,7 +172,7 @@ def rest(plan):
 
 
 if __name__ == "__main__":
-    create_follow100_product_and_plan()
+    create_follow50_product_and_plan()
     create_subscription_product_and_plans()
     create_api_product_and_plans()
     # rest(plan)

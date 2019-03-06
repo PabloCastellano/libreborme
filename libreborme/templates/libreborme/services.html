@@ -4,18 +4,6 @@
 {% comment %}
 - loren ipsum
 - anchor.js
-- <h1>Servicios</h1>
-
-  <p>Desde <strong>LibreBORME</strong> ofrecemos servicios relacionados con los datos del registro mercantil.
-  Algunos de los servicios que ofrecemos son:
-  <ul>
-    <li>Integración de los datos de LibreBORME a través de la API.</li>
-    <li>Cruce de datos con otra aplicación.</li>
-    <li>Acceso a la API para un gran número de peticiones.</li>
-  </ul>
-  </p>
-
-  <p>Si estás interesado en en algún tipo de colaboración, <a href="{% url "contact" %}"><strong>contáctanos sin compromiso</strong></a>.</p>
 {% endcomment %}
 
 {% block title %} Servicios | LibreBORME{% endblock %}
@@ -35,7 +23,8 @@
                     <h1 class="title-section">
                         <span>|</span>Servicios
                     </h1>
-                    <p>A continuación puedes encontrar una descripción de cada uno de los servicios derivados del procesamiento de datos de fuente de acceso público.<br>
+                    <p>Desde <strong>LibreBORME</strong> ofrecemos servicios derivados del procesamiento de datos de fuente de acceso públicos, entre ellas el Registro Mercantil.</p>
+                    <p>A continuación puedes encontrar una descripción de cada uno de los servicios.<br>
                     Los precios mostrados en esta página no incluyen IVA.</p>
 
                     <div class="row">
@@ -63,9 +52,9 @@
                 <div class="col-md-10">
                     <div class="row">
                         <h3 class="titulo-servicio">Seguimiento</h3>
-                        <p class="">Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa aparezca en un Boletín Oficial.</p>
+                        <p class="">Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa aparezca en uno de los Boletines Oficiales soportados.</p>
                         <p>Regístrate y prueba el servicio de forma gratuita con {{ max_alertas_follower_free }} personas o empresas de tu elección.
-                        <br>Si necesitas más, puedes contratar el bono anual de {{ max_alertas_follower_paid }} empresas.</p>
+                        <br>Si necesitas más, puedes contratar bonos de {{ max_alertas_follower_paid }} empresas.</p>
 
                         <p>Para añadir a una empresa o persona a tu lista de seguimiento, localízala usando el buscador y haz click en el botón
 
@@ -79,10 +68,10 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4>Bono de notificaciones</h4>
-                                <h3>2,99€ / mes</h3>
+                                <h3>{{ plan_follow_month_price }}€ / mes</h3>
                                 <p class="card-text">Pago anual</p>
                                 <hr>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Bono de {{ max_alertas_follower_paid }} alertas</p>
+                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Sigue a {{ max_alertas_follower_paid }} empresas</p>
                             </div>
                             <a href="#" class="btn_service_follow">
                                 <div class="card-footer text-center">
@@ -104,8 +93,8 @@
                 </div>
                 <div class="col-md-10">
                     <div class="row">
-                        <h3 class="titulo-servicio">API / Integración con terceros</h3>
-                        <p>A través de nuestra <strong>API</strong> te permitimos integrar los datos disponibles en LibreBORME en tu propia app, web o sistema ERP.</p>
+                        <h3 class="titulo-servicio">Integración de datos mediante API</h3>
+                        <p>A través de nuestra <strong>API</strong> te proporcionamos los datos disponibles en LibreBORME para que los integres en tu propia app, web o sistema ERP.</p>
                         <p>Accede a los datos publicados en la web de forma estructurada y sin restricciones.</p>
                     </div>
                     <div class="card-deck">
@@ -127,7 +116,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4>Advanced</h4>
-                                <h3>79,99€ / mes</h3>
+                                <h3>{{ plan_api_month.amount }}€ / mes</h3>
                                 <p class="card-text"></p>
                                 <hr>
                                 <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">{{ service_api_advanced_req_day }} consultas al día</p>
@@ -139,23 +128,6 @@
                                 </div>
                             </a>
                         </div>
-                        {% comment %}
-                        <div class="card">
-                            <div class="card-body">
-                                <h4>Advanced</h4>
-                                <h3>799,99€ / mes</h3>
-                                <p class="card-text">Pago anual</p>
-                                <hr>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">{{ service_api_free_advanced_day }} consultas al día</p>
-                                <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Sin soporte técnico</p>
-                            </div>
-                            <a href="{% url 'buy-product' product=plan_year.nickname %}">
-                                <div class="card-footer text-center">
-                                    <p>Suscribirme (anual)</p>
-                                </div>
-                            </a>
-                        </div>
-                        {% endcomment %}
                         <div class="card">
                             <div class="card-body">
                                 <h4>Pro</h4>
@@ -175,7 +147,7 @@
                     </div>
                     <div class="row mt-4">
                         <p>¿Necesitas un <strong>desarrollo a medida</strong>?
-                        <a class="btn btn-outline-danger ml-2" href="{% url 'contact' %}" role="button">Contáctanos</a></p>
+                        <a class="btn btn-outline-danger ml-2" href="{% url 'contact' %}" role="button">Contáctanos sin compromiso</a></p>
                     </div>
                 </div>
             </div>
@@ -191,22 +163,23 @@
                 <div class="col-md-10">
                     <div class="row">
                         <div class="col-md-12 text-justify">
-                            <h3 class="titulo-servicio">Suscripciones</h3>
-                            <p class="">Mediante el Servicio de Suscripciones recibirás información mercantil de determinados eventos.
-                            <br>Puedes elegir entre los siguientes tipos de eventos:</p>
+                            <h3 class="titulo-servicio">Suscripción a eventos mercantiles</h3>
+                            <p>Mediante el Servicio de Suscripciones recibirás información mercantil de determinados eventos.
+                            <br>Actualmente puedes elegir entre los siguientes tipos de eventos:</p>
                             <ul>
                               <li>Constitución de <strong>nuevas empresas</strong> e información sobre sus administradores</li>
                               <li>Empresas que <strong>cambian de administrador</strong></li>
                               <li>Empresas que han entrado en <strong>concurso de acreedores</strong> o liquidación</li>
                             </ul>
-                            <p>Una vez suscrito recibirás cada día en tu email la información seleccionada.</p>
+                            <p>Una vez suscrito recibirás cada día en tu email la información seleccionada.
+                            <br>También puedes consultar y automatizar los datos a través de nuestra API.</p>
                         </div>
                     </div>
                     <div class="card-deck">
                         <div class="card">
                             <div class="card-body">
-                                <h4>Suscripción mensual</h4>
-                                <h3>49,99€</h3>
+                                <h4>Suscripción</h4>
+                                <h3>{{ plan_subscription_month_one.amount }}€ / mes</h3>
                                 <p class="card-text">Pago mensual</p>
                                 <hr>
                                 <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Un tipo de notificación</p>
@@ -220,8 +193,8 @@
                         </div>
                         <div class="card">
                             <div class="card-body">
-                                <h4>Suscripción mensual</h4>
-                                <h3>149,99€</h3>
+                                <h4>Suscripción</h4>
+                                <h3>{{ plan_subscription_month_full.amount }}€ / mes</h3>
                                 <p class="card-text">Pago mensual</p>
                                 <hr>
                                 <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Un tipo de notificación</p>

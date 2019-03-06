@@ -145,6 +145,7 @@
             <div class="modal-body">
                 <div class="container">
 					<h3 class="subtitle-panel mb-4">Planes y precios</h3>
+                    <p>Los precios mostrados en esta página no incluyen IVA.</p>
 				    {% include 'alertas/pricing_subscriptions_table.html' %}
                     <div class="row justify-content-md-center">
                         <div class="col-12">
@@ -166,7 +167,7 @@
 							<div class="form-group row">
 								<label class="control-label col-sm-3">Precio</label>
 								<div class="col-sm-7">
-                                    <p class="font-weight-bold"><span class="price">{{ plan_month_one.amount }}</span>€ / mes</p>
+                                    <p class="font-weight-bold"><span class="price">{{ plan_month_one.amount }}</span>€ / mes + IVA</p>
 								</div>
 							</div>
 							<div class="form-group row">

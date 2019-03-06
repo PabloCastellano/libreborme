@@ -1,13 +1,5 @@
 {% load staticfiles %}
 
-{% comment %}
-    <ul>
-      <li>{{ plan_month.amount }} {{ plan_month.currency }} / {{ plan_month.interval }}</li>
-      <li>{{ plan_year.amount }} {{ plan_year.currency }} / {{ plan_year.interval }}</li>
-    </ul>
-  </td>
-{% endcomment %}
-
 <div class="view-servicios mt-4">
     <section class="contenido-servicio pt-0">
         <div class="card-deck">
@@ -29,35 +21,18 @@
             <div class="card">
                 <div class="card-body">
                     <h4>Advanced</h4>
-                    <h3>79,99€ / mes</h3>
+                    <h3>{{ plan_api_month.amount }}€ / mes</h3>
                     <p class="card-text"></p>
                     <hr>
                     <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">{{ service_api_advanced_req_day }} consultas al día</p>
                     <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Sin soporte técnico</p>
                 </div>
-                <a href="{% url 'buy-product' product=plan_month.nickname %}">
+                <a href="{% url 'buy-product' product=plan_api_month.nickname %}">
                     <div class="card-footer text-center">
                         <p>Suscribirme</p>
                     </div>
                 </a>
             </div>
-            {% comment %}
-            <div class="card">
-                <div class="card-body">
-                    <h4>Advanced</h4>
-                    <h3>799,99€ / mes</h3>
-                    <p class="card-text">Pago anual</p>
-                    <hr>
-                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">{{ service_api_free_advanced_day }} consultas al día</p>
-                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Sin soporte técnico</p>
-                </div>
-                <a href="{% url 'buy-product' product=plan_year.nickname %}">
-                    <div class="card-footer text-center">
-                        <p>Suscribirme (anual)</p>
-                    </div>
-                </a>
-            </div>
-            {% endcomment %}
             <div class="card">
                 <div class="card-body">
                     <h4>Pro</h4>
@@ -76,4 +51,5 @@
             </div>
         </div>
      </section>
+     <p>Los precios mostrados en esta página no incluyen IVA.</p>
 </div>

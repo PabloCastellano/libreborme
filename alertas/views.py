@@ -340,8 +340,6 @@ class ServiceSubscriptionView(CustomerMixin, StripeMixin, TemplateView):
         context["plan_month_one"] = plan_month_one
         plan_month_full = Plan.objects.get(nickname=settings.SUBSCRIPTION_MONTH_FULL_PLAN)
         context["plan_month_full"] = plan_month_full
-        # plan_year = Plan.objects.get(nickname=settings.SUBSCRIPTION_YEAR_PLAN)
-        # context["plan_year"] = plan_year
 
         return context
 
@@ -373,6 +371,8 @@ class ServiceFollowView(CustomerMixin, StripeMixin, TemplateView):
             context["subscriptions"] = context["customer"].active_subscriptions.filter(plan__nickname__in=(settings.ALERTS_YEAR_PLAN))
 
         context["plan_year"] = Plan.objects.get(nickname=settings.ALERTS_YEAR_PLAN)
+        plan_follow_year = Plan.objects.get(nickname=settings.ALERTS_YEAR_PLAN)
+        context["plan_follow_month_price"] = plan_follow_year.amount / 12
         return context
 
 
@@ -454,8 +454,7 @@ class ServiceAPIView(CustomerMixin, TemplateView):
         context = super(ServiceAPIView, self).get_context_data(**kwargs)
         context['active'] = 'api'
 
-        context["plan_month"] = Plan.objects.get(nickname=settings.API_MONTH_PLAN)
-        # context["plan_year"] = Plan.objects.get(nickname=settings.API_YEAR_PLAN)
+        context["plan_api_month"] = Plan.objects.get(nickname=settings.API_MONTH_PLAN)
 
         if context["customer"]:
             context["subscriptions"] = context["customer"].active_subscriptions.filter(

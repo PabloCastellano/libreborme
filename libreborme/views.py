@@ -4,13 +4,14 @@ from django.shortcuts import render
 from django.template.loader import get_template
 from django.views.generic.base import TemplateView
 
+from djstripe.models import Plan
+
 from borme.mixins import CacheMixin
+from alertas.utils import get_alertas_config
+from . import utils
 
 from pathlib import Path
 
-from alertas.utils import get_alertas_config
-
-from . import utils
 
 import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -45,6 +46,13 @@ class ServicesView(CacheMixin, TemplateView):
         context["service_api_advanced_req_day"] = aconfig["service_api_advanced_req_day"]
         context["max_alertas_follower_free"] = aconfig["max_alertas_follower_free"]
         context["max_alertas_follower_paid"] = aconfig["max_alertas_follower_paid"]
+
+        context["plan_subscription_month_one"] = Plan.objects.get(nickname=settings.SUBSCRIPTION_MONTH_ONE_PLAN)
+        context["plan_subscription_month_full"] = Plan.objects.get(nickname=settings.SUBSCRIPTION_MONTH_FULL_PLAN)
+        context["plan_api_month"] = Plan.objects.get(nickname=settings.API_MONTH_PLAN)
+        plan_follow_year = Plan.objects.get(nickname=settings.ALERTS_YEAR_PLAN)
+        context["plan_follow_month_price"] = plan_follow_year.amount / 12
+
         return context
 
 

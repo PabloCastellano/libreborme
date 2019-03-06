@@ -1,10 +1,5 @@
 {% load staticfiles %}
 
-{% comment %}
-  <td>{{ plan_month.amount }} {{ plan_month.currency }} / {{ plan_month.interval }}</td>
-  <td>{{ plan_year.amount }} {{ plan_year.currency }} / {{ plan_year.interval }}</td>
-{% endcomment %}
-
 <div class="view-servicios mt-4">
     <section class="contenido-servicio pt-0">
         <div class="card-deck">
@@ -23,24 +18,6 @@
                     </div>
                 </a>
             </div>
-            {% comment %}
-            <div class="card">
-                <div class="card-body">
-                    <h4>Suscripción anual</h4>
-                    <h3>599,99€</h3>
-                    <p class="card-text">Pago anual</p>
-                    <hr>
-                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Un tipo de notificación</p>
-                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Una provincia</p>
-                    <p><img src="{% static 'assets/img/servicios/stick.png' %}" alt="">Ahorra 2 meses</p>
-                </div>
-                <a href="{% url 'buy-product' product=plan_year.nickname %}">
-                    <div class="card-footer text-center">
-                        <p>Suscribirme</p>
-                    </div>
-                </a>
-            </div>
-            {% endcomment %}
             <div class="card">
                 <div class="card-body">
                     <h4>Suscripción mensual</h4>
