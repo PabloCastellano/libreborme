@@ -609,12 +609,6 @@ def add_card(request):
     return redirect(reverse('alertas-payment'))
 
 
-def mark_user_has_tried_subscriptions(user):
-    if not user.profile.has_tried_subscriptions:
-        user.profile.has_tried_subscriptions = True
-        user.profile.save()
-
-
 @login_required
 def checkout_page(request):
     """Checkout
@@ -690,10 +684,9 @@ def checkout_page(request):
             messages.add_message(request, messages.SUCCESS,
                                  'Pago realizado con éxito. Tenga en cuenta que la activación del servicio puede tardar unos minutos.')
 
-            # TODO: Update customer sdk?
-            # TODO: Duplicado
             if nickname in (settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN):
-                mark_user_has_tried_subscriptions(request.user)
+                request.user.mark_has_tried_subscriptions()
+
 
             alertas.subscriptions.create(
                 user=request.user,

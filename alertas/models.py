@@ -155,6 +155,10 @@ class User(AbstractUser):
 
     objects = UserManager()
 
+    def mark_has_tried_subscriptions(self):
+        self.profile.has_tried_subscriptions = True
+        self.profile.save()
+
     def __str__(self):
         return self.email
 
