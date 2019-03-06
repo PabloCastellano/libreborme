@@ -11,7 +11,7 @@
         {% endfor %}
         {% if upcoming_invoice %}
         <div class="alert alert-info" role="alert">
-            Tu próxima factura de {{ upcoming_invoice.amount_due }}€ ({{ upcoming_invoice.subscription.plan.product }}) será emitida el <strong>{{ upcoming_invoice.date.date }}</strong>
+        Tu próxima factura será emitida el <strong>{{ upcoming_invoice.date | date }}</strong>
         </div>
         {% endif %}
 
@@ -35,7 +35,7 @@
               <thead>
                 <tr>
                   <th>Número</th>
-                  <th>Fecha</th>
+                  <th>Periodo</th>
                   <th>Cantidad</th>
                   <th>Pagado</th>
                   <th>Acciones</th>
@@ -44,8 +44,12 @@
               <tbody>
                 {% for invoice in invoices %}
                 <tr {% if not invoice.paid %}class="danger"{% endif %}>
-                  <td>{{ invoice.number }}</td>
-                  <td>{{ invoice.date.date }}</td>
+                  <td>{{ invoice.number }}
+                    {% if invoice.subscription.status == 'trialing' %}<span class="badge badge-warning">Periodo de prueba</span>{% endif %}
+                  </td>
+                  <td>
+                    Del {{ invoice.invoiceitems.first.period_start|date:"d/m/Y" }} al {{ invoice.invoiceitems.first.period_end|date:"d/m/Y" }}
+                  </td>
                   <td>{{ invoice.amount_due }} €</td>
                   <td>{% if invoice.paid %}
                     <i class="fas fa-check"></i>

@@ -20,7 +20,7 @@
                     <div class="row justify-content-md-center">
                         <div class="col-12">
                             <p>Se va a cancelar la siguiente suscripción: <strong>{{ object.get_evento_display }} en {{ object.get_provincia_display }}</strong>.</p>
-                            <p>La suscripción seguirá activa hasta el día <strong>{{ object.stripe_subscription.current_period_end.date }}</strong> y luego finalizará automáticamente.</p>
+                            <p>La suscripción seguirá activa hasta el día <strong>{{ object.stripe_subscription.current_period_end | date }}</strong> y luego finalizará automáticamente.</p>
 						</div>
                     </div>
                 </div>
