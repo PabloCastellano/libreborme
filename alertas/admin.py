@@ -5,7 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 from . import models as m
 from libreborme import models as lb_models
 
-# TODO: SubscriptionInline in LBInvoiceAdmin
 # from djstripe.models import Subscription
 
 
@@ -22,21 +21,6 @@ class UserSubscriptionAdmin(admin.ModelAdmin):
 #     can_delete = False
 #     verbose_name_plural = 'Subscription'
 #     fk_name = 'id'
-
-
-"""
-@admin.register(m.LBInvoice)
-class LBInvoiceAdmin(admin.ModelAdmin):
-    # inlines = (SubscriptionInline, )
-    list_display = ('user', 'start_date', 'end_date', 'amount', 'payment_type', 'ip', 'subscription_id')
-    list_filter = ('user', 'payment_type')
-    search_fields = ['user__email']
-
-    # def get_inline_instances(self, request, obj=None):
-    #     if not obj:
-    #         return list()
-    #     return super(LBInvoiceAdmin, self).get_inline_instances(request, obj)
-"""
 
 
 class ProfileInline(admin.StackedInline):

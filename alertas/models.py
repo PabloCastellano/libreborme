@@ -191,35 +191,6 @@ class SubscriptionEvent(m.Model):
             self.event_date, self.province, self.event)
 
 
-# UNUSED: should be removed at some time if proven useless
-class LBInvoice(m.Model):
-    """ This table stores event subscriptions by users
-    """
-    user = m.ForeignKey(get_user_model(), on_delete=m.PROTECT)
-    start_date = m.DateTimeField()
-    end_date = m.DateTimeField()
-    amount = m.FloatField()
-    payment_type = m.CharField(max_length=10, choices=PAYMENT_CHOICES)
-    name = m.CharField(max_length=100)
-    email = m.EmailField(max_length=100)
-    address = m.CharField(max_length=200)
-    nif = m.CharField(max_length=20, blank=True)
-    ip = m.GenericIPAddressField(unpack_ipv4=True)
-    description = m.CharField(max_length=2000, blank=True)
-    subscription_id = m.CharField(max_length=200)
-
-    # TODO: unused, remove
-    @property
-    def is_paid(self):
-        return True
-
-    def get_absolute_url(self):
-        return reverse('alertas-invoice-view', args=[str(self.id)])
-
-    def __str__(self):
-        return "LBInvoice ({}): {}".format(self.user, self.amount)
-
-
 class AlertasConfig(m.Model):
     """ This table stores the configuration of this Django app
     """

@@ -71,31 +71,3 @@ def robotstxt(request):
         response = template.render()
 
     return HttpResponse(response, content_type='text/plain')
-
-
-# XXX: Do we really need this?
-"""Creates new invoice (LBInvoice)
-
-Set the following fields: start_date, end_date, amount, payment_type
-name, email, address, ip, subscription_id and nif (TODO)
-"""
-"""
-def create_new_invoice(request, customer, subscription, plan, user_input):
-    new_invoice = LBInvoice(user=request.user)
-    new_invoice.start_date = subscription.current_period_start
-    new_invoice.end_date = subscription.current_period_end
-    new_invoice.amount = plan.amount
-    new_invoice.payment_type = 'stripe'
-    new_invoice.name = user_input["name"]
-    new_invoice.email = user_input["email"]
-    new_invoice.address = ", ".join([user_input["address"],
-                                     user_input["zipcode"],
-                                     user_input["state"],
-                                     user_input["city"],
-                                     user_input["country"]])
-    new_invoice.ip = request.META.get('HTTP_X_FORWARDED_FOR',
-                                      request.META['REMOTE_ADDR'])
-    new_invoice.subscription_id = subscription.id
-    new_invoice.nif = customer.business_vat_id or "TODO"
-    return new_invoice
-"""

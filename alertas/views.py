@@ -220,21 +220,6 @@ class BillingView(CustomerMixin, TemplateView):
 
         return context
 
-"""
-@method_decorator(login_required, name='dispatch')
-class BillingDetailView(DetailView):
-    model = LBInvoice
-
-    def get_object(self):
-        self.invoice = LBInvoice.objects.get(user=self.request.user, pk=self.kwargs['id'])
-        return self.invoice
-
-    def get_context_data(self, **kwargs):
-        context = super(BillingDetailView, self).get_context_data(**kwargs)
-        context['active'] = 'billing'
-        return context
-"""
-
 
 def cancel_subscription(request, pk):
     """ Cancel djstripe.models.Subscription
