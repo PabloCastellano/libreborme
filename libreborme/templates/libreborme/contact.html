@@ -1,8 +1,8 @@
 {% extends 'borme/base2.html' %}
+{% load bootstrap %}
 {% load compress %}
 {% load staticfiles %}
 {% comment %}
-- loren ipsum
 - dropdown temas
 - <i class="fa fa-envelope"></i>
 {% endcomment %}
@@ -29,27 +29,13 @@
               </div>
               <div class="row mt-5">
                   <div class="col-md-6 text-justify">
-                      <h3 class="mb-3">Puedes contactar con nosotros a través de la siguiente dirección de correo electrónico:</h3>
-                      <span class="text-description-contact">Ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</span>
-                      <div class="row mt-5">
-                          <div class="col-md-12">
-                              {{ email_contact|reverse|safe }}
-                          </div>
-                      </div>
+                      <h3 class="mb-3">Puedes contactar con nosotros a través de la dirección de correo electrónico:</h3>
+                      {{ email_contact|reverse|safe }}
                   </div>
                   <div class="col-md-6 text-justify line-separate">
-                      <h3 class="mb-3">Formulario de contacto</h3>
+                      <h3 class="mb-3">O mediante el siguiente formulario de contacto:</h3>
                       <form>
-                          <div class="form-group">
-                              <input type="text" class="form-control" id="" aria-describedby="emailHelp" placeholder="Nombre">
-                          </div>
-                          <div class="form-group">
-                              <input type="text" class="form-control" id="" placeholder="Tema">
-                          </div>
-                          <div class="form-group">
-                              <textarea class="form-control" id="" rows="3" placeholder="Mensaje"></textarea>
-                          </div>
-
+                          {{ form | bootstrap_horizontal }}
                           <button type="submit" class="btn btn2 btn-primary2 btn-transparent">Enviar</button>
                       </form>
                   </div>

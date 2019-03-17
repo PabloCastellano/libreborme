@@ -1,75 +1,85 @@
 {% extends "alertas/base.html" %}
 {% load staticfiles %}
 
-{% comment %}
-TODO: Poner bonito el estilo de la Tarjeta con un Card o algo
-{% endcomment %}
-
 {% block content %}
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
-    {% endfor %}
-    <section class="panel">
-        <div class="row">
-            <div class="col-md-12">
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+  {% endfor %}
+  {% if not cards %}
+    {% if customer.has_any_active_subscription %}
+    <div class="alert alert-error" role="alert">No tienes ningún método de pago configurado.</div>
+    {% else %}
+    <div class="alert alert-warning" role="alert">No tienes ningún método de pago configurado.</div>
+    {% endif %}
+  {% endif %}
+
+  <section class="panel">
+        <div class="row"> <div class="col-md-12">
               <h1 class="title-section"><span>|</span>Tarjetas de crédito</h1>
             </div>
         </div>
 
           <div class="row">
             <div class="col-sm-12">
-              <p>Configura tu tarjeta para ahorrar tiempo en las próximas compras.</p>
+              <p>Puedes tener varios métodos de pago pero solo usaremos el que esté marcado como predeterminado.</p>
             </div>
           </div>
 
-          {% if card %}
+          {% if cards %}
           <div class="row">
-            <div class="col-sm-8">
-
-              <p>Su tarjeta por defecto es la siguiente</p>
-                <div class="form-group">
-
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <td></td>
-                        <td>Titular</td>
-                        <td>Fecha caducidad</td>
-                        <td></td>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          <p>
-                          <img src="/static/card_{{ card.brand }}.png" width=42 height=26>
-                          **** **** **** <strong>{{ card.last4 }}</strong>
-                          </p>
-                          <p>
-                           Añadida el <strong>{{ card.djstripe_created|date:"d/m/y" }}</strong>
-                          </p>
-                        </td>
-                        <td>
-                          <strong>{{ card.name }}</strong>
-                        </td>
-                        <td>
-                                <strong>{{ card.exp_month | stringformat:"02d" }}/{{ card.exp_year }}</strong>
-                        </td>
-                        <td>
-                          <a class="remove_card" id="{{ card.id }}">
-                            <button type="button" class="btn btn-danger btn-xs">
-                                <i class="fas fa-trash-alt"></i> Eliminar
-                            </button>
-                          </a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+            <div class="col-12 col-lg-9">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <td>#</td>
+                      <td>Tarjeta</td>
+                      <td>Titular</td>
+                      <td>Fecha caducidad</td>
+                      <td>Acciones</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for card in cards %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>
+                        <p>
+                        <img src="/static/card_{{ card.brand }}.png" width=42 height=26>
+                        **** **** **** <strong>{{ card.last4 }}</strong>
+                        {% if card.id == customer.default_source.id %}
+                        (Predeterminada)
+                        {% endif %}
+                        </p>
+                        {% if card.id != customer.default_source.id %}
+                        <a>
+                          <button type="button" class="btn btn-success btn-xs">
+                              <i class="fas fa-star"></i> Usar como predeterminada
+                          </button>
+                        </a>
+                        {% endif %}
+                      </td>
+                      <td>
+                        <strong>{{ card.name }}</strong>
+                      </td>
+                      <td>
+                        <strong>{{ card.exp_month | stringformat:"02d" }}/{{ card.exp_year }}</strong>
+                      </td>
+                      <td>
+                        <a class="remove_card" id="{{ card.id }}">
+                          <button type="button" class="btn btn-danger btn-xs">
+                              <i class="fas fa-trash-alt"></i> Eliminar
+                          </button>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
               </div>
             </div>
-
+          </div>
           {% endif %}
 
           <div class="row">
@@ -85,8 +95,8 @@ TODO: Poner bonito el estilo de la Tarjeta con un Card o algo
                   data-billing-address="true"
                   data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
                   data-name="Libreborme"
-                  data-panel-label="Actualizar"
-                  data-label="Actualizar tarjeta de crédito"
+                  data-panel-label="Añadir"
+                  data-label="Añadir tarjeta de crédito"
                   data-allow-remember-me=false
                   data-currency="eur"
                   data-locale="auto">

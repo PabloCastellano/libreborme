@@ -18,26 +18,24 @@
 <div class="view-servicios mt-4">
     <section class="contenido-descripcion">
         <div class="container">
+            <h1 class="title-section">
+                <span>|</span>Servicios
+            </h1>
             <div class="row">
                 <div class="col-md-12">
-                    <h1 class="title-section">
-                        <span>|</span>Servicios
-                    </h1>
-                    <p>Desde <strong>LibreBORME</strong> ofrecemos servicios derivados del procesamiento de datos de fuente de acceso públicos, entre ellas el Registro Mercantil.</p>
-                    <p>A continuación puedes encontrar una descripción de cada uno de los servicios.<br>
-                    Los precios mostrados en esta página no incluyen IVA.</p>
+                    <p>En <strong>LibreBORME</strong> nos leemos el Boletín Oficial del Registro Mercantil de España
+                    por ti cada mañana y te ofrecemos los siguientes servicios.</p>
+                </div>
+                <div class="col-md-6">
 
-                    <div class="row">
-                      <div class="col-6">
-                        <p>¿Trabajas en la investigación o en un proyecto sin ánimo de lucro?
-                        <br>¿Necesitas que integremos la API con tu propio sistema?
-                        </p>
-                      </div>
-                      <div class="col-2">
-                        <a class="btn btn-outline-danger ml-2" href="{% url 'contact' %}" role="button">Contáctanos</a>
-                      </div>
-                    </div>
+                    <ul>
+                        <li>¿Trabajas en la investigación o en un proyecto sin ánimo de lucro?</li>
+                        <li>¿Necesitas que integremos la API con tu propio sistema?</li>
+                    </ul>
 
+                </div>
+                <div class="col-md-6">
+                    <a class="btn btn-outline-danger ml-2" href="{% url 'contact' %}" role="button">Contáctanos</a>
                 </div>
             </div>
         </div>
@@ -50,20 +48,16 @@
                     <img src="{% static 'assets/img/servicios/alert.png' %}" alt="">
                 </div>
                 <div class="col-md-10">
-                    <div class="row">
-                        <h3 class="titulo-servicio">Seguimiento</h3>
-                        <p class="">Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa aparezca en uno de los Boletines Oficiales soportados.</p>
-                        <p>Regístrate y prueba el servicio de forma gratuita con {{ max_alertas_follower_free }} personas o empresas de tu elección.
-                        <br>Si necesitas más, puedes contratar bonos de {{ max_alertas_follower_paid }} empresas.</p>
-
-                        <p>Para añadir a una empresa o persona a tu lista de seguimiento, localízala usando el buscador y haz click en el botón
-
-                           <button id="follow-button" type="button" class="btn-secondary btn-details""">
-                             <i class="fas fa-eye"></i> Seguir
-                           </button>
-                           que verás en su página.
-                        </p>
-                    </div>
+                    <h3 class="titulo-servicio">Seguimiento</h3>
+                    <p class="">Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa de tu elección aparezca en uno de los Boletines Oficiales soportados.</p>
+                    <p>Regístrate y prueba el servicio de forma gratuita con {{ max_alertas_follower_free }} personas o empresas de tu elección.</p>
+                    <p>Para añadir a una empresa o persona a tu lista de seguimiento, localízala usando el buscador y haz click en el botón
+                       <button id="follow-button" type="button" class="btn-secondary btn-details""">
+                         <i class="fas fa-eye"></i> Seguir
+                       </button>
+                       que verás en su página.
+                    </p>
+                    <p>Si necesitas más, puedes comprar el bono de {{ max_alertas_follower_paid }} empresas.</p>
                     <div class="card-deck">
                         <div class="card">
                             <div class="card-body">
@@ -92,11 +86,9 @@
                     <img src="{% static 'assets/img/servicios/api.png' %}" alt="">
                 </div>
                 <div class="col-md-10">
-                    <div class="row">
-                        <h3 class="titulo-servicio">Integración de datos mediante API</h3>
-                        <p>A través de nuestra <strong>API</strong> te proporcionamos los datos disponibles en LibreBORME para que los integres en tu propia app, web o sistema ERP.</p>
-                        <p>Accede a los datos publicados en la web de forma estructurada y sin restricciones.</p>
-                    </div>
+                    <h3 class="titulo-servicio">Integración de datos</h3>
+                    <p>A través de nuestra <strong>API</strong> te proporcionamos los datos disponibles en LibreBORME para que los integres en tu propia app, web o sistema ERP.</p>
+                    <p>Accede a los datos publicados en la web de forma estructurada y sin restricciones.</p>
                     <div class="card-deck">
                         <div class="card">
                             <div class="card-body">
@@ -145,7 +137,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="row mt-4">
+                    <div class="mt-4">
                         <p>¿Necesitas un <strong>desarrollo a medida</strong>?
                         <a class="btn btn-outline-danger ml-2" href="{% url 'contact' %}" role="button">Contáctanos sin compromiso</a></p>
                     </div>
@@ -211,6 +203,9 @@
             </div>
         </div>
     </section>
+    <div class="container" style="text-align: center;">
+        <p>Los precios mostrados en esta página no incluyen IVA.</p>
+    </div>
 
 </div>
 {% endblock %}

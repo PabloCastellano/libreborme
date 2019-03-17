@@ -70,11 +70,12 @@
     {% compress css %}
     <link rel="stylesheet" href="{% static 'assets/css/carousel.css' %}">
     <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/libreborme.scss' %}">
-    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/button.scss' %}">
     <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/modal.scss' %}">
-    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/responsive.scss' %}">
     <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/var/colors.scss' %}">
     {% block extrastyles %}{% endblock %}
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/button.scss' %}">
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'assets/css/responsive.scss' %}">
+
     {% endcompress %}
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
 </head>

@@ -149,11 +149,11 @@ BORME_SUBSCRIPTIONS_ROOT = os.path.join(BORME_ROOT, 'subscriptions')
 EMAIL_CONTACT = 'contacto@libreborme.net'
 EMAIL_SUBJECT_PREFIX = '[LIBREBORME] '
 
-LOPD = {'provider': 'Some real name',
-        'id': 'Some real state issued ID number',
-        'domain': 'The domain that hosts this website',
+LOPD = {'provider': 'John Doe',
+        'id': '00000014Z',
+        'domain': 'libreborme.net',
         'email':  EMAIL_CONTACT,
-        'address': 'Some real address'}
+        'address': 'Carrer Noguera Pallaresa 59 Local, 08014 - Barcelona'}
 
 HOST_BUCKET = "https://libreborme-prod.ams3.digitaloceanspaces.com"
 

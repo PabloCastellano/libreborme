@@ -10,6 +10,9 @@
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
     {% endfor %}
+    {% if show_payment_warning %}
+    <div class="alert alert-warning" role="alert">Ojo! No tienes ningún <a href="{% url 'alertas-payment' %}">método de pago</a> configurado por lo que no podremos renovar tu suscripción el próximo día 1.</div>
+    {% endif %}
 
     <section class="panel">
         <div class="row">
@@ -20,7 +23,7 @@
             </div>
         </div>
         <div class="row mt-3">
-            <div class="col-md-12">
+            <div class="col-12">
                 <h3 class="subtitle-panel">Servicios contratados</h3>
 
                 {% if subscriptions %}

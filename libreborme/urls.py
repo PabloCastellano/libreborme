@@ -22,7 +22,7 @@ urlpatterns = [
 
     path('about/', views.AboutView.as_view(), name='about'),
     path('aviso-legal/', views.AvisoLegalView.as_view(), name='aviso_legal'),
-    path('contact/', t(template_name="libreborme/contact.html"), name='contact'),
+    path('contact/', views.ContactView.as_view(), name='contact'),
     path('cookies/', t(template_name="libreborme/cookies.html"), name='cookies'),
     path('developers/', t(template_name="libreborme/developers.html"), name='developers'),
     path('services/', views.ServicesView.as_view(), name='services'),

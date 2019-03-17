@@ -31,3 +31,17 @@ class LBUserCreationForm(RegistrationFormUniqueEmail):
         if commit:
             user.save()
         return user
+
+
+CONTACT_CHOICES = (
+    ('services', 'Servicios'),
+    ('gdpr', 'RGPD'),
+    ('other', 'Otros'),
+
+)
+class ContactForm(forms.Form):
+    name = forms.CharField(label="Nombre")
+    subject = forms.ChoiceField(label="Tema", choices=CONTACT_CHOICES)
+    # TODO: Placeholder "Mensaje"
+    # TODO: No seleccionar opcion por defecto
+    message = forms.CharField(label="Mensaje", widget=forms.Textarea)

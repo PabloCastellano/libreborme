@@ -124,7 +124,7 @@ aira-describedby="" ?
                                 <input type="hidden" name="next" value="" />
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <input type="submit" class="btn btn2 btn-primary2 btn-transparent w-100 mb-2" name="login" value="Login">
+                                        <input type="submit" class="btn btn2 btn-primary2 btn-transparent w-100 mb-2" name="login" value="Entrar">
                                     </div>
                                     <div class="col-md-6">
                                         <button type="button" class="btn btn2 btn-secondary w-100 mb-2" data-dismiss="modal">Cancelar</button>
@@ -185,9 +185,21 @@ aira-describedby="" ?
                                     <input type="password" class="form-control" maxlength="254" name="password2" placeholder="Repetir contraseña" required>
                                 </div>
                                 <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="signup_newsletter1" />
+                                    <label class="form-check-label" for="signup_newsletter1">
+                                      Quiero recibir novedades sobre LibreBORME en mi correo electrónico
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="signup_newsletter2" />
+                                    <label class="form-check-label" for="signup_newsletter2">
+                                      Quiero recibir información sobre descuentos y nuevas promociones en mi correo electrónico
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
                                     <input class="form-check-input" type="checkbox" name="accept_tos" id="accept_tos" required />
                                     <label class="form-check-label" for="accept_tos">
-                                      He leído y acepto las <a target="_blank" href="{% url 'aviso_legal' %}">Condiciones de Uso, Política de Privacidad y el Uso de Cookies</a>.
+                                      He leído y acepto las <a target="_blank" href="{% url 'aviso_legal' %}">Condiciones de Uso, Política de Privacidad y el Uso de Cookies</a>
                                     </label>
                                 </div>
                             <div class="row">

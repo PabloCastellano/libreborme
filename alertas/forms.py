@@ -124,8 +124,8 @@ class NotificationSettingsForm(forms.Form):
 
 
 class NewsletterForm(forms.Form):
-    newsletter_promotions = forms.BooleanField(label="Recibir promociones", required=False, help_text="¿Quieres recibir información sobre descuentos y nuevas promociones en tu correo electrónico?")
-    newsletter_features = forms.BooleanField(label="Recibir novedades", required=False, help_text="Información sobre novedades de LibreBORME")
+    newsletter_promotions = forms.BooleanField(label="Promociones", required=False, help_text="Quiero recibir información sobre descuentos y nuevas promociones en mi correo electrónico")
+    newsletter_features = forms.BooleanField(label="Novedades", required=False, help_text="Quiero recibir información sobre novedades de LibreBORME")
 
 
 class CreditCardForm(forms.Form):

@@ -8,7 +8,7 @@ from djstripe.models import Plan
 
 from borme.mixins import CacheMixin
 from alertas.utils import get_alertas_config
-from . import utils
+from . import forms, utils
 
 from pathlib import Path
 
@@ -53,6 +53,17 @@ class ServicesView(CacheMixin, TemplateView):
         plan_follow_year = Plan.objects.get(nickname=settings.ALERTS_YEAR_PLAN)
         context["plan_follow_month_price"] = plan_follow_year.amount / 12
 
+        return context
+
+
+class ContactView(CacheMixin, TemplateView):
+    template_name = "libreborme/contact.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ContactView, self).get_context_data(**kwargs)
+
+        context["form"] = forms.ContactForm()
+        # TODO: Validar form y enviar mensaje, guardar tb en BD
         return context
 
 

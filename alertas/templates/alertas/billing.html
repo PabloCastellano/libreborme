@@ -28,10 +28,12 @@
         invoice.get_absolute_url, subscription.description
       {% endcomment %}
 
+      <div class="row">
+        <div class="col-12 col-lg-9">
         {% if invoices %}
           <p>Tienes {{ invoices | length }} factura{{ invoices|length|pluralize }}.</p>
           <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-hover">
               <thead>
                 <tr>
                   <th>Número</th>
@@ -77,8 +79,9 @@
         {% else %}
           <p>Aún no se ha generado ninguna factura.</p>
         {% endif %}
-
+        </div>
       </div>
+
     </section>
     </main>
 {% endblock %}

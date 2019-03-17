@@ -15,6 +15,7 @@ from django.urls import reverse, reverse_lazy
 
 import datetime
 import json
+import logging
 import stripe
 
 from collections import OrderedDict
@@ -51,6 +52,10 @@ TAXES = {
     'IPSI-Melilla': 4.0
 }
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 
 class SubscriptionUpdate(UpdateView):
     """ Once a subscription is created, the user is allowed to change some only some fields """
@@ -75,8 +80,13 @@ class MyAccountView(CustomerMixin, TemplateView):
         aconfig = get_alertas_config()
         context['free_follows'] = aconfig['max_alertas_follower_free']
 
-        if context['customer']:
-            context['subscriptions'] = context["customer"].active_subscriptions.order_by('-start')
+        customer = context['customer']
+        if customer:
+            # context['subscriptions'] = customer.active_subscriptions.order_by('-start')
+            context['subscriptions'] = customer.valid_subscriptions.order_by('-start')
+
+            if customer.has_any_active_subscription() and not customer.has_valid_source():
+                context["show_payment_warning"] = True
 
         """:
             context['ip'] = self.request.META['HTTP_X_FORWARDED_FOR']
@@ -193,7 +203,7 @@ class PaymentView(StripeMixin, CustomerMixin, TemplateView):
         context = super(PaymentView, self).get_context_data(**kwargs)
         context['active'] = 'payment'
         if context["customer"].has_valid_source():
-            context['card'] = context["customer"].default_source.resolve()
+            context['cards'] = context["customer"].legacy_cards.all()
 
         # context["form"] = forms.CreditCardForm()
 
@@ -209,13 +219,16 @@ class BillingView(CustomerMixin, TemplateView):
         context['active'] = 'billing'
 
         if context['customer']:
-            context['invoices'] = context["customer"].invoices.all()
+            context["invoices"] = context["customer"].invoices.all()
 
             # TODO: esta llamada relentiza bastante la carga
             try:
                 upcoming_invoice = context['customer'].upcoming_invoice()
-            except stripe.error.InvalidRequestError:
+            except stripe.error.StripeError:
+                # InvalidRequestError
+                # APIConnectionError
                 upcoming_invoice = None
+                logger.exception("Error cargando vista BillingView de usuario {}".format(context["customer"]))
             context["upcoming_invoice"] = upcoming_invoice
 
         return context
@@ -408,7 +421,6 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
             context["has_tried_subscriptions"] = profile.has_tried_subscriptions
 
             # Prepare forms
-            # TODO: Falta población
             user_profile = self.request.user.profile
             context['form_payment'] = forms.PaymentForm(
                 initial={
@@ -423,7 +435,6 @@ class CartView(CustomerMixin, StripeMixin, TemplateView):
                 auto_id="example2-%s",
             )
 
-            # TODO: test when Customer doesn't exist
             # TODO: No solo plan.nickname sino las del mismo tipo
             context["active_subscriptions"] = context["customer"].active_subscriptions.filter(plan__nickname=plan.nickname).count()
 
@@ -487,14 +498,11 @@ def alerta_acto_create(request):
 
 @login_required
 def add_to_cart(request, product):
-    # TODO: avisar si ya tiene la suscripción, aunque puede
-    # querer pagar dos veces para tener más followers o suscripciones
     try:
         plan = Plan.objects.get(nickname=product)
     except Plan.DoesNotExist:
         return redirect(reverse('dashboard-index'))
 
-    # TODO: test when Customer doesn't exist
     customer = Customer.objects.get(subscriber=request.user)
     profile = request.user.profile
     # TODO: filter status=active?
@@ -619,7 +627,6 @@ def checkout_page(request):
     # TODO: make params
     # TODO: Promotion code
     # TODO: description en el payment
-    # TODO: Guardar si ya ha hecho el periodo de prueba
     # Para acelerar la carga, se puede dejar corriendo subscribe() que automáticamente luego
     if request.method == "POST":
         nickname = request.session['cart']['name']
@@ -631,21 +638,23 @@ def checkout_page(request):
         tax_percent = TAXES[taxname]
 
         token = request.POST.get("stripeToken")
-        save_card = 'save-card' in request.POST
 
-        # TODO: default source
-        use_default_source = 'use-default-source' in request.POST
+        # If the card’s owner has no default card, then the new card will become the default. However, if the owner already has a
+        # default, then it will not change. To change the default, you should either update the customer to have a new default_source,
+        # or update the recipient to have a new default_card.
+        #  If you delete a card that is currently the default source, then the most recently added source will become the new default.
+        #  If you delete a card that is the last remaining source on the customer, then the default_source attribute will become null.
 
         user_ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META['REMOTE_ADDR'])
 
         try:
 
+            # TODO: use hidden value to use existing source
             # if customer.has_valid_source():
             #     subscription = customer.subscribe(plan)
             # else:
 
-            # TODO: Save card
-            card = customer.add_card(token, set_default=save_card)
+            card = customer.add_card(token)
 
             # Pending issues:
             # trial_from_plan: https://github.com/dj-stripe/dj-stripe/issues/809
@@ -671,20 +680,19 @@ def checkout_page(request):
                                               metadata=metadata,
                                               billing_cycle_anchor=billing_cycle_anchor)
 
-            if not save_card:
-                card.remove()
-            # TODO: fix new invoice
-            # new_invoice = create_new_invoice(request, customer, subscription, plan, user_input)
 
-        except stripe.error.CardError as ce:
-            # :?
-            return False, ce
+        except Exception as e:
+            # stripe.error.InvalidRequestError when token has been used already
+            # except stripe.error.CardError ???
+            messages.add_message(request, messages.WARNING, 'Hubo un problema al procesar el pago. Por favor, inténtalo de nuevo.')
+            logger.exception("Card error during payment")
+            return redirect("alertas-cart")
 
         else:
-            # TODO
-            # new_invoice.save()
-            messages.add_message(request, messages.SUCCESS,
-                                 'Pago realizado con éxito. Tenga en cuenta que la activación del servicio puede tardar unos minutos.')
+            if trial_end:
+                messages.add_message(request, messages.SUCCESS, 'Suscripción realizada con éxito.')
+            else:
+                messages.add_message(request, messages.SUCCESS, 'Pago realizado con éxito. Gracias por confiar en LibreBORME.')
 
             if nickname in (settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN):
                 request.user.mark_has_tried_subscriptions()

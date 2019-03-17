@@ -17,16 +17,20 @@
     <h1 class="page-header">Mi lista de Seguimiento</h1>
 
     <h3 class="subtitle-panel mt-4">¿Cómo funciona?</h3>
-    <p>Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa aparezca en un Boletín Oficial.</p>
-    <p>Prueba el servicio de forma gratuita con {{ max_alertas_follower_free }} personas o empresas de tu elección. Si necesitas más, puedes contratar el bono anual de {{ max_alertas_follower_paid }} empresas.
+    <div class="row">
+        <div class="col-12 col-lg-9">
+            <p>Mediante el Servicio de Seguimiento recibirás un email cada vez que una persona o una empresa aparezca en un Boletín Oficial.</p>
+            <p>Prueba el servicio de forma gratuita con {{ max_alertas_follower_free }} personas o empresas de tu elección. Si necesitas más, puedes contratar el bono anual de {{ max_alertas_follower_paid }} empresas.
 
-    <p>Para añadir a una empresa o persona a tu lista de seguimiento, localízala usando el buscador y haz click en el botón
+            <p>Para añadir a una empresa o persona a tu lista de seguimiento, localízala usando el buscador y haz click en el botón
 
-       <button id="follow-button" type="button" class="btn-secondary btn-details""">
-         <i class="fas fa-eye"></i> Seguir
-       </button>
-       que verás en su página.
-    </p>
+               <button id="follow-button" type="button" class="btn-secondary btn-details""">
+                 <i class="fas fa-eye"></i> Seguir
+               </button>
+               que verás en su página.
+            </p>
+        </div>
+    </div>
 
     {% comment %}
     <form class="mx-4 col-sm-4" target="_blank" role="search" action="{% url "borme-search" %}" method="get">
@@ -70,7 +74,6 @@
             {% else %}
             <p>Has agotado todas tus alertas</p>
             {% endif %}
-            <p>Los precios mostrados en esta página no incluyen IVA.</p>
             {% if followers %}
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -129,6 +132,7 @@
         </div>
         {% endif %}
     </div>
+    <p>Los precios mostrados en esta página no incluyen IVA.</p>
     </div>
 
 </main>
