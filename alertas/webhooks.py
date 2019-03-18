@@ -127,6 +127,26 @@ Por favor actualiza tu método de pago tan pronto como sea posible para que no i
     )
 
 
+@webhooks.handler("invoice.upcoming")
+def invoice_upcoming(event, **kwargs):
+    """
+    Notify to admins for review
+    """
+    print("Webhook " + event.type)
+    now = datetime.datetime.now()
+    user = event.customer.subscriber
+    full_name = user.get_full_name()
+    subject = 'Libreborme webhook triggered: ' + event.type
+    message = """\
+Borrador de factura
+
+El {} se ha generado un borrador de factura para el usuario {} ({}).
+¡Revísala!
+""".format(
+        now.strftime("%c"), full_name, user.email)
+    mail_admins(subject, message)
+
+
 @webhooks.handler("customer.created")
 def customer_created(event, **kwargs):
     """
