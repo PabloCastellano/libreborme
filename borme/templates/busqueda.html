@@ -120,7 +120,7 @@
 
 {% load utils %}
 
-{% block title %}{% if query %}Resultados de la búsqueda {{ query|upper }} | LibreBORME{% else %}Búsqueda avanzada | LibreBORME{% endif %}{% endblock %}
+{% block title %}{% if query %}Resultados de la búsqueda {{ query|upper }}{% else %}Búsqueda avanzada{% endif %}{% endblock %}
 
 {% block extrastyles %}
 {% compress css %}

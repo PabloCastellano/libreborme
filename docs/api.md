@@ -1,35 +1,35 @@
 Advertencia
 ----------
 
-> **La API de LibreBORME es totalmente funcional aunque aún se encuentra en fase experimental.**
+> **La API de Librebor.me es totalmente funcional aunque aún se encuentra en fase experimental.**
 > **Los endpoints, los parámetros aceptados y los datos devueltos pueden sufrir cambios en el futuro.**
 
-API de LibreBORME
------------------
+API de LibreBOR
+---------------
 
-LibreBORME ofrece una [API](https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones)
+Librebor.me ofrece una [API](https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones)
 para que terceros puedan realizar consultas de forma automatizada e integrar los datos en sus aplicaciones.
 
 Las URLs de los endpoints son similares a las usadas para navegar por la web:
 
 Persona
 
-- Web: https://libreborme.net/borme/persona/**xxx-xxx-xxx**
-- API: https://libreborme.net/borme/api/v1/persona/**xxx-xxx-xxx**
-- Esquema: [https://libreborme.net/borme/api/v1/persona/schema/](https://libreborme.net/borme/api/v1/persona/schema/)
+- Web: https://librebor.me/borme/persona/**xxx-xxx-xxx**
+- API: https://librebor.me/borme/api/v1/persona/**xxx-xxx-xxx**
+- Esquema: [https://librebor.me/borme/api/v1/persona/schema/](https://librebor.me/borme/api/v1/persona/schema/)
 
 Empresa
 
-- Web: https://libreborme.net/borme/empresa/**xxx-xxx-xxx**
-- API: https://libreborme.net/borme/api/v1/empresa/**xxx-xxx-xxx**
-- Esquema: [https://libreborme.net/borme/api/v1/empresa/schema/](https://libreborme.net/borme/api/v1/empresa/schema/)
+- Web: https://librebor.me/borme/empresa/**xxx-xxx-xxx**
+- API: https://librebor.me/borme/api/v1/empresa/**xxx-xxx-xxx**
+- Esquema: [https://librebor.me/borme/api/v1/empresa/schema/](https://librebor.me/borme/api/v1/empresa/schema/)
 
 Búsqueda
 
-- Web (Persona): https://libreborme.net/borme/search/?q=**xxx**&page=**1**&type=**person**
-- API (Persona): https://libreborme.net/borme/api/v1/persona/search/?q=**xxx**&page=**1**
-- Web (Empresa): https://libreborme.net/borme/search/?q=**xxx**&page=**1**&type=**company**
-- API (Empresa): https://libreborme.net/borme/api/v1/empresa/search/?q=**xxx**&page=**1**
+- Web (Persona): https://librebor.me/borme/search/?q=**xxx**&page=**1**&type=**person**
+- API (Persona): https://librebor.me/borme/api/v1/persona/search/?q=**xxx**&page=**1**
+- Web (Empresa): https://librebor.me/borme/search/?q=**xxx**&page=**1**&type=**company**
+- API (Empresa): https://librebor.me/borme/api/v1/empresa/search/?q=**xxx**&page=**1**
 as respuestas se proporcionan en formato JSON y
 
 Ejemplos
@@ -37,10 +37,10 @@ Ejemplos
 
 A continuación se muestran algunos ejemplos de cómo realizar peticiones a la API con curl:
 
-Buscar la empresa "Gowex Málaga" ([enlace](https://libreborme.net/borme/api/v1/empresa/search/?q=Gowex+Malaga&page=1)):
+Buscar la empresa "Gowex Málaga" ([enlace](https://librebor.me/borme/api/v1/empresa/search/?q=Gowex+Malaga&page=1)):
 
 ```
-$ curl -s "https://libreborme.net/borme/api/v1/empresa/search/?q=Gowex+Malaga&page=1" | python -m json.tool
+$ curl -s "https://librebor.me/borme/api/v1/empresa/search/?q=Gowex+Malaga&page=1" | python -m json.tool
 {
     "objects": [
         {
@@ -52,10 +52,10 @@ $ curl -s "https://libreborme.net/borme/api/v1/empresa/search/?q=Gowex+Malaga&pa
 }
 
 ```
-Buscar la persona "Rodrigo Rato" ([enlace](https://libreborme.net/borme/api/v1/persona/search/?q=Rodrigo+Rato&page=1)):
+Buscar la persona "Rodrigo Rato" ([enlace](https://librebor.me/borme/api/v1/persona/search/?q=Rodrigo+Rato&page=1)):
 
 ```
-$ curl -s "https://libreborme.net/borme/api/v1/persona/search/?q=Rodrigo+Rato&page=1" | python -m json.tool
+$ curl -s "https://librebor.me/borme/api/v1/persona/search/?q=Rodrigo+Rato&page=1" | python -m json.tool
 {
     "objects": [
         {
@@ -81,10 +81,10 @@ Como vemos, aparecen tres aunque todo apunta a que es la misma persona. Esto es 
 muchos datos de forma no estandarizada.
 
 
-Consultar los datos de la persona "Rodrigo de Rato Figaredo" ([enlace](https://libreborme.net/borme/api/v1/persona/de-rato-figaredo-rodrigo/)):
+Consultar los datos de la persona "Rodrigo de Rato Figaredo" ([enlace](https://librebor.me/borme/api/v1/persona/de-rato-figaredo-rodrigo/)):
 
 ```
-$ curl -s "https://libreborme.net/borme/api/v1/persona/de-rato-figaredo-rodrigo/" | python -m json.tool
+$ curl -s "https://librebor.me/borme/api/v1/persona/de-rato-figaredo-rodrigo/" | python -m json.tool
 {
     "cargos_actuales": [
         {

@@ -13,10 +13,10 @@ SECRET_KEY = '41+h()yq5-!*=)sh+_%4wal8=+*e)dlrau*81odpu7n&9^7d5h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-DOMAIN = 'beta.libreborme.net'
-ALLOWED_HOSTS = ['localhost', 'beta.libreborme.net', 'staging.ingress.libreborme.net', 'staging.libreborme.net']
+DOMAIN = 'beta.librebor.me'
+ALLOWED_HOSTS = ['localhost', '.libreborme.net', '.librebor.me']
 
-SITE_URL = 'http://staging.ingress.libreborme.net/'
+SITE_URL = 'http://staging.ingress.librebor.me/'
 
 INSTALLED_APPS += [
     'debug_toolbar',
@@ -75,7 +75,7 @@ EMAIL_CONTACT = 'contacto@libreborme.net'
 
 LOPD = {'provider': 'Pablo Castellano García-Saavedra',
         'id': '76429329F',
-        'domain': 'libreborme.net',
+        'domain': DOMAIN,
         'email':  EMAIL_CONTACT,
         'address': 'Carrer de Morella 47, 12170 - Sant Mateu (Castellón)'}
 
@@ -89,7 +89,7 @@ EMAIL_USE_TLS = True
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER  # used for error reporting
-EMAIL_SUBJECT_PREFIX = '[LIBREBORME-STAGING] '
+EMAIL_SUBJECT_PREFIX = '[LIBREBOR-STAGING] '
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'info').upper()
 LOGGING = {

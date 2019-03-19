@@ -9,11 +9,11 @@ SECRET_KEY = '41+h()yq5-!*=)sh+_%4wal8=+*e)dlrau*81odpu7n&9^7d5h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-SITE_NAME = 'LibreBORME'
+SITE_NAME = 'Librebor.me'
 SITE_URL = 'http://localhost:8000'
 
-DOMAIN = 'libreborme.net'
-ALLOWED_HOSTS = [DOMAIN]
+DOMAIN = 'librebor.me'
+ALLOWED_HOSTS = ['libreborme.net', DOMAIN]
 
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -147,11 +147,11 @@ BORME_LOG_ROOT = os.path.join(BASE_DIR, '..', 'log')
 BORME_SUBSCRIPTIONS_ROOT = os.path.join(BORME_ROOT, 'subscriptions')
 
 EMAIL_CONTACT = 'contacto@libreborme.net'
-EMAIL_SUBJECT_PREFIX = '[LIBREBORME] '
+EMAIL_SUBJECT_PREFIX = '[LIBREBOR.ME] '
 
 LOPD = {'provider': 'John Doe',
         'id': '00000014Z',
-        'domain': 'libreborme.net',
+        'domain': DOMAIN,
         'email':  EMAIL_CONTACT,
         'address': 'Carrer Noguera Pallaresa 59 Local, 08014 - Barcelona'}
 

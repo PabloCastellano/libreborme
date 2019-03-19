@@ -8,7 +8,7 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
-    - host: beta.libreborme.net
+    - host: beta.librebor.me
       http:
         paths:
           - backend:

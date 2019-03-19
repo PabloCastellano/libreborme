@@ -90,8 +90,8 @@ class TestGenSubscription_BORME_A_2009_197_28(TestCase):
                 # FIXME: ending dot
                 self.assertEqual(event["company"]["address"], "C/ ALFONSO XII - NUMERO 36 3º IZQUIERDA (MADRID).")
                 self.assertEqual(event["company"]["nif"], "")
-                self.assertEqual(event["company"]["url_api"], "https://api.libreborme.net/v1/empresa/burgford-investment")
-                self.assertEqual(event["company"]["url_web"], "https://libreborme.net/borme/empresa/burgford-investment/")
+                self.assertEqual(event["company"]["url_api"], "https://api.librebor.me/v1/empresa/burgford-investment")
+                self.assertEqual(event["company"]["url_web"], "https://librebor.me/borme/empresa/burgford-investment/")
                 # FIXME: ending dot
                 self.assertEqual(event["datos_registrales"], "T 22861 , F 161, S 8, H M 409334, I/A 6 (30.09.09).")
                 self.assertEqual(event["new_roles"], [["ADM. UNICO", "PINILLA RISUEÑO RAUL"]])
@@ -164,4 +164,4 @@ class TestGenSubscription_BORME_A_2009_197_28(TestCase):
         )
         self.assertEqual(total_sent, 1)
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, "Tus suscripciones en LibreBORME")
+        self.assertEqual(mail.outbox[0].subject, "Tus suscripciones en Librebor.me")

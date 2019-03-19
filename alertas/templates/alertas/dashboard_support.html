@@ -1,12 +1,12 @@
 {% extends "alertas/base.html" %}
 
-{% block title %}Soporte | LibreBORME{% endblock %}
+{% block title %}Soporte{% endblock %}
 
 {% block content %}
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
           <h1 class="page-header">Soporte</h1>
 
           <h1 class="title-section mt-4"><span>|</span>¿Cómo ponerme en contacto para hacer otra consulta?</h1>
-          <p>Para cualquier otra duda o consulta puedes escribirnos a <a href="mailto:contacto@libreborme.net"><strong>contacto@libreborme.net</strong></a> y nos pondremos en contacto contigo lo antes posible.</p>
+          <p>Para cualquier otra duda o consulta puedes escribirnos a <a href="mailto:{{ email_contact }}"><strong>{{ email_contact }}</strong></a> y nos pondremos en contacto contigo lo antes posible.</p>
 </main>
 {% endblock %}

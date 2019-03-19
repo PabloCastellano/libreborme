@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 #
+from django.conf import settings
 from django.core.mail import send_mass_mail
 from django.core.management.base import BaseCommand, CommandError
 from django.template import Context, Template
@@ -108,7 +109,6 @@ def list_notified_day(day):
 
 def prepare_emails(notifications):
     datatuple = []
-    from_email = "contacto@libreborme.net"
     subject = "La empresa que sigue ha hecho cosas"
     for user, entities in notifications.items():
         template = MailTemplate.objects.get(name="follow_alert")
@@ -122,7 +122,7 @@ def prepare_emails(notifications):
             "entities": entities
         }
         content = tpl.render(Context(placeholders))
-        datatuple.append((subject, content, from_email, [user.email]))
+        datatuple.append((subject, content, settings.EMAIL_FROM, [user.email]))
     return datatuple
 
 

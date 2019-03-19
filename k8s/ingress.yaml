@@ -16,11 +16,11 @@ metadata:
 spec:
 #  tls:
 #    - hosts:
-#        - staging.ingress.libreborme.net
-#        - beta.ingress.libreborme.net
+#        - staging.ingress.librebor.me
+#        - beta.ingress.librebor.me
 #      secretName: tls-secret
   rules:
-    - host: staging.ingress.libreborme.net
+    - host: staging.ingress.librebor.me
       http:
         paths:
           - path: /

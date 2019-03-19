@@ -1,19 +1,19 @@
-LibreBORME proporciona una serie de comandos de Django.
+LibreBOR proporciona una serie de comandos de Django.
 
 - **importborme** permite importar datos de BORMEs en lotes
 - **importbormepdf** permite importar un archivo BORME en formato PDF
 - **importbormejson** permite importar un archivo BORME en formato JSON
 - **importbormetoday** importa los BORMEs del día actual.
-   Este comando se ejecuta periódicamente mediante cron para incorporar los nuevos datos a LibreBORME
+   Este comando se ejecuta periódicamente mediante cron para incorporar los nuevos datos a LibreBOR
 - **findperson** permite buscar personas en la base de datos
 - **findcompany** permite buscar empresas en la base de datos
 - **companyinfo** muestra información sobre la empresa especificada
 - **personinfo** muestra información sobre la persona especificada
-- **updateversion** actualiza datos internos de LibreBORME
+- **updateversion** actualiza datos internos de LibreBOR
 
 ## Importar datos
 
-Una vez está funcionando la instancia de LibreBORME nos interesa llenarla de datos.
+Una vez está funcionando la instancia de LibreBOR nos interesa llenarla de datos.
 Este es un proceso largo debido a la gran cantidad de datos que se deben procesar.
 
 En las pruebas realizadas importando 7 años de BORME (2009-2015), el proceso tardó más

@@ -29,7 +29,7 @@ elif SUBDIR and SUBDIR.endswith('/'):
     SUBDIR = SUBDIR[0:-1]
 
 SITE_URL = '%s://%s%s%s' % (PROTOCOL, settings.DOMAIN, PORT_STRING, SUBDIR)
-SITE_NAME = getattr(settings, 'SITE_NAME', 'LibreBORME')
+SITE_NAME = getattr(settings, 'SITE_NAME', 'Librebor.me')
 
 MEDIA_ROOT = '%s/media/' % settings.SITE_ROOT
 

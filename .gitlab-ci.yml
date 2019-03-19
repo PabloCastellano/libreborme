@@ -17,7 +17,7 @@ variables:
   DOCKER_DRIVER: overlay2
 
   # Kubernetes
-  KUBE_DOMAIN: ingress.libreborme.net
+  KUBE_DOMAIN: ingress.librebor.me
   # DOCKER_HOST: tcp://localhost:2375
   # DB_HOST: postgres.libreborme-6554539.svc.cluster.local
   # DB_NAME: libreborme
@@ -194,7 +194,7 @@ release_stg:
 #     - kubernetes
 #   environment:
 #     name: production
-#     url: http://production.ingress.libreborme.net
+#     url: http://production.ingress.librebor.me
 #   before_script:
 #     - wget https://storage.googleapis.com/kubernetes-release/release/v1.9.7/bin/linux/amd64/kubectl -P /usr/local/bin/
 #     - chmod +x /usr/local/bin/kubectl

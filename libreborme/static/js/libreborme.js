@@ -1,4 +1,4 @@
-// libreborme.net JS
+// librebor.me JS
 
 function toggle_positions() {
     var e = document.getElementById('positions_history');

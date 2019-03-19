@@ -1,6 +1,6 @@
 ¡Hola!
 
-Estás a un solo paso de completar tu registro en LibreBORME.
+Estás a un solo paso de completar tu registro en Librebor.me
 
 Para ello solo tienes que seguir el siguiente enlace:
 http://{{ site }}/accounts/activate/{{ activation_key }}

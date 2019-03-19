@@ -692,7 +692,7 @@ def checkout_page(request):
             if trial_end:
                 messages.add_message(request, messages.SUCCESS, 'Suscripción realizada con éxito.')
             else:
-                messages.add_message(request, messages.SUCCESS, 'Pago realizado con éxito. Gracias por confiar en LibreBORME.')
+                messages.add_message(request, messages.SUCCESS, 'Pago realizado con éxito. Gracias por confiar en Librebor.me')
 
             if nickname in (settings.SUBSCRIPTION_MONTH_ONE_PLAN, settings.SUBSCRIPTION_MONTH_FULL_PLAN, settings.SUBSCRIPTION_YEAR_PLAN):
                 request.user.mark_has_tried_subscriptions()

@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% load bootstrap %}
 
-{% block title %}API | LibreBORME{% endblock %}
+{% block title %}API{% endblock %}
 
 {% block content %}
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
@@ -16,7 +16,7 @@
     {% if not subscriptions %}
       <p>Este producto se encuentra en fase Beta. Si quieres probarlo, <a href="#" data-toggle="modal" data-target="#requestAPIKeyModal">solicita una API Key</a>.</p>
       <h1 class="title-section"><span>|</span>Suscripciones</h1>
-      <p>Tienes {{ service_api_free_req_day }} consultas gratis al mes para probar la API de LibreBORME</p>
+      <p>Tienes {{ service_api_free_req_day }} consultas gratis al mes para probar la API de Librebor.me</p>
 
     {% endif %}
 

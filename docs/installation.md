@@ -14,18 +14,18 @@ Instalación de las dependencias:
 
 Configuración de PostgreSQL:
 
-Creamos un usuario y una base de datos para LibreBORME:
+Creamos un usuario y una base de datos para LibreBOR:
 
     sudo su postgres
     psql -U postgres -c 'CREATE DATABASE libreborme;'
     psql -U postgres -c "CREATE USER libreborme WITH PASSWORD 'password';"
     psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE libreborme TO libreborme;"
 
-Instalación de LibreBORME:
+Instalación de LibreBOR:
 
 En este caso la instalación la realizamos en la carpeta /var/www/libreborme pero podría
 ser cualquier otra teniendo en cuenta que tenemos que cambiar esta ruta en otros archivos de
-configuración que la usan. Nos descargamos el paquete de LibreBORME y lo instalamos en
+configuración que la usan. Nos descargamos el paquete de LibreBOR y lo instalamos en
 un entorno virtual de Python junto a sus dependencias (entre ellas, bormeparser):
 
     git clone https://github.com/PabloCastellano/libreborme.git
@@ -37,7 +37,7 @@ A continuación ajusta tu configuración en libreborme/settings.py con tus rutas
 la variable SECRET_KEY.
 
 Ya podemos crear el esquema de las tablas en la base de datos PostgreSQL y
-cargar unos datos predefinidos necesarios para que funcione LibreBORME:
+cargar unos datos predefinidos necesarios para que funcione LibreBOR:
 
     ./manage.py migrate
     ./manage.py loaddata libreborme/fixtures/config.json
@@ -45,7 +45,7 @@ cargar unos datos predefinidos necesarios para que funcione LibreBORME:
 
 ## Ejecución
 
-LibreBORME ya está listo para funcionar. Ejecutamos el servidor de desarrollo de Django para comprobarlo:
+LibreBOR ya está listo para funcionar. Ejecutamos el servidor de desarrollo de Django para comprobarlo:
 
     cd libreborme
     ./manage.py runserver
@@ -102,10 +102,10 @@ con el siguiente contenido:
     server {
       listen 80;
 
-      server_name libreborme.net;
+      server_name librebor.me;
 
-      access_log /var/log/nginx/libreborme.net.access.log;
-      error_log /var/log/nginx/libreborme.net.error.log;
+      access_log /var/log/nginx/libreborme.access.log;
+      error_log /var/log/nginx/libreborme.error.log;
 
       root /var/www/libreborme/public_html;
       index index.html index.htm;
@@ -140,7 +140,7 @@ Y activamos el sitio:
 
 ## Tareas periódicas
 
-Queremos que cada día LibreBORME descargue los nuevos BORMEs y actualice la base
+Queremos que cada día LibreBOR descargue los nuevos BORMEs y actualice la base
 de datos con los últimos cambios en el Registro Mercantil. Para ello vamos a configurar
 una tarea programada de cron. Creamos el archivo /var/www/libreborme/script.sh con el
 siguiente contenido, al que le daremos también permisos de ejecución:

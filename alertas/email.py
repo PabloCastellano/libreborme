@@ -110,7 +110,7 @@ def _compose_and_send_notification(subscription, evento, date):
     provincia = subscription.get_provincia_display()
     evento_display = subscription.get_evento_display()
 
-    subject = "Tus suscripciones en LibreBORME"
+    subject = "Tus suscripciones en Librebor.me"
     message = str(results)
 
     companies = {}
@@ -136,7 +136,7 @@ def _compose_and_send_notification(subscription, evento, date):
         html_message = None
 
     # TODO: Enviar todos de una y no componer el email y luego mandarlo a cada uno (eficiencia)
-    # TODO: [LIBREBORME]
+    # TODO: [LIBREBOR.ME]
     # TODO: Capture Smtp error
     subscription.user.email_user(subject, message, html_message=html_message)
 
@@ -194,7 +194,7 @@ def send_email_notification(alerta, evento, companies, today):
             html_message = render_to_string(template_name, context)
 
         today_format = today.strftime("%d/%m/%Y")
-        sent_emails = send_mail("Notificaciones de LibreBORME ({0}, {1}, {2})".format(today_format, evento_display, provincia),
+        sent_emails = send_mail("Notificaciones de Librebor.me ({0}, {1}, {2})".format(today_format, evento_display, provincia),
                                 message,
                                 EMAIL_FROM,
                                 [email],
