@@ -1,13 +1,13 @@
 Advertencia
 ----------
 
-> **La API de LibreBORME es totalmente funcional aunque aún se encuentra en fase experimental.**
+> **La API de LibreBOR es totalmente funcional aunque aún se encuentra en fase experimental.**
 > **Los endpoints, los parámetros aceptados y los datos devueltos pueden sufrir cambios en el futuro.**
 
-API de LibreBORME
------------------
+API de LibreBOR
+---------------
 
-LibreBORME ofrece una [API](https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones)
+LibreBOR.me ofrece una [API](https://es.wikipedia.org/wiki/Interfaz_de_programaci%C3%B3n_de_aplicaciones)
 para que terceros puedan realizar consultas de forma automatizada e integrar los datos en sus aplicaciones.
 
 Las URLs de los endpoints son similares a las usadas para navegar por la web:

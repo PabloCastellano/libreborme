@@ -3,10 +3,10 @@
 {% load staticfiles %}
 {% load utils %}
 
-{% block title %}{{ person.name|title }} | LibreBORME{% endblock %}
+{% block title %}{{ person.name|title }} | LibreBOR.me{% endblock %}
 
 {% block meta %}
-    <meta name="keywords" content="{{ person.name|title }}, Empresas, Informe, Registro, Mercantil, Actos, Nombramiento, Cese, BOE, BORME, Open Data, Cargos, Directivos"/>
+    <meta name="keywords" content="{{ person.name|title }}, Empresas, LibreBORME, Informe, Registro, Mercantil, Actos, Nombramiento, Cese, BOE, BORME, Open Data, Cargos, Directivos"/>
     <meta name="description" content="{{ person.name|title }}. Información pública sobre el directivo {{ person.name|title }}. Cargos directivos, nombramientos, ceses y dimisiones de {{ person.name|title }}. Vinculación con empresas de {{ person.name|title }}."/>
 {% endblock %}
 

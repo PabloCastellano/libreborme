@@ -33,4 +33,4 @@ PIWIK_SITE_ID = '1'
 
 DEBUG = False
 TEMPLATE_DEBUG = False
-ALLOWED_HOSTS = ['.libreborme.net']
+ALLOWED_HOSTS = ['.libreborme.net', '.librebor.me']

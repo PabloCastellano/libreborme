@@ -21,7 +21,7 @@ SECRET_KEY = '41+h()yq5-!*=)sh+_%4wal8=+*e)dlrau*81odpu7n&9^7d5h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'libreborme.net']
+ALLOWED_HOSTS = ['127.0.0.1', 'libreborme.net', 'librebor.me']
 
 
 # Application definition

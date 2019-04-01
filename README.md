@@ -1,20 +1,20 @@
-![logo libreborme](libreborme/static/libreborme_logo.png)
+![logo LibreBOR](libreborme/static/librebor_logo.png)
 
 [![Travis libreborme](https://travis-ci.org/PabloCastellano/libreborme.svg?branch=master)](https://travis-ci.org/PabloCastellano/libreborme)
 [![Coverage Status](https://coveralls.io/repos/github/PabloCastellano/libreborme/badge.svg?branch=master)](https://coveralls.io/github/PabloCastellano/libreborme?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/libreborme/badge/?version=latest)](https://readthedocs.org/projects/libreborme/?badge=latest)
 [![Requirements Status](https://requires.io/github/PabloCastellano/libreborme/requirements.svg?branch=master)](https://requires.io/github/PabloCastellano/libreborme/requirements/?branch=master)
 
-En estos momentos hay una versión en producción en https://libreborme.net.
+En estos momentos hay una versión en producción en https://librebor.me
 
-Acerca de LibreBORME
-----------------
+Acerca de LibreBOR
+------------------
 
-LibreBORME es una plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil.
+LibreBOR es una plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil.
 
-LibreBORME nace en 2014 como un Proyecto de Fin de Carrera con la intención de «abrir» los datos del Registro Mercantil de España.
+LibreBOR (antes conocido como LibreBORME) nace en 2014 como un Proyecto de Fin de Carrera con la intención de «abrir» los datos del Registro Mercantil de España.
 Aprovechando que [desde 2009](https://elpais.com/diario/2008/01/03/ciberpais/1199330666_850215.html)
-se publica el BORME en formato electrónico, LibreBORME utiliza la librería [bormeparser](https://github.com/PabloCastellano/bormeparser/)
+se publica el BORME en formato electrónico, LibreBOR utiliza la librería [bormeparser](https://github.com/PabloCastellano/bormeparser/)
 para *leérselo* por ti cada mañana y añadir a su base de datos los últimos cambios. De esta manera tú puedes hacer búsquedas semánticas,
 recibir notificaciones y usar estos datos de manera sencilla y para lo que quieras.
 
@@ -26,12 +26,12 @@ Para más información puedes leer las siguientes entradas en el blog del autor:
 Y en los siguientes medios:
 - [LibreBORME, la herramienta gratuita para investigar empresas españolas desde casa](https://www.elconfidencial.com/tecnologia/2016-02-14/libreborme-la-herramienta-gratuita-para-investigar-empresas-espanolas-desde-casa_1151596/) (El Confidencial, 14 de febrero de 2016)
 
-LibreBORME participó en el [I Certamen de Proyectos Libres de la UGR](http://osl.ugr.es/2014/09/26/premios-a-proyectos-libres-de-la-ugr/) [(Bases)](http://osl.ugr.es/bases-de-los-premios-a-proyectos-libres-de-la-ugr/) donde obtuvo el tercer premio.
+LibreBOR participó en el [I Certamen de Proyectos Libres de la UGR](http://osl.ugr.es/2014/09/26/premios-a-proyectos-libres-de-la-ugr/) [(Bases)](http://osl.ugr.es/bases-de-los-premios-a-proyectos-libres-de-la-ugr/) donde obtuvo el tercer premio.
 
 Instalación
 -----------
 
-Para instrucciones de cómo montar tu propia instancia de LibreBORME, echa un vistazo a [INSTALL.md](INSTALL.md).
+Para instrucciones de cómo montar tu propia instancia de LibreBOR, echa un vistazo a [INSTALL.md](INSTALL.md).
 
 Documentación
 -------------
@@ -57,6 +57,6 @@ Si quieres apoyar económicamente el proyecto puedes hacerlo a través de [PayPa
 Licencia
 --------
 
-LibreBORME es software libre y su código fuente está accesible en [GitHub](https://github.com/PabloCastellano/libreborme) bajo la licencia [Affero GPL v3](https://www.gnu.org/licenses/agpl-3.0.html).
+LibreBOR es software libre y su código fuente está accesible en [GitHub](https://github.com/PabloCastellano/libreborme) bajo la licencia [Affero GPL v3](https://www.gnu.org/licenses/agpl-3.0.html).
 
-© Desarrolladores de LibreBORME. Véase el archivo [AUTHORS](AUTHORS).
+© Desarrolladores de LibreBOR. Véase el archivo [AUTHORS](AUTHORS).

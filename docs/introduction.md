@@ -1,11 +1,11 @@
 En estos momentos hay una versión en producción en [https://libreborme.net](https://libreborme.net).
 
-# Acerca de LibreBORME
+# Acerca de LibreBOR
 
-LibreBORME es una plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil.
+LibreBOR.me es una plataforma web para la consulta y el análisis del Boletín Oficial del Registro Mercantil.
 
-LibreBORME nace en 2014 como un Proyecto de Fin de Carrera con la intención de «abrir» los datos del Registro Mercantil de España. Aprovechando que [desde 2009](https://elpais.com/diario/2008/01/03/ciberpais/1199330666_850215.html)
-se publica el BORME en formato electrónico, LibreBORME se encarga de *leérselo* por ti cada mañana y añadir a su base de datos los
+LibreBOR (antes conocido como LibreBORME) nace en 2014 como un Proyecto de Fin de Carrera con la intención de «abrir» los datos del Registro Mercantil de España. Aprovechando que [desde 2009](https://elpais.com/diario/2008/01/03/ciberpais/1199330666_850215.html)
+se publica el BORME en formato electrónico, LibreBOR se encarga de *leérselo* por ti cada mañana y añadir a su base de datos los
 últimos cambios. De esta manera tú puedes hacer búsquedas semánticas, recibir notificaciones y usar estos datos de manera sencilla
 y para lo que quieras.
 
@@ -34,6 +34,6 @@ puedes ojear el [listado de bugs](https://github.com/PabloCastellano/libreborme/
 
 # Licencia
 
-LibreBORME es software libre y su código fuente está accesible en [GitHub](https://github.com/PabloCastellano/libreborme) bajo la licencia [Affero GPL v3](https://www.gnu.org/licenses/agpl-3.0.html).
+LibreBOR es software libre y su código fuente está accesible en [GitHub](https://github.com/PabloCastellano/libreborme) bajo la licencia [Affero GPL v3](https://www.gnu.org/licenses/agpl-3.0.html).
 
-© Desarrolladores de LibreBORME. Véase el archivo [AUTHORS](https://github.com/PabloCastellano/libreborme/blob/master/AUTHORS).
+© Desarrolladores de LibreBOR. Véase el archivo [AUTHORS](https://github.com/PabloCastellano/libreborme/blob/master/AUTHORS).

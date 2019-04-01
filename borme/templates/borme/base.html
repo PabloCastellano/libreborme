@@ -6,15 +6,15 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {% block meta %}
-      <meta name="keywords" content="Empresas, Informe, CNAE, Registro, Mercantil, Actos, BOE, BORME, Open Data, Cargos, Directivos"/>
-      <meta name="description" content="Libreborme.net ofrece un buscador para el Boletín Oficial del Registro Mercantil. Encuentra información sobre actos mercantiles de empresas."/>
+      <meta name="keywords" content="Empresas, LibreBORME, Informe, CNAE, Registro, Mercantil, Actos, BOE, BORME, Open Data, Cargos, Directivos"/>
+      <meta name="description" content="LibreBOR ofrece un buscador para el Boletín Oficial del Registro Mercantil. Encuentra información sobre actos mercantiles de empresas."/>
   {% endblock %}
   <meta name="author" content="Pablo Castellano">
   {% load staticfiles %}
   <link rel="icon" href="{% static "favicon.ico" %}">
   <link type="text/plain" rel="author" href="humans.txt" />
 
-  <title>{% block title %}LibreBORME{% endblock %}</title>
+  <title>{% block title %}LibreBOR.me{% endblock %}</title>
 
   <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
   <link href="{% static "fontawesome/css/font-awesome.min.css" %}" rel="stylesheet">
@@ -33,7 +33,7 @@
 <!-- Cookies message -->
 <div id="headerCookies" style="display:none;">
 	<div class="limiter">
-		<p class="header-message">LibreBORME.net utiliza cookies para que tengas la mejor experiencia de navegación. Si sigues navegando entendemos que aceptas nuestra <a href="{% url 'cookies' %}">política de cookies</a>.</p>
+		<p class="header-message">LibreBOR.me utiliza cookies para que tengas la mejor experiencia de navegación. Si sigues navegando entendemos que aceptas nuestra <a href="{% url 'cookies' %}">política de cookies</a>.</p>
 		<p class="header-buttonline">
 			<button type="button" class="btn btn-primary btn-sm cookies-header-close">OK</button>
 		</p>
@@ -50,7 +50,7 @@
 	    closeButton.click(function(e){
 		var date = new Date();
 	        date.setTime(date.getTime() + (60 * 60 * 24 * 365 * 10 * 1000));
-	        $.cookie("cookies", "accept", { expires: date, path: "/", domain: ".libreborme.net" });
+	        $.cookie("cookies", "accept", { expires: date, path: "/", domain: ".librebor.me" });
 		e.preventDefault();
 		e.stopPropagation();
 		advice.slideUp("fast");
@@ -66,7 +66,7 @@
 <div class="row">
 
   <form class="navbar-form navbar-left" role="search" action="{% url "borme-search" %}" method="get">
-  <a href="{% url "borme-home" %}"><img alt="libreborme logo" src="{% static "libreborme_logo.png" %}"></a>
+  <a href="{% url "borme-home" %}"><img alt="LibreBOR logo" src="{% static "librebor_logo.svg" %}"></a>
   <div class="form-group">
     <input type="text" class="form-control" size="32" name="q" placeholder="Buscar por nombre de empresa o persona" {% if not search_view %}autofocus {% endif %}>
     <input type="hidden" name="page" value="1">
@@ -95,11 +95,11 @@
               <p>Dicha ley especificó que la fecha a partir de la cual se publicarían los Boletines en formato electrónico sería a partir de 2009,
                   por lo que todos los Boletines Oficiales anteriores sólo están disponibles en papel en la sede de la <i>Agencia Estatal Boletín Oficial del Estado</i>.</p>
 
-              <p>Por este motivo en LibreBORME la información no es completa: aparecen empresas de las que desconocemos sus cargos directivos,
+              <p>Por este motivo en LibreBOR la información no es completa: aparecen empresas de las que desconocemos sus cargos directivos,
                   sabemos la fecha de disolución de sociedades pero no sabemos la de su constitución y no hay rastro de empresas que no hayan
                   inscrito ningún acto mercantil desde 2009 hasta ahora.</p>
 
-              <p>El proyecto LibreBORME nace para recordar que los datos recogidos en el Registro Mercantil han sido tratados y gestionados por
+              <p>El proyecto LibreBOR nace para recordar que los datos recogidos en el Registro Mercantil han sido tratados y gestionados por
                   funcionarios públicos, pagados a su vez con los impuestos de los ciudadanos y reivindicar que son datos que nos
                   pertenecen y que en pleno siglo XXI deben estar accesibles a través de Internet.</p>
 
@@ -118,12 +118,12 @@
             <div class="row">
               <div class="col-lg-8">
                 <p class="text-muted">Esta web muestra únicamente datos públicos disponibles desde el año 2009. <a href="#" data-toggle="modal" data-target="#myModal"><small>¿Por qué?</small></a></p>
-                <p class="text-muted"><small>© LibreBORME 2014-2018
+                <p class="text-muted"><small>© LibreBOR 2014-2019
                   | <i class="fa fa-envelope"></i> <a href="{% url 'contact' %}">Contacto</a>
-                  | <i class="fa fa-twitter"></i> <a href="https://twitter.com/libreborme" target="_blank" rel="nofollow">@LibreBORME</a>
+                  | <i class="fa fa-twitter"></i> <a href="https://twitter.com/libreborme" target="_blank" rel="nofollow">@Libreborme</a>
                   | <i class="fa fa-github"></i> <a href="https://github.com/PabloCastellano/libreborme/" target="_blank" rel="nofollow">Código fuente</a> <i>(<a href="https://github.com/PabloCastellano/libreborme/commit/{{ version }}" target="_blank" rel="nofollow">git-{{ version }}</a>)</i>
                   | <i class="fa fa-flag-o"></i> <a href="{% url 'aviso_legal' %}">Aviso legal</a>
-                  | <i class="fa fa-heart"></i> <a href="{% url 'support' %}">Apoya LibreBORME</a></small>
+                  | <i class="fa fa-heart"></i> <a href="{% url 'support' %}">Apoya LibreBOR.me</a></small>
                 </p>
               </div>
               <div class="col-lg-4">

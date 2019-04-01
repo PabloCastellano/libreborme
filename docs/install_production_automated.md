@@ -1,6 +1,6 @@
 # Instalación automatizada para producción
 
-Esta sección describe cómo realizar una instalación de LibreBORME automatizada y en producción.
+Esta sección describe cómo realizar una instalación de LibreBOR automatizada y en producción.
 
 ## Advertencia
 
@@ -8,7 +8,7 @@ Esta sección describe cómo realizar una instalación de LibreBORME automatizad
 
 ## Prerrequisitos
 
-LibreBORME utiliza [Ansible](https://www.ansible.com/) para ser desplegado en un servidor remoto.
+LibreBOR utiliza [Ansible](https://www.ansible.com/) para ser desplegado en un servidor remoto.
 
 Para instalar Ansible en tu máquina:
 
