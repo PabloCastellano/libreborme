@@ -1,4 +1,5 @@
 settings := libreborme.settings_dev
+VERSION ?= staging
 
 index:
 		./manage.py search_index --models borme.Company --populate
@@ -110,9 +111,15 @@ staging:
 		./manage.py loaddata ./alertas/fixtures/alertasconfig.json --settings $(settings)
 		uwsgi --ini=/site/uwsgi.ini
 
-update_staging_images:
-		# docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+docker_build:
 		docker build -t registry.gitlab.com/libreborme/libreborme:staging .
-		docker push registry.gitlab.com/libreborme/libreborme:staging
-		cd docker/nginx && docker build -t registry.gitlab.com/libreborme/libreborme/nginx:staging .
-		docker push registry.gitlab.com/libreborme/libreborme/nginx:staging
+		docker build -t registry.gitlab.com/libreborme/libreborme/nginx:staging docker/nginx
+
+docker_push:
+		# docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+		docker push registry.gitlab.com/libreborme/libreborme:$(VERSION)
+		docker push registry.gitlab.com/libreborme/libreborme/nginx:$(VERSION)
+
+docker_clean:
+		-docker rmi registry.gitlab.com/libreborme/libreborme:$(VERSION)
+		-docker rmi registry.gitlab.com/libreborme/libreborme/nginx:$(VERSION)
