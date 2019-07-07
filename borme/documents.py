@@ -48,6 +48,7 @@ class CompanyDocument(DocType):
     class Meta:
         model = Company
         fields = ['slug']
+        doc_type = "company"
 
 
 @idx.doc_type
@@ -55,6 +56,7 @@ class PersonDocument(DocType):
     class Meta:
         model = Person
         fields = ['name', 'slug']
+        doc_type = "person"
 
 
 class ElasticSearchPaginatorListException(Exception):
@@ -99,7 +101,7 @@ def es_search_paginator(doc_type, text):
     https://www.elastic.co/guide/en/elasticsearch/reference/5.6/query-dsl-match-query.html
     https://www.elastic.co/guide/en/elasticsearch/reference/5.6/query-dsl-query-string-query.html
 
-    :param doc_type: ES document name ('person_document' or 'company_document')
+    :param doc_type: ES document name ('person' or 'company')
     :param query: Text to search
     :type doc_type: str
     :type query: str

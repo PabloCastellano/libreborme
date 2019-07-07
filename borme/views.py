@@ -173,8 +173,8 @@ class BusquedaView(TemplateView):
             raw_query = self.request.GET['q']
             doc_type = self.request.GET.get('type', 'all')
 
-            q_companies = es_search_paginator('company_document', raw_query)
-            q_persons = es_search_paginator('person_document', raw_query)
+            q_companies = es_search_paginator('company', raw_query)
+            q_persons = es_search_paginator('person', raw_query)
 
             context['query'] = raw_query
 

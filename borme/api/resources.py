@@ -44,7 +44,7 @@ class CompanyResource(ModelResource):
             # ...
             #    for result in page.object_list:
 
-            sqs = es_search_paginator('company_document', query)
+            sqs = es_search_paginator('company', query)
             paginator = Paginator(sqs, 20)
 
             try:
@@ -132,7 +132,7 @@ class PersonResource(ModelResource):
             # ...
             #    for result in page.object_list:
 
-            sqs = es_search_paginator('person_document', query)
+            sqs = es_search_paginator('person', query)
             paginator = Paginator(sqs, 20)
 
             try:
