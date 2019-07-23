@@ -7,6 +7,9 @@ from .models import Company, Person
 import elasticsearch
 
 
+ELASTICSEARCH_INDEX = settings.DATABASES['default']['NAME']
+
+
 def configure_index(idx):
     """Configure ES index settings.
 
@@ -36,7 +39,7 @@ def configure_index(idx):
     return lb_analyzer, lb_filter
 
 
-idx = Index('libreborme')
+idx = Index(ELASTICSEARCH_INDEX)
 # lb_analyzer, lb_filter = configure_index(idx)
 
 
@@ -140,6 +143,6 @@ def es_search_paginator(doc_type, text):
     es = elasticsearch.Elasticsearch(settings.ELASTICSEARCH_URI)
     results = ElasticSearchPaginatorList(
             es, body=es_query,
-            index='libreborme', doc_type=doc_type)
+            index=ELASTICSEARCH_INDEX, doc_type=doc_type)
 
     return results
