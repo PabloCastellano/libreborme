@@ -179,6 +179,8 @@ BORME_PDF_ROOT = environ.get("BORME_PDF_ROOT", path.join(BORME_ROOT, 'pdf'))
 BORME_XML_ROOT = environ.get("BORME_XML_ROOT", path.join(BORME_ROOT, 'xml'))
 BORME_JSON_ROOT = environ.get("BORME_JSON_ROOT", path.join(BORME_ROOT, 'json'))
 
+STATIC_ROOT = environ.get("STATIC_ROOT", "/app/libreborme/static")
+
 BORME_LOG_ROOT = environ.get("BORME_LOG_ROOT", path.join(BASE_DIR, '..', 'log'))
 
 EMAIL_CONTACT = environ.get("EMAIL_CONTACT", "contact@domain")
