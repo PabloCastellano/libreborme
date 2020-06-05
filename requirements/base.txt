@@ -1,5 +1,5 @@
 bormeparser==0.3.1
-Django==2.0.3
+Django==2.2.13
 django-bootstrap-form==3.2.1
 django-bootstrap-static==3.3.7.2
 django-elasticsearch-dsl==0.5.0
