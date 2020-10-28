@@ -1,5 +1,6 @@
 ![logo LibreBOR](libreborme/static/librebor_logo.png)
 
+[![Chat on Telegram](https://img.shields.io/badge/Únete-Telegram-2CA5E0?logo=Telegram)](https://t.me/librebor_noticias)
 [![Travis libreborme](https://travis-ci.org/PabloCastellano/libreborme.svg?branch=master)](https://travis-ci.org/PabloCastellano/libreborme)
 [![Coverage Status](https://coveralls.io/repos/github/PabloCastellano/libreborme/badge.svg?branch=master)](https://coveralls.io/github/PabloCastellano/libreborme?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/libreborme/badge/?version=latest)](https://readthedocs.org/projects/libreborme/?badge=latest)
