@@ -5,7 +5,11 @@
 [![Documentation Status](https://readthedocs.org/projects/libreborme/badge/?version=latest)](https://readthedocs.org/projects/libreborme/?badge=latest)
 [![Requirements Status](https://requires.io/github/PabloCastellano/libreborme/requirements.svg?branch=master)](https://requires.io/github/PabloCastellano/libreborme/requirements/?branch=master)
 
-En estos momentos hay una versión en producción en https://librebor.me
+Primera versión de LibreBOR, escrita usando el framework web Django. **Este repositorio está desmantenido** pero lo mantenemos online por si puede ayudar a otras personas que quieran estudiar su código.
+
+Si quieres apoyar económicamente el proyecto puedes hacerlo a través de [PayPal](http://librebor.me/donar).
+
+Visita LibreBOR en https://librebor.me
 
 Acerca de LibreBOR
 ------------------
@@ -48,11 +52,6 @@ Contribuciones
 
 Si deseas contribuir al proyecto puedes enviarme tus Pull Requests en GitHub, donde también
 puedes ojear el [listado de bugs](https://github.com/PabloCastellano/libreborme/issues).
-
-Donaciones
-----------
-
-Si quieres apoyar económicamente el proyecto puedes hacerlo a través de [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=contacto%40libreborme%2enet&lc=ES&item_name=LibreBORME&item_number=Servicio%20web&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted) o Bitcoin en la dirección [1Jp6SdEvPWahE5cDQ61StroCRM6Sbvxz94](https://blockchain.info/address/1Jp6SdEvPWahE5cDQ61StroCRM6Sbvxz94).
 
 Licencia
 --------
