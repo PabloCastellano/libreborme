@@ -13,6 +13,8 @@ urlpatterns = [
     path('robots.txt', views.robotstxt),
     path('humans.txt', t(template_name='humans.txt', content_type='text/plain')),
 
+    path('healthz/', include('health_check.urls')),
+
     path('about/', views.AboutView.as_view(), name='about'),
     path('aviso-legal/', views.AvisoLegalView.as_view(), name='aviso_legal'),
     path('contact/', t(template_name="libreborme/contact.html"), name='contact'),
