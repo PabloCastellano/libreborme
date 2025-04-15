@@ -6,11 +6,13 @@
 [![Documentation Status](https://readthedocs.org/projects/libreborme/badge/?version=latest)](https://readthedocs.org/projects/libreborme/?badge=latest)
 [![Requirements Status](https://requires.io/github/PabloCastellano/libreborme/requirements.svg?branch=master)](https://requires.io/github/PabloCastellano/libreborme/requirements/?branch=master)
 
-Primera versión de LibreBOR, escrita usando el framework web Django. **Este repositorio está desmantenido** pero lo mantenemos online por si puede ayudar a otras personas que quieran estudiar su código.
+Primera versión de LibreBOR, escrita usando el framework web Django.
+
+**NOTA: Este repositorio se encuentra desmantenido pero lo mantenemos online por si puede ayudar a otras personas que quieran estudiar su código.
+Si buscas una solución para acceder a la información mercantil mediante API y con soporte para empresas,
+consulta [LibreBOR](https://librebor.me) y [Documentación LibreBOR API](https://docs.librebor.me/).**
 
 Si quieres apoyar económicamente el proyecto puedes hacerlo a través de [PayPal](http://librebor.me/donar).
-
-Visita LibreBOR en https://librebor.me
 
 Acerca de LibreBOR
 ------------------
