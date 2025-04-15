@@ -1,9 +1,3 @@
-Advertencia
-----------
-
-> **La API de LibreBOR es totalmente funcional aunque aún se encuentra en fase experimental.**
-> **Los endpoints, los parámetros aceptados y los datos devueltos pueden sufrir cambios en el futuro.**
-
 API de LibreBOR
 ---------------
 
