@@ -1,7 +1,7 @@
 backports.ssl-match-hostname==3.5.0.1
 certifi==2018.1.18
 click==6.7
-Jinja2==2.10
+Jinja2==3.1.6
 livereload==2.5.1
 Markdown==2.6.11
 MarkupSafe==1.0
