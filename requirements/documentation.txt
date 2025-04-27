@@ -7,4 +7,4 @@ Markdown==2.6.11
 MarkupSafe==1.0
 mkdocs==0.17.3
 PyYAML==3.12
-tornado==5.0
+tornado==6.4.2
